@@ -23,8 +23,9 @@ class Wpml_2_Mlp {
 
 		$wp_version_check      = $this->check_wordpress_version();
 		$wp_is_multisite_check = $this->check_is_multisite_enabled();
+		$wpml_installed = $this->is_wpmlplugin_active();
 
-		if ( $wp_version_check || $wp_is_multisite_check ) {
+		if ( $wp_version_check || $wp_is_multisite_check || !$wpml_installed ) {
 			$plugin      = plugin_basename( __FILE__ );
 			$plugin_data = get_plugin_data( __FILE__, FALSE );
 			if ( is_plugin_active( $plugin ) ) {
@@ -33,8 +34,12 @@ class Wpml_2_Mlp {
 
 					$msg = "'" . $plugin_data[ 'Name' ] . "' requires WordPress " . WPVERSION_CONST . " or higher, and has been deactivated! Please upgrade WordPress and try again.<br /><br />Back to <a href='" . admin_url(
 						) . "'>WordPress admin</a>.";
-				} else {
+				}
+				if($wp_is_multisite_check) {
 					$msg = "Multisite needs to be enabled";
+				}
+				if(!$wpml_installed) {
+					$msg = "WPML Plugin is not installed or it's not activated";
 				}
 
 				wp_die( $msg );
@@ -53,6 +58,10 @@ class Wpml_2_Mlp {
 		global $wp_version;
 
 		return version_compare( $wp_version, WPVERSION_CONST, "<" ) ? TRUE : FALSE;
+	}
+
+	function is_wpmlplugin_active(){
+		return is_plugin_active('sitepress-multilingual-cms/sitepress.php') ? TRUE : FALSE;
 	}
 
 	function __construct() {
