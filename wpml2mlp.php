@@ -23,9 +23,9 @@ class Wpml_2_Mlp {
 
 		$wp_version_check      = $this->check_wordpress_version();
 		$wp_is_multisite_check = $this->check_is_multisite_enabled();
-		$wpml_installed = $this->is_wpmlplugin_active();
+		$wpml_installed        = $this->is_wpmlplugin_active();
 
-		if ( $wp_version_check || $wp_is_multisite_check || !$wpml_installed ) {
+		if ( $wp_version_check || $wp_is_multisite_check || ! $wpml_installed ) {
 			$plugin      = plugin_basename( __FILE__ );
 			$plugin_data = get_plugin_data( __FILE__, FALSE );
 			if ( is_plugin_active( $plugin ) ) {
@@ -35,10 +35,10 @@ class Wpml_2_Mlp {
 					$msg = "'" . $plugin_data[ 'Name' ] . "' requires WordPress " . WPVERSION_CONST . " or higher, and has been deactivated! Please upgrade WordPress and try again.<br /><br />Back to <a href='" . admin_url(
 						) . "'>WordPress admin</a>.";
 				}
-				if($wp_is_multisite_check) {
+				if ( $wp_is_multisite_check ) {
 					$msg = "Multisite needs to be enabled";
 				}
-				if(!$wpml_installed) {
+				if ( ! $wpml_installed ) {
 					$msg = "WPML Plugin is not installed or it's not activated";
 				}
 
@@ -60,8 +60,9 @@ class Wpml_2_Mlp {
 		return version_compare( $wp_version, WPVERSION_CONST, "<" ) ? TRUE : FALSE;
 	}
 
-	function is_wpmlplugin_active(){
-		return is_plugin_active('sitepress-multilingual-cms/sitepress.php') ? TRUE : FALSE;
+	function is_wpmlplugin_active() {
+
+		return is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ? TRUE : FALSE;
 	}
 
 	function __construct() {
@@ -92,38 +93,70 @@ class Wpml_2_Mlp {
 	function options_page() {
 
 		if ( isset( $_POST[ 'submit' ] ) ) {
-			echo( "Exporting..." );
+			$queryParams   = array(
+				'posts_per_page' => - 1,
+				'post_type'      => get_post_types( array( 'public' => TRUE ), 'names', 'and' )
+			);
+
+			$conversionData = new WP_Query();
+			$conversionData->query( $queryParams );
+			if ( $conversionData->have_posts() ) {
+				//store grouped data
+				$data = array();
+
+				while ( $conversionData->have_posts() ) : $conversionData->the_post();
+
+					$ID           = get_the_ID();
+					$postType     = get_post_type( $ID );
+					$translations = icl_get_languages( 'skip_missing=1' );
+					foreach ( $translations as $translation ) {
+						$translate_ID = icl_object_id( $ID, $postType, FALSE, $translation[ 'language_code' ] );
+						//Filter out languages that do not have translations
+						if ( $translate_ID != "" ) {
+							$langCode = $translation[ 'language_code' ];
+							if ( ! array_key_exists( $langCode, $data ) ) {
+								$data[ $langCode ] = array();
+							}
+							if ( ! array_key_exists( "posts", $data[ $langCode ] ) ) {
+								$data[ $langCode ][ 'posts' ] = array();
+							}
+							array_push( $data[ $langCode ][ 'posts' ], get_post( $translate_ID ) );
+
+						}
+						//TODO Check do we need this identification
+						//Identify primary language of the current post
+						if ( $ID == $translate_ID ) {
+						} else {
+						}
+					}
+				endwhile;
+				var_dump( $data );
+			} else {
+				echo 'There is no any posts';
+
+			}
+			var_dump( $data );
 		}
 		?>
 		<div class="wrap">
-
-			<!-- Display Plugin Icon, Header, and Description -->
 			<div class="icon32" id="icon-options-general"><br></div>
 			<h2><?php echo 'WPML 2 MLP'; ?></h2>
 
 			<p><?php echo 'Conversion from WPML to MLP.'; ?></p>
 
-
-			<!-- Beginning of the Plugin Options Form -->
 			<form method="post" action="settings.php?page=<?php echo Wpml2MlpConstants::PREFIX_CONST; ?>">
-
-
 				<?php submit_button( 'Do export' ); ?>
-
-
 			</form>
-
-
 		</div>
 	<?php
 	}
 }
 
 //init plugin
-add_action( "plugins_loaded", "wpml_2_mlp_init" );
+add_action(
+	"plugins_loaded", function () {
 
-function wpml_2_mlp_init() {
-
-	global $wpml_2_mlp;
-	$wpml_2_mlp = new Wpml_2_Mlp();
-}
+		global $wpml_2_mlp;
+		$wpml_2_mlp = new Wpml_2_Mlp();
+	}
+);
