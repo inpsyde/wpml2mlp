@@ -11,6 +11,10 @@
 
 defined( 'ABSPATH' ) or die();
 
+if ( ! class_exists( 'Wpml2MlpConstants' ) ) {
+	require plugin_dir_path( __FILE__ ) . 'constants.php';
+}
+
 define( "WPVERSION_CONST", "3.1" );
 
 class Wpml_2_Mlp {
@@ -56,27 +60,58 @@ class Wpml_2_Mlp {
 		//TODO Check do we need version test!
 		add_action( "admin_init", array( &$this, "check_prerequisites" ) );
 
-		// add menu to navigation
-		add_action( "admin_menu", array( &$this, "add_menu_option" ) );
+		// add menu to to network navigation
+		add_action( "network_admin_menu", array( &$this, "add_menu_option" ) );
 
 	}
 
 	// Add menu page
 	function add_menu_option() {
 
-		global $wpml2mlp;
-
-		$wpml2mlp = add_options_page(
-			'Convert WPML to MLP', 'WPML2MLP', 'manage_options', 'wpmltomlp', array( &$this, 'options_page' )
+		add_submenu_page(
+			'settings.php',
+			Wpml2MlpConstants::CONVERT_WPML_TO_MLP,
+			strtoupper( Wpml2MlpConstants::PREFIX_CONST ),
+			'manage_network_options',
+			Wpml2MlpConstants::PREFIX_CONST,
+			array( &$this, 'options_page' )
 		);
 
-		add_action( 'load-' . $wpml2mlp, array( &$this, 'contextual_help_tab' ) );
+	}
 
+	// Options Form
+	function options_page() {
+
+		if ( isset( $_POST[ 'submit' ] ) ) {
+			echo( "Exporting..." );
+		}
+		?>
+		<div class="wrap">
+
+			<!-- Display Plugin Icon, Header, and Description -->
+			<div class="icon32" id="icon-options-general"><br></div>
+			<h2><?php echo 'WPML 2 MLP'; ?></h2>
+
+			<p><?php echo 'Conversion from WPML to MLP.'; ?></p>
+
+
+			<!-- Beginning of the Plugin Options Form -->
+			<form method="post" action="settings.php?page=<?php echo Wpml2MlpConstants::PREFIX_CONST; ?>">
+
+
+				<?php submit_button( 'Do export' ); ?>
+
+
+			</form>
+
+
+		</div>
+	<?php
 	}
 }
 
 //init plugin
-add_action( "init", "wpml_2_mlp_init" );
+add_action( "plugins_loaded", "wpml_2_mlp_init" );
 
 function wpml_2_mlp_init() {
 
