@@ -144,7 +144,7 @@ class Wpml_2_Mlp {
 							array_push( $data[ $langCode ][ 'posts' ], get_post( $translate_ID ) );
 
 						}
-						if ( ! $default_lng_id < 0 && $ID == $translate_ID ) {
+						if ( $default_lng_id < 0 && $ID == $translate_ID ) {
                                                     $default_lng_id = $translation["id"];
                                                 }
 					}
