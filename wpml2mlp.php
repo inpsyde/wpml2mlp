@@ -110,6 +110,7 @@ class Wpml_2_Mlp {
 			$conversionData->query( $queryParams );
 			$new_blog_ids = array();
                         $default_lng_id = -1;
+                        global $sitepress;
                         
 			if ( $conversionData->have_posts() ) {
 				//store grouped data
@@ -121,32 +122,24 @@ class Wpml_2_Mlp {
 					$postType     = get_post_type( $ID );
 					$translations = icl_get_languages( 'skip_missing=1' );
                                         
+                                        $previous_lng_code = "dummy";
 					foreach ( $translations as $translation ) {
-						$translate_ID = icl_object_id( $ID, $postType, FALSE, $translation[ 'language_code' ] );
-						//Filter out languages that do not have translations
-						if ( $translate_ID != "" ) {
-							$langCode = $translation[ 'language_code' ];
-                                                        
-                                                        // check is this correnct language format
-                                                        if ( ! self::site_exists( $langCode ) ) {
-                                                            $new_blog_id = self::create_new_multisite( $langCode );
-                                                            if ( $new_blog_id > 0 ) {
-                                                                    array_push( $new_blog_ids, $new_blog_id );
-                                                            }
-                                                        }
-                                                        
-							if ( ! array_key_exists( $langCode, $data ) ) {
-								$data[ $langCode ] = array();
-							}
-							if ( ! array_key_exists( "posts", $data[ $langCode ] ) ) {
-								$data[ $langCode ][ 'posts' ] = array();
-							}
-							array_push( $data[ $langCode ][ 'posts' ], get_post( $translate_ID ) );
+                                            $langCode = $translation[ 'language_code' ];
+                                            $translate_ID = icl_object_id( $ID, $postType, FALSE, $langCode );
 
-						}
-						if ( $default_lng_id < 0 && $ID == $translate_ID ) {
-                                                    $default_lng_id = $translation["id"];
+                                            // check is this correct language format
+                                            if ( $previous_lng_code != $langCode && ! self::site_exists( $langCode ) ) {
+                                                $new_blog_id = self::create_new_multisite( $langCode );
+                                                if ( $new_blog_id > 0 ) {
+                                                        array_push( $new_blog_ids, $new_blog_id );
                                                 }
+                                            }
+
+                                            if ( $default_lng_id < 0 && $ID == $translate_ID ) {
+                                                $default_lng_id = self::get_mlp_lng_id( $translation["id"] );
+                                            }
+                                            
+                                            $previous_lng_code = $translation[ 'language_code' ];
 					}
 				endwhile;
 			} else {
@@ -199,6 +192,10 @@ class Wpml_2_Mlp {
         
         private function site_exists( $lng ) {
             return true; // TODO: implement this
+        }
+        
+        private function get_mlp_lng_id( $wp_lng_id ) {
+            return 1; // TODO: implement correctly
         }
 
 	private function delete_multisite( $blog_id, $main_blog_id = 0 ) {
@@ -253,24 +250,6 @@ class Wpml_2_Mlp {
 		sort( $ids, SORT_NUMERIC );
 
 		return $ids;
-	}
-
-	private function site_id_exist( $id ) {
-
-		return FALSE;
-	}
-
-	private function try_get_last_multisite_id( &$last_id ) {
-
-		$ids   = self::get_sites_ids();
-		$count = count( $ids );
-		if ( count( $count ) > 0 ) {
-			$last_id = $ids[ $count - 1 ];
-
-			return TRUE;
-		}
-
-		return FALSE;
 	}
 }
 
