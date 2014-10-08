@@ -108,38 +108,38 @@ class Wpml_2_Mlp {
 
 			$conversionData = new WP_Query();
 			$conversionData->query( $queryParams );
-			$new_blog_ids = array();
-                        $default_lng_id = -1;
-                        global $sitepress;
-                        
+			$new_blog_ids   = array();
+			$default_lng_id = - 1;
+			global $sitepress;
+
 			if ( $conversionData->have_posts() ) {
 				//store grouped data
 				$data = array();
 
 				while ( $conversionData->have_posts() ) : $conversionData->the_post();
-                                        
+
 					$ID           = get_the_ID();
 					$postType     = get_post_type( $ID );
 					$translations = icl_get_languages( 'skip_missing=1' );
-                                        
-                                        $previous_lng_code = "dummy";
+
+					$previous_lng_code = "dummy";
 					foreach ( $translations as $translation ) {
-                                            $langCode = $translation[ 'language_code' ];
-                                            $translate_ID = icl_object_id( $ID, $postType, FALSE, $langCode );
+						$langCode     = $translation[ 'language_code' ];
+						$translate_ID = icl_object_id( $ID, $postType, FALSE, $langCode );
 
-                                            // check is this correct language format
-                                            if ( $previous_lng_code != $langCode && ! self::site_exists( $langCode ) ) {
-                                                $new_blog_id = self::create_new_multisite( $langCode );
-                                                if ( $new_blog_id > 0 ) {
-                                                        array_push( $new_blog_ids, $new_blog_id );
-                                                }
-                                            }
+						// check is this correct language format
+						if ( $previous_lng_code != $langCode && ! self::site_exists( $langCode ) ) {
+							$new_blog_id = self::create_new_multisite( $langCode );
+							if ( $new_blog_id > 0 ) {
+								array_push( $new_blog_ids, $new_blog_id );
+							}
+						}
 
-                                            if ( $default_lng_id < 0 && $ID == $translate_ID ) {
-                                                $default_lng_id = self::get_mlp_lng_id( $translation["id"] );
-                                            }
-                                            
-                                            $previous_lng_code = $translation[ 'language_code' ];
+						if ( $default_lng_id < 0 && $ID == $translate_ID ) {
+							$default_lng_id = self::get_mlp_lng_id( $translation[ "id" ] );
+						}
+
+						$previous_lng_code = $translation[ 'language_code' ];
 					}
 				endwhile;
 			} else {
@@ -148,13 +148,13 @@ class Wpml_2_Mlp {
 			}
 			//var_dump( $data );
 			//var_dump( $this->get_inpsyde_multilingual() );
-                        
-                        if( count($new_blog_ids) > 0 ) {
-                            if($default_lng_id < 0) {
-                                $default_lng_id = 1;
-                            }
-                            $this->mlp_site_relations->set_relation($default_lng_id, $new_blog_ids);
-                        }
+
+			if ( count( $new_blog_ids ) > 0 ) {
+				if ( $default_lng_id < 0 ) {
+					$default_lng_id = 1;
+				}
+				$this->mlp_site_relations->set_relation( $default_lng_id, $new_blog_ids );
+			}
 		}
 		?>
 		<div class="wrap">
@@ -189,14 +189,16 @@ class Wpml_2_Mlp {
 
 		return $new_blog_id;
 	}
-        
-        private function site_exists( $lng ) {
-            return true; // TODO: implement this
-        }
-        
-        private function get_mlp_lng_id( $wp_lng_id ) {
-            return 1; // TODO: implement correctly
-        }
+
+	private function site_exists( $lng ) {
+
+		return TRUE; // TODO: implement this
+	}
+
+	private function get_mlp_lng_id( $wp_lng_id ) {
+
+		return 1; // TODO: implement correctly
+	}
 
 	private function delete_multisite( $blog_id, $main_blog_id = 0 ) {
 
