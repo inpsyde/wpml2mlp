@@ -19,6 +19,10 @@ define( "WPVERSION_CONST", "3.1" );
 
 class Wpml_2_Mlp {
 
+	private $sites;
+
+	private $mlp_site_relations;
+
 	function check_prerequisites() {
 
 		$wp_version_check      = $this->check_wordpress_version();
@@ -67,6 +71,10 @@ class Wpml_2_Mlp {
 
 	function __construct() {
 
+		global $wpdb;
+		$this->sites              = wp_get_sites();
+		$this->mlp_site_relations = new Mlp_Site_Relations( $wpdb, "mlp_site_relations" );
+
 		//TODO Check do we need version test!
 		add_action( "admin_init", array( &$this, "check_prerequisites" ) );
 
@@ -93,7 +101,7 @@ class Wpml_2_Mlp {
 	function options_page() {
 
 		if ( isset( $_POST[ 'submit' ] ) ) {
-			$queryParams   = array(
+			$queryParams = array(
 				'posts_per_page' => - 1,
 				'post_type'      => get_post_types( array( 'public' => TRUE ), 'names', 'and' )
 			);
@@ -136,6 +144,15 @@ class Wpml_2_Mlp {
 
 			}
 			var_dump( $data );
+			var_dump( $this->get_inpsyde_multilingual() );
+			$new_blog_ids = array();
+			array_push($new_blog_ids, 10);
+
+			/*$new_blog_id = self::create_new_multisite( "it_IT" );
+			if ( $new_blog_id > 0 ) {
+				array_push( $new_blog_ids, $new_blog_id );
+			}
+			$this->mlp_site_relations->set_relation(1, $new_blog_ids);*/
 		}
 		?>
 		<div class="wrap">
