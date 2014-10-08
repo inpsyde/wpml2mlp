@@ -157,6 +157,9 @@ class Wpml_2_Mlp {
 			//var_dump( $this->get_inpsyde_multilingual() );
                         
                         if( count($new_blog_ids) > 0 ) {
+                            if($default_lng_id < 0) {
+                                $default_lng_id = 1;
+                            }
                             $this->mlp_site_relations->set_relation($default_lng_id, $new_blog_ids);
                         }
 		}
