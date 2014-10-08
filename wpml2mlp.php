@@ -167,6 +167,108 @@ class Wpml_2_Mlp {
 		</div>
 	<?php
 	}
+
+	function get_inpsyde_multilingual() {
+
+		global $wpdb;
+
+		var_dump( get_sitestats() );
+		$results = $wpdb->get_results( 'SELECT * FROM wp_sitemeta WHERE meta_key = "inpsyde_multilingual"', OBJECT );
+
+		return maybe_unserialize( $results[ 0 ]->meta_value );
+	}
+
+	private function create_new_multisite( $lng, $main_site_id = 1 ) {
+
+		$is_multisite_on_subdomain = self::check_is_subdomain_multisite_running();
+		$current_site              = get_current_site();
+		$domain                    = $is_multisite_on_subdomain ? $lng . $current_site->domain : $current_site->domain;
+		$path                      = $is_multisite_on_subdomain ? "/" : "/" . $lng;
+		$user_id                   = get_current_user_id();
+
+		$new_blog_id = wpmu_create_blog( $domain, $path, strtoupper( $lng ) . " site", $user_id );
+
+		if ( $new_blog_id > 0 ) {
+			$site_meta                       = self::create_inpsyde_multilingual_site_meta( $lng, $new_blog_id );
+			$mlp_site_option                 = self::get_inpsyde_multilingual_site_meta();
+			$mlp_site_option[ $new_blog_id ] = $site_meta;
+			self::update_inpsyde_multilingual_site_meta( $mlp_site_option );
+		}
+
+		return $new_blog_id;
+	}
+
+	private function delete_multisite( $blog_id, $main_blog_id = 0 ) {
+
+		wpmu_delete_blog( $blog_id, TRUE );
+		$this->mlp_site_relations->delete_relation( $main_blog_id, $blog_id );
+		$inpsyde_multilingual_site_option = self::get_inpsyde_multilingual_site_meta();
+		if ( is_array( $inpsyde_multilingual_site_option )
+			&& array_key_exists(
+				$blog_id, $inpsyde_multilingual_site_option
+			)
+		) {
+			unset( $inpsyde_multilingual_site_option[ $blog_id ] );
+			self::update_inpsyde_multilingual_site_meta( $inpsyde_multilingual_site_option );
+		}
+
+	}
+
+	private function create_inpsyde_multilingual_site_meta( $lng, $new_blog_id, $text = "" ) {
+
+		return
+
+			array(
+				'lang' => $lng,
+				'text' => $text,
+
+			);
+	}
+
+	private function update_inpsyde_multilingual_site_meta( $site_meta_arr ) {
+
+		update_site_option( "inpsyde_multilingual", serialize( $site_meta_arr ) );
+	}
+
+	private function get_inpsyde_multilingual_site_meta() {
+
+		return maybe_unserialize( get_site_option( "inpsyde_multilingual" ) );
+	}
+
+	private function check_is_subdomain_multisite_running() {
+
+		return defined( 'SUBDOMAIN_INSTALL' ) ? SUBDOMAIN_INSTALL : FALSE;
+	}
+
+	private function get_sites_ids() {
+
+		$ids = array();
+
+		foreach ( $this->sites as $site ) {
+			array_push( $ids, $site[ blog_id ] );
+		}
+		sort( $ids, SORT_NUMERIC );
+
+		return $ids;
+	}
+
+	private function site_id_exist( $id ) {
+
+		return FALSE;
+	}
+
+	private function try_get_last_multisite_id( &$last_id ) {
+
+		$ids   = self::get_sites_ids();
+		$count = count( $ids );
+		if ( count( $count ) > 0 ) {
+			$last_id = $ids[ $count - 1 ];
+
+			return TRUE;
+		}
+
+		return FALSE;
+	}
 }
 
 //init plugin
