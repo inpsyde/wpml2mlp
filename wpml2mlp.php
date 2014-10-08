@@ -138,15 +138,14 @@ class Wpml_2_Mlp {
 						}
 					}
 				endwhile;
-				var_dump( $data );
 			} else {
 				echo 'There is no any posts';
 
 			}
-			var_dump( $data );
-			var_dump( $this->get_inpsyde_multilingual() );
+			//var_dump( $data );
+			//var_dump( $this->get_inpsyde_multilingual() );
 			$new_blog_ids = array();
-			array_push($new_blog_ids, 10);
+			array_push( $new_blog_ids, 10 );
 
 			/*$new_blog_id = self::create_new_multisite( "it_IT" );
 			if ( $new_blog_id > 0 ) {
@@ -166,16 +165,6 @@ class Wpml_2_Mlp {
 			</form>
 		</div>
 	<?php
-	}
-
-	function get_inpsyde_multilingual() {
-
-		global $wpdb;
-
-		var_dump( get_sitestats() );
-		$results = $wpdb->get_results( 'SELECT * FROM wp_sitemeta WHERE meta_key = "inpsyde_multilingual"', OBJECT );
-
-		return maybe_unserialize( $results[ 0 ]->meta_value );
 	}
 
 	private function create_new_multisite( $lng, $main_site_id = 1 ) {
