@@ -18,6 +18,7 @@ if ( ! class_exists( 'Wpml2MlpConstants' ) ) {
 define( "WPVERSION_CONST", "3.1" );
 
 add_filter( 'plugins_loaded', array( 'Wpml_2_Mlp', 'get_object' ) );
+
 class Wpml_2_Mlp {
 
 	/**
@@ -40,8 +41,9 @@ class Wpml_2_Mlp {
 	 */
 	public static function get_object() {
 
-		if ( NULL == self::$class_object )
+		if ( NULL == self::$class_object ) {
 			self::$class_object = new self;
+		}
 
 		return self::$class_object;
 	}
@@ -119,7 +121,7 @@ class Wpml_2_Mlp {
 			strtoupper( Wpml2MlpConstants::PREFIX_CONST ),
 			'manage_network_options',
 			Wpml2MlpConstants::PREFIX_CONST,
-			array( &$this, 'options_page' )
+			array( $this, 'options_page' )
 		);
 
 	}
@@ -148,7 +150,9 @@ class Wpml_2_Mlp {
 					$ID           = get_the_ID();
 					$postType     = get_post_type( $ID );
 					$translations = icl_get_languages( 'skip_missing=1' );
+
 					foreach ( $translations as $translation ) {
+
 						$langCode     = $translation[ 'language_code' ];
 						$translate_ID = icl_object_id( $ID, $postType, FALSE, $langCode );
 
@@ -160,35 +164,38 @@ class Wpml_2_Mlp {
 									array_push( $new_blog_ids, $new_blog_id );
 								}
 							}
-							$already_checked_lng_arr[$langCode] = TRUE;
+							$already_checked_lng_arr[ $langCode ] = TRUE;
 						}
 
 						if ( $default_lng_id < 0 && $ID == $translate_ID ) {
 							$default_lng_id = self::get_mlp_lng_id( $translation[ "id" ] );
 						}
 					}
+
 				endwhile;
+
 			} else {
 				echo 'There is no any posts';
-
 			}
 
 			if ( count( $new_blog_ids ) > 0 ) {
+
 				if ( $default_lng_id < 0 ) {
 					$default_lng_id = 1;
 				}
+
 				$this->mlp_site_relations->set_relation( $default_lng_id, $new_blog_ids );
 			}
 		}
 		?>
 		<div class="wrap">
 			<div class="icon32" id="icon-options-general"><br></div>
-			<h2><?php echo 'WPML 2 MLP'; ?></h2>
+			<h2><?php _e( 'WPML 2 MLP' ); ?></h2>
 
-			<p><?php echo 'Conversion from WPML to MLP.'; ?></p>
+			<p><?php _e( 'Conversion from WPML to MLP.' ); ?></p>
 
 			<form method="post" action="settings.php?page=<?php echo Wpml2MlpConstants::PREFIX_CONST; ?>">
-				<?php submit_button( 'Do export' ); ?>
+				<?php submit_button( __( 'Do export' ) ); ?>
 			</form>
 		</div>
 	<?php
@@ -255,7 +262,6 @@ class Wpml_2_Mlp {
 			array(
 				'lang' => $lng,
 				'text' => $text,
-
 			);
 	}
 
