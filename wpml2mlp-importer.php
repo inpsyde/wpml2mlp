@@ -27,6 +27,7 @@ if ( ! class_exists( 'WPML2MLP_Helper' ) ) {
 add_filter( 'plugins_loaded', array( 'WPML2MLP_Importer', 'get_object' ) );
 
 class WPML2MLP_Importer {
+
 	/**
 	 * The class object
 	 *
@@ -34,43 +35,45 @@ class WPML2MLP_Importer {
 	 * @var    String
 	 */
 	static protected $class_object = NULL;
-        
+
 	/**
 	 * @var wpdb
 	 */
 	private $wpdb;
-        
-        /**
-         * @var site_creator
-         */
-        private $site_creator;
-        
-        /**
-         * @var post_creator
-         */
-        private $post_creator;
-        
-        /**
+
+	/**
+	 * @var site_creator
+	 */
+	private $site_creator;
+
+	/**
+	 * @var post_creator
+	 */
+	private $post_creator;
+
+	/**
 	 * Constructor
 	 *
 	 */
-	public function __construct() { 
-                global $wpdb;
-                
-		if ( NULL === $wpdb )
+	public function __construct() {
+
+		global $wpdb;
+
+		if ( NULL === $wpdb ) {
 			return;
+		}
 
 		$this->wpdb         = $wpdb;
-                $this->site_creator = new MLP_Site_Creator;
-                $this->post_creator = new MLP_Post_Creator;
-                
+		$this->site_creator = new MLP_Site_Creator;
+		$this->post_creator = new MLP_Post_Creator;
+
 		// add menu to to network navigation
 		add_action( "network_admin_menu", array( $this, "add_menu_option" ) );
 	}
-        
-        /**
-         * Adds the menu option to the settings
-         */
+
+	/**
+	 * Adds the menu option to the settings
+	 */
 	public function add_menu_option() {
 
 		add_submenu_page(
@@ -83,8 +86,8 @@ class WPML2MLP_Importer {
 		);
 
 	}
-        
-        /**
+
+	/**
 	 * Load the object and get the current state
 	 *
 	 * @since   0.0.1
@@ -98,47 +101,47 @@ class WPML2MLP_Importer {
 
 		return self::$class_object;
 	}
-        
-        /**
-         * Runs the import from WPML to MLP
-         */
-        public function run_import(){
-            
-                if ( isset( $_POST[ 'submit' ] ) ) {
-                        $all_posts = WPML2MLP_Helper::get_all_posts();
-                        
-                        while ( $all_posts->have_posts() ) : $all_posts->the_post();
 
-                                $ID           = get_the_ID();
-                                $postType     = get_post_type( $ID );
-                                $translations = icl_get_languages( 'skip_missing=1' );
-                                
-                                foreach ( $translations as $translation ) {
-                                        $langCode = $translation[ 'language_code' ];
-                                        
-                                        // pass relevant data if needed
-                                        if ( ! $this->site_creator->site_exists( $langCode ) ) {
-                                                $this->site_creator->create_site( $langCode );
-                                        }
-                                        
-                                        // pass relevant data if needed
-                                        if ( ! $this->post_creator->post_exists( $translation ) ) {
-                                                $this->post_creator->add_post( $translation );
-                                        }
-                                }
-                        endwhile;
-                }
-                ?>
-                        <div class="wrap">
-                                <div class="icon32" id="icon-options-general"><br></div>
-                                <h2><?php _e( 'WPML 2 MLP' ); ?></h2>
+	/**
+	 * Runs the import from WPML to MLP
+	 */
+	public function run_import() {
 
-                                <p><?php _e( 'Conversion from WPML to MLP.' ); ?></p>
+		if ( isset( $_POST[ 'submit' ] ) ) {
+			$all_posts = WPML2MLP_Helper::get_all_posts();
 
-                                <form method="post" action="settings.php?page=<?php echo 'wpml2mlp'; ?>">
-                                        <?php submit_button( __( 'Do export' ) ); ?>
-                                </form>
-                        </div>
-                <?php
-        }
+			while ( $all_posts->have_posts() ) : $all_posts->the_post();
+
+				$ID           = get_the_ID();
+				$postType     = get_post_type( $ID );
+				$translations = icl_get_languages( 'skip_missing=1' );
+
+				foreach ( $translations as $translation ) {
+					$langCode = $translation[ 'language_code' ];
+
+					// pass relevant data if needed
+					if ( ! $this->site_creator->site_exists( $langCode ) ) {
+						$this->site_creator->create_site( $langCode );
+					}
+
+					// pass relevant data if needed
+					if ( ! $this->post_creator->post_exists( $translation ) ) {
+						$this->post_creator->add_post( $translation );
+					}
+				}
+			endwhile;
+		}
+		?>
+		<div class="wrap">
+			<div class="icon32" id="icon-options-general"><br></div>
+			<h2><?php _e( 'WPML 2 MLP' ); ?></h2>
+
+			<p><?php _e( 'Conversion from WPML to MLP.' ); ?></p>
+
+			<form method="post" action="settings.php?page=<?php echo 'wpml2mlp'; ?>">
+				<?php submit_button( __( 'Do export' ) ); ?>
+			</form>
+		</div>
+	<?php
+	}
 }
