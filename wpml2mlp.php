@@ -17,11 +17,34 @@ if ( ! class_exists( 'Wpml2MlpConstants' ) ) {
 
 define( "WPVERSION_CONST", "3.1" );
 
+add_filter( 'plugins_loaded', array( 'Wpml_2_Mlp', 'get_object' ) );
 class Wpml_2_Mlp {
+
+	/**
+	 * The class object
+	 *
+	 * @since  0.0.1
+	 * @var    String
+	 */
+	static protected $class_object = NULL;
 
 	private $sites;
 
 	private $mlp_site_relations;
+
+	/**
+	 * Load the object and get the current state
+	 *
+	 * @since   0.0.1
+	 * @return String $class_object
+	 */
+	public static function get_object() {
+
+		if ( NULL == self::$class_object )
+			self::$class_object = new self;
+
+		return self::$class_object;
+	}
 
 	function check_prerequisites() {
 
@@ -33,15 +56,19 @@ class Wpml_2_Mlp {
 			$plugin      = plugin_basename( __FILE__ );
 			$plugin_data = get_plugin_data( __FILE__, FALSE );
 			if ( is_plugin_active( $plugin ) ) {
+
 				deactivate_plugins( $plugin );
+
 				if ( $wp_version_check ) {
 
 					$msg = "'" . $plugin_data[ 'Name' ] . "' requires WordPress " . WPVERSION_CONST . " or higher, and has been deactivated! Please upgrade WordPress and try again.<br /><br />Back to <a href='" . admin_url(
 						) . "'>WordPress admin</a>.";
 				}
+				$msg = '';
 				if ( $wp_is_multisite_check ) {
 					$msg = "Multisite needs to be enabled";
 				}
+
 				if ( ! $wpml_installed ) {
 					$msg = "WPML Plugin is not installed or it's not activated";
 				}
@@ -76,10 +103,10 @@ class Wpml_2_Mlp {
 		$this->mlp_site_relations = new Mlp_Site_Relations( $wpdb, "mlp_site_relations" );
 
 		//TODO Check do we need version test!
-		add_action( "admin_init", array( &$this, "check_prerequisites" ) );
+		add_action( "admin_init", array( $this, "check_prerequisites" ) );
 
 		// add menu to to network navigation
-		add_action( "network_admin_menu", array( &$this, "add_menu_option" ) );
+		add_action( "network_admin_menu", array( $this, "add_menu_option" ) );
 
 	}
 
@@ -254,12 +281,3 @@ class Wpml_2_Mlp {
 		return $ids;
 	}
 }
-
-//init plugin
-add_action(
-	"plugins_loaded", function () {
-
-		global $wpml_2_mlp;
-		$wpml_2_mlp = new Wpml_2_Mlp();
-	}
-);
