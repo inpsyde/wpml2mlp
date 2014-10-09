@@ -137,44 +137,41 @@ class Wpml_2_Mlp {
 			$conversionData->query( $queryParams );
 			$new_blog_ids   = array();
 			$default_lng_id = - 1;
-			global $sitepress;
 
 			if ( $conversionData->have_posts() ) {
 				//store grouped data
-				$data = array();
+				$data                    = array();
+				$already_checked_lng_arr = array();
 
 				while ( $conversionData->have_posts() ) : $conversionData->the_post();
 
 					$ID           = get_the_ID();
 					$postType     = get_post_type( $ID );
 					$translations = icl_get_languages( 'skip_missing=1' );
-
-					$previous_lng_code = "dummy";
 					foreach ( $translations as $translation ) {
 						$langCode     = $translation[ 'language_code' ];
 						$translate_ID = icl_object_id( $ID, $postType, FALSE, $langCode );
 
-						// check is this correct language format
-						if ( $previous_lng_code != $langCode && ! self::site_exists( $langCode ) ) {
-							$new_blog_id = self::create_new_multisite( $langCode );
-							if ( $new_blog_id > 0 ) {
-								array_push( $new_blog_ids, $new_blog_id );
+						if ( ! array_key_exists( $langCode, $already_checked_lng_arr ) ) {
+							if ( ! self::site_exists( $langCode ) ) {
+								$new_blog_id = self::create_new_multisite( $langCode );
+								if ( $new_blog_id > 0 ) {
+
+									array_push( $new_blog_ids, $new_blog_id );
+								}
 							}
+							$already_checked_lng_arr[$langCode] = TRUE;
 						}
 
 						if ( $default_lng_id < 0 && $ID == $translate_ID ) {
 							$default_lng_id = self::get_mlp_lng_id( $translation[ "id" ] );
 						}
-
-						$previous_lng_code = $translation[ 'language_code' ];
 					}
 				endwhile;
 			} else {
 				echo 'There is no any posts';
 
 			}
-			//var_dump( $data );
-			//var_dump( $this->get_inpsyde_multilingual() );
 
 			if ( count( $new_blog_ids ) > 0 ) {
 				if ( $default_lng_id < 0 ) {
@@ -219,7 +216,15 @@ class Wpml_2_Mlp {
 
 	private function site_exists( $lng ) {
 
-		return TRUE; // TODO: implement this
+		global $sitepress;
+
+		$default_lng = $sitepress->get_default_language();
+
+		if ( $default_lng == $lng ) {
+			return TRUE;
+		}
+
+		return TRUE; //check is mlp language exist
 	}
 
 	private function get_mlp_lng_id( $wp_lng_id ) {
