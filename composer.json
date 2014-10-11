@@ -3,6 +3,8 @@
   "description": "Get data from WPML export and immediately import in Multisite environment.",
   "minimum-stability": "stable",
   "license": "GPL 2+",
+  "version": "1.0.0",
+  "type": "wordpress-plugin",
   "authors": [
     {
       "name": "Inpsyde GmbH",
