@@ -5,25 +5,67 @@ if ( ! class_exists( 'WPML2MLP_Helper' ) ) {
 }
 
 class MLP_Site_Creator {
-
+        /**
+         *
+         * @var wpdb
+         */
+        private $wpdb;
+    
+    
 	/**
-	 *
-	 * @var site_exists_arr
-	 */
-	private $site_exists_arr;
-
-	private $wpdb;
-
-	/**
+         *
+         * @var Mlp_Site_Relations 
+         */
+        private $site_relations;
+        
+        /**
+         *
+         * @var Mlp_Content_Relations 
+         */
+        private $content_relations;
+        
+        /**
+         *
+         * @var Mlp_Language_Api 
+         */
+        private $language_api;
+        
+        /**
+         *
+         * @var Mlp_Network_New_Site_Controller 
+         */
+        private $network_new_site_controler;
+        
+        /**
 	 * Constructs the MLP_Site_Creator
 	 *
 	 */
-	public function __construct( wpdb $wpdb ) {
-
-		$this->wpdb            = $wpdb;
-		$this->site_exists_arr = array();
-		$this->populate_installed_languages();
-
+	public function __construct(
+                wpdb $wpdb ) {
+            
+                if ( null == $wpdb ) {
+                    return;
+                }
+                
+		$link_table             = $wpdb->base_prefix . 'multilingual_linked';  
+                $this->wpdb = $wpdb;
+                $this->site_relations = new Mlp_Site_Relations( $wpdb, 'mlp_site_relations' );
+                $this->content_relations = new Mlp_Content_Relations(
+			$wpdb,
+			$this->site_relations,
+			$link_table);
+                
+                $this->language_api = new Mlp_Language_Api(
+			new Inpsyde_Property_List,
+			'mlp_languages',
+			$this->site_relations,
+			$this->content_relations,
+			$wpdb
+		);
+                
+                $this->network_new_site_controler = new Mlp_Network_New_Site_Controller(
+                        $this->language_api,
+                        $this->site_relations );
 	}
 
 	/**
@@ -33,14 +75,18 @@ class MLP_Site_Creator {
 	 *
 	 * @return boolean
 	 */
-	public function site_exists( $language ) {
-
-		//if we already checked the language or language is main we don't create new site
-		if ( array_key_exists( $language, $this->site_exists_arr ) || $this->is_main_language() == $language ) {
-			return TRUE;
+	public function site_exists( $lng ) {
+                $ret = false;
+                
+                if ( $this->language_exists( $lng ) ) {
+			$ret = true; // already exists mlp site
 		}
-
-		return FALSE;
+                
+                if ( ! $ret && get_current_site()->id == $lng['id'] ) {
+                        $ret = true; // it is default, do we need to create?
+                }
+                
+		return $ret;
 	}
 
 	/**
@@ -48,24 +94,34 @@ class MLP_Site_Creator {
 	 *
 	 * @param type $language
 	 */
-	public function create_site( $language ) {
-
+        public function create_site( $language ) {
+                if ( $this->site_exists( $language ) ) {
+                    return false;
+                }
+                
+                $active                    = (int) $language['active'];
+                $lng_code                  = $language['language_code'];
 		$is_multisite_on_subdomain = $this->check_is_subdomain_multisite_running();
 		$current_site              = get_current_site();
-		$domain                    = $is_multisite_on_subdomain ? $language . $current_site->domain
-			: $current_site->domain;
-		$path                      = $is_multisite_on_subdomain ? "/" : "/" . $language;
+		$domain                    = $is_multisite_on_subdomain ? $lng_code . $current_site->domain : $current_site->domain;
+		$path                      = $is_multisite_on_subdomain ? "/" : "/" . $lng_code;
 		$user_id                   = get_current_user_id();
-
-		//set this before creating the new blog
-		//set correct $_POST params, how we can use wpmu_new_blog filter for writing the correct data
-		$this->set_or_update_post_obj( $this->convert_to_lang_obj( $language ) );
-
-		wpmu_create_blog( $domain, $path, strtoupper( $language ) . " site", $user_id );
-
-		$this->site_exists_arr[ $language ] = TRUE;
+                
+		$this->set_or_update_post_obj( $language, $current_site  );
+                
+		$blog_id = wpmu_create_blog( 
+                        $domain, 
+                        $path, 
+                        "My " . $language['translated_name'] . " site", 
+                        $user_id, 
+                        array( 'public' => $active ), 
+                        $current_site->id );
+                
+                if ( 0 < $blog_id ) {
+                    $this->network_new_site_controler->update($blog_id);
+                }
 	}
-
+        
 	/**
 	 * Checks how the multisite is configured (subdomain or folder separation)
 	 *
@@ -83,42 +139,22 @@ class MLP_Site_Creator {
 	 *
 	 * @return void
 	 */
-	private function set_or_update_post_obj( $lng_obj ) {
-
-		$_POST[ 'inpsyde_multilingual_lang' ] = $lng_obj;
-
-		//set default blog (check do we need to fetch default from db)
-		$_POST[ 'related_blogs' ] = array(
-			0 => "1"
-		);
+	private function set_or_update_post_obj( $language, $current_site ) {
+		$_POST[ 'inpsyde_multilingual_lang' ] = $language['default_locale'];
+		$_POST[ 'related_blogs' ] = array( $current_site->id );
 	}
-
-	private function convert_to_lang_obj( $language ) {
-
-		$query  = $this->wpdb->prepare(
-			"SELECT http_name FROM `wp_mlp_languages` WHERE iso_639_1 = " . "%s LIMIT 1", $language
-		);
-		$result = $this->wpdb->get_var( $query );
-
-		return NULL === $result ? '' : str_replace( '-', '_', $result );
-	}
-
-	private function is_main_language() {
-
-		global $sitepress;
-		$main_lng = $sitepress->get_default_language();
-
-		return $main_lng;
-	}
-
-	private function populate_installed_languages() {
-
-		$sites = wp_get_sites();
-		foreach ( $sites as $site ) {
-			$lng                           = get_blog_language( $site[ 'blog_id' ] );
-			$this->site_exists_arr[ $lng ] = TRUE;
-
-		}
-	}
+        
+        private function language_exists( $language ) {
+                $all_lngs = mlp_get_available_languages();   
+                
+                foreach ( $all_lngs as $lng ) {
+                        if ( $language['language_code'] == $lng ||
+                             $language['default_locale'] == $lng ) {
+                                return true;
+                        }
+                }
+                
+                return false;
+        }
 
 }

@@ -106,30 +106,35 @@ class WPML2MLP_Importer {
 	 * Runs the import from WPML to MLP
 	 */
 	public function run_import() {
-
+                //var_dump(icl_get_languages( 'skip_missing=1' ));
+                                
 		if ( isset( $_POST[ 'submit' ] ) ) {
+                        $lng_arr = icl_get_languages( 'skip_missing=1' );
+                        
+                        foreach ( $lng_arr as  $lng ) {
+                            var_dump(blog_exists($lng['id']));
+                            
+                                if ( ! $this->site_creator->site_exists( $lng ) ) {
+                                        $this->site_creator->create_site( $lng );
+                                }
+                        }
+                                            
 			$all_posts = WPML2MLP_Helper::get_all_posts();
-
 			while ( $all_posts->have_posts() ) : $all_posts->the_post();
-
+                                $pst = 0;// convert post here 
+                                
 				$ID           = get_the_ID();
 				$postType     = get_post_type( $ID );
-				$translations = icl_get_languages( 'skip_missing=1' );
-
-				foreach ( $translations as $translation ) {
-					$langCode = $translation[ 'language_code' ];
-
-					// pass relevant data if needed
-					if ( ! $this->site_creator->site_exists( $langCode ) ) {
-						$this->site_creator->create_site( $langCode );
-					}
-
-					// pass relevant data if needed
-					if ( ! $this->post_creator->post_exists( $translation ) ) {
-						$this->post_creator->add_post( $translation );
-					}
-				}
+                                
+                                if ( ! $this->post_creator->post_exists( $pst ) ) {
+                                        $this->post_creator->add_post( $pst );
+                                }                                
 			endwhile;
+                        
+                        ?>
+                        <div class="wrap">
+                                You have successfully import WPML data to the MLP.
+                        </div><?php
 		}
 		?>
 		<div class="wrap">
@@ -139,7 +144,7 @@ class WPML2MLP_Importer {
 			<p><?php _e( 'Conversion from WPML to MLP.' ); ?></p>
 
 			<form method="post" action="settings.php?page=<?php echo 'wpml2mlp'; ?>">
-				<?php submit_button( __( 'Do export' ) ); ?>
+				<?php submit_button( __( 'Run WMPL to MLP import' ) ); ?>
 			</form>
 		</div>
 	<?php
