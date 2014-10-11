@@ -47,7 +47,7 @@ class WPML2MLP_Importer {
 	private $site_creator;
 
 	/**
-	 * @var &post_creator
+	 * @var $post_creator
 	 */
 	private $post_creator;
 
