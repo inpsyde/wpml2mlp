@@ -1,0 +1,16 @@
+{
+  "name": "inpsyde/wpml2mlp",
+  "description": "Get data from WPML export and immediately import in Multisite environment.",
+  "minimum-stability": "stable",
+  "license": "GPL 2+",
+  "authors": [
+    {
+      "name": "Inpsyde GmbH",
+      "email": "info@inpsyde.com"
+    }
+  ],
+  "require": {
+    "php": ">5.2.4",
+    "composer/installers": "~1.0"
+  }
+}
