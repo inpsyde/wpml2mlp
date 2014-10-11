@@ -106,13 +106,17 @@ class WPML2MLP_Importer {
 	 * Runs the import from WPML to MLP
 	 */
 	public function run_import() {
-                //var_dump(icl_get_languages( 'skip_missing=1' ));
-                                
+                var_dump(icl_get_languages( 'skip_missing=1' ));
 		if ( isset( $_POST[ 'submit' ] ) ) {
-                        $lng_arr = icl_get_languages( 'skip_missing=1' );
+                        $current_site = get_current_site();                        
+                        $lng_arr      = icl_get_languages( 'skip_missing=1' );  
                         
                         foreach ( $lng_arr as  $lng ) {
-                            var_dump(blog_exists($lng['id']));
+                                if ( $current_site->id == $lng['id'] ) { // check is default language set in MLP
+                                        $this->site_creator->check_and_update_site_lagnguage( 
+                                                $current_site->blog_id, 
+                                                $lng['default_locale'] );
+                                }
                             
                                 if ( ! $this->site_creator->site_exists( $lng ) ) {
                                         $this->site_creator->create_site( $lng );
@@ -144,7 +148,7 @@ class WPML2MLP_Importer {
 			<p><?php _e( 'Conversion from WPML to MLP.' ); ?></p>
 
 			<form method="post" action="settings.php?page=<?php echo 'wpml2mlp'; ?>">
-				<?php submit_button( __( 'Run WMPL to MLP import' ) ); ?>
+				<?php submit_button( __( 'Run WPML to MLP import' ) ); ?>
 			</form>
 		</div>
 	<?php

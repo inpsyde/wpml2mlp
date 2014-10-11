@@ -122,6 +122,28 @@ class MLP_Site_Creator {
                 }
 	}
         
+        /**
+         * 
+         * @param int $blog_id
+         * @param string $language
+         * @return void
+         */
+        public function check_and_update_site_lagnguage( $blog_id, $language ) {
+            
+                $languages = (array) get_site_option( 'inpsyde_multilingual', array() );
+
+                if ( empty ( $languages[ $blog_id ] ) ) {
+                        $languages[ $blog_id ] = array ();
+                }
+                else {
+                        return;
+                }
+
+                $languages[ $blog_id ][ 'lang' ] = str_replace( '-', '_', $language );
+                
+		update_site_option( 'inpsyde_multilingual', $languages );
+        }
+        
 	/**
 	 * Checks how the multisite is configured (subdomain or folder separation)
 	 *
