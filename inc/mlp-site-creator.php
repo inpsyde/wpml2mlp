@@ -22,6 +22,8 @@ class MLP_Site_Creator {
 
 		$this->wpdb            = $wpdb;
 		$this->site_exists_arr = array();
+		$this->populate_installed_languages();
+
 	}
 
 	/**
@@ -37,8 +39,6 @@ class MLP_Site_Creator {
 		if ( array_key_exists( $language, $this->site_exists_arr ) || $this->is_main_language() == $language ) {
 			return TRUE;
 		}
-
-		// TODO: check here does site exists in db
 
 		return FALSE;
 	}
@@ -109,6 +109,16 @@ class MLP_Site_Creator {
 		$main_lng = $sitepress->get_default_language();
 
 		return $main_lng;
+	}
+
+	private function populate_installed_languages() {
+
+		$sites = wp_get_sites();
+		foreach ( $sites as $site ) {
+			$lng                           = get_blog_language( $site[ 'blog_id' ] );
+			$this->site_exists_arr[ $lng ] = TRUE;
+
+		}
 	}
 
 }
