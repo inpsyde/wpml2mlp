@@ -42,12 +42,12 @@ class WPML2MLP_Importer {
 	private $wpdb;
 
 	/**
-	 * @var site_creator
+	 * @var $site_creator
 	 */
 	private $site_creator;
 
 	/**
-	 * @var post_creator
+	 * @var &post_creator
 	 */
 	private $post_creator;
 
