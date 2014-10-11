@@ -12,12 +12,15 @@ class MLP_Site_Creator {
 	 */
 	private $site_exists_arr;
 
+	private $wpdb;
+
 	/**
 	 * Constructs the MLP_Site_Creator
 	 *
 	 */
-	public function __construct() {
+	public function __construct( wpdb $wpdb ) {
 
+		$this->wpdb            = $wpdb;
 		$this->site_exists_arr = array();
 	}
 
@@ -30,13 +33,14 @@ class MLP_Site_Creator {
 	 */
 	public function site_exists( $language ) {
 
-		if ( array_key_exists( $language, $this->site_exists_arr ) ) {
+		//if we already checked the language or language is main we don't create new site
+		if ( array_key_exists( $language, $this->site_exists_arr ) || $this->is_main_language() == $language ) {
 			return TRUE;
 		}
 
-		// TODO: check here does site exists
+		// TODO: check here does site exists in db
 
-		return TRUE;
+		return FALSE;
 	}
 
 	/**
@@ -48,8 +52,9 @@ class MLP_Site_Creator {
 
 		$is_multisite_on_subdomain = $this->check_is_subdomain_multisite_running();
 		$current_site              = get_current_site();
-		$domain                    = $is_multisite_on_subdomain ? $lng . $current_site->domain : $current_site->domain;
-		$path                      = $is_multisite_on_subdomain ? "/" : "/" . $lng;
+		$domain                    = $is_multisite_on_subdomain ? $language . $current_site->domain
+			: $current_site->domain;
+		$path                      = $is_multisite_on_subdomain ? "/" : "/" . $language;
 		$user_id                   = get_current_user_id();
 
 		//set this before creating the new blog
@@ -71,12 +76,39 @@ class MLP_Site_Creator {
 		return defined( 'SUBDOMAIN_INSTALL' ) ? SUBDOMAIN_INSTALL : FALSE;
 	}
 
-	private function set_or_update_post_obj( $convert_to_lang_obj ) {
-		//TODO implement writing to $_POST object
+	/**
+	 * Set global POST object how we can use wpmu_new_blog action and do correct site_options update and relations
+	 *
+	 * @param $lng_obj
+	 *
+	 * @return void
+	 */
+	private function set_or_update_post_obj( $lng_obj ) {
+
+		$_POST[ 'inpsyde_multilingual_lang' ] = $lng_obj;
+
+		//set default blog (check do we need to fetch default from db)
+		$_POST[ 'related_blogs' ] = array(
+			0 => "1"
+		);
 	}
 
 	private function convert_to_lang_obj( $language ) {
-		//TODO construct to correct language object. Probbably it will be call to $this->language_api->get_db()->get_items( $search, OBJECT );
+
+		$query  = $this->wpdb->prepare(
+			"SELECT http_name FROM `wp_mlp_languages` WHERE iso_639_1 = " . "%s LIMIT 1", $language
+		);
+		$result = $this->wpdb->get_var( $query );
+
+		return NULL === $result ? '' : str_replace( '-', '_', $result );
+	}
+
+	private function is_main_language() {
+
+		global $sitepress;
+		$main_lng = $sitepress->get_default_language();
+
+		return $main_lng;
 	}
 
 }

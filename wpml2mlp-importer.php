@@ -12,16 +12,16 @@
 defined( 'ABSPATH' ) or die();
 define( "WPVERSION_CONST", "3.1" );
 
-if ( ! class_exists( 'MLP_Site_Creator' ) ) {
-	require plugin_dir_path( __FILE__ ) . 'inc/mlp-site-creator.php';
-}
+$class_mappings = array(
+	'MLP_Site_Creator' => 'mlp-site-creator.php',
+	'MLP_Post_Creator' => 'mlp-post-creator.php',
+	'WPML2MLP_Helper'  => 'wpml2mlp-Helper.php'
+);
 
-if ( ! class_exists( 'MLP_Post_Creator' ) ) {
-	require plugin_dir_path( __FILE__ ) . 'inc/mlp-post-creator.php';
-}
-
-if ( ! class_exists( 'WPML2MLP_Helper' ) ) {
-	require plugin_dir_path( __FILE__ ) . 'inc/wpml2mlp-Helper.php';
+foreach ( $class_mappings as $key => $value ) {
+	if ( ! class_exists( $key ) ) {
+		require plugin_dir_path( __FILE__ ) . 'inc/' . $value;
+	}
 }
 
 add_filter( 'plugins_loaded', array( 'WPML2MLP_Importer', 'get_object' ) );
@@ -64,8 +64,8 @@ class WPML2MLP_Importer {
 		}
 
 		$this->wpdb         = $wpdb;
-		$this->site_creator = new MLP_Site_Creator;
-		$this->post_creator = new MLP_Post_Creator;
+		$this->site_creator = new MLP_Site_Creator( $this->wpdb );
+		$this->post_creator = new MLP_Post_Creator();
 
 		// add menu to to network navigation
 		add_action( "network_admin_menu", array( $this, "add_menu_option" ) );
