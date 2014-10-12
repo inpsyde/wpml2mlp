@@ -46,7 +46,8 @@ class MLP_Post_Creator {
 	 */
 	public function post_exists( $post, $blog ) {
 
-		if ( (int) $blog[ 'blog_id' ] == get_current_blog_id() ) { // default site, we don't need to copy that?
+		if ( (int) $blog[ 'blog_id' ] == WPML2MLP_Helper::get_default_blog()
+		) { // default site, we don't need to copy that?
 			return TRUE;
 		}
 
@@ -67,17 +68,23 @@ class MLP_Post_Creator {
 		if ( ! $blog || $this->post_exists( $post, $blog ) ) {
 			return;
 		}
-		$source_content_id = (int) $post->ID;
-
-		$post->ID = NULL; // reset the post_id, new one will be created
+		$source_content_id = (int) icl_object_id($post->ID, $post->post_type, true);
+		$meta              = get_post_meta( $post->ID );
+		$post->ID          = NULL; // reset the post_id, new one will be created
 
 		switch_to_blog( (int) $blog[ 'blog_id' ] );
 		$new_post_id = wp_insert_post( (array) $post );
+		if ( $new_post_id > 0 ) {
+			foreach ( $meta as $key => $value ) {
+				update_post_meta( $new_post_id, $key, $value[ 0 ] );
+			}
+		}
+
 		restore_current_blog();
 
 		if ( 0 < $new_post_id ) {
 			$this->content_relations->set_relation(
-				get_current_blog_id(),
+				WPML2MLP_Helper::get_default_blog(),
 				(int) $blog[ 'blog_id' ],
 				$source_content_id,
 				$new_post_id,

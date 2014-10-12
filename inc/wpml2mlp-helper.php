@@ -73,6 +73,7 @@ class WPML2MLP_Helper {
 
 	/**
 	 * Get default blog
+	 *
 	 * @return int
 	 */
 	public static function get_default_blog() {
@@ -80,7 +81,7 @@ class WPML2MLP_Helper {
 		$ret   = 1;
 		$sites = wp_get_sites();
 		if ( $sites != NULL && is_array( $sites ) && count( $sites ) > 0 ) {
-			$ret = $sites[ 0 ]['blog_id'];
+			$ret = $sites[ 0 ][ 'blog_id' ];
 		}
 
 		return $ret;

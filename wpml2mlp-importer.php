@@ -114,19 +114,10 @@ class WPML2MLP_Importer {
 	 */
 	public function run_import() {
 
-		//var_dump(icl_get_languages( 'skip_missing=1' ));
-
 		if ( isset( $_POST[ 'submit' ] ) ) {
-			$current_site = get_current_site();
-			$lng_arr      = icl_get_languages( 'skip_missing=1' );
+			$lng_arr = icl_get_languages( 'skip_missing=1' );
 
 			foreach ( $lng_arr as $lng ) {
-		/*		if ( $current_site->id == $lng[ 'id' ] ) { // check is default language set in MLP
-					$this->site_creator->check_and_update_site_lagnguage(
-						$current_site->blog_id,
-						$lng[ 'default_locale' ]
-					);
-				}*/
 
 				if ( ! $this->site_creator->site_exists( $lng ) ) {
 					$this->site_creator->create_site( $lng );
@@ -136,9 +127,10 @@ class WPML2MLP_Importer {
 			$this->blog_cache = FALSE; // reset object cache after adding new site. (it will be recreated)
 
 			foreach ( WPML2MLP_Helper::get_all_posts() as $current_post ) {
+
 				$relevant_blog = $this->get_relevant_blog( $current_post );
 
-				if ( ! $this->post_creator->post_exists( $current_post, $relevant_blog ) ) {
+				if ( $relevant_blog != FALSE && ! $this->post_creator->post_exists( $current_post, $relevant_blog ) ) {
 					$this->post_creator->add_post( $current_post, $relevant_blog );
 				}
 			}
@@ -168,13 +160,13 @@ class WPML2MLP_Importer {
 	private function get_relevant_blog( $post ) {
 
 		if ( ! $this->blog_cache ) {
-			$this->blog_cache = get_blog_list();
+			$this->blog_cache = wp_get_sites();
 		}
 
 		$pst_lng = wpml_get_language_information( $post->ID );
 
 		foreach ( $this->blog_cache as $ab ) {
-			if ( get_blog_language( $ab[ 'blog_id' ], FALSE ) == $pst_lng[ 'locale' ] ) {
+			if ( get_blog_language( $ab[ 'blog_id' ], TRUE ) == $pst_lng[ 'locale' ] ) {
 				return $ab;
 			}
 		}
