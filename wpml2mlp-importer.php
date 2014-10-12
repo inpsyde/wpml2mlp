@@ -62,14 +62,15 @@ class WPML2MLP_Importer {
 		if ( NULL === $wpdb ) {
 			return;
 		}
-                
-                $link_table         = $wpdb->base_prefix . 'multilingual_linked';  
-                $this->wpdb         = $wpdb;
-                $site_relations     = new Mlp_Site_Relations( $wpdb, 'mlp_site_relations' );
-                $content_relations  = new Mlp_Content_Relations(
+
+		$link_table         = $wpdb->base_prefix . 'multilingual_linked';
+		$this->wpdb         = $wpdb;
+		$site_relations     = new Mlp_Site_Relations( $wpdb, 'mlp_site_relations' );
+		$content_relations  = new Mlp_Content_Relations(
 			$this->wpdb,
 			$site_relations,
-			$link_table);                
+			$link_table
+		);
 		$this->site_creator = new MLP_Site_Creator( $this->wpdb, $site_relations, $content_relations );
 		$this->post_creator = new MLP_Post_Creator( $this->wpdb, $content_relations );
 
@@ -107,42 +108,44 @@ class WPML2MLP_Importer {
 
 		return self::$class_object;
 	}
-        
+
 	/**
 	 * Runs the import from WPML to MLP
 	 */
-	public function run_import() {            
-		if ( isset( $_POST[ 'submit' ] ) ) {
-                        $current_site = get_current_site();                        
-                        $lng_arr      = icl_get_languages( 'skip_missing=1' );  
-                        
-                        foreach ( $lng_arr as  $lng ) {
-                                if ( $current_site->id == $lng['id'] ) { // check is default language set in MLP
-                                        $this->site_creator->check_and_update_site_lagnguage( 
-                                                $current_site->blog_id, 
-                                                $lng['default_locale'] );
-                                }
-                            
-                                if ( ! $this->site_creator->site_exists( $lng ) ) {
-                                        $this->site_creator->create_site( $lng );
-                                }
-                        }
-                        
-                        $this->blog_cache = false; // reset object cache after adding new site. (it will be recreated)
-                        
-                        foreach ( WPML2MLP_Helper::get_all_posts() as $current_post ) {
-                                $relevant_blog = $this->get_relevant_blog( $current_post );
-                                
-                                if ( ! $this->post_creator->post_exists( $current_post, $relevant_blog ) ) {
-                                        $this->post_creator->add_post( $current_post, $relevant_blog );
-                                }
-                        }
-                        
-                        ?>
+	public function run_import() {
 
-                        <div class="wrap">
-                                You have successfully import WPML data to the MLP.
-                        </div><?php
+		if ( isset( $_POST[ 'submit' ] ) ) {
+			$current_site = get_current_site();
+			$lng_arr      = icl_get_languages( 'skip_missing=1' );
+
+			foreach ( $lng_arr as $lng ) {
+				if ( $current_site->id == $lng[ 'id' ] ) { // check is default language set in MLP
+					$this->site_creator->check_and_update_site_lagnguage(
+						$current_site->blog_id,
+						$lng[ 'default_locale' ]
+					);
+				}
+
+				if ( ! $this->site_creator->site_exists( $lng ) ) {
+					$this->site_creator->create_site( $lng );
+				}
+			}
+
+			$this->blog_cache = FALSE; // reset object cache after adding new site. (it will be recreated)
+
+			foreach ( WPML2MLP_Helper::get_all_posts() as $current_post ) {
+				$relevant_blog = $this->get_relevant_blog( $current_post );
+
+				if ( ! $this->post_creator->post_exists( $current_post, $relevant_blog ) ) {
+					$this->post_creator->add_post( $current_post, $relevant_blog );
+				}
+			}
+
+			?>
+
+			<div class="wrap">
+				You have successfully import WPML data to the MLP.
+			</div><?php
 		}
 		?>
 		<div class="wrap">
@@ -157,22 +160,23 @@ class WPML2MLP_Importer {
 		</div>
 	<?php
 	}
-        
-        
-        private $blog_cache;
-        private function get_relevant_blog( $post ) {
-                if( ! $this->blog_cache ) {
-                        $this->blog_cache = get_blog_list();
-                }
-                
-                $pst_lng = wpml_get_language_information($post->ID);
-                
-                foreach ($this->blog_cache as $ab ) {
-                        if (get_blog_language($ab['blog_id'], false) == $pst_lng['locale'] ) {
-                                return $ab;
-                        }
-                }
-                
-                return false;
-        }
+
+	private $blog_cache;
+
+	private function get_relevant_blog( $post ) {
+
+		if ( ! $this->blog_cache ) {
+			$this->blog_cache = get_blog_list();
+		}
+
+		$pst_lng = wpml_get_language_information( $post->ID );
+
+		foreach ( $this->blog_cache as $ab ) {
+			if ( get_blog_language( $ab[ 'blog_id' ], FALSE ) == $pst_lng[ 'locale' ] ) {
+				return $ab;
+			}
+		}
+
+		return FALSE;
+	}
 }
