@@ -68,8 +68,14 @@ class WPML2MLP_Helper {
 		);
 		$result = $wpdb->get_var( $query );
 
-		return NULL === $result ? '' : str_replace( '-', '_', $result );
+		return NULL === $result ? $language : str_replace( '-', '_', $result );
 	}
+        
+        public static function get_short_language( $language ) {
+                if ( empty($language) ) return "";
+                
+                return substr( $language, 0, 2 );
+        }
 
 	/**
 	 * Get default blog
