@@ -71,7 +71,7 @@ class WPML2MLP_Importer {
 			$site_relations,
 			$link_table
 		);
-		$this->site_creator = new MLP_Site_Creator( $this->wpdb, $site_relations, $content_relations );
+		$this->site_creator = new MLP_Site_Creator( $this->wpdb );
 		$this->post_creator = new MLP_Post_Creator( $this->wpdb, $content_relations );
 
 		// add menu to to network navigation
@@ -114,17 +114,19 @@ class WPML2MLP_Importer {
 	 */
 	public function run_import() {
 
+		//var_dump(icl_get_languages( 'skip_missing=1' ));
+
 		if ( isset( $_POST[ 'submit' ] ) ) {
 			$current_site = get_current_site();
 			$lng_arr      = icl_get_languages( 'skip_missing=1' );
 
 			foreach ( $lng_arr as $lng ) {
-				if ( $current_site->id == $lng[ 'id' ] ) { // check is default language set in MLP
+		/*		if ( $current_site->id == $lng[ 'id' ] ) { // check is default language set in MLP
 					$this->site_creator->check_and_update_site_lagnguage(
 						$current_site->blog_id,
 						$lng[ 'default_locale' ]
 					);
-				}
+				}*/
 
 				if ( ! $this->site_creator->site_exists( $lng ) ) {
 					$this->site_creator->create_site( $lng );

@@ -25,13 +25,77 @@ class WPML2MLP_Helper {
 	 */
 	public static function update_flag( $blog_id, $flag_url ) {
 
-		$flag_url = $flag_url || '';
+		$flag_url = empty( $flag_url ) ? '' : $flag_url;
 
 		if ( $blog_id > 0 ) {
 
-			return update_blog_option( $blog_id, 'inpsyde_multilingual_flag_url', $flag_url || '' );
+			return update_blog_option( $blog_id, 'inpsyde_multilingual_flag_url', $flag_url );
 		}
 
 		return FALSE;
+	}
+
+	/**
+	 * Determinate is main language
+	 *
+	 * @param $lng
+	 *
+	 * @return bool
+	 */
+	public static function is_main_language( $lng ) {
+
+		$ret = FALSE;
+		if ( is_array( $lng ) && array_key_exists( 'language_code', $lng ) ) {
+
+			$ret = self::get_main_language() == $lng[ 'language_code' ] ? TRUE : FALSE;
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * Convert language to mlp culture. ie: hr_HR
+	 *
+	 * @param wpdb $wpdb
+	 * @param      $language
+	 *
+	 * @return mixed|string
+	 */
+	public static function convert_to_mlp_lang_obj( wpdb $wpdb, $language ) {
+
+		$query  = $wpdb->prepare(
+			"SELECT http_name FROM `wp_mlp_languages` WHERE iso_639_1 = " . "%s LIMIT 1", $language
+		);
+		$result = $wpdb->get_var( $query );
+
+		return NULL === $result ? '' : str_replace( '-', '_', $result );
+	}
+
+	/**
+	 * Get default blog
+	 * @return int
+	 */
+	public static function get_default_blog() {
+
+		$ret   = 1;
+		$sites = wp_get_sites();
+		if ( $sites != NULL && is_array( $sites ) && count( $sites ) > 0 ) {
+			$ret = $sites[ 0 ]['blog_id'];
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * Get main language from database
+	 *
+	 * @return string
+	 */
+	private function get_main_language() {
+
+		global $sitepress;
+		$main_lng = $sitepress->get_default_language();
+
+		return $main_lng;
 	}
 }

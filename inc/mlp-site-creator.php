@@ -13,44 +13,19 @@ class MLP_Site_Creator {
 	private $wpdb;
 
 	/**
-	 *
-	 * @var Mlp_Language_Api
-	 */
-	private $language_api;
-
-	/**
-	 *
-	 * @var Mlp_Network_New_Site_Controller
-	 */
-	private $network_new_site_controler;
-
-	/**
 	 * Constructs the MLP_Site_Creator
 	 *
 	 */
 	public function __construct(
-		wpdb $wpdb,
-		Mlp_Site_Relations_Interface $site_relations,
-		Mlp_Content_Relations_Interface $content_relations
+		wpdb $wpdb
 	) {
 
 		if ( NULL == $wpdb ) {
 			return;
 		}
 
-		$this->wpdb         = $wpdb;
-		$this->language_api = new Mlp_Language_Api(
-			new Inpsyde_Property_List,
-			'mlp_languages',
-			$site_relations,
-			$content_relations,
-			$wpdb
-		);
+		$this->wpdb = $wpdb;
 
-		$this->network_new_site_controler = new Mlp_Network_New_Site_Controller(
-			$this->language_api,
-			$site_relations
-		);
 	}
 
 	/**
@@ -68,7 +43,7 @@ class MLP_Site_Creator {
 			$ret = TRUE; // already exists mlp site
 		}
 
-		if ( ! $ret && get_current_site()->id == $lng[ 'id' ] ) {
+		if ( ! $ret && WPML2MLP_Helper::is_main_language( $lng ) ) {
 			$ret = TRUE; // it is default, do we need to create?
 		}
 
@@ -110,33 +85,11 @@ class MLP_Site_Creator {
 
 		if ( 0 < $blog_id ) {
 			$this->set_after_blog_created_vars( $language, $current_site, $blog_id );
-			$this->network_new_site_controler->update( $blog_id );
-			WPML2MLP_Helper::update_flag( $blog_id, $language[ 'country_flag_url' ] );
+			//$this->network_new_site_controler->update( $blog_id );
+			//WPML2MLP_Helper::update_flag( $blog_id, $language[ 'country_flag_url' ] );
 		}
 
 		return $blog_id;
-	}
-
-	/**
-	 *
-	 * @param int    $blog_id
-	 * @param string $language
-	 *
-	 * @return void
-	 */
-	public function check_and_update_site_lagnguage( $blog_id, $language ) {
-
-		$languages = (array) get_site_option( 'inpsyde_multilingual', array() );
-
-		if ( empty ( $languages[ $blog_id ] ) ) {
-			$languages[ $blog_id ] = array();
-		} else {
-			return;
-		}
-
-		$languages[ $blog_id ][ 'lang' ] = str_replace( '-', '_', $language );
-
-		update_site_option( 'inpsyde_multilingual', $languages );
 	}
 
 	/**
@@ -159,8 +112,10 @@ class MLP_Site_Creator {
 	private function set_or_update_post_obj( $language, $current_site ) {
 
 		$_POST[ 'inpsyde_multilingual_flag_url' ] = $language[ 'country_flag_url' ];
-		$_POST[ 'inpsyde_multilingual_lang' ]     = $language[ 'default_locale' ];
-		$_POST[ 'related_blogs' ]                 = array( $current_site->id );
+		$_POST[ 'inpsyde_multilingual_lang' ]     = $language[ 'language_code' ];
+		$_POST[ 'related_blogs' ]                 = array(
+			0 => WPML2MLP_Helper::get_default_blog()
+		);
 	}
 
 	private function set_after_blog_created_vars( $language, $current_site, $blog_id ) {
