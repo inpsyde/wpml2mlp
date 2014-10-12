@@ -96,13 +96,14 @@ class MLP_Site_Creator {
                         $path, 
                         "My " . $language['translated_name'] . " site", 
                         $user_id, 
-                        array( 'public' => 1 ), 
+                        array( 'public' => $active, 'lang_id' => $language['id'] ), 
                         $current_site->id );
                 
                 
                 if ( 0 < $blog_id ) {
                     $this->set_after_blog_created_vars ( $language, $current_site, $blog_id  );
                     $this->network_new_site_controler->update( $blog_id );
+                    WPML2MLP_Helper::update_flag( $blog_id, $language['country_flag_url'] );
                 }
 	}
         

@@ -64,7 +64,21 @@ class MLP_Post_Creator {
                 if ( !$blog || $this->post_exists($post, $blog) ) {
                         return;
                 }
+                $source_content_id = (int)$post->ID;
                 
-                return false;
+                $post->ID = null; // reset the post_id, new one will be created
+                
+                switch_to_blog( (int)$blog[ 'blog_id' ] );
+                $new_post_id = wp_insert_post( (array)$post );
+                restore_current_blog();
+                
+                if ( 0 < $new_post_id ) {
+                        $this->content_relations->set_relation( 
+                                get_current_blog_id(), 
+                                (int)$blog['blog_id'], 
+                                $source_content_id, 
+                                $new_post_id, 
+                                $post->post_type);
+                }
 	}
 }
