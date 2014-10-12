@@ -42,12 +42,12 @@ class WPML2MLP_Importer {
 	private $wpdb;
 
 	/**
-	 * @var $site_creator
+	 * @var MLP_Site_Creator
 	 */
 	private $site_creator;
 
 	/**
-	 * @var $post_creator
+	 * @var MLP_Post_Creator
 	 */
 	private $post_creator;
 
@@ -62,10 +62,16 @@ class WPML2MLP_Importer {
 		if ( NULL === $wpdb ) {
 			return;
 		}
-
-		$this->wpdb         = $wpdb;
-		$this->site_creator = new MLP_Site_Creator( $this->wpdb );
-		$this->post_creator = new MLP_Post_Creator();
+                
+                $link_table         = $wpdb->base_prefix . 'multilingual_linked';  
+                $this->wpdb         = $wpdb;
+                $site_relations     = new Mlp_Site_Relations( $wpdb, 'mlp_site_relations' );
+                $content_relations  = new Mlp_Content_Relations(
+			$this->wpdb,
+			$site_relations,
+			$link_table);                
+		$this->site_creator = new MLP_Site_Creator( $this->wpdb, $site_relations, $content_relations );
+		$this->post_creator = new MLP_Post_Creator( $this->wpdb, $content_relations );
 
 		// add menu to to network navigation
 		add_action( "network_admin_menu", array( $this, "add_menu_option" ) );
@@ -101,12 +107,11 @@ class WPML2MLP_Importer {
 
 		return self::$class_object;
 	}
-
+        
 	/**
 	 * Runs the import from WPML to MLP
 	 */
-	public function run_import() {
-                var_dump(icl_get_languages( 'skip_missing=1' ));
+	public function run_import() {            
 		if ( isset( $_POST[ 'submit' ] ) ) {
                         $current_site = get_current_site();                        
                         $lng_arr      = icl_get_languages( 'skip_missing=1' );  
@@ -122,20 +127,19 @@ class WPML2MLP_Importer {
                                         $this->site_creator->create_site( $lng );
                                 }
                         }
-                                            
-			$all_posts = WPML2MLP_Helper::get_all_posts();
-			while ( $all_posts->have_posts() ) : $all_posts->the_post();
-                                $pst = 0;// convert post here 
+                        
+                        $this->blog_cache = false; // reset object cache after adding new site. (it will be recreated)
+                        
+                        foreach ( WPML2MLP_Helper::get_all_posts() as $current_post ) {
+                                $relevant_blog = $this->get_relevant_blog( $current_post );
                                 
-				$ID           = get_the_ID();
-				$postType     = get_post_type( $ID );
-                                
-                                if ( ! $this->post_creator->post_exists( $pst ) ) {
-                                        $this->post_creator->add_post( $pst );
-                                }                                
-			endwhile;
+                                if ( ! $this->post_creator->post_exists( $current_post, $relevant_blog ) ) {
+                                        $this->post_creator->add_post( $current_post, $relevant_blog );
+                                }
+                        }
                         
                         ?>
+
                         <div class="wrap">
                                 You have successfully import WPML data to the MLP.
                         </div><?php
@@ -153,4 +157,22 @@ class WPML2MLP_Importer {
 		</div>
 	<?php
 	}
+        
+        
+        private $blog_cache;
+        private function get_relevant_blog( $post ) {
+                if( ! $this->blog_cache ) {
+                        $this->blog_cache = get_blog_list();
+                }
+                
+                $pst_lng = wpml_get_language_information($post->ID);
+                
+                foreach ($this->blog_cache as $ab ) {
+                        if (get_blog_language($ab['blog_id'], false) == $pst_lng['locale'] ) {
+                                return $ab;
+                        }
+                }
+                
+                return false;
+        }
 }

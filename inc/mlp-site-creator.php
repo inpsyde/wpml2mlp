@@ -10,62 +10,44 @@ class MLP_Site_Creator {
          * @var wpdb
          */
         private $wpdb;
-    
-    
-	/**
-         *
-         * @var Mlp_Site_Relations 
-         */
-        private $site_relations;
-        
-        /**
-         *
-         * @var Mlp_Content_Relations 
-         */
-        private $content_relations;
-        
+            
         /**
          *
          * @var Mlp_Language_Api 
          */
-        private $language_api;
+        private  $language_api;
         
         /**
          *
          * @var Mlp_Network_New_Site_Controller 
          */
         private $network_new_site_controler;
-        
+                
         /**
 	 * Constructs the MLP_Site_Creator
 	 *
 	 */
 	public function __construct(
-                wpdb $wpdb ) {
+                wpdb $wpdb,
+                Mlp_Site_Relations_Interface $site_relations,
+                Mlp_Content_Relations_Interface $content_relations ) {
             
                 if ( null == $wpdb ) {
                     return;
                 }
-                
-		$link_table             = $wpdb->base_prefix . 'multilingual_linked';  
-                $this->wpdb = $wpdb;
-                $this->site_relations = new Mlp_Site_Relations( $wpdb, 'mlp_site_relations' );
-                $this->content_relations = new Mlp_Content_Relations(
-			$wpdb,
-			$this->site_relations,
-			$link_table);
-                
+                 
+                $this->wpdb = $wpdb;                
                 $this->language_api = new Mlp_Language_Api(
 			new Inpsyde_Property_List,
 			'mlp_languages',
-			$this->site_relations,
-			$this->content_relations,
+			$site_relations,
+			$content_relations,
 			$wpdb
 		);
                 
                 $this->network_new_site_controler = new Mlp_Network_New_Site_Controller(
                         $this->language_api,
-                        $this->site_relations );
+                        $site_relations );
 	}
 
 	/**
@@ -114,11 +96,13 @@ class MLP_Site_Creator {
                         $path, 
                         "My " . $language['translated_name'] . " site", 
                         $user_id, 
-                        array( 'public' => $active ), 
+                        array( 'public' => 1 ), 
                         $current_site->id );
                 
+                
                 if ( 0 < $blog_id ) {
-                    $this->network_new_site_controler->update($blog_id);
+                    $this->set_after_blog_created_vars ( $language, $current_site, $blog_id  );
+                    $this->network_new_site_controler->update( $blog_id );
                 }
 	}
         
@@ -162,9 +146,14 @@ class MLP_Site_Creator {
 	 * @return void
 	 */
 	private function set_or_update_post_obj( $language, $current_site ) {
+                $_POST[ 'inpsyde_multilingual_flag_url' ] = $language['country_flag_url'];
 		$_POST[ 'inpsyde_multilingual_lang' ] = $language['default_locale'];
 		$_POST[ 'related_blogs' ] = array( $current_site->id );
 	}
+        
+        private function set_after_blog_created_vars( $language, $current_site, $blog_id ) {
+                $_POST[ 'id' ] = $blog_id;
+        }
         
         private function language_exists( $language ) {
                 $all_lngs = mlp_get_available_languages();   
