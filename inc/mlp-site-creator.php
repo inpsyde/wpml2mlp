@@ -53,7 +53,7 @@ class MLP_Site_Creator {
 	/**
 	 * Creates new MLP site for the provided language
 	 *
-	 * @param type $language
+	 * @param string $language
 	 *
 	 * @return int
 	 */

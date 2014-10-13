@@ -113,14 +113,6 @@ class WPML2MLP_Importer {
 	 * Runs the import from WPML to MLP
 	 */
 	public function run_import() {
-                foreach ( WPML2MLP_Helper::get_all_posts() as $current_post ) {
-
-                        $relevant_blog = $this->get_relevant_blog( $current_post );
-                }
-            
-            
-            
-            
 
 		if ( isset( $_POST[ 'submit' ] ) ) {
 			$lng_arr = icl_get_languages( 'skip_missing=1' );
@@ -172,9 +164,12 @@ class WPML2MLP_Importer {
 		}
 
 		$pst_lng = wpml_get_language_information( $post->ID );
-                
+
 		foreach ( $this->blog_cache as $ab ) {
-			if ( get_blog_language( $ab[ 'blog_id' ], TRUE ) == WPML2MLP_Helper::get_short_language(  $pst_lng[ 'locale' ] ) ) {
+			if ( get_blog_language( $ab[ 'blog_id' ], TRUE ) == WPML2MLP_Helper::get_short_language(
+					$pst_lng[ 'locale' ]
+				)
+			) {
 				return $ab;
 			}
 		}

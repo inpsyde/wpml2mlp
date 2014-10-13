@@ -70,12 +70,15 @@ class WPML2MLP_Helper {
 
 		return NULL === $result ? $language : str_replace( '-', '_', $result );
 	}
-        
-        public static function get_short_language( $language ) {
-                if ( empty($language) ) return "";
-                
-                return substr( $language, 0, 2 );
-        }
+
+	public static function get_short_language( $language ) {
+
+		if ( empty( $language ) ) {
+			return "";
+		}
+
+		return substr( $language, 0, 2 );
+	}
 
 	/**
 	 * Get default blog
