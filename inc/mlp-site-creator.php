@@ -1,7 +1,7 @@
 <?php
 
 if ( ! class_exists( 'WPML2MLP_Helper' ) ) {
-	require plugin_dir_path( __FILE__ ) . 'wpml2mlp-Helper.php';
+	require plugin_dir_path( __FILE__ ) . 'wpml2mlp-helper.php';
 }
 
 class MLP_Site_Creator {

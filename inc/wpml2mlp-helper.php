@@ -101,7 +101,7 @@ class WPML2MLP_Helper {
 	 *
 	 * @return string
 	 */
-	private function get_main_language() {
+	private static function get_main_language() {
 
 		global $sitepress;
 		$main_lng = $sitepress->get_default_language();
