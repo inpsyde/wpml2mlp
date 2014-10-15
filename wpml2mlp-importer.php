@@ -13,9 +13,12 @@ defined( 'ABSPATH' ) or die();
 define( "WPVERSION_CONST", "3.1" );
 
 $class_mappings = array(
-	'MLP_Site_Creator' => 'mlp-site-creator.php',
-	'MLP_Post_Creator' => 'mlp-post-creator.php',
-	'WPML2MLP_Helper'  => 'wpml2mlp-Helper.php'
+	'MLP_Site_Creator'  => 'mlp-site-creator.php',
+	'MLP_Post_Creator'  => 'mlp-post-creator.php',
+	'WPML2MLP_Helper'   => 'wpml2mlp-Helper.php',
+	'MLP_Xliff_Creator' => 'mlp-xliff-creator.php',
+	'ZipCreator'        => 'zip-creator.php',
+
 );
 
 foreach ( $class_mappings as $key => $value ) {
@@ -42,6 +45,12 @@ class WPML2MLP_Importer {
 	private $wpdb;
 
 	/**
+	 * @var blog_cache
+	 */
+
+	private $blog_cache;
+
+	/**
 	 * @var MLP_Site_Creator
 	 */
 	private $site_creator;
@@ -50,6 +59,11 @@ class WPML2MLP_Importer {
 	 * @var MLP_Post_Creator
 	 */
 	private $post_creator;
+
+	/**
+	 * @var MLP_Xliff_Creator
+	 */
+	private $xliff_creator;
 
 	/**
 	 * Constructor
@@ -63,16 +77,17 @@ class WPML2MLP_Importer {
 			return;
 		}
 
-		$link_table         = $wpdb->base_prefix . 'multilingual_linked';
-		$this->wpdb         = $wpdb;
-		$site_relations     = new Mlp_Site_Relations( $wpdb, 'mlp_site_relations' );
-		$content_relations  = new Mlp_Content_Relations(
+		$link_table          = $wpdb->base_prefix . 'multilingual_linked';
+		$this->wpdb          = $wpdb;
+		$site_relations      = new Mlp_Site_Relations( $wpdb, 'mlp_site_relations' );
+		$content_relations   = new Mlp_Content_Relations(
 			$this->wpdb,
 			$site_relations,
 			$link_table
 		);
-		$this->site_creator = new MLP_Site_Creator( $this->wpdb );
-		$this->post_creator = new MLP_Post_Creator( $this->wpdb, $content_relations );
+		$this->site_creator  = new MLP_Site_Creator( $this->wpdb );
+		$this->post_creator  = new MLP_Post_Creator( $this->wpdb, $content_relations );
+		$this->xliff_creator = new MLP_Xliff_Creator();
 
 		// add menu to to network navigation
 		add_action( "network_admin_menu", array( $this, "add_menu_option" ) );
@@ -117,6 +132,11 @@ class WPML2MLP_Importer {
 	public function run_import() {
 
 		if ( isset( $_POST[ 'submit' ] ) ) {
+			//Todo move this to correct locatio and pass correct data
+			if ( isset( $_POST[ 'exporttofile' ] ) && $_POST[ 'exporttofile' ] == "1" ) {
+				do_action( 'WPML2MLP_xliff_export', $_POST ); //pass post translations instead of post obj
+			}
+
 			$lng_arr = icl_get_languages( 'skip_missing=1' );
 
 			foreach ( $lng_arr as $lng ) {
@@ -162,8 +182,6 @@ class WPML2MLP_Importer {
 	<?php
 	}
 
-	private $blog_cache;
-
 	/**
 	 * Register and add settings
 	 */
@@ -196,8 +214,8 @@ class WPML2MLP_Importer {
 	public function id_export_callback() {
 
 		//$options = get_option( 'plugin_options' );
-		echo "<label><input checked=checked  value='No' name='exporttofile' type='radio' /> No</label><br />";
-		echo "<label><input value='Yes' name='exporttofile' type='radio' /> Yes</label><br />";
+		echo "<label><input checked=checked  value='0' name='exporttofile' type='radio' /> No</label><br />";
+		echo "<label><input value='1' name='exporttofile' type='radio' /> Yes</label><br />";
 
 	}
 
