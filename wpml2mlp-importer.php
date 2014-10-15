@@ -76,6 +76,8 @@ class WPML2MLP_Importer {
 
 		// add menu to to network navigation
 		add_action( "network_admin_menu", array( $this, "add_menu_option" ) );
+		add_action( 'admin_init', array( $this, 'page_init' ) );
+
 	}
 
 	/**
@@ -149,13 +151,55 @@ class WPML2MLP_Importer {
 			<p><?php _e( 'Conversion from WPML to MLP.' ); ?></p>
 
 			<form method="post" action="settings.php?page=<?php echo 'wpml2mlp'; ?>">
-				<?php submit_button( __( 'Run WPML to MLP import' ) ); ?>
+
+				<?php
+				// This prints out all hidden setting fields
+				settings_fields( 'export_option_group' );
+				do_settings_sections( 'export-setting-admin' );
+				submit_button( __( 'Run WPML to MLP import' ) ); ?>
 			</form>
 		</div>
 	<?php
 	}
 
 	private $blog_cache;
+
+	/**
+	 * Register and add settings
+	 */
+	public function page_init() {
+
+		register_setting(
+			'export_option_group', // Option group
+			'export_option_name'
+		);
+
+		add_settings_section(
+			'setting_section_id', // ID
+			'', // Title
+			NULL, // Callback
+			'export-setting-admin' // Page
+		);
+
+		add_settings_field(
+			'id_export', // ID
+			'Export XLIFF?', // Title
+			array( $this, 'id_export_callback' ), // Callback
+			'export-setting-admin', // Page
+			'setting_section_id' // Section
+		);
+	}
+
+	/**
+	 * Get the settings option array and print one of its values
+	 */
+	public function id_export_callback() {
+
+		//$options = get_option( 'plugin_options' );
+		echo "<label><input checked=checked  value='No' name='exporttofile' type='radio' /> No</label><br />";
+		echo "<label><input value='Yes' name='exporttofile' type='radio' /> Yes</label><br />";
+
+	}
 
 	private function get_relevant_blog( $post ) {
 
