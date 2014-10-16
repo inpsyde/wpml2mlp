@@ -130,13 +130,13 @@ class WPML2MLP_Importer {
 	 * Runs the import from WPML to MLP
 	 */
 	public function run_import() {
-		$translator = new LanguageHolder();
+		/*$translator = new LanguageHolder();
 
 		$translator->setItem(new TranslationItem("bla", "blaaaa", "de_DE"));
 		$translator->setItem(new TranslationItem("alb", "albbbb", "it_IT"));
 		$translator->setItem(new TranslationItem("alsfdfb", "sdfsafdsaf", "it_IT"));
 
-		var_dump($translator->getAllItems());
+		var_dump($translator->getAllItems());*/
 
 
 		/*foreach ( WPML2MLP_Helper::get_all_posts() as $current_post ) {
