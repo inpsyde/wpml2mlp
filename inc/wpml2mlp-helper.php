@@ -80,6 +80,11 @@ class WPML2MLP_Helper {
 		return substr( $language, 0, 2 );
 	}
 
+	public static function  get_language_info( $post_id ) {
+
+		return wpml_get_language_information( $post_id );
+	}
+
 	/**
 	 * Get default blog
 	 *
@@ -101,7 +106,7 @@ class WPML2MLP_Helper {
 	 *
 	 * @return string
 	 */
-	private static function get_main_language() {
+	public static function get_main_language() {
 
 		global $sitepress;
 		$main_lng = $sitepress->get_default_language();
