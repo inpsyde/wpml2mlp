@@ -138,19 +138,7 @@ class WPML2MLP_Importer {
 	 * Runs the import from WPML to MLP
 	 */
 	public function run_import() {
-
-		$lng_hld = new MLP_Language_Holder();
-		foreach ( WPML2MLP_Helper::get_all_posts() as $current_post ) {
-
-			$post_translations = $this->translation_builder->build_translation_item( $current_post );
-			if ( $post_translations ) {
-				foreach ( $post_translations as $trans_item ) {
-					$lng_hld->setItem( $trans_item );
-				}
-			}
-		}
-		var_dump( $lng_hld->getAllItems() );
-
+		
 		if ( isset( $_POST[ 'submit' ] ) ) {
 
 			$lng_arr = icl_get_languages( 'skip_missing=1' );
