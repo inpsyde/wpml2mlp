@@ -130,6 +130,7 @@ class WPML2MLP_Importer {
 	 * Runs the import from WPML to MLP
 	 */
 	public function run_import() {
+
 		/*$translator = new LanguageHolder();
 
 		$translator->setItem(new TranslationItem("bla", "blaaaa", "de_DE"));
@@ -138,19 +139,13 @@ class WPML2MLP_Importer {
 
 		var_dump($translator->getAllItems());*/
 
-
 		/*foreach ( WPML2MLP_Helper::get_all_posts() as $current_post ) {
 
 			$relevant_blog = $this->get_relevant_blog( $current_post );
 
 			var_dump( $current_post );
 		}*/
-
 		if ( isset( $_POST[ 'submit' ] ) ) {
-			//Todo move this to correct locatio and pass correct data
-			if ( isset( $_POST[ 'exporttofile' ] ) && $_POST[ 'exporttofile' ] == "1" ) {
-				do_action( 'WPML2MLP_xliff_export', $_POST ); //pass post translations instead of post obj
-			}
 
 			$lng_arr = icl_get_languages( 'skip_missing=1' );
 
@@ -171,9 +166,16 @@ class WPML2MLP_Importer {
 					$this->post_creator->add_post( $current_post, $relevant_blog );
 				}
 			}
+			if ( isset( $_POST[ 'exporttofile' ] ) && $_POST[ 'exporttofile' ] == "1" ) {
 
+				//TODO dsantic 17102014 get correct data instead of mocked
+				$data = array(
+					'title'   => 'My title',
+					'content' => 'My content'
+				);
+				do_action( 'WPML2MLP_xliff_export', $data );
+			}
 			?>
-
 			<div class="wrap">
 				You have successfully import WPML data to the MLP.
 			</div><?php
@@ -255,42 +257,51 @@ class WPML2MLP_Importer {
 	}
 }
 
-
 class TranslationItem {
+
 	private $source;
+
 	private $destination;
+
 	private $language;
 
-	public function __construct($source, $destination, $language) {
-		$this->source = $source;
+	public function __construct( $source, $destination, $language ) {
+
+		$this->source      = $source;
 		$this->destination = $destination;
-		$this->language = $language;
+		$this->language    = $language;
 	}
 
-	public function getSource(){
+	public function getSource() {
+
 		return $this->source;
 	}
 
-	public function  getDestination(){
+	public function  getDestination() {
+
 		return $this->destination;
 	}
 
-	public function getLanguage(){
+	public function getLanguage() {
+
 		return $this->language;
 	}
 
-	public function isValid(){
-		return !empty($this->source) && !empty($this->destination) && !empty($this->language);
+	public function isValid() {
+
+		return ! empty( $this->source ) && ! empty( $this->destination ) && ! empty( $this->language );
 	}
 }
+
 interface iHoldTranslations {
 
-	public function setItem(TranslationItem &$translationItem);
+	public function setItem( TranslationItem &$translationItem );
 
 	public function getAllItems();
 }
 
 class LanguageHolder implements iHoldTranslations {
+
 	private $mapper;
 
 	/**
@@ -298,30 +309,34 @@ class LanguageHolder implements iHoldTranslations {
 	 *
 	 */
 	public function __construct() {
+
 		$mapper = array();
 	}
 
-	public function setItem(TranslationItem &$translationItem) {
-		if(!$translationItem->isValid()){
+	public function setItem( TranslationItem &$translationItem ) {
+
+		if ( ! $translationItem->isValid() ) {
 			return;
 		}
 
 		$lng = $translationItem->getLanguage();
-		$this->checkLanguage($lng);
+		$this->checkLanguage( $lng );
 
-		array_push($this->mapper[$lng], $translationItem);
+		array_push( $this->mapper[ $lng ], $translationItem );
 	}
 
 	public function getAllItems() {
-		return array_values($this->mapper);
+
+		return array_values( $this->mapper );
 	}
 
-	private function checkLanguage($language) {
-		if($this->mapper == NULL) {
+	private function checkLanguage( $language ) {
+
+		if ( $this->mapper == NULL ) {
 			$this->mapper = array();
 		}
-		if ( ! array_key_exists($language, $this->mapper)) {
-			$this->mapper[$language] = array();
+		if ( ! array_key_exists( $language, $this->mapper ) ) {
+			$this->mapper[ $language ] = array();
 		}
 	}
 }
