@@ -72,25 +72,28 @@ class MLP_Xliff_Creator {
 
 		//TODO dsantic 17102014 logic for creating XLIF file goes here
 		$data = <<< XML
-<?xml version="1.0" encoding="utf-8" standalone="no"?>
-<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-   <file original="1-6512bd43d9caa6e02c990b0a82652dca" source-language="en" target-language="bs" datatype="plaintext">
-      <header />
-      <body>
-         <trans-unit resname="title" restype="string" datatype="html" id="title">
-            <source><![CDATA[Hello world!]]></source>
-            <target><![CDATA[Hello world from Bosnia]]></target>
-         </trans-unit>
-         <trans-unit resname="body" restype="string" datatype="html" id="body">
-            <source><![CDATA[Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!]]></source>
-            <target><![CDATA[Welcome to WordPressfrom Bosnia]]></target>
-         </trans-unit>
-         <trans-unit resname="categories" restype="string" datatype="html" id="categories">
-            <source><![CDATA[Uncategorized]]></source>
-            <target><![CDATA[Uncategorized]]></target>
-         </trans-unit>
-      </body>
-   </file>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="en" trgLang="fr">
+	<file id="f1">
+		<unit id="u1">
+			<my:elem xmlns:my="myNamespaceURI" id="x1">data</my:elem>
+			<segment id="s1">
+				<source>
+					<pc id="1">Hello  World!</pc>
+				</source>
+				<target>
+					<pc id="1">Bonjour le  Monde  !</pc>
+				</target>
+			</segment>
+			<segment id="s2">
+				<source>
+					<pc id="2">Hello  World!</pc>
+				</source>
+				<target>
+					<pc id="2">Bonjour le  Monde  !</pc>
+				</target>
+			</segment>
+		</unit>
+	</file>
 </xliff>
 XML;
 
