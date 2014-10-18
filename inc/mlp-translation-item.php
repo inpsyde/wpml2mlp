@@ -20,6 +20,6 @@ class MLP_Translation_Item {
 
 	public function is_valid() {
 
-		return ! empty( $this->source ) && ! empty( $this->target ) && $this->original_id > 0 && $this->post_id > 0;
+		return ! empty( $this->source ) && $this->original_id > 0 && $this->post_id > 0;
 	}
 }
