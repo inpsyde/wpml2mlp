@@ -43,14 +43,6 @@ class MLP_Translations_Builder {
 		return $ret;
 	}
 
-	public function get_post_language( $post_id ) {
-
-		$language = WPML2MLP_Helper::get_language_info( $post_id );
-		$locale   = $language[ 'locale' ];
-
-		return WPML2MLP_Helper::get_short_language( $locale );
-	}
-
 	private function construct_translation_item( $source_val, $dest_val, $post_id, $source_id ) {
 
 		return new MLP_Translation_Item( $source_val, $dest_val, $source_id, $post_id );

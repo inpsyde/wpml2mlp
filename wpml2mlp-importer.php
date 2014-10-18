@@ -142,7 +142,7 @@ class WPML2MLP_Importer {
 	 * Runs the import from WPML to MLP
 	 */
 	public function run_import() {
-
+		
 		if ( isset( $_POST[ 'submit' ] ) ) {
 
 			$lng_arr = icl_get_languages( 'skip_missing=1' );
@@ -260,7 +260,7 @@ class WPML2MLP_Importer {
 
 	private function set_xliff_item( $mlp_post_id, $post, MLP_Language_Holder &$language_holder ) {
 
-		$post_lang = $this->translation_builder->get_post_language( $post->ID );
+		$post_lang = WPML2MLP_Helper::get_language_info( $post->ID );
 
 		if ( $post_lang != $this->main_language ) { // don't map default language
 			$post_translations = $this->translation_builder->build_translation_item( $post, $mlp_post_id );

@@ -82,7 +82,14 @@ class WPML2MLP_Helper {
 
 	public static function  get_language_info( $post_id ) {
 
-		return wpml_get_language_information( $post_id );
+		global $wpdb;
+
+		$query      = $wpdb->prepare(
+			'SELECT language_code FROM ' . $wpdb->prefix . 'icl_translations WHERE element_id="%d"', $post_id
+		);
+		$query_exec = $wpdb->get_row( $query );
+
+		return $query_exec->language_code;
 	}
 
 	/**
