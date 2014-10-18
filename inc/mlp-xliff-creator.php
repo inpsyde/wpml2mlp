@@ -18,7 +18,7 @@ class MLP_Xliff_Creator {
 		}
 
 		if ( isset( $_GET[ 'mlp_xliff_action' ] ) && $_GET[ 'mlp_xliff_action' ] == 'download'
-			&& $_GET[ 'nonce' ] = wp_create_nonce(
+		     && $_GET[ 'nonce' ] = wp_create_nonce(
 				'xliff-export'
 			)
 		) {
@@ -52,18 +52,24 @@ class MLP_Xliff_Creator {
 		$data = unserialize( base64_decode( $data ) );
 
 		$zip_archive = new ZipCreator();
-		$xliff_file  = $this->get_xlif_file( $data );
 
-		$zip_archive->addFile( $xliff_file, 'export.xliff' );
-		$archive_data = $zip_archive->getZippedfile();
-		header( "Content-Type: application/force-download" );
-		header( "Content-Type: application/octet-stream" );
-		header( "Content-Type: application/download" );
-		header( "Content-Disposition: attachment; filename=export.zip" );
-		//header("Content-Encoding: gzip");
-		header( "Content-Length: " . strlen( $archive_data ) );
+		if ( is_array( $data ) ) {
+			foreach ( $data as $lng ) {
+				$xliff_file = $this->get_xlif_file( $lng );
+				$filename   = $lng->source_language . '_' . $lng->destination_language;
+				$zip_archive->addFile( $xliff_file, 'translation_' . $filename . '.xliff' );
+			}
+			$archive_data = $zip_archive->getZippedfile();
+			header( "Content-Type: application/force-download" );
+			header( "Content-Type: application/octet-stream" );
+			header( "Content-Type: application/download" );
+			header( "Content-Disposition: attachment; filename=wpml2mlp_xliff_export.zip" );
+			//header("Content-Encoding: gzip");
+			header( "Content-Length: " . strlen( $archive_data ) );
 
-		echo $archive_data;
+			echo $archive_data;
+		}
+
 		exit;
 
 	}
