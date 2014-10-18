@@ -70,7 +70,7 @@ class MLP_Post_Creator {
 		}
 
 		$original_post_id  = $post->ID; // store temp so that we can return it to the original post
-		$source_content_id = (int) icl_object_id( $post->ID, $post->post_type, TRUE );
+		$source_content_id = WPML2MLP_Helper::get_default_post_ID( $post );
 		$meta              = get_post_meta( $post->ID );
 		$post->ID          = NULL; // reset the post_id, new one will be created
 

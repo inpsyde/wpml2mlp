@@ -142,7 +142,7 @@ class WPML2MLP_Importer {
 	 * Runs the import from WPML to MLP
 	 */
 	public function run_import() {
-		
+
 		if ( isset( $_POST[ 'submit' ] ) ) {
 
 			$lng_arr = icl_get_languages( 'skip_missing=1' );
@@ -172,7 +172,9 @@ class WPML2MLP_Importer {
 			}
 
 			if ( $do_xliff_export ) {
-				do_action( 'WPML2MLP_xliff_export', $language_holder->get_all_items() );
+				$all_items = $language_holder->get_all_items();
+				var_dump( $all_items );
+				do_action( 'WPML2MLP_xliff_export', $all_items );
 				//$this->xliff_creator->do_xliff_export( $language_holder->get_all_items() );
 			}
 

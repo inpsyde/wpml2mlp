@@ -120,4 +120,11 @@ class WPML2MLP_Helper {
 
 		return $main_lng;
 	}
+
+	public static function get_default_post_ID( $post ) {
+
+		$main_language = WPML2MLP_Helper::get_main_language();
+
+		return (int) icl_object_id( $post->ID, $post->post_type, TRUE, $main_language );
+	}
 }

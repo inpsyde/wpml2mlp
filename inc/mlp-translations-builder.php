@@ -21,7 +21,7 @@ class MLP_Translations_Builder {
 
 		$ret = array();
 
-		$source_id = (int) icl_object_id( $post->ID, $post->post_type, TRUE );
+		$source_id = WPML2MLP_Helper::get_default_post_ID($post);
 
 		$source_post = get_post( $source_id ); // TODO: cache this
 
