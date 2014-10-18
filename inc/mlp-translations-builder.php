@@ -17,16 +17,7 @@ class MLP_Translations_Builder {
 		$this->default_language = $default_language;
 	}
 
-	public function build_translation_item( $post ) {
-
-		$language = WPML2MLP_Helper::get_language_info( $post->ID );
-		$locale   = $language[ 'locale' ];
-
-		$dest_lang = WPML2MLP_Helper::get_short_language( $locale ); // TODO: cache this
-
-		if ( $dest_lang == $this->default_language ) {
-			return FALSE; // it is default language, we don't need export for this
-		}
+	public function build_translation_item( $post, $mlp_post_id ) {
 
 		$ret = array();
 
@@ -40,17 +31,28 @@ class MLP_Translations_Builder {
 
 		// put translations here for current post
 		array_push(
-			$ret, $this->construct_translation_item( $source_post->post_title, $post->post_title, $dest_lang )
+			$ret,
+			$this->construct_translation_item( $source_post->post_title, $post->post_title, $mlp_post_id, $source_id )
 		);
 		array_push(
-			$ret, $this->construct_translation_item( $source_post->post_content, $post->post_content, $dest_lang )
+			$ret, $this->construct_translation_item(
+				$source_post->post_content, $post->post_content, $mlp_post_id, $source_id
+			)
 		);
 
 		return $ret;
 	}
 
-	private function construct_translation_item( $source_val, $dest_val, $dest_lang ) {
+	public function get_post_language( $post_id ) {
 
-		return new MLP_Translation_Item( $source_val, $dest_val, $this->default_language, $dest_lang );
+		$language = WPML2MLP_Helper::get_language_info( $post_id );
+		$locale   = $language[ 'locale' ];
+
+		return WPML2MLP_Helper::get_short_language( $locale );
+	}
+
+	private function construct_translation_item( $source_val, $dest_val, $post_id, $source_id ) {
+
+		return new MLP_Translation_Item( $source_val, $dest_val, $source_id, $post_id );
 	}
 }

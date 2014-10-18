@@ -66,9 +66,11 @@ class MLP_Post_Creator {
 	public function add_post( $post, $blog ) {
 
 		if ( ! $blog || $this->post_exists( $post, $blog ) ) {
-			return;
+			return FALSE;
 		}
-		$source_content_id = (int) icl_object_id($post->ID, $post->post_type, true);
+
+		$original_post_id  = $post->ID; // store temp so that we can return it to the original post
+		$source_content_id = (int) icl_object_id( $post->ID, $post->post_type, TRUE );
 		$meta              = get_post_meta( $post->ID );
 		$post->ID          = NULL; // reset the post_id, new one will be created
 
@@ -91,5 +93,9 @@ class MLP_Post_Creator {
 				$post->post_type
 			);
 		}
+
+		$post->ID = $original_post_id;
+
+		return $new_post_id;
 	}
 }

@@ -13,27 +13,33 @@ class MLP_Language_Holder {
 		$this->mapper = array();
 	}
 
-	public function setItem( MLP_Translation_Item &$translationItem ) {
+	public function set_item( MLP_Translation_Item &$translation_item, $source_lang, $destination_lang ) {
 
-		if ( $translationItem == NULL || ! $translationItem->isValid() ) {
+		if ( $translation_item == NULL
+			|| ! $translation_item->is_valid()
+			|| empty( $source_lang )
+			|| empty( $destination_lang )
+		) {
 			return;
 		}
 
-		$lng = $translationItem->getDestinationLanguage();
-		$this->checkLanguage( $lng );
-
-		array_push( $this->mapper[ $lng ], $translationItem );
+		$this->check_language( $source_lang, $destination_lang );
+		$translations = $this->mapper[ $destination_lang ];
+		$translations->push( $translation_item );
+		$this->mapper[ $destination_lang ] = $translations;
 	}
 
-	public function getAllItems() {
+	public function get_all_items() {
 
-		return $this->mapper;
+		return array_values( $this->mapper );
 	}
 
-	private function checkLanguage( $language ) {
+	private function check_language( $source_lang, $destination_lang ) {
 
-		if ( ! array_key_exists( $language, $this->mapper ) ) {
-			$this->mapper[ $language ] = array();
+		if ( ! array_key_exists( $destination_lang, $this->mapper ) ) {
+			$this->mapper[ $destination_lang ] = new MLP_Translations( $source_lang, $destination_lang );
 		}
+
+		return $this->mapper[ $destination_lang ];
 	}
 }
