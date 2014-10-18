@@ -130,9 +130,13 @@ class MLP_Site_Creator {
 
 		$all_lngs = mlp_get_available_languages();
 
+		$short_code   = WPML2MLP_Helper::get_short_language( $language[ 'language_code' ] );
+		$short_locale = WPML2MLP_Helper::get_short_language( $language[ 'default_locale' ] );
+
 		foreach ( $all_lngs as $lng ) {
-			if ( $language[ 'language_code' ] == $lng
-				|| $language[ 'default_locale' ] == $lng
+			$short_lng = WPML2MLP_Helper::get_short_language( $lng );
+
+			if ( $short_code == $short_lng || $short_locale == $short_lng
 			) {
 				return TRUE;
 			}

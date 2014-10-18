@@ -162,7 +162,7 @@ class WPML2MLP_Importer {
 
 				$relevant_blog = $this->get_relevant_blog( $current_post );
 
-				if ( $relevant_blog != FALSE && ! $this->post_creator->post_exists( $current_post, $relevant_blog ) ) {
+				if ( $relevant_blog != FALSE &&!  $this->post_creator->post_exists( $current_post, $relevant_blog ) ) {
 					$mlp_post_id = $this->post_creator->add_post( $current_post, $relevant_blog );
 
 					if ( $do_xliff_export && $mlp_post_id ) {
@@ -172,10 +172,7 @@ class WPML2MLP_Importer {
 			}
 
 			if ( $do_xliff_export ) {
-				$all_items = $language_holder->get_all_items();
-				var_dump( $all_items );
-				do_action( 'WPML2MLP_xliff_export', $all_items );
-				//$this->xliff_creator->do_xliff_export( $language_holder->get_all_items() );
+				do_action( 'WPML2MLP_xliff_export', $language_holder->get_all_items() );
 			}
 
 			?>
@@ -246,13 +243,10 @@ class WPML2MLP_Importer {
 			$this->blog_cache = wp_get_sites();
 		}
 
-		$pst_lng = wpml_get_language_information( $post->ID );
+		$pst_lng = WPML2MLP_Helper::get_language_info( $post->ID );
 
 		foreach ( $this->blog_cache as $ab ) {
-			if ( get_blog_language( $ab[ 'blog_id' ], TRUE ) == WPML2MLP_Helper::get_short_language(
-					$pst_lng[ 'locale' ]
-				)
-			) {
+			if ( get_blog_language( $ab[ 'blog_id' ], TRUE ) == $pst_lng ) {
 				return $ab;
 			}
 		}
