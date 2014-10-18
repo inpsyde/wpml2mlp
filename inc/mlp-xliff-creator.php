@@ -52,7 +52,7 @@ class MLP_Xliff_Creator {
 		$data = unserialize( base64_decode( $data ) );
 
 		$zip_archive = new ZipCreator();
-		$xliff_file  = $this->get_xlif_file();
+		$xliff_file  = $this->get_xlif_file( $data );
 
 		$zip_archive->addFile( $xliff_file, 'export.xliff' );
 		$archive_data = $zip_archive->getZippedfile();
@@ -68,36 +68,31 @@ class MLP_Xliff_Creator {
 
 	}
 
-	function get_xlif_file() {
+	function get_xlif_file( MLP_Translations $data ) {
 
-		//TODO dsantic 17102014 logic for creating XLIF file goes here
-		$data = <<< XML
-<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="en" trgLang="fr">
-	<file id="f1">
-		<unit id="u1">
-			<my:elem xmlns:my="myNamespaceURI" id="x1">data</my:elem>
-			<segment id="s1">
-				<source>
-					<pc id="1">Hello  World!</pc>
-				</source>
-				<target>
-					<pc id="1">Bonjour le  Monde  !</pc>
-				</target>
-			</segment>
-			<segment id="s2">
-				<source>
-					<pc id="2">Hello  World!</pc>
-				</source>
-				<target>
-					<pc id="2">Bonjour le  Monde  !</pc>
-				</target>
-			</segment>
-		</unit>
-	</file>
-</xliff>
-XML;
+		$new_line   = "\n";
+		$xliff_file = '<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="' . $data->source_language . '" trgLang="' . $data->destination_language . '">' . $new_line;
+		$xliff_file .= '<file id="f1">' . $new_line;
+		$i = 0;
+		foreach ( $data->data as $segment ) {
+			$xliff_file .= '<unit id="u' . $i . '">' . $new_line;
+			$xliff_file .= '<segment id="' . $segment->original_id . '">' . $new_line;
+			$xliff_file .= '<source>' . $new_line;
+			$xliff_file .= '<pc id="' . $segment->post_id . '">' . $segment->source . '</pc>' . $new_line;
+			$xliff_file .= '</source>' . $new_line;
+			$xliff_file .= '<target>' . $new_line;
+			$xliff_file .= '<pc id="' . $segment->post_id . '">' . $segment->target . '</pc>' . $new_line;
+			$xliff_file .= '</target>' . $new_line;
+			$xliff_file .= '</segment>' . $new_line;
+			$xliff_file .= '</unit>' . $new_line;
+			$i ++;
+		}
 
-		return $data;
+		$xliff_file .= '</file>' . $new_line;
+		$xliff_file .= '</xliff>';
+
+		return $xliff_file;
+
 	}
 
 }

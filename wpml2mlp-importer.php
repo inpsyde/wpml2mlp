@@ -172,7 +172,8 @@ class WPML2MLP_Importer {
 			}
 
 			if ( $do_xliff_export ) {
-				$this->xliff_creator->do_xliff_export( $language_holder->get_all_items() );
+				do_action( 'WPML2MLP_xliff_export', $language_holder->get_all_items() );
+				//$this->xliff_creator->do_xliff_export( $language_holder->get_all_items() );
 			}
 
 			?>
