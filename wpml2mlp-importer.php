@@ -12,25 +12,15 @@
 defined( 'ABSPATH' ) or die();
 define( "WPVERSION_CONST", "3.1" );
 
-$class_mappings = array(
-	'MLP_Site_Creator'         => 'mlp-site-creator.php',
-	'MLP_Post_Creator'         => 'mlp-post-creator.php',
-	'WPML2MLP_Helper'          => 'wpml2mlp-Helper.php',
-	'MLP_Xliff_Creator'        => 'mlp-xliff-creator.php',
-	'ZipCreator'               => 'zip-creator.php',
-	'MLP_Translation_Item'     => 'mlp-translation-item.php',
-	'MLP_Language_Holder'      => 'mlp-language-holder.php',
-	'MLP_Translations_Builder' => 'mlp-translations-builder.php',
-	'MLP_Translations'         => 'mlp-translations.php'
-);
-
-foreach ( $class_mappings as $key => $value ) {
-	if ( ! class_exists( $key ) ) {
-		require plugin_dir_path( __FILE__ ) . 'inc/' . $value;
-	}
-}
-
 add_filter( 'plugins_loaded', array( 'WPML2MLP_Importer', 'get_object' ) );
+
+add_action(
+	'mlp_and_wp_loaded',
+	function ( Inpsyde_Property_List_Interface $mlp_data ) {
+
+		$load_rule = new Inpsyde_Directory_Load( __DIR__ . '/inc' );
+		$mlp_data->loader->add_rule( $load_rule );
+	} );
 
 class WPML2MLP_Importer {
 
@@ -162,7 +152,7 @@ class WPML2MLP_Importer {
 
 				$relevant_blog = $this->get_relevant_blog( $current_post );
 
-				if ( $relevant_blog != FALSE &&!  $this->post_creator->post_exists( $current_post, $relevant_blog ) ) {
+				if ( $relevant_blog != FALSE && ! $this->post_creator->post_exists( $current_post, $relevant_blog ) ) {
 					$mlp_post_id = $this->post_creator->add_post( $current_post, $relevant_blog );
 
 					if ( $do_xliff_export && $mlp_post_id ) {
