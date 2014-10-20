@@ -1,6 +1,6 @@
 <?php
 
-class MLP_Translations {
+class WPML2MLP_Translations {
 
 	public $source_language;
 
@@ -15,7 +15,7 @@ class MLP_Translations {
 		$this->data                 = array();
 	}
 
-	public function push( MLP_Translation_Item &$translation_Item ) {
+	public function push( WPML2MLP_Translation_Item &$translation_Item ) {
 
 		if ( $translation_Item->is_valid() ) {
 			array_push( $this->data, $translation_Item );

@@ -1,10 +1,7 @@
 <?php
 
-if ( ! class_exists( 'WPML2MLP_Helper' ) ) {
-	require plugin_dir_path( __FILE__ ) . 'wpml2mlp-Helper.php';
-}
 
-class MLP_Post_Creator {
+class WPML2MLP_Post_Creator {
 
 	/**
 	 *
@@ -14,17 +11,17 @@ class MLP_Post_Creator {
 
 	/**
 	 *
-	 * @var Mlp_Content_Relations_Interface
+	 * @var WPML2Mlp_Content_Relations_Interface
 	 */
 	private $content_relations;
 
 	/**
-	 * Constructs the MLP_Post_Creator
+	 * Constructs the WPML2MLP_Post_Creator
 	 *
 	 */
 	public function __construct(
 		wpdb $wpdb,
-		Mlp_Content_Relations_Interface $content_relations
+		WPML2Mlp_Content_Relations_Interface $content_relations
 	) {
 
 		if ( NULL == $wpdb ) {

@@ -1,6 +1,6 @@
 <?php
 
-class MLP_Xliff_Creator {
+class WPML2MLP_Xliff_Creator {
 
 	function __construct() {
 
@@ -74,7 +74,7 @@ class MLP_Xliff_Creator {
 
 	}
 
-	function get_xlif_file( MLP_Translations $data ) {
+	function get_xlif_file( WPML2MLP_Translations $data ) {
 
 		$new_line   = "\n";
 		$xliff_file = '<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="' . $data->source_language . '" trgLang="' . $data->destination_language . '">' . $new_line;

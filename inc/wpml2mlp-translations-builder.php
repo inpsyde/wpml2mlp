@@ -1,6 +1,6 @@
 <?php
 
-class MLP_Translations_Builder {
+class WPML2MLP_Translations_Builder {
 
 	/**
 	 *
@@ -9,7 +9,7 @@ class MLP_Translations_Builder {
 	private $default_language;
 
 	/**
-	 * Constructs the MLP_Translations_Builder
+	 * Constructs the WPML2MLP_Translations_Builder
 	 *
 	 */
 	public function __construct( $default_language ) {
@@ -45,6 +45,6 @@ class MLP_Translations_Builder {
 
 	private function construct_translation_item( $source_val, $dest_val, $post_id, $source_id ) {
 
-		return new MLP_Translation_Item( $source_val, $dest_val, $source_id, $post_id );
+		return new WPML2MLP_Translation_Item( $source_val, $dest_val, $source_id, $post_id );
 	}
 }

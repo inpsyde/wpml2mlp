@@ -1,6 +1,6 @@
 <?php
 
-class MLP_Translation_Item {
+class WPML2MLP_Translation_Item {
 
 	public $source;
 
