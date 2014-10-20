@@ -80,6 +80,15 @@ class WPML2MLP_Importer {
 	 */
 	public function __construct() {
 
+		/**
+		 * Add menu to to network navigation
+		 */
+		add_action( "network_admin_menu", array( $this, "add_menu_option" ) );
+		/**
+		 * Check plugin check_prerequisites
+		 */
+		add_action( 'admin_init', array( $this, 'page_init' ) );
+
 		global $wpdb;
 
 		if ( NULL === $wpdb ) {
@@ -100,10 +109,6 @@ class WPML2MLP_Importer {
 		$this->main_language       = WPML2MLP_Helper::get_main_language();
 		$this->translation_builder = new WPML2MLP_Translations_Builder( $this->main_language );
 		$this->language_holder     = new WPML2MLP_Language_Holder();
-
-		// add menu to to network navigation
-		add_action( "network_admin_menu", array( $this, "add_menu_option" ) );
-		add_action( 'admin_init', array( $this, 'page_init' ) );
 
 	}
 
@@ -204,6 +209,9 @@ class WPML2MLP_Importer {
 	 * Register and add settings
 	 */
 	public function page_init() {
+
+		//check  check_prerequisites
+		Wpml2MLP_Prerequisites::check_prerequisites();
 
 		register_setting(
 			'export_option_group', // Option group
