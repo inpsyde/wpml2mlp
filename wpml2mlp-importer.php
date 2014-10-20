@@ -20,7 +20,8 @@ add_action(
 
 		$load_rule = new Inpsyde_Directory_Load( __DIR__ . '/inc' );
 		$mlp_data->loader->add_rule( $load_rule );
-	} );
+	}
+);
 
 class WPML2MLP_Importer {
 
@@ -44,25 +45,33 @@ class WPML2MLP_Importer {
 	private $blog_cache;
 
 	/**
-	 * @var MLP_Site_Creator
+	 * @var WPML2MLP_Site_Creator
 	 */
 	private $site_creator;
 
 	/**
-	 * @var MLP_Post_Creator
+	 * @var WPML2MLP_Post_Creator
 	 */
 	private $post_creator;
 
 	/**
-	 * @var MLP_Xliff_Creator
+	 * @var WPML2MLP_Xliff_Creator
 	 */
 	private $xliff_creator;
 
 	/**
-	 * @var MLP_Translations_Builder
+	 * @var WPML2MLP_Translations_Builder
 	 */
 	private $translation_builder;
 
+	/**
+	 * @var WPML2MLP_Language_Holder
+	 */
+	private $language_holder;
+
+	/**
+	 * @var string
+	 */
 	private $main_language;
 
 	/**
@@ -85,11 +94,12 @@ class WPML2MLP_Importer {
 			$site_relations,
 			$link_table
 		);
-		$this->site_creator        = new MLP_Site_Creator( $this->wpdb );
-		$this->post_creator        = new MLP_Post_Creator( $this->wpdb, $content_relations );
-		$this->xliff_creator       = new MLP_Xliff_Creator();
+		$this->site_creator        = new WPML2MLP_Site_Creator( $this->wpdb );
+		$this->post_creator        = new WPML2MLP_Post_Creator( $this->wpdb, $content_relations );
+		$this->xliff_creator       = new WPML2MLP_Xliff_Creator();
 		$this->main_language       = WPML2MLP_Helper::get_main_language();
-		$this->translation_builder = new MLP_Translations_Builder( $this->main_language );
+		$this->translation_builder = new WPML2MLP_Translations_Builder( $this->main_language );
+		$this->language_holder     = new WPML2MLP_Language_Holder();
 
 		// add menu to to network navigation
 		add_action( "network_admin_menu", array( $this, "add_menu_option" ) );
@@ -147,7 +157,7 @@ class WPML2MLP_Importer {
 			$this->blog_cache = FALSE; // reset object cache after adding new site. (it will be recreated)
 
 			$do_xliff_export = isset( $_POST[ 'exporttofile' ] ) && $_POST[ 'exporttofile' ] == "1";
-			$language_holder = new MLP_Language_Holder();
+
 			foreach ( WPML2MLP_Helper::get_all_posts() as $current_post ) {
 
 				$relevant_blog = $this->get_relevant_blog( $current_post );
@@ -156,13 +166,13 @@ class WPML2MLP_Importer {
 					$mlp_post_id = $this->post_creator->add_post( $current_post, $relevant_blog );
 
 					if ( $do_xliff_export && $mlp_post_id ) {
-						$this->set_xliff_item( $mlp_post_id, $current_post, $language_holder );
+						$this->set_xliff_item( $mlp_post_id, $current_post, $this->language_holder );
 					}
 				}
 			}
 
 			if ( $do_xliff_export ) {
-				do_action( 'WPML2MLP_xliff_export', $language_holder->get_all_items() );
+				do_action( 'WPML2MLP_xliff_export', $this->language_holder->get_all_items() );
 			}
 
 			?>
@@ -244,7 +254,7 @@ class WPML2MLP_Importer {
 		return FALSE;
 	}
 
-	private function set_xliff_item( $mlp_post_id, $post, MLP_Language_Holder &$language_holder ) {
+	private function set_xliff_item( $mlp_post_id, $post, WPML2MLP_Language_Holder &$language_holder ) {
 
 		$post_lang = WPML2MLP_Helper::get_language_info( $post->ID );
 
