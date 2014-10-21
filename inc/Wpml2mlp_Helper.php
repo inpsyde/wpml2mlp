@@ -1,6 +1,6 @@
 <?php
 
-class WPML2MLP_Helper {
+class Wpml2mlp_Helper {
 
 	/**
 	 * Gets all posts from wp db.
@@ -123,7 +123,7 @@ class WPML2MLP_Helper {
 
 	public static function get_default_post_ID( $post ) {
 
-		$main_language = WPML2MLP_Helper::get_main_language();
+		$main_language = Wpml2mlp_Helper::get_main_language();
 
 		return (int) icl_object_id( $post->ID, $post->post_type, TRUE, $main_language );
 	}

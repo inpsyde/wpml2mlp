@@ -2,7 +2,7 @@
 
 define( "WPVERSION_CONST", "3.1" );
 
-class Wpml2MLP_Prerequisites {
+class Wpml2mlp_Prerequisites {
 
 	public static function check_prerequisites() {
 

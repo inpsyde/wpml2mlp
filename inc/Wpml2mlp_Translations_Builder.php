@@ -1,6 +1,6 @@
 <?php
 
-class WPML2MLP_Translations_Builder {
+class Wpml2mlp_Translations_Builder {
 
 	/**
 	 *
@@ -21,7 +21,7 @@ class WPML2MLP_Translations_Builder {
 
 		$ret = array();
 
-		$source_id = WPML2MLP_Helper::get_default_post_ID($post);
+		$source_id = Wpml2mlp_Helper::get_default_post_ID($post);
 
 		$source_post = get_post( $source_id ); // TODO: cache this
 
@@ -45,6 +45,6 @@ class WPML2MLP_Translations_Builder {
 
 	private function construct_translation_item( $source_val, $dest_val, $post_id, $source_id ) {
 
-		return new WPML2MLP_Translation_Item( $source_val, $dest_val, $source_id, $post_id );
+		return new Wpml2mlp_Translation_Item( $source_val, $dest_val, $source_id, $post_id );
 	}
 }

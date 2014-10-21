@@ -1,6 +1,6 @@
 <?php
 
-class WPML2MLP_Translations {
+class Wpml2mlp_Translations {
 
 	public $source_language;
 

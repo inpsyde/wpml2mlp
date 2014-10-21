@@ -1,6 +1,6 @@
 <?php
 
-class WPML2MLP_Xliff_Creator {
+class Wpml2mlp_Xliff_Creator {
 
 	function __construct() {
 
@@ -51,7 +51,7 @@ class WPML2MLP_Xliff_Creator {
 		$data = $_GET[ 'xliff_export_data' ];
 		$data = unserialize( base64_decode( $data ) );
 
-		$zip_archive = new ZipCreator();
+		$zip_archive = new Wpml2mlp_ZipCreator();
 
 		if ( is_array( $data ) ) {
 			foreach ( $data as $lng ) {

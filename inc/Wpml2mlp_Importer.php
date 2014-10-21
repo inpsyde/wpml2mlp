@@ -1,37 +1,6 @@
 <?php
-/**
- * Plugin Name: WPML 2 MLP
- * Plugin URI:  http://marketpress.com/product/multilingual-press-pro/?piwik_campaign=mlp&piwik_kwd=pro
- * Description: Get data from WPML export and immediately import in Multisite environment .
- * Author:      Inpsyde GmbH
- * Author URI:  http://inpsyde.com
- * Version:     1.0.0
- * Network:     true
- */
 
-defined( 'ABSPATH' ) or die();
-define( "WPVERSION_CONST", "3.1" );
-
-add_filter( 'plugins_loaded', array( 'WPML2MLP_Importer', 'get_object' ) );
-
-add_action(
-	'mlp_and_wp_loaded',
-	function ( Inpsyde_Property_List_Interface $mlp_data ) {
-
-		$load_rule = new Inpsyde_Directory_Load( __DIR__ . '/inc' );
-		$mlp_data->loader->add_rule( $load_rule );
-	}
-);
-
-class WPML2MLP_Importer {
-
-	/**
-	 * The class object
-	 *
-	 * @since  0.0.1
-	 * @var    String
-	 */
-	static protected $class_object = NULL;
+class Wpml2mlp_Importer {
 
 	/**
 	 * @var wpdb
@@ -73,74 +42,50 @@ class WPML2MLP_Importer {
 	 * @var string
 	 */
 	private $main_language;
+	/**
+	 * Overloaded instance for plugin data.
+	 *
+	 * @var Inpsyde_Property_List_Interface
+	 */
+	private $plugin_data;
 
 	/**
 	 * Constructor
 	 *
+	 * @param Inpsyde_Property_List_Interface $data
+	 * @param wpdb                            $wpdb
 	 */
-	public function __construct() {
-
-		/**
-		 * Add menu to to network navigation
-		 */
-		add_action( "network_admin_menu", array( $this, "add_menu_option" ) );
-		/**
-		 * Check plugin check_prerequisites
-		 */
-		add_action( 'admin_init', array( $this, 'page_init' ) );
-
-		global $wpdb;
+	public function __construct( Inpsyde_Property_List_Interface $data, wpdb $wpdb = NULL ) {
 
 		if ( NULL === $wpdb ) {
 			return;
 		}
 
-		$link_table                = $wpdb->base_prefix . 'multilingual_linked';
-		$this->wpdb                = $wpdb;
+		$this->plugin_data = $data;
+		$this->wpdb        = $wpdb;
+
+		if ( NULL === $wpdb ) {
+			return;
+		}
+
+
+
+
+		$link_table = $wpdb->base_prefix . 'multilingual_linked';
+
 		$site_relations            = new Mlp_Site_Relations( $wpdb, 'mlp_site_relations' );
 		$content_relations         = new Mlp_Content_Relations(
 			$this->wpdb,
 			$site_relations,
 			$link_table
 		);
-		$this->site_creator        = new WPML2MLP_Site_Creator( $this->wpdb );
-		$this->post_creator        = new WPML2MLP_Post_Creator( $this->wpdb, $content_relations );
-		$this->xliff_creator       = new WPML2MLP_Xliff_Creator();
-		$this->main_language       = WPML2MLP_Helper::get_main_language();
-		$this->translation_builder = new WPML2MLP_Translations_Builder( $this->main_language );
-		$this->language_holder     = new WPML2MLP_Language_Holder();
+		$this->site_creator        = new Wpml2mlp_Site_Creator( $this->wpdb );
+		$this->post_creator        = new Wpml2mlp_Post_Creator( $this->wpdb, $content_relations );
+		$this->xliff_creator       = new Wpml2mlp_Xliff_Creator();
+		$this->main_language       = Wpml2mlp_Helper::get_main_language();
+		$this->translation_builder = new Wpml2mlp_Translations_Builder( $this->main_language );
+		$this->language_holder     = new Wpml2mlp_Language_Holder();
 
-	}
-
-	/**
-	 * Adds the menu option to the settings
-	 */
-	public function add_menu_option() {
-
-		add_submenu_page(
-			'settings.php',
-			'Convert WPML to MLP',
-			strtoupper( 'wpml2mlp' ),
-			'manage_network_options',
-			'wpml2mlp',
-			array( $this, 'run_import' )
-		);
-
-	}
-
-	/**
-	 * Load the object and get the current state
-	 *
-	 * @since   0.0.1
-	 * @return String $class_object
-	 */
-	public static function get_object() {
-
-		if ( NULL == self::$class_object ) {
-			self::$class_object = new self;
-		}
-
-		return self::$class_object;
 	}
 
 	/**
@@ -163,7 +108,7 @@ class WPML2MLP_Importer {
 
 			$do_xliff_export = isset( $_POST[ 'exporttofile' ] ) && $_POST[ 'exporttofile' ] == "1";
 
-			foreach ( WPML2MLP_Helper::get_all_posts() as $current_post ) {
+			foreach ( Wpml2mlp_Helper::get_all_posts() as $current_post ) {
 
 				$relevant_blog = $this->get_relevant_blog( $current_post );
 
@@ -206,12 +151,80 @@ class WPML2MLP_Importer {
 	}
 
 	/**
+	 * Get the settings option array and print one of its values
+	 */
+	public function id_export_callback() {
+
+		//$options = get_option( 'plugin_options' );
+		echo "<label><input checked=checked  value='0' name='exporttofile' type='radio' /> No</label><br />";
+		echo "<label><input value='1' name='exporttofile' type='radio' /> Yes</label><br />";
+
+	}
+
+	private function get_relevant_blog( $post ) {
+
+		if ( ! $this->blog_cache ) {
+			$this->blog_cache = wp_get_sites();
+		}
+
+		$pst_lng = Wpml2mlp_Helper::get_language_info( $post->ID );
+
+		foreach ( $this->blog_cache as $ab ) {
+			if ( get_blog_language( $ab[ 'blog_id' ], TRUE ) == $pst_lng ) {
+				return $ab;
+			}
+		}
+
+		return FALSE;
+	}
+
+	private function set_xliff_item( $mlp_post_id, $post, WPML2MLP_Language_Holder &$language_holder ) {
+
+		$post_lang = Wpml2mlp_Helper::get_language_info( $post->ID );
+
+		if ( $post_lang != $this->main_language ) { // don't map default language
+			$post_translations = $this->translation_builder->build_translation_item( $post, $mlp_post_id );
+
+			if ( $post_translations ) {
+				foreach ( $post_translations as $trans_item ) {
+					$language_holder->set_item( $trans_item, $this->main_language, $post_lang );
+				}
+			}
+		}
+	}
+
+	public function setup() {
+
+		/**
+		 * Add menu to to network navigation
+		 */
+		add_action( "network_admin_menu", array( $this, "add_menu_option" ) );
+		/**
+		 * Check plugin check_prerequisites
+		 */
+		add_action( 'admin_init', array( $this, 'page_init' ) );
+	}
+
+	public function add_menu_option() {
+
+		add_submenu_page(
+			'settings.php',
+			'Convert WPML to MLP',
+			strtoupper( 'wpml2mlp' ),
+			'manage_network_options',
+			'wpml2mlp',
+			array( $this, 'run_import' )
+		);
+
+	}
+
+	/**
 	 * Register and add settings
 	 */
 	public function page_init() {
 
 		//check  check_prerequisites
-		Wpml2MLP_Prerequisites::check_prerequisites();
+		Wpml2mlp_Prerequisites::check_prerequisites();
 
 		register_setting(
 			'export_option_group', // Option group
@@ -234,46 +247,4 @@ class WPML2MLP_Importer {
 		);
 	}
 
-	/**
-	 * Get the settings option array and print one of its values
-	 */
-	public function id_export_callback() {
-
-		//$options = get_option( 'plugin_options' );
-		echo "<label><input checked=checked  value='0' name='exporttofile' type='radio' /> No</label><br />";
-		echo "<label><input value='1' name='exporttofile' type='radio' /> Yes</label><br />";
-
-	}
-
-	private function get_relevant_blog( $post ) {
-
-		if ( ! $this->blog_cache ) {
-			$this->blog_cache = wp_get_sites();
-		}
-
-		$pst_lng = WPML2MLP_Helper::get_language_info( $post->ID );
-
-		foreach ( $this->blog_cache as $ab ) {
-			if ( get_blog_language( $ab[ 'blog_id' ], TRUE ) == $pst_lng ) {
-				return $ab;
-			}
-		}
-
-		return FALSE;
-	}
-
-	private function set_xliff_item( $mlp_post_id, $post, WPML2MLP_Language_Holder &$language_holder ) {
-
-		$post_lang = WPML2MLP_Helper::get_language_info( $post->ID );
-
-		if ( $post_lang != $this->main_language ) { // don't map default language
-			$post_translations = $this->translation_builder->build_translation_item( $post, $mlp_post_id );
-
-			if ( $post_translations ) {
-				foreach ( $post_translations as $trans_item ) {
-					$language_holder->set_item( $trans_item, $this->main_language, $post_lang );
-				}
-			}
-		}
-	}
 }

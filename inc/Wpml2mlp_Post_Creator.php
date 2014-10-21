@@ -1,7 +1,7 @@
 <?php
 
 
-class WPML2MLP_Post_Creator {
+class Wpml2mlp_Post_Creator {
 
 	/**
 	 *
@@ -11,7 +11,7 @@ class WPML2MLP_Post_Creator {
 
 	/**
 	 *
-	 * @var WPML2Mlp_Content_Relations_Interface
+	 * @var Mlp_Content_Relations_Interface
 	 */
 	private $content_relations;
 
@@ -21,7 +21,7 @@ class WPML2MLP_Post_Creator {
 	 */
 	public function __construct(
 		wpdb $wpdb,
-		WPML2Mlp_Content_Relations_Interface $content_relations
+		Mlp_Content_Relations_Interface $content_relations
 	) {
 
 		if ( NULL == $wpdb ) {
@@ -43,7 +43,7 @@ class WPML2MLP_Post_Creator {
 	 */
 	public function post_exists( $post, $blog ) {
 
-		if ( (int) $blog[ 'blog_id' ] == WPML2MLP_Helper::get_default_blog()
+		if ( (int) $blog[ 'blog_id' ] == Wpml2mlp_Helper::get_default_blog()
 		) { // default site, we don't need to copy that?
 			return TRUE;
 		}
@@ -67,7 +67,7 @@ class WPML2MLP_Post_Creator {
 		}
 
 		$original_post_id  = $post->ID; // store temp so that we can return it to the original post
-		$source_content_id = WPML2MLP_Helper::get_default_post_ID( $post );
+		$source_content_id = Wpml2mlp_Helper::get_default_post_ID( $post );
 		$meta              = get_post_meta( $post->ID );
 		$post->ID          = NULL; // reset the post_id, new one will be created
 
@@ -83,7 +83,7 @@ class WPML2MLP_Post_Creator {
 
 		if ( 0 < $new_post_id ) {
 			$this->content_relations->set_relation(
-				WPML2MLP_Helper::get_default_blog(),
+				Wpml2mlp_Helper::get_default_blog(),
 				(int) $blog[ 'blog_id' ],
 				$source_content_id,
 				$new_post_id,

@@ -9,7 +9,7 @@
  *
  * @version 1.0
  */
-class ZipCreator {
+class Wpml2mlp_ZipCreator {
 
 	public $compressedData = array();
 

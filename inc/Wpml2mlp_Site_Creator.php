@@ -1,7 +1,7 @@
 <?php
 
 
-class WPML2MLP_Site_Creator {
+class Wpml2mlp_Site_Creator {
 
 	/**
 	 *
@@ -40,7 +40,7 @@ class WPML2MLP_Site_Creator {
 			$ret = TRUE; // already exists mlp site
 		}
 
-		if ( ! $ret && WPML2MLP_Helper::is_main_language( $lng ) ) {
+		if ( ! $ret && Wpml2mlp_Helper::is_main_language( $lng ) ) {
 			$ret = TRUE; // it is default, do we need to create?
 		}
 
@@ -83,7 +83,7 @@ class WPML2MLP_Site_Creator {
 		if ( 0 < $blog_id ) {
 			$this->set_after_blog_created_vars( $language, $current_site, $blog_id );
 			//$this->network_new_site_controler->update( $blog_id );
-			WPML2MLP_Helper::update_flag( $blog_id, $language[ 'country_flag_url' ] );
+			Wpml2mlp_Helper::update_flag( $blog_id, $language[ 'country_flag_url' ] );
 		}
 
 		return $blog_id;
@@ -109,12 +109,12 @@ class WPML2MLP_Site_Creator {
 	private function set_or_update_post_obj( $language, $current_site ) {
 
 		$_POST[ 'inpsyde_multilingual_flag_url' ] = $language[ 'country_flag_url' ];
-		$_POST[ 'inpsyde_multilingual_lang' ]     = WPML2MLP_Helper::convert_to_mlp_lang_obj(
+		$_POST[ 'inpsyde_multilingual_lang' ]     = Wpml2mlp_Helper::convert_to_mlp_lang_obj(
 			$this->wpdb,
 			$language[ 'language_code' ]
 		);
 		$_POST[ 'related_blogs' ]                 = array(
-			0 => WPML2MLP_Helper::get_default_blog()
+			0 => Wpml2mlp_Helper::get_default_blog()
 		);
 	}
 
@@ -127,11 +127,11 @@ class WPML2MLP_Site_Creator {
 
 		$all_lngs = mlp_get_available_languages();
 
-		$short_code   = WPML2MLP_Helper::get_short_language( $language[ 'language_code' ] );
-		$short_locale = WPML2MLP_Helper::get_short_language( $language[ 'default_locale' ] );
+		$short_code   = Wpml2mlp_Helper::get_short_language( $language[ 'language_code' ] );
+		$short_locale = Wpml2mlp_Helper::get_short_language( $language[ 'default_locale' ] );
 
 		foreach ( $all_lngs as $lng ) {
-			$short_lng = WPML2MLP_Helper::get_short_language( $lng );
+			$short_lng = Wpml2mlp_Helper::get_short_language( $lng );
 
 			if ( $short_code == $short_lng || $short_locale == $short_lng
 			) {
