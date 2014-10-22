@@ -231,10 +231,21 @@ class Wpml2mlp_Importer {
 		 * Add menu to to network navigation
 		 */
 		add_action( "network_admin_menu", array( $this, "add_menu_option" ) );
+		add_action( "admin_menu", array( $this, "wpml_admin_menu" ) );
 		/**
 		 * Check plugin check_prerequisites
 		 */
 		add_action( 'admin_init', array( $this, 'page_init' ) );
+	}
+
+	function wpml_admin_menu() {
+
+		add_options_page(
+			'Convert WPML to MLP',
+			'WPML2MLP',
+			'manage_options',
+			'wpml2mlp',
+			array( $this, 'run_import' ) );
 	}
 
 	public function add_menu_option() {
