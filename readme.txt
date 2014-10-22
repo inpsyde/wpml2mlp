@@ -13,12 +13,12 @@ WPML stores each entry as a separate post and uses some custom tables to connect
 This migration plugin:
 
 * Converts the WPML translation records to default core posts or post types
-* Create the relationship about the languages inside the network of the Multisite
-* Helps with the export/import to your new WPMS site the data.
+* It creates the relationship about the languages inside the network of the Multisite
+* Helps to export/import your data to your new WPMS site.
 * Use XLIFF (XML Localisation Interchange File Format) format as Export file
-* Restores the meta data back to posts and his meta data so that (MultilingualPress)[https://wordpress.org/plugins/multilingual-press/] will recognize all your translations.
+* Restores the meta data back to posts and their meta data so that (MultilingualPress)[https://wordpress.org/plugins/multilingual-press/] will recognize all your translations.
 
-MultilingualPress connect multiple sites as language alternatives in a multisite. Use a customizable widget to link to all sites.
+MultilingualPress connects multiple sites as language alternatives in a multisite. Use a customizable widget to link to all sites.
 
 We cannot guarantee free ad hoc support. Please be patient, we are a small team.
 You can follow our progress and development notices on our [developer blog](http://make.marketpress.com/multilingualpress/).
