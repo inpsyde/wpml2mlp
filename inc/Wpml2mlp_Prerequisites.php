@@ -7,10 +7,9 @@ class Wpml2mlp_Prerequisites {
 	public static function check_prerequisites() {
 
 		$wp_version_check      = self::check_wordpress_version();
-		$wp_is_multisite_check = self::check_is_multisite_enabled();
 		$wpml_installed        = self::is_wpmlplugin_active();
 
-		if ( $wp_version_check || $wp_is_multisite_check || ! $wpml_installed ) {
+		if ( $wp_version_check || ! $wpml_installed ) {
 			$plugin      = plugin_basename( __FILE__ );
 			$plugin_data = get_plugin_data( __FILE__, FALSE );
 			if ( is_plugin_active( $plugin ) ) {
@@ -36,9 +35,14 @@ class Wpml2mlp_Prerequisites {
 
 	}
 
-	private static function check_is_multisite_enabled() {
+	public static function is_multisite_enabled() {
 
-		return ! is_multisite() ? TRUE : FALSE;
+		return is_multisite() ? TRUE : FALSE;
+	}
+
+	public static function is_mlp_plugin_active() {
+
+		return is_plugin_active( 'multilingual-press-pro/multilingual-press.php' ) ? TRUE : FALSE;
 	}
 
 	private static function check_wordpress_version() {
