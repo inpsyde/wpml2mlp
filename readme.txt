@@ -35,8 +35,7 @@ Use the installer via back-end of your install or ...
 1. Unpack the download-package.
 2. Upload the files to the `/wp-content/plugins/` directory.
 3. Activate the plugin through the **Network/Plugins** menu in WordPress and click **Network Activate**.
-4. Go to **All Sites**, **Edit** each site, then select the tab **Multilingual Press** to configure the
-   settings. You need at least two sites with an assigned language.
+4. Go to **Settings**, **WPML2MLP**, then start the export of the current WPML stuff.
 
 == Screenshots ==
 
