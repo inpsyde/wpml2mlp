@@ -88,7 +88,7 @@ class Wpml2mlp_Importer {
 	}
 
 	private function do_xliff_export(){
-		if( ! Wpml2mlp_Prerequisites::is_multisite_enabled()) {
+		if( is_main_site ()) {
 			foreach ( Wpml2mlp_Helper::get_all_posts() as $current_post ) {
 				$this->set_xliff_item( $current_post->ID, $current_post, $this->language_holder );
 			}
@@ -158,7 +158,7 @@ class Wpml2mlp_Importer {
 
 			<p>
 
-			<form method="post" action="settings.php?page=wpml2mlp">
+			<form method="post" action="<?php echo is_main_site () == TRUE ? 'options-general' : 'settings' ?>.php?page=wpml2mlp">
 				<input type="hidden" name="post_type" value="do_xliff_export" />
 				<?php
 				submit_button( __( 'Run translations export to xliff' ) ); ?>
@@ -169,7 +169,7 @@ class Wpml2mlp_Importer {
 			if ( Wpml2mlp_Prerequisites::is_multisite_enabled() ) {
 				?>
 
-					<form method="post" action="settings.php?page=wpml2mlp">
+					<form method="post" action="<?php echo is_main_site () == TRUE ? 'options-general' : 'settings' ?>.php?page=wpml2mlp">
 
 						<input type="hidden" name="post_type" value="do_wmpl_2_mlp" />
 
