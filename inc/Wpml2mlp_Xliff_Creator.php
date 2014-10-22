@@ -2,12 +2,7 @@
 
 class Wpml2mlp_Xliff_Creator {
 
-	function __construct() {
-
-		add_action( 'init', array( $this, 'init' ) );
-	}
-
-	function init() {
+	function setup() {
 
 		if ( is_admin() ) {
 			add_action(
@@ -53,7 +48,7 @@ class Wpml2mlp_Xliff_Creator {
 
 		$zip_archive = new Wpml2mlp_ZipCreator();
 
-		if ( is_array( $data ) ) {
+		if ( is_array( $data ) && count( $data ) > 0 ) {
 			foreach ( $data as $lng ) {
 				$xliff_file = $this->get_xlif_file( $lng );
 				$filename   = $lng->source_language . '_' . $lng->destination_language;
