@@ -11,18 +11,20 @@
 
 defined( 'ABSPATH' ) or die( "No direct access!" );
 
-add_action(
-	'mlp_and_wp_loaded',
-	function ( Inpsyde_Property_List_Interface $mlp_data ) {
+add_action( 'mlp_and_wp_loaded', 'mlp_and_wp_loaded_handler' );
 
-		global $wpdb;
-		$data = new Inpsyde_Property_List;
+function mlp_and_wp_loaded_handler ( Inpsyde_Property_List_Interface $mlp_data ) {
 
-		$load_rule = new Inpsyde_Directory_Load( __DIR__ . '/inc' );
-		$mlp_data->loader->add_rule( $load_rule );
+	global $wpdb;
+	$data = new Inpsyde_Property_List;
 
-		$wpml2mlp = new Wpml2mlp_Importer( $data, $wpdb );
-		$wpml2mlp->setup();
-	} );
+	$load_rule = new Inpsyde_Directory_Load( __DIR__ . '/inc' );
+	$mlp_data->loader->add_rule( $load_rule );
+
+	$wpml2mlp = new Wpml2mlp_Importer( $data, $wpdb );
+	$wpml2mlp->setup();
+}
+
+
 
 

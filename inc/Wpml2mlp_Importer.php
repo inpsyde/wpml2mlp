@@ -71,15 +71,15 @@ class Wpml2mlp_Importer {
 
 		$link_table = $wpdb->base_prefix . 'multilingual_linked';
 
-		$site_relations            = new Mlp_Site_Relations( $wpdb, 'mlp_site_relations' );
-		$content_relations         = new Mlp_Content_Relations(
+		$site_relations      = new Mlp_Site_Relations( $wpdb, 'mlp_site_relations' );
+		$content_relations   = new Mlp_Content_Relations(
 			$this->wpdb,
 			$site_relations,
 			$link_table
 		);
-		$this->site_creator        = new Wpml2mlp_Site_Creator( $this->wpdb );
-		$this->post_creator        = new Wpml2mlp_Post_Creator( $this->wpdb, $content_relations );
-		$this->xliff_creator       = new Wpml2mlp_Xliff_Creator();
+		$this->site_creator  = new Wpml2mlp_Site_Creator( $this->wpdb );
+		$this->post_creator  = new Wpml2mlp_Post_Creator( $this->wpdb, $content_relations );
+		$this->xliff_creator = new Wpml2mlp_Xliff_Creator();
 		$this->xliff_creator->setup();
 		$this->main_language       = Wpml2mlp_Helper::get_main_language();
 		$this->translation_builder = new Wpml2mlp_Translations_Builder( $this->main_language );
@@ -87,7 +87,8 @@ class Wpml2mlp_Importer {
 
 	}
 
-	private function do_xliff_export(){
+	private function do_xliff_export() {
+
 		foreach ( Wpml2mlp_Helper::get_all_posts() as $current_post ) {
 			$this->set_xliff_item( $current_post->ID, $current_post, $this->language_holder );
 		}
@@ -105,7 +106,8 @@ class Wpml2mlp_Importer {
 	<?php
 	}
 
-	private function do_wpml2mlp(){
+	private function do_wpml2mlp() {
+
 		$lng_arr = icl_get_languages( 'skip_missing=1' );
 
 		foreach ( $lng_arr as $lng ) {
@@ -130,7 +132,7 @@ class Wpml2mlp_Importer {
 		<div class="wrap">
 			You have successfully import WPML data to the MLP.
 		</div>
-		<?php
+	<?php
 	}
 
 	/**
@@ -139,9 +141,9 @@ class Wpml2mlp_Importer {
 	public function run_import() {
 
 		if ( isset( $_POST[ 'submit' ] ) ) {
-			if($_POST[ 'post_type' ] == 'do_wmpl_2_mlp') {
+			if ( $_POST[ 'post_type' ] == 'do_wmpl_2_mlp' ) {
 				$this->do_wpml2mlp();
-			}else if($_POST[ 'post_type' ] == 'do_xliff_export'){
+			} else if ( $_POST[ 'post_type' ] == 'do_xliff_export' ) {
 				$this->do_xliff_export();
 			}
 		}
@@ -154,7 +156,8 @@ class Wpml2mlp_Importer {
 
 			<p>
 
-			<form method="post" action="<?php echo ! is_network_admin() ? 'options-general' : 'settings' ?>.php?page=wpml2mlp">
+			<form method="post" action="<?php echo ! is_network_admin() ? 'options-general'
+				: 'settings' ?>.php?page=wpml2mlp">
 				<input type="hidden" name="post_type" value="do_xliff_export" />
 				<?php
 				submit_button( __( 'Run translations export to xliff' ) ); ?>
@@ -165,13 +168,20 @@ class Wpml2mlp_Importer {
 			if ( is_network_admin() ) {
 				?>
 
-					<form method="post" action="<?php echo ! is_network_admin() ? 'options-general' : 'settings' ?>.php?page=wpml2mlp">
+				<form method="post" action="settings.php?page=wpml2mlp">
 
-						<input type="hidden" name="post_type" value="do_wmpl_2_mlp" />
+					<input type="hidden" name="post_type" value="do_wmpl_2_mlp" />
 
-						<?php
-						submit_button( __( 'Run WPML to MLP import' ) ); ?>
-					</form>
+					<?php
+					submit_button( __( 'Run WPML to MLP import' ) ); ?>
+				</form>
+			<?php } else { ?>
+				<div>
+					<button disabled="disabled">Run WPML to MLP import</button>
+				</div><br />
+				<div>
+					To perform import from WPML to multi site you need to be<br /> on network admin and have "Multilingual Press" plugin enabled.
+				</div>
 			<?php } ?>
 			</p>
 		</div>
@@ -241,7 +251,8 @@ class Wpml2mlp_Importer {
 			'WPML2MLP',
 			'manage_options',
 			'wpml2mlp',
-			array( $this, 'run_import' ) );
+			array( $this, 'run_import' )
+		);
 	}
 
 	public function add_menu_option() {
