@@ -35,6 +35,8 @@ class Wpml2mlp_Helper {
 		return FALSE;
 	}
 
+
+
 	/**
 	 * Determinate is main language
 	 *
@@ -83,13 +85,25 @@ class Wpml2mlp_Helper {
 	public static function  get_language_info( $post_id ) {
 
 		global $wpdb;
-
 		$query      = $wpdb->prepare(
 			'SELECT language_code FROM ' . $wpdb->prefix . 'icl_translations WHERE element_id="%d"', $post_id
 		);
 		$query_exec = $wpdb->get_row( $query );
 
+		if ( $query_exec == NULL ) {
+			$query      = $wpdb->prepare(
+				'SELECT language_code FROM ' . $wpdb->base_prefix . 'icl_translations WHERE element_id="%d"', $post_id
+			);
+			$query_exec = $wpdb->get_row( $query );
+
+		}
+		if ( $query_exec == NULL ) {
+			return NULL;
+
+		}
+
 		return $query_exec->language_code;
+
 	}
 
 	/**
@@ -115,10 +129,9 @@ class Wpml2mlp_Helper {
 	 */
 	public static function get_main_language() {
 
-		global $sitepress;
-		$main_lng = $sitepress->get_default_language();
+		$settings = get_blog_option( self::get_default_blog(), 'icl_sitepress_settings', - 1 );
 
-		return $main_lng;
+		return isset( $settings[ 'default_language' ] ) ? $settings[ 'default_language' ] : FALSE;
 	}
 
 	public static function get_default_post_ID( $post ) {

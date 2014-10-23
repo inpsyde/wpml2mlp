@@ -84,6 +84,7 @@ class Wpml2mlp_Site_Creator {
 			$this->set_after_blog_created_vars( $language, $current_site, $blog_id );
 			//$this->network_new_site_controler->update( $blog_id );
 			Wpml2mlp_Helper::update_flag( $blog_id, $language[ 'country_flag_url' ] );
+
 		}
 
 		return $blog_id;

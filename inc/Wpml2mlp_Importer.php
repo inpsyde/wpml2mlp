@@ -220,7 +220,7 @@ class Wpml2mlp_Importer {
 
 		$post_lang = Wpml2mlp_Helper::get_language_info( $post->ID );
 
-		if ( $post_lang != $this->main_language ) { // don't map default language
+		if ( $post_lang != NULL && $post_lang != $this->main_language ) { // don't map default language
 			$post_translations = $this->translation_builder->build_translation_item( $post, $mlp_post_id );
 
 			if ( $post_translations ) {
