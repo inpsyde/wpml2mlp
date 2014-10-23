@@ -88,12 +88,8 @@ class Wpml2mlp_Importer {
 	}
 
 	private function do_xliff_export(){
-		if( ! is_network_admin()) {
-			foreach ( Wpml2mlp_Helper::get_all_posts() as $current_post ) {
-				$this->set_xliff_item( $current_post->ID, $current_post, $this->language_holder );
-			}
-		}else{
-			// todo: implement getting multisite posts
+		foreach ( Wpml2mlp_Helper::get_all_posts() as $current_post ) {
+			$this->set_xliff_item( $current_post->ID, $current_post, $this->language_holder );
 		}
 
 		$data = $this->language_holder->get_all_items();
