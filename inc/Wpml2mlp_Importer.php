@@ -162,7 +162,7 @@ class Wpml2mlp_Importer {
 
 
 			<?php
-			if ( Wpml2mlp_Prerequisites::is_multisite_enabled() ) {
+			if ( is_network_admin() ) {
 				?>
 
 					<form method="post" action="<?php echo ! is_network_admin() ? 'options-general' : 'settings' ?>.php?page=wpml2mlp">
