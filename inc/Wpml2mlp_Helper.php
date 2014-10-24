@@ -129,7 +129,10 @@ class Wpml2mlp_Helper {
 	 */
 	public static function get_main_language() {
 
-		$settings = get_blog_option( self::get_default_blog(), 'icl_sitepress_settings', - 1 );
+		if ( is_multisite() )
+			$settings = get_blog_option( self::get_default_blog(), 'icl_sitepress_settings', - 1 );
+		else
+			$settings = get_option( 'icl_sitepress_settings', - 1 );
 
 		return isset( $settings[ 'default_language' ] ) ? $settings[ 'default_language' ] : FALSE;
 	}
