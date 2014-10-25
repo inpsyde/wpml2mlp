@@ -3,7 +3,7 @@
 Convert posts from an existing WPML multilingual site via XLIFF Import/Export for MultilingualPress
 
 ## Description
-WPML stores each entry as a separate post and uses some custom tables to connect the translations. If you de-activate the plugin or have issues with functionality related to version updates, you get one site with multilingual confusion. This plugin migrate all data from WPML to [MultilingualPress](https://wordpress.org/plugins/multilingual-press/) plugin, also the [Premimum](http://multilingualpress.pro/) Version.
+WPML stores each entry as a separate post and uses some custom tables to connect the translations. If you de-activate the plugin or have issues with functionality related to version updates, you get one site with multilingual confusion. This plugin migrate all data from WPML to [MultilingualPress](https://wordpress.org/plugins/multilingual-press/) plugin, also the [Premium](http://multilingualpress.pro/) Version.
 
 ### Attention
 **This is a beta version!** You can use the plugin, but make a backup safely. Please give us feedback if you see problems.
@@ -27,7 +27,7 @@ You can follow our progress and development notices on our [developer blog](http
 #### Requirements
  * WordPress Multisite 3.4+
  * PHP 5.2.4, newer PHP versions will work faster.
- * [MultilingualPress](https://wordpress.org/plugins/multilingual-press/) plugin, also the [Premimum](http://multilingualpress.pro/) Version
+ * [MultilingualPress](https://wordpress.org/plugins/multilingual-press/) plugin, also the [Premium](http://multilingualpress.pro/) Version
 
 Use the installer via back-end of your install or ...
 
