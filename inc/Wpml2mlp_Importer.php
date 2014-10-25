@@ -51,6 +51,11 @@ class Wpml2mlp_Importer {
 	private $plugin_data;
 
 	/**
+	 * @var string
+	 */
+	private $import_message;
+
+	/**
 	 * Constructor
 	 *
 	 * @param Inpsyde_Property_List_Interface $data
@@ -95,17 +100,9 @@ class Wpml2mlp_Importer {
 
 		$data = $this->language_holder->get_all_items();
 		if ( is_array( $data ) && count( $data ) > 0 ) {
-			$this->xliff_creator->contentForExport = $data;
-			//$this->xliff_creator->do_xliff_export();
-			do_action( 'WPML2MLP_xliff_export');
+			$this->xliff_creator->contentForExport = $data[ 0 ];
+			$this->xliff_creator->do_xliff_export();
 		}
-
-		?>
-
-		<div class="wrap">
-			You have successfully export files.
-		</div>
-	<?php
 	}
 
 	private function do_wpml2mlp() {
@@ -129,26 +126,14 @@ class Wpml2mlp_Importer {
 				$mlp_post_id = $this->post_creator->add_post( $current_post, $relevant_blog );
 			}
 		}
-		?>
-
-		<div class="wrap">
-			You have successfully import WPML data to the MLP.
-		</div>
-	<?php
+		$this->import_message = 'You have successfully import WPML data to the MLP.';
 	}
 
 	/**
 	 * Runs the import from WPML to MLP
 	 */
-	public function run_import() {
+	public function show_import() {
 
-		if ( isset( $_POST[ 'submit' ] ) ) {
-			if ( $_POST[ 'post_type' ] == 'do_wmpl_2_mlp' ) {
-				$this->do_wpml2mlp();
-			} else if ( $_POST[ 'post_type' ] == 'do_xliff_export' ) {
-				$this->do_xliff_export();
-			}
-		}
 		?>
 		<div class="wrap">
 			<div class="icon32" id="icon-options-general"><br></div>
@@ -176,6 +161,11 @@ class Wpml2mlp_Importer {
 
 					<?php
 					submit_button( __( 'Run WPML to MLP import' ) ); ?>
+
+					<?php if ( ! empty( $this->import_message ) ) : ?>
+						<strong><?php echo $this->import_message; ?></strong>
+					<?php endif; ?>
+
 				</form>
 			<?php } else { ?>
 				<div>
@@ -188,6 +178,20 @@ class Wpml2mlp_Importer {
 			</p>
 		</div>
 	<?php
+	}
+
+	/**
+	 * Runs the import from WPML to MLP
+	 */
+	public function run_import() {
+	
+		if ( isset( $_POST[ 'submit' ] ) ) {
+			if ( $_POST[ 'post_type' ] == 'do_wmpl_2_mlp' ) {
+				$this->do_wpml2mlp();
+			} else if ( $_POST[ 'post_type' ] == 'do_xliff_export' ) {
+				$this->do_xliff_export();
+			}
+		}
 	}
 
 	/**
@@ -244,6 +248,10 @@ class Wpml2mlp_Importer {
 		 * Check plugin check_prerequisites
 		 */
 		add_action( 'admin_init', array( $this, 'page_init' ) );
+		/**
+		 * Run import on admin_init
+		 */
+		add_action( 'admin_init',  array( $this, 'run_import' ) );
 	}
 
 	function wpml_admin_menu() {
@@ -253,7 +261,7 @@ class Wpml2mlp_Importer {
 			'WPML2MLP',
 			'manage_options',
 			'wpml2mlp',
-			array( $this, 'run_import' )
+			array( $this, 'show_import' )
 		);
 	}
 
@@ -265,7 +273,7 @@ class Wpml2mlp_Importer {
 			strtoupper( 'wpml2mlp' ),
 			'manage_network_options',
 			'wpml2mlp',
-			array( $this, 'run_import' )
+			array( $this, 'show_import' )
 		);
 
 	}
