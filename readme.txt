@@ -12,7 +12,7 @@ WPML stores each entry as a separate post and uses some custom tables to connect
 
 = Attention =
 **This is a beta version!** You can use the plugin, but make a backup safely. Please give us feedback if you see problems.
-The best way for feedback is a issue on the repository on [github.com/inpsyde/wpml2mlp](https://github.com/inpsyde/wpml2mlp).
+The best way for feedback is an issue on the repository on [github.com/inpsyde/wpml2mlp](https://github.com/inpsyde/wpml2mlp).
 
 This migration plugin:
 
