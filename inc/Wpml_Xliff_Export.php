@@ -42,26 +42,16 @@ class Wpml_Xliff_Export{
 		$data = $this->language_holder->get_all_items();
 
 		if ( is_array( $data ) && count( $data ) > 0 ) {
-			do_action( 'WPML2MLP_xliff_export', $data );
+			$this->xliff_creator->contentForExport = $data;
+			$this->xliff_creator->do_xliff_export();
 		}
-
-		?>
-
-		<div class="wrap">
-			You have successfully export files.
-		</div>
-	<?php
 	}
 
 	/**
-	 * Runs the import from WPML to MLP
+	 * Shows the Xliff export
 	 */
-	public function run_import() {
+	public function show_import() {
 
-		if ( isset( $_POST[ 'submit' ] ) ) {
-
-			$this->do_xliff_export();
-		}
 		?>
 		<div class="wrap">
 			<div class="icon32" id="icon-options-general"><br></div>
@@ -80,6 +70,17 @@ class Wpml_Xliff_Export{
 			</p>
 		</div>
 	<?php
+	}
+	
+	/**
+	 * Runs the import from WPML to MLP
+	 */
+	public function run_import() {
+	
+		if ( isset( $_POST[ 'submit' ] ) ) {
+	
+			$this->do_xliff_export();
+		}
 	}
 
 	/**
@@ -119,6 +120,10 @@ class Wpml_Xliff_Export{
 		 * Check plugin check_prerequisites
 		 */
 		add_action( 'admin_init', array( $this, 'page_init' ) );
+		/**
+		 * Run import on admin_init
+		 */
+		add_action( 'admin_init',  array( $this, 'run_import' ) );
 	}
 
 	function wpml_admin_menu() {
@@ -128,7 +133,7 @@ class Wpml_Xliff_Export{
 			'WPML2MLP',
 			'manage_options',
 			'wpml2mlp',
-			array( $this, 'run_import' )
+			array( $this, 'show_import' )
 		);
 	}
 
@@ -140,7 +145,7 @@ class Wpml_Xliff_Export{
 			strtoupper( 'wpml2mlp' ),
 			'manage_network_options',
 			'wpml2mlp',
-			array( $this, 'run_import' )
+			array( $this, 'show_import' )
 		);
 
 	}
