@@ -5,7 +5,7 @@
  * Description: Get data from WPML export and immediately import in Multisite environment .
  * Author:      Inpsyde GmbH
  * Author URI:  http://inpsyde.com
- * Version:     1.0.0
+ * Version:     0.1 Beta
  * Network:     true
  */
 
