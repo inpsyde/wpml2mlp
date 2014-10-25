@@ -143,7 +143,7 @@ class Wpml2mlp_Importer {
 
 			<p>
 
-			<form method="post" action="<?php echo ! is_network_admin() ? 'options-general'
+			<form method="post" action="<?php echo ! is_network_admin() ? 'tools'
 				: 'settings' ?>.php?page=wpml2mlp">
 				<input type="hidden" name="post_type" value="do_xliff_export" />
 				<?php
@@ -256,7 +256,8 @@ class Wpml2mlp_Importer {
 
 	function wpml_admin_menu() {
 
-		add_options_page(
+		add_submenu_page(
+			'tools.php',
 			'Convert WPML to MLP',
 			'WPML2MLP',
 			'manage_options',
