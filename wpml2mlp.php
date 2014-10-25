@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: WPML 2 MLP
- * Plugin URI:  http://marketpress.com/product/multilingual-press-pro/?piwik_campaign=mlp&piwik_kwd=pro
- * Description: Get data from WPML export and immediately import in Multisite environment .
+ * Plugin Name: WPML to MultilingualPress
+ * Plugin URI:  https://github.com/inpsyde/wpml2mlp
+ * Description: Get data from WPML export and immediately import in Multisite and MultilingualPress environment.
  * Author:      Inpsyde GmbH
  * Author URI:  http://inpsyde.com
  * Version:     0.1 Beta
