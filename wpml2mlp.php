@@ -15,7 +15,7 @@ if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
 	require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
 }
 
-if ( ! is_plugin_active_for_network( 'multilingual-press-pro/multilingual-press.php' ) ) {
+if ( ! is_plugin_active_for_network( 'multilingual-press-pro/multilingual-press.php' ) && ! is_plugin_active_for_network( 'multilingual-press/multilingual-press.php' ) ) {
 	add_action( 'wp_loaded', 'load_wpml2xliff_export' );
 }else{
 
