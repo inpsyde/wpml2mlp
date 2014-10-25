@@ -10,6 +10,10 @@ Convert posts from an existing WPML multilingual site via XLIFF Import/Export fo
 == Description ==
 WPML stores each entry as a separate post and uses some custom tables to connect the translations. If you de-activate the plugin or have issues with functionality related to version updates, you get one site with multilingual confusion. 
 
+= Attention =
+*This is a beta version!* You can use the plugin, but make a backup safely. Please give us feedback if you see problems.
+The best way for feedback is a issue on the repository on [github.com/inpsyde/wpml2mlp](https://github.com/inpsyde/wpml2mlp).
+
 This migration plugin:
 
 * Converts the WPML translation records to default core posts or post types
@@ -34,14 +38,11 @@ Use the installer via back-end of your install or ...
 
 1. Unpack the download-package.
 2. Upload the files to the `/wp-content/plugins/` directory.
-3. Activate the plugin through the **Network/Plugins** menu in WordPress and click **Network Activate**.
-4. Go to **Settings**, **WPML2MLP**, then start the export of the current WPML stuff.
-
-== Screenshots ==
-
-1. Language Manager
+3. Single Site: Activate the plugin through the **Plugins** menu in WordPress and click **Activate**
+4. Multisite: Activate the plugin through the **Network/Plugins** menu in WordPress and click **Network Activate**.
+5. Go to **Settings** on Multisite or **Tools** on single site, **WPML2MLP**, then start the export of the current WPML stuff.
 
 == Changelog ==
 
-= 1.0.0 =
- * First public release
+= 0.1 Beta (10/25/2014) =
+ * First public release, but Beta version
