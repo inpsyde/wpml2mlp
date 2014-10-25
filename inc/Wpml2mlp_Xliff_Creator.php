@@ -45,8 +45,6 @@ class Wpml2mlp_Xliff_Creator {
 		?>
 
 		<script type="text/javascript">
-
-			var xliff_export_data = "<?php echo $data; ?>";
 			var xliff_export_nonce = "<?php echo $nonce; ?>";
 			addLoadEvent( function() {
 				window.location = "<?php echo htmlentities($_SERVER['REQUEST_URI']) ?>&mlp_xliff_action=download&nonce=" + xliff_export_nonce;

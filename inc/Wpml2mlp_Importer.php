@@ -100,7 +100,7 @@ class Wpml2mlp_Importer {
 
 		$data = $this->language_holder->get_all_items();
 		if ( is_array( $data ) && count( $data ) > 0 ) {
-			$this->xliff_creator->contentForExport = $data[ 0 ];
+			$this->xliff_creator->contentForExport = $data;
 			$this->xliff_creator->do_xliff_export();
 		}
 	}
