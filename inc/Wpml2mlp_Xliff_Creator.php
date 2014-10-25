@@ -2,6 +2,22 @@
 
 class Wpml2mlp_Xliff_Creator {
 
+	private $contentForExport;
+
+	public function __get( $property ) {
+
+		if ( property_exists( $this, $property ) ) {
+			return $this->$property;
+		}
+	}
+
+	public function __set( $property, $value ) {
+
+		if ( property_exists( $this, $property ) ) {
+			$this->$property = $value;
+		}
+	}
+
 	function setup() {
 
 		if ( is_admin() ) {
@@ -21,9 +37,9 @@ class Wpml2mlp_Xliff_Creator {
 		}
 	}
 
-	function trigger_export( $data ) {
+	function trigger_export( ) {
 
-		$data  = base64_encode( serialize( $data ) );
+		//$data  = base64_encode( serialize( $data ) );
 		$nonce = wp_create_nonce( 'xliff-export' );
 
 		?>
@@ -33,7 +49,7 @@ class Wpml2mlp_Xliff_Creator {
 			var xliff_export_data = "<?php echo $data; ?>";
 			var xliff_export_nonce = "<?php echo $nonce; ?>";
 			addLoadEvent( function() {
-				window.location = "<?php echo htmlentities($_SERVER['REQUEST_URI']) ?>&mlp_xliff_action=download&xliff_export_data=" + xliff_export_data + "&nonce=" + xliff_export_nonce;
+				window.location = "<?php echo htmlentities($_SERVER['REQUEST_URI']) ?>&mlp_xliff_action=download&nonce=" + xliff_export_nonce;
 			} );
 
 		</script>
@@ -43,8 +59,8 @@ class Wpml2mlp_Xliff_Creator {
 
 	function do_xliff_export() {
 
-		$data = $_GET[ 'xliff_export_data' ];
-		$data = unserialize( base64_decode( $data ) );
+		$data = $this->contentForExport;
+		//$data = unserialize( base64_decode( $data ) );
 
 		$zip_archive = new Wpml2mlp_ZipCreator();
 
