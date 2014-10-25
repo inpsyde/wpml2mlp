@@ -17,12 +17,12 @@ The best way for feedback is an issue on the repository on [github.com/inpsyde/w
 This migration plugin:
 
 * Converts the WPML translation records to default core posts or post types
-* It creates the relationship about the languages inside the network of the Multisite
+* It creates the relationship about the languages inside the network of the Multisite with the [MultilingualPress](https://wordpress.org/plugins/multilingual-press/) plugin
 * Helps to export/import your data to your new WPMS site.
 * Use XLIFF (XML Localisation Interchange File Format) format as Export file
-* Restores the meta data back to posts and their meta data so that (MultilingualPress)[https://wordpress.org/plugins/multilingual-press/] will recognize all your translations.
+* Restores the meta data back to posts and their meta data so that [MultilingualPress](https://wordpress.org/plugins/multilingual-press/) will recognize all your translations.
 
-MultilingualPress connects multiple sites as language alternatives in a multisite. Use a customizable widget to link to all sites.
+[MultilingualPress](https://wordpress.org/plugins/multilingual-press/) connects multiple sites as language alternatives in a multisite. Use a customizable widget to link to all sites.
 
 We cannot guarantee free ad hoc support. Please be patient, we are a small team.
 You can follow our progress and development notices on our [developer blog](http://make.marketpress.com/multilingualpress/).
@@ -33,6 +33,7 @@ You can follow our progress and development notices on our [developer blog](http
 = Requirements =
 * WordPress Multisite 3.4+
 * PHP 5.2.4, newer PHP versions will work faster.
+* [MultilingualPress](https://wordpress.org/plugins/multilingual-press/) plugin
 
 Use the installer via back-end of your install or ...
 
