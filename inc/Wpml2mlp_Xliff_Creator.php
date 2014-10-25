@@ -29,7 +29,7 @@ class Wpml2mlp_Xliff_Creator {
 		}
 
 		if ( isset( $_GET[ 'mlp_xliff_action' ] ) && $_GET[ 'mlp_xliff_action' ] == 'download'
-		     && $_GET[ 'nonce' ] = wp_create_nonce(
+			&& $_GET[ 'nonce' ] = wp_create_nonce(
 				'xliff-export'
 			)
 		) {
@@ -37,7 +37,7 @@ class Wpml2mlp_Xliff_Creator {
 		}
 	}
 
-	function trigger_export( ) {
+	function trigger_export() {
 
 		//$data  = base64_encode( serialize( $data ) );
 		$nonce = wp_create_nonce( 'xliff-export' );
@@ -62,19 +62,11 @@ class Wpml2mlp_Xliff_Creator {
 
 		$zip_archive = new Wpml2mlp_ZipCreator();
 
-		if ( is_array( $data ) || $data != NULL ) {
-
-			if ( count( $data ) == 1 ) {
-				$xliff_file = $this->get_xlif_file( $data );
-				$filename   = $data->source_language . '_' . $data->destination_language;
+		if ( is_array( $data ) && count( $data ) > 0 ) {
+			foreach ( $data as $lng ) {
+				$xliff_file = $this->get_xlif_file( $lng );
+				$filename   = $lng->source_language . '_' . $lng->destination_language;
 				$zip_archive->addFile( $xliff_file, 'translation_' . $filename . '.xliff' );
-			}
-			if ( count( $data ) > 1 ) {
-				foreach ( $data as $lng ) {
-					$xliff_file = $this->get_xlif_file( $lng );
-					$filename   = $lng->source_language . '_' . $lng->destination_language;
-					$zip_archive->addFile( $xliff_file, 'translation_' . $filename . '.xliff' );
-				}
 			}
 
 			$archive_data = $zip_archive->getZippedfile();
