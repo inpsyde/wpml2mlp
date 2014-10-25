@@ -6,7 +6,7 @@ Convert posts from an existing WPML multilingual site via XLIFF Import/Export fo
 WPML stores each entry as a separate post and uses some custom tables to connect the translations. If you de-activate the plugin or have issues with functionality related to version updates, you get one site with multilingual confusion. 
 
 ### Attention
-*This is a beta version!* You can use the plugin, but make a backup safely. Please give us feedback if you see problems.
+**This is a beta version!** You can use the plugin, but make a backup safely. Please give us feedback if you see problems.
 The best way for feedback is a issue on the repository on [github.com/inpsyde/wpml2mlp](https://github.com/inpsyde/wpml2mlp).
 
 This migration plugin:
