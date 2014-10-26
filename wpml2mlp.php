@@ -6,7 +6,6 @@
  * Author:      Inpsyde GmbH
  * Author URI:  http://inpsyde.com
  * Version:     0.1 Beta
- * Network:     true
  */
 
 defined( 'ABSPATH' ) or die( "No direct access!" );
