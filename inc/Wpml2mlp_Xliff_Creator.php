@@ -1,9 +1,20 @@
 <?php
 
+/**
+ * Class Wpml2mlp_Xliff_Creator
+ */
 class Wpml2mlp_Xliff_Creator {
 
+	/**
+	 * @var $contentForExport
+	 */
 	private $contentForExport;
 
+	/**
+	 * @param $property
+	 *
+	 * @return property value if property exists.
+	 */
 	public function __get( $property ) {
 
 		if ( property_exists( $this, $property ) ) {
@@ -11,6 +22,12 @@ class Wpml2mlp_Xliff_Creator {
 		}
 	}
 
+	/**
+	 * Sets property value if property exists.
+	 *
+	 * @param $property
+	 * @param $value
+	 */
 	public function __set( $property, $value ) {
 
 		if ( property_exists( $this, $property ) ) {
@@ -18,6 +35,9 @@ class Wpml2mlp_Xliff_Creator {
 		}
 	}
 
+	/**
+	 * Setup xliff creator.
+	 */
 	function setup() {
 
 		if ( is_admin() ) {
@@ -37,6 +57,9 @@ class Wpml2mlp_Xliff_Creator {
 		}
 	}
 
+	/**
+	 * Triggers xliff export.
+	 */
 	function trigger_export() {
 
 		//$data  = base64_encode( serialize( $data ) );
@@ -55,6 +78,9 @@ class Wpml2mlp_Xliff_Creator {
 	<?php
 	}
 
+	/**
+	 * Runs xliff export.
+	 */
 	function do_xliff_export() {
 
 		$data = $this->contentForExport;
@@ -84,6 +110,13 @@ class Wpml2mlp_Xliff_Creator {
 
 	}
 
+	/**
+	 * Creates xliff file from WPML2MLP_Translations object.
+	 *
+	 * @param WPML2MLP_Translations $data
+	 *
+	 * @return string
+	 */
 	function get_xlif_file( WPML2MLP_Translations $data ) {
 
 		$new_line   = "\n";

@@ -11,12 +11,24 @@
  */
 class Wpml2mlp_ZipCreator {
 
+	/**
+	 * @var array
+	 */
 	public $compressedData = array();
 
+	/**
+	 * @var array
+	 */
 	public $centralDirectory = array(); // central directory
 
+	/**
+	 * @var string
+	 */
 	public $endOfCentralDirectory = "\x50\x4b\x05\x06\x00\x00\x00\x00"; //end of Central directory record
 
+	/**
+	 * @var int
+	 */
 	public $oldOffset = 0;
 
 	/**

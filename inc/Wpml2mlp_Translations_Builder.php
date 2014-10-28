@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class Wpml2mlp_Translations_Builder
+ */
 class Wpml2mlp_Translations_Builder {
 
 	/**
@@ -17,13 +20,21 @@ class Wpml2mlp_Translations_Builder {
 		$this->default_language = $default_language;
 	}
 
+	/**
+	 * Builds translations from given post.
+	 *
+	 * @param $post
+	 * @param $mlp_post_id
+	 *
+	 * @return array
+	 */
 	public function build_translation_item( $post, $mlp_post_id ) {
 
 		$ret = array();
 
-		$source_id = Wpml2mlp_Helper::get_default_post_ID($post);
+		$source_id = Wpml2mlp_Helper::get_default_post_ID( $post );
 
-		$source_post = get_post( $source_id ); // TODO: cache this
+		$source_post = get_post( $source_id );
 
 		if ( $source_post == NULL ) {
 			return FALSE;
@@ -32,19 +43,13 @@ class Wpml2mlp_Translations_Builder {
 		// put translations here for current post
 		array_push(
 			$ret,
-			$this->construct_translation_item( $source_post->post_title, $post->post_title, $mlp_post_id, $source_id )
+			new Wpml2mlp_Translation_Item( $source_post->post_title, $post->post_title, $source_id, $mlp_post_id )
 		);
 		array_push(
-			$ret, $this->construct_translation_item(
-				$source_post->post_content, $post->post_content, $mlp_post_id, $source_id
-			)
+			$ret,
+			new Wpml2mlp_Translation_Item( $source_post->post_content, $post->post_content, $source_id, $mlp_post_id )
 		);
 
 		return $ret;
-	}
-
-	private function construct_translation_item( $source_val, $dest_val, $post_id, $source_id ) {
-
-		return new Wpml2mlp_Translation_Item( $source_val, $dest_val, $source_id, $post_id );
 	}
 }

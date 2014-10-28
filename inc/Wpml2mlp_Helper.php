@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class Wpml2mlp_Helper
+ */
 class Wpml2mlp_Helper {
 
 	/**
@@ -18,6 +21,8 @@ class Wpml2mlp_Helper {
 	}
 
 	/**
+	 * Updates flag url for given blog.
+	 *
 	 * @param int    $blog_id
 	 * @param string $flag_url
 	 *
@@ -34,8 +39,6 @@ class Wpml2mlp_Helper {
 
 		return FALSE;
 	}
-
-
 
 	/**
 	 * Determinate is main language
@@ -73,6 +76,13 @@ class Wpml2mlp_Helper {
 		return NULL === $result ? $language : str_replace( '-', '_', $result );
 	}
 
+	/**
+	 * Gets the short language code for given culture.
+	 *
+	 * @param $language
+	 *
+	 * @return string
+	 */
 	public static function get_short_language( $language ) {
 
 		if ( empty( $language ) ) {
@@ -82,6 +92,13 @@ class Wpml2mlp_Helper {
 		return substr( $language, 0, 2 );
 	}
 
+	/**
+	 * Gets the language info for the given post id.
+	 *
+	 * @param $post_id
+	 *
+	 * @return null
+	 */
 	public static function  get_language_info( $post_id ) {
 
 		global $wpdb;
@@ -107,7 +124,7 @@ class Wpml2mlp_Helper {
 	}
 
 	/**
-	 * Get default blog
+	 * Gets default blog.
 	 *
 	 * @return int
 	 */
@@ -129,14 +146,23 @@ class Wpml2mlp_Helper {
 	 */
 	public static function get_main_language() {
 
-		if ( is_multisite() )
+		if ( is_multisite() ) {
 			$settings = get_blog_option( self::get_default_blog(), 'icl_sitepress_settings', - 1 );
-		else
+		} else {
 			$settings = get_option( 'icl_sitepress_settings', - 1 );
+		}
 
 		return isset( $settings[ 'default_language' ] ) ? $settings[ 'default_language' ] : FALSE;
 	}
 
+	/**
+	 * Gets the main post id from multisite language post.
+	 *
+	 * @param $post
+	 *
+	 * @return int
+	 *
+	 */
 	public static function get_default_post_ID( $post ) {
 
 		$main_language = Wpml2mlp_Helper::get_main_language();

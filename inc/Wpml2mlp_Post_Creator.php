@@ -1,6 +1,8 @@
 <?php
 
-
+/**
+ * Class Wpml2mlp_Post_Creator
+ */
 class Wpml2mlp_Post_Creator {
 
 	/**

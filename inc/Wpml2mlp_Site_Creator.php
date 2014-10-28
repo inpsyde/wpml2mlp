@@ -1,6 +1,8 @@
 <?php
 
-
+/**
+ * Class Wpml2mlp_Site_Creator
+ */
 class Wpml2mlp_Site_Creator {
 
 	/**
@@ -119,11 +121,25 @@ class Wpml2mlp_Site_Creator {
 		);
 	}
 
+	/**
+	 * Sets after blog created vars.
+	 *
+	 * @param $language
+	 * @param $current_site
+	 * @param $blog_id
+	 */
 	private function set_after_blog_created_vars( $language, $current_site, $blog_id ) {
 
 		$_POST[ 'id' ] = $blog_id;
 	}
 
+	/**
+	 * Checks if given language already exists on WP.
+	 *
+	 * @param $language
+	 *
+	 * @return bool
+	 */
 	private function language_exists( $language ) {
 
 		$all_lngs = mlp_get_available_languages();

@@ -70,10 +70,6 @@ class Wpml2mlp_Importer {
 		$this->plugin_data = $data;
 		$this->wpdb        = $wpdb;
 
-		if ( NULL === $wpdb ) {
-			return;
-		}
-
 		$link_table = $wpdb->base_prefix . 'multilingual_linked';
 
 		$site_relations      = new Mlp_Site_Relations( $wpdb, 'mlp_site_relations' );

@@ -1,6 +1,9 @@
 <?php
 
-class Wpml_Xliff_Export{
+/**
+ * Class Wpml_Xliff_Export
+ */
+class Wpml_Xliff_Export {
 
 	/**
 	 * @var WPML2MLP_Xliff_Creator
@@ -22,17 +25,22 @@ class Wpml_Xliff_Export{
 	 */
 	private $main_language;
 
+	/**
+	 * Constructs new Wpml_Xliff_Export instance.
+	 */
+	public function __construct() {
 
-	public function __construct(  ) {
-
-		$this->main_language       = Wpml2mlp_Helper::get_main_language();
+		$this->main_language = Wpml2mlp_Helper::get_main_language();
 
 		$this->translation_builder = new Wpml2mlp_Translations_Builder( $this->main_language );
 		$this->language_holder     = new Wpml2mlp_Language_Holder();
-		$this->xliff_creator = new Wpml2mlp_Xliff_Creator();
+		$this->xliff_creator       = new Wpml2mlp_Xliff_Creator();
 		$this->xliff_creator->setup();
 	}
 
+	/**
+	 * Performs xliff export.
+	 */
 	private function do_xliff_export() {
 
 		foreach ( Wpml2mlp_Helper::get_all_posts() as $current_post ) {
@@ -71,14 +79,14 @@ class Wpml_Xliff_Export{
 		</div>
 	<?php
 	}
-	
+
 	/**
 	 * Runs the import from WPML to MLP
 	 */
 	public function run_import() {
-	
+
 		if ( isset( $_POST[ 'submit' ] ) ) {
-	
+
 			$this->do_xliff_export();
 		}
 	}
@@ -94,10 +102,17 @@ class Wpml_Xliff_Export{
 
 	}
 
+	/**
+	 * Set xliff item.
+	 *
+	 * @param                          $mlp_post_id
+	 * @param                          $post
+	 * @param WPML2MLP_Language_Holder $language_holder
+	 */
 	private function set_xliff_item( $mlp_post_id, $post, WPML2MLP_Language_Holder &$language_holder ) {
 
 		$post_lang = Wpml2mlp_Helper::get_language_info( $post->ID );
-		
+
 		if ( $post_lang != $this->main_language ) { // don't map default language
 			$post_translations = $this->translation_builder->build_translation_item( $post, $mlp_post_id );
 
@@ -109,6 +124,9 @@ class Wpml_Xliff_Export{
 		}
 	}
 
+	/**
+	 * Setup xliff export.
+	 */
 	public function setup() {
 
 		/**
@@ -123,9 +141,12 @@ class Wpml_Xliff_Export{
 		/**
 		 * Run import on admin_init
 		 */
-		add_action( 'admin_init',  array( $this, 'run_import' ) );
+		add_action( 'admin_init', array( $this, 'run_import' ) );
 	}
 
+	/**
+	 * Wpml admin menu.
+	 */
 	function wpml_admin_menu() {
 
 		add_submenu_page(
@@ -138,6 +159,9 @@ class Wpml_Xliff_Export{
 		);
 	}
 
+	/**
+	 * Adds wpml2mlp menu option.
+	 */
 	public function add_menu_option() {
 
 		add_submenu_page(
@@ -150,7 +174,6 @@ class Wpml_Xliff_Export{
 		);
 
 	}
-
 
 	/**
 	 * Register and add settings
