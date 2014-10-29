@@ -58,7 +58,7 @@ class Wpml_Xliff_Export {
 	/**
 	 * Shows the Xliff export
 	 */
-	public function show_import() {
+	public static function display() {
 
 		?>
 		<div class="wrap">
@@ -86,20 +86,10 @@ class Wpml_Xliff_Export {
 	public function run_import() {
 
 		if ( isset( $_POST[ 'submit' ] ) ) {
-
-			$this->do_xliff_export();
+			if ( $_POST[ 'post_type' ] == 'do_xliff_export' ) {
+				$this->do_xliff_export();
+			}
 		}
-	}
-
-	/**
-	 * Get the settings option array and print one of its values
-	 */
-	public function id_export_callback() {
-
-		//$options = get_option( 'plugin_options' );
-		echo "<label><input checked=checked  value='0' name='exporttofile' type='radio' /> No</label><br />";
-		echo "<label><input value='1' name='exporttofile' type='radio' /> Yes</label><br />";
-
 	}
 
 	/**
@@ -130,77 +120,8 @@ class Wpml_Xliff_Export {
 	public function setup() {
 
 		/**
-		 * Add menu to to network navigation
-		 */
-		add_action( "network_admin_menu", array( $this, "add_menu_option" ) );
-		add_action( "admin_menu", array( $this, "wpml_admin_menu" ) );
-		/**
-		 * Check plugin check_prerequisites
-		 */
-		add_action( 'admin_init', array( $this, 'page_init' ) );
-		/**
 		 * Run import on admin_init
 		 */
 		add_action( 'admin_init', array( $this, 'run_import' ) );
-	}
-
-	/**
-	 * Wpml admin menu.
-	 */
-	function wpml_admin_menu() {
-
-		add_submenu_page(
-			'tools.php',
-			'Convert WPML to MLP',
-			'WPML2MLP',
-			'manage_options',
-			'wpml2mlp',
-			array( $this, 'show_import' )
-		);
-	}
-
-	/**
-	 * Adds wpml2mlp menu option.
-	 */
-	public function add_menu_option() {
-
-		add_submenu_page(
-			'settings.php',
-			'Convert WPML to MLP',
-			strtoupper( 'wpml2mlp' ),
-			'manage_network_options',
-			'wpml2mlp',
-			array( $this, 'show_import' )
-		);
-
-	}
-
-	/**
-	 * Register and add settings
-	 */
-	public function page_init() {
-
-		//check  check_prerequisites
-		//Wpml2mlp_Prerequisites::check_prerequisites();
-
-		register_setting(
-			'export_option_group', // Option group
-			'export_option_name'
-		);
-
-		add_settings_section(
-			'setting_section_id', // ID
-			'', // Title
-			NULL, // Callback
-			'export-setting-admin' // Page
-		);
-
-		add_settings_field(
-			'id_export', // ID
-			'Export XLIFF?', // Title
-			array( $this, 'id_export_callback' ), // Callback
-			'export-setting-admin', // Page
-			'setting_section_id' // Section
-		);
 	}
 }

@@ -10,29 +10,23 @@
 
 defined( 'ABSPATH' ) or die( "No direct access!" );
 
-if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
-	require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
-}
+add_action( 'wp_loaded', 'wpml2mlp_load' );
 
-if ( ! is_plugin_active_for_network( 'multilingual-press-pro/multilingual-press.php' ) && ! is_plugin_active_for_network( 'multilingual-press/multilingual-press.php' ) ) {
-	add_action( 'wp_loaded', 'load_wpml2xliff_export' );
-}else{
-
-	add_action( 'mlp_and_wp_loaded', 'mlp_and_wp_loaded_handler' );
-}
-
-function load_wpml2xliff_export() {
+function wpml2mlp_load() {
 
 	$class_mappings = array(
-		'Wpml_Xliff_Export'             => 'Wpml_Xliff_Export.php',
 		'Wpml2mlp_Helper'               => 'Wpml2mlp_Helper.php',
+		'Wpml2mlp_Importer'             => 'Wpml2mlp_Importer.php',
+		'Wpml2mlp_Language_Holder'      => 'Wpml2mlp_Language_Holder.php',
+		'Wpml2mlp_Post_Creator'         => 'Wpml2mlp_Post_Creator.php',
+		'Wpml2mlp_Prerequisites'        => 'Wpml2mlp_Prerequisites.php',
+		'Wpml2mlp_Site_Creator'         => 'Wpml2mlp_Site_Creator.php',
+		'Wpml2mlp_Translation_Item'     => 'Wpml2mlp_Translation_Item.php',
+		'Wpml2mlp_Translations'         => 'Wpml2mlp_Translations.php',
+		'Wpml2mlp_Translations_Builder' => 'Wpml2mlp_Translations_Builder.php',
 		'Wpml2mlp_Xliff_Creator'        => 'Wpml2mlp_Xliff_Creator.php',
 		'Wpml2mlp_ZipCreator'           => 'Wpml2mlp_ZipCreator.php',
-		'Wpml2mlp_Translation_Item'     => 'Wpml2mlp_Translation_Item.php',
-		'Wpml2mlp_Language_Holder'      => 'Wpml2mlp_Language_Holder.php',
-		'Wpml2mlp_Translations_Builder' => 'Wpml2mlp_Translations_Builder.php',
-		'Wpml2mlp_Translations'         => 'Wpml2mlp_Translations.php',
-		'Wpml2mlp_Prerequisites'        => 'Wpml2mlp_Prerequisites.php'
+		'Wpml_Xliff_Export'             => 'Wpml_Xliff_Export.php'
 	);
 
 	foreach ( $class_mappings as $key => $value ) {
@@ -41,22 +35,90 @@ function load_wpml2xliff_export() {
 		}
 	}
 
+	if ( Wpml2mlp_Prerequisites::is_mlp_plugin_active() ) {
+
+		global $wpdb;
+
+		$w2m_import = new Wpml2mlp_Importer( $wpdb );
+		$w2m_import->setup();
+	}
+
 	$xliff_export = new Wpml_Xliff_Export();
 	$xliff_export->setup();
+
+	wpml2mlp_add_hooks();
 }
 
-function mlp_and_wp_loaded_handler( Inpsyde_Property_List_Interface $mlp_data ) {
+/**
+ * Creates hooks for plugin.
+ */
+function wpml2mlp_add_hooks() {
 
-	global $wpdb;
-	$data = new Inpsyde_Property_List;
-
-	$load_rule = new Inpsyde_Directory_Load( __DIR__ . '/inc' );
-	$mlp_data->loader->add_rule( $load_rule );
-
-	$wpml2mlp = new Wpml2mlp_Importer( $data, $wpdb );
-	$wpml2mlp->setup();
+	add_action( 'admin_init', 'wpml2mlp_page_init' );
+	add_action( "network_admin_menu", "wpml2mpl_add_menu_option" );
+	add_action( "admin_menu", "wpml2mlp_admin_menu" );
 }
 
+/**
+ * Add option to admin menu.
+ */
+function wpml2mlp_admin_menu() {
 
+	add_submenu_page(
+		'tools.php',
+		'Convert WPML to MLP',
+		'WPML2MLP',
+		'manage_options',
+		'wpml2mlp',
+		'wpml2mlp_show_import'
+	);
+}
 
+/**
+ * Add menu to to network navigation.
+ */
+function wpml2mpl_add_menu_option() {
 
+	add_submenu_page(
+		'settings.php',
+		'Convert WPML to MLP',
+		strtoupper( 'wpml2mlp' ),
+		'manage_network_options',
+		'wpml2mlp',
+		'wpml2mlp_show_import'
+	);
+
+}
+
+/**
+ * Register, add settings and checks prerequisites of the plugin.
+ */
+function wpml2mlp_page_init() {
+
+	//check  check_prerequisites
+	Wpml2mlp_Prerequisites::check_prerequisites();
+
+	register_setting(
+		'export_option_group', // Option group
+		'export_option_name'
+	);
+
+	add_settings_section(
+		'setting_section_id', // ID
+		'', // Title
+		NULL, // Callback
+		'export-setting-admin' // Page
+	);
+}
+
+/**
+ * Displays relevant HTML content for plugin.
+ */
+function wpml2mlp_show_import() {
+
+	if ( Wpml2mlp_Prerequisites::is_mlp_plugin_active() ) {
+		Wpml2mlp_Importer::display();
+	}
+
+	Wpml_Xliff_Export::display();
+}

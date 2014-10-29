@@ -24,11 +24,6 @@ class Wpml2mlp_Importer {
 	private $post_creator;
 
 	/**
-	 * @var WPML2MLP_Xliff_Creator
-	 */
-	private $xliff_creator;
-
-	/**
 	 * @var WPML2MLP_Translations_Builder
 	 */
 	private $translation_builder;
@@ -44,16 +39,9 @@ class Wpml2mlp_Importer {
 	private $main_language;
 
 	/**
-	 * Overloaded instance for plugin data.
-	 *
-	 * @var Inpsyde_Property_List_Interface
-	 */
-	private $plugin_data;
-
-	/**
 	 * @var string
 	 */
-	private $import_message;
+	private static $show_success_msg;
 
 	/**
 	 * Constructor
@@ -61,46 +49,34 @@ class Wpml2mlp_Importer {
 	 * @param Inpsyde_Property_List_Interface $data
 	 * @param wpdb                            $wpdb
 	 */
-	public function __construct( Inpsyde_Property_List_Interface $data, wpdb $wpdb = NULL ) {
+	public function __construct( wpdb $wpdb = NULL ) {
 
 		if ( NULL === $wpdb ) {
 			return;
 		}
 
-		$this->plugin_data = $data;
-		$this->wpdb        = $wpdb;
+		$this->wpdb = $wpdb;
 
 		$link_table = $wpdb->base_prefix . 'multilingual_linked';
 
-		$site_relations      = new Mlp_Site_Relations( $wpdb, 'mlp_site_relations' );
-		$content_relations   = new Mlp_Content_Relations(
+		$site_relations            = new Mlp_Site_Relations( $wpdb, 'mlp_site_relations' );
+		$content_relations         = new Mlp_Content_Relations(
 			$this->wpdb,
 			$site_relations,
 			$link_table
 		);
-		$this->site_creator  = new Wpml2mlp_Site_Creator( $this->wpdb );
-		$this->post_creator  = new Wpml2mlp_Post_Creator( $this->wpdb, $content_relations );
-		$this->xliff_creator = new Wpml2mlp_Xliff_Creator();
-		$this->xliff_creator->setup();
+		$this->site_creator        = new Wpml2mlp_Site_Creator( $this->wpdb );
+		$this->post_creator        = new Wpml2mlp_Post_Creator( $this->wpdb, $content_relations );
 		$this->main_language       = Wpml2mlp_Helper::get_main_language();
 		$this->translation_builder = new Wpml2mlp_Translations_Builder( $this->main_language );
 		$this->language_holder     = new Wpml2mlp_Language_Holder();
 
+		self::$show_success_msg = FALSE;
 	}
 
-	private function do_xliff_export() {
-
-		foreach ( Wpml2mlp_Helper::get_all_posts() as $current_post ) {
-			$this->set_xliff_item( $current_post->ID, $current_post, $this->language_holder );
-		}
-
-		$data = $this->language_holder->get_all_items();
-		if ( is_array( $data ) && count( $data ) > 0 ) {
-			$this->xliff_creator->contentForExport = $data;
-			$this->xliff_creator->do_xliff_export();
-		}
-	}
-
+	/**
+	 * Runs import of wmpl to the mlp and creates new sites in multisite environment if doesn't exists.
+	 */
 	private function do_wpml2mlp() {
 
 		$lng_arr = icl_get_languages( 'skip_missing=1' );
@@ -122,31 +98,19 @@ class Wpml2mlp_Importer {
 				$mlp_post_id = $this->post_creator->add_post( $current_post, $relevant_blog );
 			}
 		}
-		$this->import_message = 'You have successfully import WPML data to the MLP.';
+		self::$show_success_msg = TRUE;
 	}
 
 	/**
 	 * Runs the import from WPML to MLP
 	 */
-	public function show_import() {
+	public static function display() {
 
 		?>
 		<div class="wrap">
-			<div class="icon32" id="icon-options-general"><br></div>
-			<h2><?php _e( 'WPML 2 MLP' ); ?></h2>
+			<h2><?php _e( 'WPML 2 MLP import' ); ?></h2>
 
-			<p><?php _e( 'Conversion from WPML to MLP.' ); ?></p>
-
-			<p>
-
-			<form method="post" action="<?php echo ! is_network_admin() ? 'tools'
-				: 'settings' ?>.php?page=wpml2mlp">
-				<input type="hidden" name="post_type" value="do_xliff_export" />
-				<?php
-				submit_button( __( 'Run translations export to xliff' ) ); ?>
-			</form>
-
-
+			<p><?php _e( 'MLP import from WPML.' ); ?></p>
 			<?php
 			if ( is_network_admin() ) {
 				?>
@@ -158,12 +122,18 @@ class Wpml2mlp_Importer {
 					<?php
 					submit_button( __( 'Run WPML to MLP import' ) ); ?>
 
-					<?php if ( ! empty( $this->import_message ) ) : ?>
-						<strong><?php echo $this->import_message; ?></strong>
-					<?php endif; ?>
-
 				</form>
-			<?php } else { ?>
+				<?php
+				if ( self::$show_success_msg ) {
+					?>
+					<p>
+						You have successfully import WPML data to the MLP.
+					</p>
+
+				<?php
+				}
+			} else {
+				?>
 				<div>
 					<button disabled="disabled">Run WPML to MLP import</button>
 				</div><br />
@@ -172,6 +142,7 @@ class Wpml2mlp_Importer {
 				</div>
 			<?php } ?>
 			</p>
+			<hr />
 		</div>
 	<?php
 	}
@@ -180,27 +151,22 @@ class Wpml2mlp_Importer {
 	 * Runs the import from WPML to MLP
 	 */
 	public function run_import() {
-	
+
 		if ( isset( $_POST[ 'submit' ] ) ) {
+
 			if ( $_POST[ 'post_type' ] == 'do_wmpl_2_mlp' ) {
 				$this->do_wpml2mlp();
-			} else if ( $_POST[ 'post_type' ] == 'do_xliff_export' ) {
-				$this->do_xliff_export();
 			}
 		}
 	}
 
 	/**
-	 * Get the settings option array and print one of its values
+	 * Gets blog relevant for provided post.
+	 *
+	 * @param $post
+	 *
+	 * @return blog
 	 */
-	public function id_export_callback() {
-
-		//$options = get_option( 'plugin_options' );
-		echo "<label><input checked=checked  value='0' name='exporttofile' type='radio' /> No</label><br />";
-		echo "<label><input value='1' name='exporttofile' type='radio' /> Yes</label><br />";
-
-	}
-
 	private function get_relevant_blog( $post ) {
 
 		if ( ! $this->blog_cache ) {
@@ -218,90 +184,14 @@ class Wpml2mlp_Importer {
 		return FALSE;
 	}
 
-	private function set_xliff_item( $mlp_post_id, $post, WPML2MLP_Language_Holder &$language_holder ) {
-
-		$post_lang = Wpml2mlp_Helper::get_language_info( $post->ID );
-
-		if ( $post_lang != NULL && $post_lang != $this->main_language ) { // don't map default language
-			$post_translations = $this->translation_builder->build_translation_item( $post, $mlp_post_id );
-
-			if ( $post_translations ) {
-				foreach ( $post_translations as $trans_item ) {
-					$language_holder->set_item( $trans_item, $this->main_language, $post_lang );
-				}
-			}
-		}
-	}
-
+	/**
+	 * Setups the importer.
+	 */
 	public function setup() {
 
 		/**
-		 * Add menu to to network navigation
-		 */
-		add_action( "network_admin_menu", array( $this, "add_menu_option" ) );
-		add_action( "admin_menu", array( $this, "wpml_admin_menu" ) );
-		/**
-		 * Check plugin check_prerequisites
-		 */
-		add_action( 'admin_init', array( $this, 'page_init' ) );
-		/**
 		 * Run import on admin_init
 		 */
-		add_action( 'admin_init',  array( $this, 'run_import' ) );
+		add_action( 'admin_init', array( $this, 'run_import' ) );
 	}
-
-	function wpml_admin_menu() {
-
-		add_submenu_page(
-			'tools.php',
-			'Convert WPML to MLP',
-			'WPML2MLP',
-			'manage_options',
-			'wpml2mlp',
-			array( $this, 'show_import' )
-		);
-	}
-
-	public function add_menu_option() {
-
-		add_submenu_page(
-			'settings.php',
-			'Convert WPML to MLP',
-			strtoupper( 'wpml2mlp' ),
-			'manage_network_options',
-			'wpml2mlp',
-			array( $this, 'show_import' )
-		);
-
-	}
-
-	/**
-	 * Register and add settings
-	 */
-	public function page_init() {
-
-		//check  check_prerequisites
-		//Wpml2mlp_Prerequisites::check_prerequisites();
-
-		register_setting(
-			'export_option_group', // Option group
-			'export_option_name'
-		);
-
-		add_settings_section(
-			'setting_section_id', // ID
-			'', // Title
-			NULL, // Callback
-			'export-setting-admin' // Page
-		);
-
-		add_settings_field(
-			'id_export', // ID
-			'Export XLIFF?', // Title
-			array( $this, 'id_export_callback' ), // Callback
-			'export-setting-admin', // Page
-			'setting_section_id' // Section
-		);
-	}
-
 }

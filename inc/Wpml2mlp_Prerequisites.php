@@ -9,34 +9,31 @@ class Wpml2mlp_Prerequisites {
 
 	public static function check_prerequisites() {
 
+		$plugin_data      = get_plugin_data( __FILE__, FALSE );
 		$wp_version_check = self::check_wordpress_version();
 		$wpml_installed   = self::is_wpmlplugin_active();
 
-		if ( $wp_version_check || ! $wpml_installed ) {
-			$plugin      = plugin_basename( __FILE__ );
-			$plugin_data = get_plugin_data( __FILE__, FALSE );
-			if ( is_plugin_active( $plugin ) ) {
+		$die = FALSE;
+		if ( $wp_version_check ) {
 
-				deactivate_plugins( $plugin );
-
-				if ( $wp_version_check ) {
-
-					$msg = "'" . $plugin_data[ 'Name' ] . "' requires WordPress " . WPVERSION_CONST . " or higher, and has been deactivated! Please upgrade WordPress and try again.<br /><br />Back to <a href='" . admin_url(
-						) . "'>WordPress admin</a>.";
-				}
-				$msg = '';
-				if ( $wp_is_multisite_check ) {
-					$msg = "Multisite needs to be enabled";
-				}
-
-				if ( ! $wpml_installed ) {
-					$msg = "WPML Plugin is not installed or it's not activated";
-				}
-
-				wp_die( $msg );
-			}
+			$msg = "'" . $plugin_data[ 'Name' ] . "' requires WordPress " . WPVERSION_CONST . " or higher, and has been deactivated! Please upgrade WordPress and try again.<br /><br />Back to <a href='" . admin_url(
+				) . "'>WordPress admin</a>.";
+			$die = TRUE;
 		}
 
+		if ( $wp_is_multisite_check ) {
+			$msg = "Multisite needs to be enabled";
+			$die = TRUE;
+		}
+
+		if ( ! $wpml_installed ) {
+			$msg = "WPML Plugin is not installed or it's not activated";
+			$die = TRUE;
+		}
+
+		if ( $die ) {
+			wp_die( $msg );
+		}
 	}
 
 	/**
@@ -55,6 +52,10 @@ class Wpml2mlp_Prerequisites {
 	 * @return bool
 	 */
 	public static function is_mlp_plugin_active() {
+
+		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+			require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
+		}
 
 		return is_plugin_active( 'multilingual-press-pro/multilingual-press.php' ) ? TRUE : FALSE;
 	}
