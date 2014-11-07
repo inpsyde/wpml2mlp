@@ -50,17 +50,17 @@ class Wpml2mlp_Post_Creator {
 			return TRUE;
 		}
 
-		$rel = $this->content_relations->get_relations( (int) $blog[ 'blog_id' ], $post->ID, $post->post_type );
-
-		return ! empty( $rel );
+		return self::get_multisite_id( $post, $blog ) != - 1;
 	}
 
 	/**
-	 * Adds the post to the relevant language
+	 * Adds the post to the relevant site
 	 *
 	 * @param $post
 	 *
 	 * @param $blog
+	 *
+	 * @return int|\WP_Error
 	 */
 	public function add_post( $post, $blog ) {
 
@@ -96,5 +96,87 @@ class Wpml2mlp_Post_Creator {
 		$post->ID = $original_post_id;
 
 		return $new_post_id;
+	}
+
+	/**
+	 * Updates the post on the relevant language
+	 *
+	 * @param $post
+	 *
+	 * @param $blog
+	 *
+	 * @return int|\WP_Error
+	 */
+	public function update( $post, $blog ) {
+
+		if ( ! $blog || ! self::post_exists( $post, $blog ) ) {
+			return FALSE;
+		}
+
+		$multisite_post_id = self::get_multisite_id( $post, $blog );
+
+		switch_to_blog( (int) $blog[ 'blog_id' ] );
+
+		$multisite_post = get_post( $multisite_post_id );
+
+		if ( self::update_post_content( $post, $multisite_post ) ) {
+			wp_update_post( $multisite_post );
+		}
+
+		restore_current_blog();
+
+		return TRUE;
+	}
+
+	/**
+	 * Updates the multisite post with new content.
+	 *
+	 * @param $post
+	 * @param $multisite_post
+	 *
+	 * @return bool
+	 */
+	private function update_post_content( $post, &$multisite_post ) {
+
+		$ret = FALSE;
+
+		if ( $post->post_title != $multisite_post->post_title ) {
+			$multisite_post->post_title = $post->post_title;
+			$ret                        = TRUE;
+		}
+
+		if ( $post->post_content != $multisite_post->post_content ) {
+			$multisite_post->post_content = $post->post_content;
+			$ret                          = TRUE;
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * Gets the relevant multisite post id from singlesite post.
+	 *
+	 * @param $post
+	 * @param $blog
+	 *
+	 * @return int
+	 */
+	private function get_multisite_id( $post, $blog ) {
+
+		$rel = $this->content_relations->get_relations(
+			Wpml2mlp_Helper::get_default_blog(), Wpml2mlp_Helper::get_default_post_ID( $post ), $post->post_type
+		);
+
+		$blog_id = (int) $blog[ 'blog_id' ];
+
+		$multisite_id = - 1;
+		foreach ( $rel as $key => $value ) {
+			if ( $key == $blog_id ) {
+				$multisite_id = $value;
+				break;
+			}
+		}
+
+		return $multisite_id;
 	}
 }

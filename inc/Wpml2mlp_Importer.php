@@ -129,8 +129,12 @@ class Wpml2mlp_Importer {
 
 			$relevant_blog = $this->get_relevant_blog( $current_post );
 
-			if ( $relevant_blog != FALSE && ! $this->post_creator->post_exists( $current_post, $relevant_blog ) ) {
-				$mlp_post_id = $this->post_creator->add_post( $current_post, $relevant_blog );
+			if ( $relevant_blog != FALSE ) {
+				if ( ! $this->post_creator->post_exists( $current_post, $relevant_blog ) ) {
+					$mlp_post_id = $this->post_creator->add_post( $current_post, $relevant_blog );
+				} else {
+					$mlp_post_id = $this->post_creator->update( $current_post, $relevant_blog );
+				}
 			}
 		}
 		self::$show_success_msg = TRUE;
@@ -196,44 +200,44 @@ class Wpml2mlp_Importer {
 			<?php } ?>
 			</p>
 			<hr />
-			<!--
 			<p>
-				<form method="post" action="settings.php?page=wpml2mlp" enctype="multipart/form-data">
-					<h2>
-						Xliff 2 MLP import
-					</h2>
 
-					<p><?php _e( 'MLP import from WPML.' ); ?></p>
+			<form method="post" action="settings.php?page=wpml2mlp" enctype="multipart/form-data">
+				<h2>
+					Xliff 2 MLP import
+				</h2>
 
-					<?php if ( self::$xliff_message ) { ?>
-						<p>
-							<?php _e( self::$xliff_message ) ?>
-						</p>
-					<?php } ?>
+				<p><?php _e( 'MLP import from WPML.' ); ?></p>
 
-					<input type="hidden" name="post_type" value="do_xliff_import" />
-					<?php
-					if ( is_network_admin() ) {
-						?>
-						<div>
-							<input type="file" name="xliff_translations" id="xliff_translations" />
-						</div>
-						<div>
-							<?php submit_button( __( 'Upload xliff translations' ) ); ?>
-						</div>
-					<?php
-					} else {
-						?>
-						<div>
-							<input type="file" disabled="disabled" />
-						</div>
-						<div>
-							<button disabled="disabled">Upload xliff translations</button>
-						</div>
-					<?php } ?>
-				</form>
+				<?php if ( self::$xliff_message ) { ?>
+					<p>
+						<?php _e( self::$xliff_message ) ?>
+					</p>
+				<?php } ?>
+
+				<input type="hidden" name="post_type" value="do_xliff_import" />
+				<?php
+				if ( is_network_admin() ) {
+					?>
+					<div>
+						<input type="file" name="xliff_translations" id="xliff_translations" />
+					</div>
+					<div>
+						<?php submit_button( __( 'Upload xliff translations' ) ); ?>
+					</div>
+				<?php
+				} else {
+					?>
+					<div>
+						<input type="file" disabled="disabled" />
+					</div>
+					<div>
+						<button disabled="disabled">Upload xliff translations</button>
+					</div>
+				<?php } ?>
+			</form>
 			</p>
-			<hr />-->
+			<hr />
 		</div>
 	<?php
 	}
