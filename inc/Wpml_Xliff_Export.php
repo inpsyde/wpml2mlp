@@ -82,6 +82,8 @@ class Wpml_Xliff_Export {
 
 	/**
 	 * Runs the import from WPML to MLP
+	 *
+	 * @wp-hook admin_init
 	 */
 	public function run_import() {
 

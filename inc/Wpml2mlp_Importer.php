@@ -39,15 +39,24 @@ class Wpml2mlp_Importer {
 	private $main_language;
 
 	/**
+	 * @var Wpml2mlp_Xliff_Extractor
+	 */
+	private $xliff_extractor;
+
+	/**
 	 * @var string
 	 */
 	private static $show_success_msg;
 
 	/**
+	 * @var string
+	 */
+	private static $xliff_message;
+
+	/**
 	 * Constructor
 	 *
-	 * @param Inpsyde_Property_List_Interface $data
-	 * @param wpdb                            $wpdb
+	 * @param wpdb $wpdb
 	 */
 	public function __construct( wpdb $wpdb = NULL ) {
 
@@ -70,8 +79,28 @@ class Wpml2mlp_Importer {
 		$this->main_language       = Wpml2mlp_Helper::get_main_language();
 		$this->translation_builder = new Wpml2mlp_Translations_Builder( $this->main_language );
 		$this->language_holder     = new Wpml2mlp_Language_Holder();
+		$this->xliff_extractor     = new Wpml2mlp_Xliff_Extractor();
 
 		self::$show_success_msg = FALSE;
+		self::$xliff_message    = FALSE;
+	}
+
+	/**
+	 * Runs import of xliff files to the mlp and creates new sites in multisite environment if doesn't exists.
+	 */
+	private function do_xliff2mlp() {
+
+		$zip_file = $this->xliff_extractor->check_and_get_xliff_zip( $_FILES[ 'xliff_translations' ] );
+
+		if ( ! $zip_file ) {
+			self::$xliff_message = "Please select correct file for upload.";
+
+			return;
+		}
+
+		self::check_sites();
+
+		self::create_posts( $this->xliff_extractor->extract( $zip_file ) );
 	}
 
 	/**
@@ -79,18 +108,24 @@ class Wpml2mlp_Importer {
 	 */
 	private function do_wpml2mlp() {
 
-		$lng_arr = icl_get_languages( 'skip_missing=1' );
+		self::check_sites();
 
-		foreach ( $lng_arr as $lng ) {
+		self::create_posts( Wpml2mlp_Helper::get_all_posts() );
+	}
 
-			if ( ! $this->site_creator->site_exists( $lng ) ) {
-				$this->site_creator->create_site( $lng );
-			}
+	/**
+	 * @param $posts_arr
+	 *
+	 * Creates posts in multisite.
+	 */
+	private function create_posts( $posts_arr ) {
+
+		if ( ! $posts_arr ) {
+
+			return;
 		}
 
-		$this->blog_cache = FALSE; // reset object cache after adding new site. (it will be recreated)
-
-		foreach ( Wpml2mlp_Helper::get_all_posts() as $current_post ) {
+		foreach ( $posts_arr as $current_post ) {
 
 			$relevant_blog = $this->get_relevant_blog( $current_post );
 
@@ -102,12 +137,43 @@ class Wpml2mlp_Importer {
 	}
 
 	/**
-	 * Runs the import from WPML to MLP
+	 * Checks if relevant sites exists.
+	 */
+	private function check_sites() {
+
+		$lng_arr = icl_get_languages( 'skip_missing=1' );
+
+		foreach ( $lng_arr as $lng ) {
+
+			if ( ! $this->site_creator->site_exists( $lng ) ) {
+				$this->site_creator->create_site( $lng );
+			}
+		}
+
+		$this->blog_cache = FALSE; // reset object cache after adding new site. (it will be recreated)
+	}
+
+	/**
+	 * Runs the import from WPML or Xliff to MLP
 	 */
 	public static function display() {
 
 		?>
 		<div class="wrap">
+			<?php if ( ! is_network_admin() ) { ?>
+				<div>
+					To perform import from WPML or Xliff to multi site you need to be<br />
+					on network admin and have "Multilingual Press" plugin enabled.
+				</div>
+				<hr />
+			<?php } ?>
+			<?php if ( self::$show_success_msg ) { ?>
+				<h3>
+					You have successfully import translations data to the MLP.
+				</h3>
+				<hr />
+			<?php } ?>
+
 			<h2><?php _e( 'WPML 2 MLP import' ); ?></h2>
 
 			<p><?php _e( 'MLP import from WPML.' ); ?></p>
@@ -123,39 +189,67 @@ class Wpml2mlp_Importer {
 					submit_button( __( 'Run WPML to MLP import' ) ); ?>
 
 				</form>
-				<?php
-				if ( self::$show_success_msg ) {
-					?>
-					<p>
-						You have successfully import WPML data to the MLP.
-					</p>
-
-				<?php
-				}
-			} else {
-				?>
+			<?php } else { ?>
 				<div>
 					<button disabled="disabled">Run WPML to MLP import</button>
-				</div><br />
-				<div>
-					To perform import from WPML to multi site you need to be<br /> on network admin and have "Multilingual Press" plugin enabled.
 				</div>
 			<?php } ?>
 			</p>
 			<hr />
+			<!--
+			<p>
+				<form method="post" action="settings.php?page=wpml2mlp" enctype="multipart/form-data">
+					<h2>
+						Xliff 2 MLP import
+					</h2>
+
+					<p><?php _e( 'MLP import from WPML.' ); ?></p>
+
+					<?php if ( self::$xliff_message ) { ?>
+						<p>
+							<?php _e( self::$xliff_message ) ?>
+						</p>
+					<?php } ?>
+
+					<input type="hidden" name="post_type" value="do_xliff_import" />
+					<?php
+					if ( is_network_admin() ) {
+						?>
+						<div>
+							<input type="file" name="xliff_translations" id="xliff_translations" />
+						</div>
+						<div>
+							<?php submit_button( __( 'Upload xliff translations' ) ); ?>
+						</div>
+					<?php
+					} else {
+						?>
+						<div>
+							<input type="file" disabled="disabled" />
+						</div>
+						<div>
+							<button disabled="disabled">Upload xliff translations</button>
+						</div>
+					<?php } ?>
+				</form>
+			</p>
+			<hr />-->
 		</div>
 	<?php
 	}
 
 	/**
 	 * Runs the import from WPML to MLP
+	 *
+	 * @wp-hook admin_init
 	 */
 	public function run_import() {
 
 		if ( isset( $_POST[ 'submit' ] ) ) {
-
 			if ( $_POST[ 'post_type' ] == 'do_wmpl_2_mlp' ) {
 				$this->do_wpml2mlp();
+			} else if ( $_POST[ 'post_type' ] == 'do_xliff_import' ) {
+				$this->do_xliff2mlp();
 			}
 		}
 	}
