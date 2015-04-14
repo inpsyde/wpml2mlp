@@ -21,7 +21,7 @@ class Wpml2mlp_Prerequisites {
 			$die = TRUE;
 		}
 
-		if ( $wp_is_multisite_check ) {
+		if ( ! is_multisite() ) {
 			$msg = "Multisite needs to be enabled";
 			$die = TRUE;
 		}
