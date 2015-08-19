@@ -26,12 +26,13 @@ class Wpml2mlp_Prerequisites {
 			$die = TRUE;
 		}
 
-		if ( ! $wpml_installed ) {
-			$msg = "WPML Plugin is not installed or it's not activated";
+		if ( ! is_multisite() || ! $wpml_installed ) {
+			$msg = "Please ensure, that you have set up a multisite environment and activated WPML.";
 			$die = TRUE;
 		}
 
 		if ( $die ) {
+			deactivate_plugins( "wpml2mlp/wpml2mlp.php" );
 			wp_die( $msg );
 		}
 	}
