@@ -58,7 +58,14 @@ class Wpml2mlp_Prerequisites {
 			require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
 		}
 
-		return is_plugin_active( 'multilingual-press-pro/multilingual-press.php' ) ? TRUE : FALSE;
+		$mlp_pro_active = is_plugin_active( 'multilingual-press-pro/multilingual-press.php' );
+		$mlp_active = is_plugin_active( 'multilingual-press/multilingual-press.php' );
+
+		if ( $mlp_pro_active || $mlp_active ){
+			return TRUE;
+		}
+
+		return FALSE;
 	}
 
 	/**
