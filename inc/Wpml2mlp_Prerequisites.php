@@ -16,23 +16,24 @@ class Wpml2mlp_Prerequisites {
 		$die = FALSE;
 		if ( $wp_version_check ) {
 
-			$msg = "'" . $plugin_data[ 'Name' ] . "' requires WordPress " . WPVERSION_CONST . " or higher, and has been deactivated! Please upgrade WordPress and try again.<br /><br />Back to <a href='" . admin_url(
-				) . "'>WordPress admin</a>.";
+			$msg = '"' . $plugin_data[ 'Name' ] . '" requires WordPress ' . WPVERSION_CONST . ' or higher, and has been deactivated! Please upgrade WordPress and try again.<br /><br />Back to <a href="' . admin_url(
+				) . '">WordPress admin</a>.';
 			$die = TRUE;
 		}
 
 		if ( ! is_multisite() ) {
-			$msg = "Multisite needs to be enabled";
+			$msg = 'Multisite needs to be enabled';
 			$die = TRUE;
 		}
 
 		if ( ! is_multisite() || ! $wpml_installed ) {
-			$msg = "Please ensure, that you have set up a multisite environment and activated WPML.";
+			$msg = 'Please ensure, that you have set up a multisite environment and activated WPML.<br /><br />Back to <a href="' . admin_url(
+				) . '">WordPress admin</a>.';
 			$die = TRUE;
 		}
 
 		if ( $die ) {
-			deactivate_plugins( "wpml2mlp/wpml2mlp.php" );
+			deactivate_plugins( 'wpml2mlp/wpml2mlp.php' );
 			wp_die( $msg );
 		}
 	}
