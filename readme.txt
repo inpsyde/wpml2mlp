@@ -1,8 +1,8 @@
 === WPML to MultilingualPress ===
-Contributors: inpsyde, Bueltge, nullbyte, toscho
+Contributors: inpsyde, Bueltge, nullbyte
 Tags: WPML, convert, export, import, migration, l10n, i18n, bilingual, international, internationalization, lang, language, localization,  multilanguage, multi language, multilingual, multi lingual, multisite, switcher, translation, website translation, wordpress translation,  network, categories, taxonomy, xliff
 Requires at least: 3.8
-Tested up to: 4.1-alpha
+Tested up to: 4.3
 Stable tag: trunk
 
 Convert posts from an existing WPML multilingual site via XLIFF Export/Import for MultilingualPress
@@ -11,7 +11,7 @@ Convert posts from an existing WPML multilingual site via XLIFF Export/Import fo
 WPML stores each entry as a separate post and uses some custom tables to connect the translations. If you de-activate the plugin or have issues with functionality related to version updates, you get one site with multilingual confusion. This plugin migrate all data from WPML to [MultilingualPress](https://wordpress.org/plugins/multilingual-press/) plugin, also the [Premium](http://multilingualpress.pro/) Version.
 
 = Attention =
-**This is a beta version!** You can use the plugin, but make a backup safely. Please give us feedback if you see problems.
+**This is a helper plugin, not always in use!** You can use the plugin, but make a backup safely. Please give us feedback if you see problems.
 The best way for feedback is an issue on the repository on [github.com/inpsyde/wpml2mlp](https://github.com/inpsyde/wpml2mlp).
 
 This migration plugin:

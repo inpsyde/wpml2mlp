@@ -1,6 +1,6 @@
 {
   "name": "inpsyde/wpml2mlp",
-  "description": "Get data from WPML export and immediately import in Multisite environment.",
+  "description": "Get data from WPML plugin export and immediately import in WordPress Multisite environment.",
   "minimum-stability": "stable",
   "license": "GPL 2+",
   "version": "1.0.0",
