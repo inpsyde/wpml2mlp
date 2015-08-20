@@ -16,8 +16,15 @@ class Wpml2mlp_Prerequisites {
 		$die = FALSE;
 		if ( $wp_version_check ) {
 
-			$msg = '"' . $plugin_data[ 'Name' ] . '" requires WordPress ' . WPVERSION_CONST . ' or higher, and has been deactivated! Please upgrade WordPress and try again.<br /><br />Back to <a href="' . admin_url(
-				) . '">WordPress admin</a>.';
+			$msg = '"%1$s" requires WordPress %2$s or higher, and has been deactivated! Please upgrade WordPress and try again.<br /><br />Back to <a href="%3$s">WordPress admin</a>.';
+			$url = esc_url( admin_url() );
+			$msg = sprintf(
+				$msg,
+				$plugin_data[ 'Name' ],
+				WPVERSION_CONST,
+				$url
+			);
+
 			$die = TRUE;
 		}
 
