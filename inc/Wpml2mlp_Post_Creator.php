@@ -112,7 +112,7 @@ class Wpml2mlp_Post_Creator {
 		if ( ! $blog || ! self::post_exists( $post, $blog ) ) {
 			return FALSE;
 		}
-
+		
 		$multisite_post_id = self::get_multisite_id( $post, $blog );
 
 		switch_to_blog( (int) $blog[ 'blog_id' ] );
@@ -161,7 +161,7 @@ class Wpml2mlp_Post_Creator {
 	 *
 	 * @return int
 	 */
-	private function get_multisite_id( $post, $blog ) {
+	public function get_multisite_id( $post, $blog ) {
 
 		$rel = $this->content_relations->get_relations(
 			Wpml2mlp_Helper::get_default_blog(), Wpml2mlp_Helper::get_default_post_ID( $post ), $post->post_type

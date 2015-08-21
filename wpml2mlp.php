@@ -15,6 +15,7 @@ add_action( 'wp_loaded', 'wpml2mlp_load' );
 function wpml2mlp_load() {
 
 	$class_mappings = array(
+		'Wpml2mlp_Categorie_Creator'         => 'Wpml2mlp_Categorie_Creator.php',
 		'Wpml2mlp_Helper'               => 'Wpml2mlp_Helper.php',
 		'Wpml2mlp_Importer'             => 'Wpml2mlp_Importer.php',
 		'Wpml2mlp_Language_Holder'      => 'Wpml2mlp_Language_Holder.php',
