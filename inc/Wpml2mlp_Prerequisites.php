@@ -9,18 +9,15 @@ class Wpml2mlp_Prerequisites {
 
 	public static function check_prerequisites() {
 
-		$plugin_data      = get_plugin_data( __FILE__, FALSE );
 		$wp_version_check = self::check_wordpress_version();
 		$wpml_installed   = self::is_wpmlplugin_active();
 
 		$die = FALSE;
 		if ( $wp_version_check ) {
-
-			$msg = '"%1$s" requires WordPress %2$s or higher, and has been deactivated! Please upgrade WordPress and try again.<br /><br />Back to <a href="%3$s">WordPress admin</a>.';
+			$msg = __('"Wpml2mlp" requires WordPress %1$s or higher, and has been deactivated! Please upgrade WordPress and try again.<br /><br />Back to <a href="%2$s">WordPress admin</a>.', 'wpml2mlp');
 			$url = esc_url( admin_url() );
 			$msg = sprintf(
 				$msg,
-				$plugin_data[ 'Name' ],
 				WPVERSION_CONST,
 				$url
 			);
@@ -29,8 +26,13 @@ class Wpml2mlp_Prerequisites {
 		}
 
 		if ( ! is_multisite() || ! $wpml_installed ) {
-			$msg = 'Please ensure, that you have set up a multisite environment and activated WPML.<br /><br />Back to <a href="' . admin_url(
-				) . '">WordPress admin</a>.';
+			$msg = __('Please ensure, that you have set up a multisite environment and activated WPML.<br /><br />Back to <a href="%s">WordPress admin</a>.', 'wpml2mlp');
+			$url = esc_url( admin_url() );
+			$msg = sprintf(
+				$msg,
+				$url
+			);
+
 			$die = TRUE;
 		}
 
