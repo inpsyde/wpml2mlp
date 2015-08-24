@@ -1,6 +1,6 @@
 <?php
 
-define( "WPVERSION_CONST", "3.1" );
+define( 'WPVERSION_CONST', '3.1' );
 
 /**
  * Class Wpml2mlp_Prerequisites
@@ -12,9 +12,13 @@ class Wpml2mlp_Prerequisites {
 		$wp_version_check = self::check_wordpress_version();
 		$wpml_installed   = self::is_wpmlplugin_active();
 
+		$msg = '';
 		$die = FALSE;
 		if ( $wp_version_check ) {
-			$msg = __('"Wpml2mlp" requires WordPress %1$s or higher, and has been deactivated! Please upgrade WordPress and try again.<br /><br />Back to <a href="%2$s">WordPress admin</a>.', 'wpml2mlp');
+			$msg = __(
+				'"Wpml2mlp" requires WordPress %1$s or higher, and has been deactivated! Please upgrade WordPress and try again.<br /><br />Back to <a href="%2$s">WordPress admin</a>.',
+				'wpml2mlp'
+			);
 			$url = esc_url( admin_url() );
 			$msg = sprintf(
 				$msg,
@@ -26,7 +30,10 @@ class Wpml2mlp_Prerequisites {
 		}
 
 		if ( ! is_multisite() || ! $wpml_installed ) {
-			$msg = __('Please ensure, that you have set up a multisite environment and activated WPML.<br /><br />Back to <a href="%s">WordPress admin</a>.', 'wpml2mlp');
+			$msg = __(
+				'Please ensure, that you have set up a multisite environment and activated WPML.<br /><br />Back to <a href="%s">WordPress admin</a>.',
+				'wpml2mlp'
+			);
 			$url = esc_url( admin_url() );
 			$msg = sprintf(
 				$msg,
@@ -54,7 +61,7 @@ class Wpml2mlp_Prerequisites {
 
 		global $wp_version;
 
-		return version_compare( $wp_version, WPVERSION_CONST, "<" ) ? TRUE : FALSE;
+		return version_compare( $wp_version, WPVERSION_CONST, '<' ) ? TRUE : FALSE;
 	}
 
 	/**
@@ -73,22 +80,22 @@ class Wpml2mlp_Prerequisites {
 	 * @return bool
 	 */
 	public static function is_mlp_plugin_active() {
-		
+
 		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
 			require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
 		}
 
 		$act_plugs = get_site_option( 'active_sitewide_plugins' );
-		$plugs = array();
+		$plugs     = array();
 
 		foreach ( $act_plugs as $key => $value ) {
 			$plugin_name = explode( '/', $key );
-			if ( isset( $plugin_name[ 1 ] ) ) {
-				$plugs[ ] = $plugin_name[ 1 ];
+			if ( array_key_exists( 1, $plugin_name ) ) {
+				$plugs[] = $plugin_name[ 1 ];
 			}
 		}
 
-		return in_array( 'multilingual-press.php', $plugs );
+		return in_array( 'multilingual-press.php', $plugs, FALSE );
 	}
 
 	/**
@@ -99,15 +106,15 @@ class Wpml2mlp_Prerequisites {
 	private static function is_wpmlplugin_active() {
 
 		$act_plugs = get_option( 'active_plugins' );
-		$plugs = array();
+		$plugs     = array();
 
 		foreach ( $act_plugs as $key => $value ) {
 			$plugin_name = explode( '/', $value );
-			if ( isset( $plugin_name[ 1 ] ) ) {
-				$plugs[ ] = $plugin_name[ 1 ];
+			if ( array_key_exists( 1, $plugin_name ) ) {
+				$plugs[] = $plugin_name[ 1 ];
 			}
 		}
 
-		return in_array( 'sitepress.php', $plugs );
+		return in_array( 'sitepress.php', $plugs, FALSE );
 	}
 }
