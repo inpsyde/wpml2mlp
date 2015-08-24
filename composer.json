@@ -26,6 +26,6 @@
   }
   "require-dev": {
     "squizlabs/php_codesniffer": "^2.3",
-    "phpmd/phpmd": "2.1.3",
+    "phpmd/phpmd": "2.1.3"
   }
 }
