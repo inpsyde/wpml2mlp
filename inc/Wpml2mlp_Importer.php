@@ -67,12 +67,13 @@ class Wpml2mlp_Importer {
 		$this->wpdb = $wpdb;
 
 		$link_table = $wpdb->base_prefix . 'multilingual_linked';
+		$table_list = new Mlp_Db_Table_List( $this->wpdb );
 
 		$site_relations            = new Mlp_Site_Relations( $wpdb, 'mlp_site_relations' );
 		$content_relations         = new Mlp_Content_Relations(
 			$this->wpdb,
 			$site_relations,
-			$link_table
+			new Mlp_Db_Table_Name( $link_table, $table_list )
 		);
 		$this->site_creator        = new Wpml2mlp_Site_Creator( $this->wpdb );
 		$this->post_creator        = new Wpml2mlp_Post_Creator( $this->wpdb, $content_relations );
