@@ -67,15 +67,17 @@ class Wpml2mlp_Importer {
 		$this->wpdb = $wpdb;
 
 		$link_table = $wpdb->base_prefix . 'multilingual_linked';
+		$table_list = new Mlp_Db_Table_List( $this->wpdb );
 
 		$site_relations            = new Mlp_Site_Relations( $wpdb, 'mlp_site_relations' );
 		$content_relations         = new Mlp_Content_Relations(
 			$this->wpdb,
 			$site_relations,
-			$link_table
+			new Mlp_Db_Table_Name( $link_table, $table_list )
 		);
 		$this->site_creator        = new Wpml2mlp_Site_Creator( $this->wpdb );
 		$this->post_creator        = new Wpml2mlp_Post_Creator( $this->wpdb, $content_relations );
+		$this->categorie_creator   = new Wpml2mlp_Categorie_Creator( $this->wpdb, $content_relations );
 		$this->main_language       = Wpml2mlp_Helper::get_main_language();
 		$this->translation_builder = new Wpml2mlp_Translations_Builder( $this->main_language );
 		$this->language_holder     = new Wpml2mlp_Language_Holder();
@@ -110,6 +112,8 @@ class Wpml2mlp_Importer {
 
 		self::check_sites();
 
+		self::create_categories();
+
 		self::create_posts( Wpml2mlp_Helper::get_all_posts() );
 	}
 
@@ -135,9 +139,63 @@ class Wpml2mlp_Importer {
 				} else {
 					$mlp_post_id = $this->post_creator->update( $current_post, $relevant_blog );
 				}
+
+				self::set_post_categories( $current_post, $relevant_blog );
+
 			}
 		}
 		self::$show_success_msg = TRUE;
+	}
+
+	/**
+	 * Creates categories in multisite.
+	 */
+	private function create_categories( ) {
+
+		if ( ! $this->blog_cache ) {
+			$this->blog_cache = wp_get_sites();
+		}
+
+		foreach ( $this->blog_cache as $blog ) {
+			$this->categorie_creator->create_categories_from_lng( $blog );
+		}
+
+		self::$show_success_msg = TRUE;
+
+	}
+
+	/**
+	 * Set post categories in multisite
+	 *
+	 * @param $post
+	 *
+	 * @param $blog
+	 *
+	 */
+	private function set_post_categories( $post, $blog ) {
+
+		$get_cats_args = array(
+			"fields" => "slugs"
+		);
+		$post_cat_arr = wp_get_post_categories( $post->ID , $get_cats_args);
+
+		if( ! empty( $post_cat_arr ) ){
+
+			switch_to_blog( (int) $blog[ 'blog_id' ] );
+
+			$cat_id_arr = array();
+
+			foreach( $post_cat_arr as $post_cat_slug ){
+				$cat = get_category_by_slug($post_cat_slug);
+				$cat_id_arr[] = $cat->cat_ID;
+			}
+
+			$mlp_post_id = $this->post_creator->get_multisite_id( $post, $blog );
+			
+			wp_set_post_categories( $mlp_post_id, $cat_id_arr, FALSE );
+
+			restore_current_blog();
+		}
 	}
 
 	/**
@@ -148,7 +206,6 @@ class Wpml2mlp_Importer {
 		$lng_arr = icl_get_languages( 'skip_missing=1' );
 
 		foreach ( $lng_arr as $lng ) {
-
 			if ( ! $this->site_creator->site_exists( $lng ) ) {
 				$this->site_creator->create_site( $lng );
 			}

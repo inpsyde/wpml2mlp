@@ -8,13 +8,14 @@
  * Version:     1.0.0
  */
 
-defined( 'ABSPATH' ) or die( "No direct access!" );
+defined( 'ABSPATH' ) or die( 'No direct access!' );
 
 add_action( 'wp_loaded', 'wpml2mlp_load' );
 
 function wpml2mlp_load() {
 
 	$class_mappings = array(
+		'Wpml2mlp_Categorie_Creator'    => 'Wpml2mlp_Categorie_Creator.php',
 		'Wpml2mlp_Helper'               => 'Wpml2mlp_Helper.php',
 		'Wpml2mlp_Importer'             => 'Wpml2mlp_Importer.php',
 		'Wpml2mlp_Language_Holder'      => 'Wpml2mlp_Language_Holder.php',
@@ -56,8 +57,8 @@ function wpml2mlp_load() {
 function wpml2mlp_add_hooks() {
 
 	add_action( 'admin_init', 'wpml2mlp_page_init' );
-	add_action( "network_admin_menu", "wpml2mpl_add_menu_option" );
-	add_action( "admin_menu", "wpml2mlp_admin_menu" );
+	add_action( 'network_admin_menu', 'wpml2mpl_add_menu_option' );
+	add_action( 'admin_menu', 'wpml2mlp_admin_menu' );
 }
 
 /**
