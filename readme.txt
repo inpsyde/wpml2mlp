@@ -45,5 +45,10 @@ Use the installer via back-end of your install or ...
 
 == Changelog ==
 
+= 1.0.0 (09/24/2015) =
+* Lot of tester - stable release
+* Add move of categories
+* Bugfixes and maintenance
+
 = 0.1 Beta (10/25/2014) =
  * First public release, but Beta version
