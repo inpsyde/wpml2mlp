@@ -35,6 +35,10 @@ class Wpml_Xliff_Export {
 		$this->translation_builder = new Wpml2mlp_Translations_Builder( $this->main_language );
 		$this->language_holder     = new Wpml2mlp_Language_Holder();
 		$this->xliff_creator       = new Wpml2mlp_Xliff_Creator();
+
+
+		debug( $this );
+
 		$this->xliff_creator->setup();
 	}
 

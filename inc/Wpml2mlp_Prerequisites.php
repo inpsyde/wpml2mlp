@@ -28,6 +28,9 @@ class Wpml2mlp_Prerequisites {
 
 		} elseif ( ! is_multisite() ) {
 
+			$xliff_export = new Wpml_Xliff_Export();
+			#$xliff_export->setup();
+
 			$msg = sprintf( __( ' Hier wird die neue wpml2mlp info Seite ausgegeben.<br /><br />Back to <a href="%2$s">WordPress admin</a>.', $txt_domain ), 1, admin_url() );
 
 		} elseif ( ! self::is_wpmlplugin_active() ) {
