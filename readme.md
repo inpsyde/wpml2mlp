@@ -1,4 +1,7 @@
 # WPML to MultilingualPress
+[![GitHub release](https://img.shields.io/github/forks/inpsyde/wpml2mlp.svg)](https://github.com/inpsyde/wpml2mlp/edit/master/readme.md#fork-destination-box)
+[![GitHub release](https://img.shields.io/github/stars/inpsyde/wpml2mlp.svg)](https://github.com/inpsyde/wpml2mlp/stargazers)[![Twitter](https://img.shields.io/twitter/url/https/github.com/inpsyde/wpml2mlp.svg?style=social)](https://twitter.com/intent/tweet?text=Wow:&url=%5Bobject%20Object%5D)
+
 
 Convert posts from an existing WPML multilingual site via XLIFF Export/Import for MultilingualPress
 
