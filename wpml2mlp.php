@@ -47,6 +47,7 @@ function wpml2mlp_prerequisites() {
 	foreach ( $class_mappings as $key => $value ) {
 
 		if ( ! class_exists( $key ) ) {
+
 			require plugin_dir_path( __FILE__ ) . 'inc/' . $value;
 		}
 
