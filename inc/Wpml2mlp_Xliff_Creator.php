@@ -130,7 +130,7 @@ class Wpml2mlp_Xliff_Creator {
 
 		}
 
-		debug( $xliff_cache->clear_xlifff_stack() );
+		debug( $xliff_cache->get_xlifff_stack() );
 		debug( 'xliff' );
 
 	}
@@ -144,10 +144,13 @@ class Wpml2mlp_Xliff_Creator {
 	 */
 	function get_xlif_file( WPML2MLP_Translations $data ) {
 
-		$new_line   = "\n";
-		$xliff_file = '<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="' . $data->source_language . '" trgLang="' . $data->destination_language . '">' . $new_line;
+		$new_line = "\n";
+
+		$xliff_file = '<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="' . $data->source_language . '" trgLang="' . $data->destination_language . '" translations="' . count( $data->data ) . '">' . $new_line;
 		$xliff_file .= '<file id="f1">' . $new_line;
+
 		$i = 0;
+
 		foreach ( $data->data as $segment ) {
 			$xliff_file .= '<unit id="u' . $i . '">' . $new_line;
 			$xliff_file .= '<segment id="' . $segment->original_id . '">' . $new_line;
