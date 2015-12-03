@@ -12,7 +12,7 @@
 class Wpml2mlp_Xliff_Cache {
 
 	/**
-	 * @var array
+	 * @var array hold generatet xliff files
 	 */
 	public $xliff = array();
 
@@ -21,13 +21,18 @@ class Wpml2mlp_Xliff_Cache {
 	 */
 	public $oldOffset = 0;
 
-
+	/**
+	 * @return array retruns a stack of generatet translation xliff files
+	 */
 	public function get_xlifff_stack(){
 
-			return $this->xliff;
+		return $this->xliff;
 
 	}
 
+	/**
+	 * Cleat the xliff stack and delete generatet xliff files
+	 */
 	public function clear_xlifff_stack(){
 
 		if( count( $this->xliff ) > 0){
@@ -44,7 +49,7 @@ class Wpml2mlp_Xliff_Cache {
 	}
 
 
-		/**
+	/**
 	 * Function to add file(s) to the specified directory in the archive
 	 *
 	 * @param string $directoryName
