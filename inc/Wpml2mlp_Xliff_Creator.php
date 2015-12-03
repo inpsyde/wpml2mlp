@@ -49,7 +49,7 @@ class Wpml2mlp_Xliff_Creator {
 		}
 
 		if ( isset( $_GET[ 'mlp_xliff_action' ] ) && $_GET[ 'mlp_xliff_action' ] == 'download'
-			&& $_GET[ 'nonce' ] = wp_create_nonce(
+		     && $_GET[ 'nonce' ] = wp_create_nonce(
 				'xliff-export'
 			)
 		) {
@@ -75,13 +75,13 @@ class Wpml2mlp_Xliff_Creator {
 
 		</script>
 
-	<?php
+		<?php
 	}
 
 	/**
 	 * Runs xliff export.
 	 */
-	function do_xliff_export() {
+	function  do_xliff_export() {
 
 		$data = $this->contentForExport;
 		//$data = unserialize( base64_decode( $data ) );
@@ -107,6 +107,31 @@ class Wpml2mlp_Xliff_Creator {
 		}
 
 		exit;
+
+	}
+
+	/**
+	 * Runs storing xliff data.
+	 */
+	function store_xliff_export() {
+
+		$data = $this->contentForExport;
+		//$data = unserialize( base64_decode( $data ) );
+
+		$xliff_cache = new Wpml2mlp_Xliff_Cache();
+
+		if ( is_array( $data ) && count( $data ) > 0 ) {
+
+			foreach ( $data as $lng ) {
+				$xliff_file       = $this->get_xlif_file( $lng );
+				$xliff_cache_name = 'translation_' . $lng->source_language . '_' . $lng->destination_language . '.xliff';
+				$xliff_cache->add( $xliff_file, $xliff_cache_name );
+			}
+
+		}
+
+		debug( $xliff_cache->clear_xlifff_stack() );
+		debug( 'xliff' );
 
 	}
 

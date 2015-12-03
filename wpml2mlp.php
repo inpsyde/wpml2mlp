@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) or die( 'No direct access!' );
 
 # Load plugin
-add_action( 'plugins_loaded', 'wpml2mlp_prerequisites' );
+add_action( 'admin_init', 'wpml2mlp_prerequisites' );
 
 /**
  * Reqiure needed files and heck the prerequisites to chose the way of use
@@ -39,8 +39,9 @@ function wpml2mlp_prerequisites() {
 		'Wpml2mlp_Translations'         => 'Wpml2mlp_Translations.php',
 		'Wpml2mlp_Translations_Builder' => 'Wpml2mlp_Translations_Builder.php',
 		'Wpml2mlp_Xliff_Creator'        => 'Wpml2mlp_Xliff_Creator.php',
+		'Wpml2mlp_Xliff_Cache'          => 'Wpml2mlp_Xliff_Cache.php',
 		'Wpml2mlp_ZipCreator'           => 'Wpml2mlp_ZipCreator.php',
-		'Wpml_Xliff_Export'             => 'Wpml_Xliff_Export.php',
+		'Wpml2mlp_Xliff_Export'         => 'Wpml2mlp_Xliff_Export.php',
 		'Wpml2mlp_Xliff_Extractor'      => 'Wpml2mlp_Xliff_Extractor.php'
 	);
 

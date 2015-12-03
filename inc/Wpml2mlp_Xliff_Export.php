@@ -26,6 +26,11 @@ class Wpml_Xliff_Export {
 	private $main_language;
 
 	/**
+	 * @var string
+	 */
+	private $action;
+
+	/**
 	 * Constructs new Wpml_Xliff_Export instance.
 	 */
 	public function __construct() {
@@ -36,16 +41,41 @@ class Wpml_Xliff_Export {
 		$this->language_holder     = new Wpml2mlp_Language_Holder();
 		$this->xliff_creator       = new Wpml2mlp_Xliff_Creator();
 
-
-		debug( $this );
-
-		$this->xliff_creator->setup();
+		#$this->xliff_creator->setup();
 	}
 
 	/**
 	 * Performs xliff export.
 	 */
 	private function do_xliff_export() {
+
+		if( $this->prepare_xliff_data() ){
+
+			$this->xliff_creator->do_xliff_export();
+
+		}
+
+	}
+
+	/**
+	 *
+	 */
+	private function do_store_xliff() {
+
+		if( $this->prepare_xliff_data() ){
+
+			$this->xliff_creator->store_xliff_export();
+
+		}
+
+		debug( 'do_xliff_export' );
+
+	}
+
+	/**
+	 *
+	 */
+	private function prepare_xliff_data() {
 
 		foreach ( Wpml2mlp_Helper::get_all_posts() as $current_post ) {
 			$this->set_xliff_item( $current_post->ID, $current_post, $this->language_holder );
@@ -55,11 +85,12 @@ class Wpml_Xliff_Export {
 
 		if ( is_array( $data ) && count( $data ) > 0 ) {
 			$this->xliff_creator->contentForExport = $data;
-			$this->xliff_creator->do_xliff_export();
+			return true;
 		}
+
 	}
 
-	/**
+		/**
 	 * Shows the Xliff export
 	 */
 	public static function display() {
@@ -81,7 +112,7 @@ class Wpml_Xliff_Export {
 			</form>
 			</p>
 		</div>
-	<?php
+		<?php
 	}
 
 	/**
@@ -123,11 +154,20 @@ class Wpml_Xliff_Export {
 	/**
 	 * Setup xliff export.
 	 */
-	public function setup() {
+	public function setup( $action = FALSE ) {
+
+		$this->action = $action;
+
+		if ( $this->action == 'multisite_not_installed' ) {
+
+			$this->do_store_xliff();
+
+		}
 
 		/**
 		 * Run import on admin_init
 		 */
 		add_action( 'admin_init', array( $this, 'run_import' ) );
+
 	}
 }
