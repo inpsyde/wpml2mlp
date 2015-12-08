@@ -14,10 +14,18 @@ class Wpml2mlp_Helper {
 
 		$query_params = array(
 			'posts_per_page' => - 1,
+			#'suppress_filters' => 1,
 			'post_type'      => get_post_types( array( 'public' => TRUE ), 'names', 'and' )
 		);
 
-		return get_posts( $query_params );
+		$query = new WP_Query( $query_params );
+
+		if ( $query->posts ) {
+
+			return $query->posts;
+
+		}
+
 	}
 
 	/**
@@ -99,27 +107,11 @@ class Wpml2mlp_Helper {
 	 *
 	 * @return null
 	 */
-	public static function  get_language_info( $post_id ) {
+	public static function get_language_info( $post_id ) {
 
-		global $wpdb;
-		$query      = $wpdb->prepare(
-			'SELECT language_code FROM ' . $wpdb->prefix . 'icl_translations WHERE element_id="%d"', $post_id
-		);
-		$query_exec = $wpdb->get_row( $query );
+		$language_code = wpml_get_language_information( FALSE, $post_id );
 
-		if ( $query_exec == NULL ) {
-			$query      = $wpdb->prepare(
-				'SELECT language_code FROM ' . $wpdb->base_prefix . 'icl_translations WHERE element_id="%d"', $post_id
-			);
-			$query_exec = $wpdb->get_row( $query );
-
-		}
-		if ( $query_exec == NULL ) {
-			return NULL;
-
-		}
-
-		return $query_exec->language_code;
+		return $language_code[ 'language_code' ];
 
 	}
 
@@ -167,6 +159,7 @@ class Wpml2mlp_Helper {
 
 		$main_language = Wpml2mlp_Helper::get_main_language();
 
-		return (int) icl_object_id( $post->ID, $post->post_type, TRUE, $main_language );
+		return (int) wpml_object_id_filter( $post->ID, $post->post_type, TRUE, $main_language );
+
 	}
 }
