@@ -1,13 +1,7 @@
 <?php
 
 /**
- * Class to dynamically create a zip file (archive) of file(s) and/or directory
- *
- * @author  Rochak Chauhan  www.rochakchauhan.com
- * @package CreateZipFile
- * @see     Distributed under "General Public License"
- *
- * @version 1.0
+ * Class to dynamically create and handle xliff files as gz
  */
 class Wpml2mlp_Xliff_Cache {
 
@@ -84,7 +78,14 @@ class Wpml2mlp_Xliff_Cache {
 
 		} else {
 
+			if ( file_exists( $xliff_filename ) ) {
+
+				unlink( $xliff_filename );
+
+			}
+
 			file_put_contents( $xliff_filename, $xliff_data );
+			$this->xliff[] = $xliff_filename;
 
 		}
 
