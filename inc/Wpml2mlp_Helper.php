@@ -12,13 +12,24 @@ class Wpml2mlp_Helper {
 	 */
 	public static function get_all_posts() {
 
+		$posttypes = array(
+			'post'       => 'post',
+			#'page'       => 'page',
+			#'attachment' => 'attachment'
+		);
+
+		#$posttypes = get_post_types( array( 'public' => TRUE ), 'names', 'and' )
+
+
 		$query_params = array(
 			'posts_per_page' => - 1,
-			#'suppress_filters' => 1,
-			'post_type'      => get_post_types( array( 'public' => TRUE ), 'names', 'and' )
+			'post_type'      => apply_filters( 'wpml2mlp_supported_posttypes', $posttypes ),
+			'post_status'    => array( 'publish', 'pending', 'draft', 'future', 'private',)
+
 		);
 
 		$query = new WP_Query( $query_params );
+
 
 		if ( $query->posts ) {
 
