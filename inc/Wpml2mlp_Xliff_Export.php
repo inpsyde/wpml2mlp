@@ -62,9 +62,9 @@ class Wpml_Xliff_Export {
 	 */
 	private function do_store_xliff() {
 
-		if( $this->prepare_xliff_data() ){
+		if( $this->prepare_store_data() ){
 
-			$this->xliff_creator->store_xliff_export();
+			$this->xliff_creator->store_wxr_export();
 
 		}
 
@@ -85,6 +85,36 @@ class Wpml_Xliff_Export {
 
 		if ( is_array( $data ) && count( $data ) > 0 ) {
 			$this->xliff_creator->contentForExport = $data;
+			return true;
+		}
+
+	}
+
+
+	/**
+	 *
+	 */
+	private function prepare_store_data() {
+
+		$posts = array();
+
+		foreach ( Wpml2mlp_Helper::get_all_posts() as $current_lang => $lang_obj ) {
+
+			foreach( $lang_obj['posts'] as $current_post ){
+
+				$current_post->translations = $this->map_translation_ids_to_source( $current_lang, $current_post );
+
+				$posts[ $current_lang ]['posts'][] = $current_post;
+
+			}
+
+			$posts[ $current_lang ]['category'] = $lang_obj['category'];
+			$posts[ $current_lang ]['post_tag'] = $lang_obj['post_tag'];
+
+		}
+
+		if ( is_array( $posts ) && count( $posts ) > 0 ) {
+			$this->xliff_creator->contentForExport = $posts;
 			return true;
 		}
 
@@ -138,9 +168,11 @@ class Wpml_Xliff_Export {
 	 */
 	private function set_xliff_item( $mlp_post_id, $post, WPML2MLP_Language_Holder &$language_holder ) {
 
+		#TODO check wat is $mlp_post_id or is it a fail or we need a nother function?
 		$post_lang = Wpml2mlp_Helper::get_language_info( $post->ID );
 
 		if ( $post_lang != $this->main_language ) { // don't map default language
+
 			$post_translations = $this->translation_builder->build_translation_item( $post, $mlp_post_id );
 
 			if ( $post_translations ) {
@@ -149,6 +181,36 @@ class Wpml_Xliff_Export {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Query and collect post ids of translation from a given post id
+	 *
+	 * @param $current_lang
+	 * @param $post
+	 *
+	 * @return mixed
+	 */
+	private function map_translation_ids_to_source( $current_lang, $post ){
+
+		foreach( wpml_get_active_languages_filter() as $lang_code => $lang_data ){
+
+			if( $current_lang != $lang_code ){
+
+				$translation_id = wpml_object_id_filter( $post->ID, $post->post_type, false, $lang_code );
+
+				if( ! empty( $translation_id ) ){
+
+					$translations[ $lang_code ] = $translation_id;
+
+				}
+
+			}
+
+		}
+
+		return $translations;
+
 	}
 
 	/**
