@@ -84,7 +84,7 @@ class Wpml_Wxr_Export {
 			return;
 		}
 
-		echo '<wp:tag_name>' . $this->wxr_cdata( $tag->name ) . '</wp:tag_name>';
+		return '<wp:tag_name>' . $this->wxr_cdata( $tag->name ) . '</wp:tag_name>';
 	}
 
 	/**
@@ -100,39 +100,28 @@ class Wpml_Wxr_Export {
 			return;
 		}
 
-		echo '<wp:tag_description>' . $this->wxr_cdata( $tag->description ) . '</wp:tag_description>';
+		return '<wp:tag_description>' . $this->wxr_cdata( $tag->description ) . '</wp:tag_description>';
 	}
 
 	/**
-	 * Output a term_name XML tag from a given term object
+	 * Output list of taxonomy terms, in XML tag format, associated with a post
 	 *
-	 * @since 2.9.0
-	 *
-	 * @param object $term Term Object
+	 * @since 2.3.0
 	 */
-	private function wxr_term_name( $term ) {
+	function wxr_post_categories( $post_ID ) {
 
-		if ( empty( $term->name ) ) {
-			return;
+		$terms = wp_get_post_terms( $post_ID, 'category', array( "fields" => "all" ) );
+
+		foreach ( (array) $terms as $term ) {
+			$categories = "\t\t\t<category domain=\"{$term->taxonomy}\" nicename=\"{$term->slug}\" term_id=\"$term->term_id\">" . $this->wxr_cdata( $term->name ) . "</category>\n";
 		}
 
-		echo '<wp:term_name>' . $this->wxr_cdata( $term->name ) . '</wp:term_name>';
-	}
+		if ( ! empty( $categories ) ) {
 
-	/**
-	 * Output a term_description XML tag from a given term object
-	 *
-	 * @since 2.9.0
-	 *
-	 * @param object $term Term Object
-	 */
-	private function wxr_term_description( $term ) {
+			return $categories;
 
-		if ( empty( $term->description ) ) {
-			return;
 		}
 
-		echo '<wp:term_description>' . $this->wxr_cdata( $term->description ) . '</wp:term_description>';
 	}
 
 	/**
@@ -223,6 +212,8 @@ class Wpml_Wxr_Export {
 			$wxr_categories .= "\n\t\t<wp:tag>\n";
 			$wxr_categories .= "\t\t\t<wp:term_id>" . intval( $post_tag->term_id ) . "</wp:term_id>\n";
 			$wxr_categories .= "\t\t\t<wp:tag_slug>" . $this->wxr_cdata( $post_tag->slug ) . "</wp:tag_slug >\n";
+			$wxr_categories .= "\t\t\t" . $this->wxr_tag_name( $post_tag ) . "\n";
+			$wxr_categories .= "\t\t\t" . $this->wxr_tag_description( $post_tag ) . "\n";
 			$wxr_categories .= "\t\t</wp:tag>\n";
 		}
 
@@ -230,24 +221,133 @@ class Wpml_Wxr_Export {
 
 	}
 
+	private function wxr_get_post_items() {
+
+		$wxr_items = FALSE;
+
+		foreach ( $this->posts as $post ) {
+
+			$wxr_items .= "\n\t\t<item>\n";
+			$wxr_items .= "\t\t\t<title>" . apply_filters( 'the_title_rss', $post->post_title ) . "</title>\n";
+			$wxr_items .= "\t\t\t<link>" . get_permalink( $post->ID ) . "</link>>\n";
+			$wxr_items .= "\t\t\t<pubDate>" . $this->wxr_cdata( $post->post_date ) . "</pubDate>\n";
+			$wxr_items .= "\t\t\t<dc:creator>" . $this->wxr_cdata( get_the_author_meta( $post->post_author ) ) . "</dc:creator>\n";
+			$wxr_items .= "\t\t\t<guid isPermaLink=\"false\">" . get_the_guid( $post->ID ) . "</guid>\n";
+			$wxr_items .= "\t\t\t<<excerpt:encoded>>" . $this->wxr_cdata( $post->post_excerpt ) . "</<excerpt:encoded>>\n";
+			$wxr_items .= "\t\t\t<content:encoded>" . $this->wxr_cdata( $post->post_content ) . "</content:encoded>\n";
+
+			$wxr_items .= "\t\t\t<wp:post_id>" . intval( $post->ID ) . "</wp:post_id>\n";
+			$wxr_items .= "\t\t\t<wp:post_date>" . $this->wxr_cdata( $post->post_date ) . "</wp:post_date>\n";
+			$wxr_items .= "\t\t\t<wp:post_date_gmt>" . $this->wxr_cdata( $post->post_date_gmt ) . "</wp:post_date_gmt>\n";
+			$wxr_items .= "\t\t\t<wp:comment_status>" . $this->wxr_cdata( $post->comment_status ) . "</wp:comment_status>\n";
+			$wxr_items .= "\t\t\t<wp:ping_status>" . $this->wxr_cdata( $post->ping_status ) . "</wp:ping_status>\n";
+			$wxr_items .= "\t\t\t<wp:post_name>" . $this->wxr_cdata( $post->post_name ) . "</wp:post_name>\n";
+			$wxr_items .= "\t\t\t<wp:status>" . $this->wxr_cdata( $post->post_status ) . "</wp:status>\n";
+			$wxr_items .= "\t\t\t<wp:post_parent>" . intval( $post->post_parent ) . "</wp:post_parent>\n";
+			$wxr_items .= "\t\t\t<wp:menu_order>" . intval( $post->menu_order ) . "</wp:menu_order>\n";
+			$wxr_items .= "\t\t\t<wp:post_type>" . $this->wxr_cdata( $post->post_type ) . "</wp:post_type>\n";
+			$wxr_items .= "\t\t\t<wp:post_password>" . $this->wxr_cdata( $post->post_password ) . "</wp:post_password>\n";
+			$wxr_items .= "\t\t\t<wp:is_sticky>" . intval( is_sticky( $post->ID ) ) . "</wp:is_sticky>\n";
+
+			if ( $post->post_type == 'attachment' ) {
+				$wxr_items .= "\t\t\t<wp:attachment_url>" . wxr_cdata( wp_get_attachment_url( $post->ID ) ) . "</wp:attachment_url>\n";
+			}
+
+			$wxr_items .= $this->wxr_post_categories( $post->ID );
+			$wxr_items .= $this->wxr_get_postmeta( $post->ID );
+			$wxr_items .= $this->wxr_get_translations( $post->translations );
+			$wxr_items .= $this->wxr_comments( $post->ID );
+
+			$wxr_items .= "\n\t\t</item>\n";
+		}
+
+		return $wxr_items;
+
+	}
+
 	/**
-	 * Output list of taxonomy terms, in XML tag format, associated with a post
+	 * Filter whether to selectively skip post meta used for WXR exports.
 	 *
-	 * @since 2.3.0
+	 * Returning a truthy value to the filter will skip the current meta
+	 * object from being exported.
+	 *
+	 * @since 3.3.0
+	 *
+	 * @param bool   $skip     Whether to skip the current post meta. Default false.
+	 * @param string $meta_key Current meta key.
+	 * @param object $meta     Current meta object.
 	 */
-	private function wxr_post_taxonomy() {
+	private function wxr_get_postmeta( $post_ID ) {
 
-		$post = get_post();
+		global $wpdb;
 
-		$taxonomies = get_object_taxonomies( $post->post_type );
-		if ( empty( $taxonomies ) ) {
-			return;
+		$postmeta = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->postmeta WHERE post_id = %d", $post_ID ) );
+
+		$wxr_postmeta = FALSE;
+
+		foreach ( $postmeta as $meta ) {
+
+			$wxr_postmeta .= "\n\t\t\t<wp:postmeta>\n";
+			$wxr_postmeta .= "\t\t\t\t<wp:meta_key>" . $this->wxr_cdata( $meta->meta_key ) . "</wp:meta_key>\n";
+			$wxr_postmeta .= "\t\t\t\t<wp:meta_value>" . $this->wxr_cdata( $meta->meta_value ) . "</wp:meta_value>\n";
+			$wxr_postmeta .= "\t\t\t</wp:postmeta>\n";
+
 		}
-		$terms = wp_get_object_terms( $post->ID, $taxonomies );
 
-		foreach ( (array) $terms as $term ) {
-			echo "\t\t<category domain=\"{$term->taxonomy}\" nicename=\"{$term->slug}\">" . $this->wxr_cdata( $term->name ) . "</category>\n";
+		return $wxr_postmeta;
+
+	}
+
+	private function wxr_get_translations( $post_translations ) {
+
+		$wxr_post_translations = FALSE;
+
+		if ( ! empty( $post_translations ) ) {
+
+			foreach ( $post_translations as $lng => $post_id ) {
+
+				$wxr_post_translations .= "\n\t\t\t<wp:translation lang=\"{$lng}\" post_id=\"{$post_id}\"/>";
+
+			}
+
 		}
+
+		return $wxr_post_translations;
+
+	}
+
+	private function wxr_comments( $post_id ) {
+
+		global $wpdb;
+
+		$_comments = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->comments WHERE comment_post_ID = %d AND comment_approved = 1", $post_id ) );
+
+		$comments = array_map( 'get_comment', $_comments );
+
+		$wxr_post_comments = FALSE;
+
+		foreach ( $comments as $comment ) {
+
+			$wxr_post_comments .= "\n\t\t\t<wp:comment>\n";
+
+			foreach ( $comment as $wxr_tag => $wxr_data ) {
+
+				if ( $wxr_tag == 'comment_id' || $wxr_tag == 'comment_parent' || $wxr_tag == 'comment_user_id' ) {
+					$wxr_data = intval( $wxr_data );
+				} else {
+					$wxr_data = $this->wxr_cdata( $wxr_data );
+				}
+
+				$wxr_post_comments .= "\t\t\t\t<wp:" . $wxr_tag . ">" . $wxr_data . "</wp:" . $wxr_tag . ">\n";
+
+			}
+
+			$wxr_post_comments .= "\t\t\t</wp:comment>\n";
+
+		}
+
+		return $wxr_post_comments;
+
 	}
 
 	/**
@@ -293,7 +393,7 @@ class Wpml_Wxr_Export {
 		<link>{$blog_url}</link>
 		<description>{$blog_description}</description>
 		<pubDate>{$time}</pubDate>
-		<language>{$lng}</language>
+		<language>{$this->current_lng}</language>
 		<wp:wxr_version>{$wxr_version}</wp:wxr_version>
 		<wp:base_site_url>{$wxr_site_url}</wp:base_site_url>
 		<wp:base_blog_url>{$blog_url}</wp:base_blog_url>
@@ -316,10 +416,11 @@ EOF;
 
 		$wxr_items = $this->wxr_authors_list( $post_ids );
 		$wxr_items .= $this->wxr_get_categories();
+		$wxr_items .= $this->wxr_get_post_items();
 
 		$wxr = $this->get_wxr_output( $wxr_items );
 
-		debug( $wxr );
+		return $wxr;
 
 	}
 
