@@ -43,7 +43,7 @@ class Wpml2mlp_Helper {
 				foreach( $termtypes as $term ){
 
 					if( ! empty( get_terms( $term ) ) ) {
-						q[ $lang_code ][ $term ] = get_terms( $term );
+						$all_posts[ $lang_code ][ $term ] = get_terms( $term );
 					}
 
 				}
