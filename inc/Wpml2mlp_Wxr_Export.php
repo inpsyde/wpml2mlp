@@ -116,6 +116,8 @@ class Wpml_Wxr_Export {
 			$categories = "\t\t\t<category domain=\"{$term->taxonomy}\" nicename=\"{$term->slug}\" term_id=\"$term->term_id\">" . $this->wxr_cdata( $term->name ) . "</category>\n";
 		}
 
+		unset( $terms );
+
 		if ( ! empty( $categories ) ) {
 
 			return $categories;
@@ -164,6 +166,9 @@ class Wpml_Wxr_Export {
 			$wxr_authors .= "\t\t\t<wp:author_last_name>" . $this->wxr_cdata( $author->last_name ) . "</wp:author_last_name>\n";
 			$wxr_authors .= "\t\t</wp:author>\n";
 		}
+
+		unset( $authors );
+		unset( $results );
 
 		return $wxr_authors;
 	}
@@ -250,7 +255,7 @@ class Wpml_Wxr_Export {
 			$wxr_items .= "\t\t\t<wp:is_sticky>" . intval( is_sticky( $post->ID ) ) . "</wp:is_sticky>\n";
 
 			if ( $post->post_type == 'attachment' ) {
-				$wxr_items .= "\t\t\t<wp:attachment_url>" . wxr_cdata( wp_get_attachment_url( $post->ID ) ) . "</wp:attachment_url>\n";
+				$wxr_items .= "\t\t\t<wp:attachment_url>" . $this->wxr_cdata( wp_get_attachment_url( $post->ID ) ) . "</wp:attachment_url>\n";
 			}
 
 			$wxr_items .= $this->wxr_post_categories( $post->ID );
@@ -419,6 +424,8 @@ EOF;
 		$wxr_items .= $this->wxr_get_post_items();
 
 		$wxr = $this->get_wxr_output( $wxr_items );
+
+		unset( $wxr_items );
 
 		return $wxr;
 
