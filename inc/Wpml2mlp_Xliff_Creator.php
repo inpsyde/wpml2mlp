@@ -113,24 +113,35 @@ class Wpml2mlp_Xliff_Creator {
 	/**
 	 * Runs storing xliff data.
 	 */
-	function store_xliff_export() {
+	function store_wxr_export() {
 
-		$data = $this->contentForExport;
-		//$data = unserialize( base64_decode( $data ) );
 
-		$xliff_cache = new Wpml2mlp_Xliff_Cache();
+		#TODO remove this filter to aktivate gz compressing for xliff files
+		add_filter( 'wpml2mlp_xliff_crompress', function(){ return FALSE; } );
+
+		$data= $this->contentForExport;
+
+
+		$wxr_cache = new Wpml2mlp_Wxr_Cache();
+
 
 		if ( is_array( $data ) && count( $data ) > 0 ) {
 
-			foreach ( $data as $lng ) {
-				$xliff_file       = $this->get_xlif_file( $lng );
-				$xliff_cache_name = 'translation_' . $lng->source_language . '_' . $lng->destination_language . '.xliff';
-				$xliff_cache->add( $xliff_file, $xliff_cache_name );
+			foreach ( $data as $lng => $posts ) {
+
+				$wxr_file       = $this->get_wxr_file( $lng, $posts );
+				$wxr_cache_name = 'translation_' . $lng . '.xliff';
+
+
+				debug( $lng );
+
+				$wxr_cache->add( $wxr_file, $wxr_cache_name );
+
 			}
 
 		}
 
-		debug( $xliff_cache->get_xlifff_stack() );
+		debug( $wxr_cache->get_xlifff_stack() );
 		debug( 'xliff' );
 
 	}
@@ -143,6 +154,7 @@ class Wpml2mlp_Xliff_Creator {
 	 * @return string
 	 */
 	function get_xlif_file( WPML2MLP_Translations $data ) {
+
 
 		$new_line = "\n";
 
@@ -169,6 +181,17 @@ class Wpml2mlp_Xliff_Creator {
 		$xliff_file .= '</xliff>';
 
 		return $xliff_file;
+
+	}
+
+
+	function get_wxr_file( $lng, $posts ) {
+
+		$wxr = new Wpml_Wxr_Export( $lng, $posts );
+
+		$wxr_file = $wxr->get_wxr();
+
+		return $wxr_file;
 
 	}
 
