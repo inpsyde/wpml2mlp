@@ -117,7 +117,7 @@ class Wpml2mlp_Xliff_Creator {
 
 
 		#TODO remove this filter to aktivate gz compressing for xliff files
-		add_filter( 'wpml2mlp_xliff_crompress', function(){ return FALSE; } );
+		#add_filter( 'wpml2mlp_xliff_crompress', function(){ return FALSE; } );
 
 		$data= $this->contentForExport;
 
@@ -130,10 +130,7 @@ class Wpml2mlp_Xliff_Creator {
 			foreach ( $data as $lng => $posts ) {
 
 				$wxr_file       = $this->get_wxr_file( $lng, $posts );
-				$wxr_cache_name = 'translation_' . $lng . '.xliff';
-
-
-				debug( $lng );
+				$wxr_cache_name = 'wpml_export_' . $lng . '.xml';
 
 				$wxr_cache->add( $wxr_file, $wxr_cache_name );
 
