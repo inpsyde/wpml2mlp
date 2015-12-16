@@ -11,33 +11,59 @@ class Wpml2mlp_Helper {
 	 * @return posts array
 	 */
 	public static function get_all_posts() {
+		global $sitepress;
+
+		$termtypes = array( 'category', 'post_tag' );
 
 		$posttypes = array(
-			'post'       => 'post',
-			#'page'       => 'page',
-			#'attachment' => 'attachment'
+			'post' => 'post',
+			'page'       => 'page',
+			'attachment' => 'attachment'
 		);
-
-		#$posttypes = get_post_types( array( 'public' => TRUE ), 'names', 'and' )
-
 
 		$query_params = array(
-			'posts_per_page' => - 1,
-			'post_type'      => apply_filters( 'wpml2mlp_supported_posttypes', $posttypes ),
-			'post_status'    => array( 'publish', 'pending', 'draft', 'future', 'private',)
+			'posts_per_page'   => -1,
+			'post_type'        => apply_filters( 'wpml2mlp_supported_posttypes', $posttypes ),
+			'post_status'      => array( 'publish', 'pending', 'draft', 'future', 'private', )
 
 		);
 
-		$query = new WP_Query( $query_params );
+		$all_posts = array();
+
+		foreach( wpml_get_active_languages_filter() as $lang_code => $lang_data ){
+
+			$sitepress->switch_lang( $lang_code );
+
+			$query = new WP_Query( $query_params );
+
+			if ( $query->found_posts > 0 ) {
+
+				$all_posts[ $lang_code ]['posts'] = $query->posts;
+
+				foreach( $termtypes as $term ){
+
+					if( ! empty( get_terms( $term ) ) ) {
+						q[ $lang_code ][ $term ] = get_terms( $term );
+					}
+
+				}
+
+			}
+
+			#save memory claenup the $query
+			unset( $query );
+
+		}
 
 
-		if ( $query->posts ) {
+		if ( ! empty( $all_posts ) ) {
 
-			return $query->posts;
+			return $all_posts;
 
 		}
 
 	}
+
 
 	/**
 	 * Updates flag url for given blog.
