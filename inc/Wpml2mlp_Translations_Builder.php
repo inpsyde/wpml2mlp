@@ -36,14 +36,14 @@ class Wpml2mlp_Translations_Builder {
 
 		$source_post = get_post( $source_id );
 
-		if ( $source_post == NULL ) {
+		if ( $source_post == NULL && $source_post == $mlp_post_id ) {
 			return FALSE;
 		}
 
 		// put translations here for current post
 		array_push(
 			$ret,
-			new Wpml2mlp_Translation_Item( $source_post->post_title, $post->post_title, $source_id, $mlp_post_id )
+			new Wpml2mlp_Translation_Item( $source_post->post_title, $post->post_title, $source_id, $mlp_post_id, $source_post->post_type )
 		);
 		array_push(
 			$ret,
