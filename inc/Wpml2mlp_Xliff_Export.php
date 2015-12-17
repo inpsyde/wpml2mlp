@@ -201,7 +201,7 @@ class Wpml_Xliff_Export {
 
 				if( ! empty( $translation_id ) ){
 
-					$translations[ $lang_code ] = $translation_id;
+					$translations[ $lang_data['default_locale'] ] = $translation_id;
 
 				}
 
