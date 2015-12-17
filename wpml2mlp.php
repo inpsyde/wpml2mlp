@@ -54,6 +54,9 @@ function wpml2mlp_prerequisites() {
 		}
 
 	}
+	$autoload = __DIR__ . '/vendor/autoload.php';
+	if ( file_exists( $autoload ) )
+		require_once $autoload;
 
 	$txt_domain = 'wpml2mlp';
 	$error_code = $txt_domain . '_prerequisites';
