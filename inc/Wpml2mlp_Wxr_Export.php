@@ -264,6 +264,7 @@ class Wpml_Wxr_Export {
 			$wxr_items .= $this->wxr_comments( $post->ID );
 
 			$wxr_items .= "\n\t\t</item>\n";
+
 		}
 
 		return $wxr_items;
@@ -311,7 +312,10 @@ class Wpml_Wxr_Export {
 
 			foreach ( $post_translations as $lng => $post_id ) {
 
-				$wxr_post_translations .= "\n\t\t\t<wp:translation lang=\"{$lng}\" post_id=\"{$post_id}\"/>";
+				$wxr_post_translations .= "\n\t\t\t<wp:translation>\n";
+				$wxr_post_translations .= "\t\t\t\t<wp:locale>" . $this->wxr_cdata( $lng ) . "</wp:meta_key>\n";
+				$wxr_post_translations .= "\t\t\t\t<wp:element_id>" . intval( $post_id ) . "</wp:element_id>\n";
+				$wxr_post_translations .= "\t\t\t</wp:translation>\n";
 
 			}
 
