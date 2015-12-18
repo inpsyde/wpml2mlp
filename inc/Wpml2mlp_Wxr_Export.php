@@ -24,15 +24,15 @@ class Wpml_Wxr_Export {
 	/**
 	 * Constructs new Wpml_WXR_Export instance.git checkout
 	 */
-	public function __construct( $loc, $loc_obj ) {
+	public function __construct( $locale, $locale_obj ) {
 
-		$this->current_lng = $loc;
-		$this->posts       = $loc_obj[ 'posts' ];
-		$this->categories  = $loc_obj[ 'category' ];
-		$this->post_tags   = $loc_obj[ 'post_tag' ];
+		$this->current_$locale = $locale;
+		$this->posts           = $locale_obj[ 'posts' ];
+		$this->categories      = $locale_obj[ 'category' ];
+		$this->post_tags       = $locale_obj[ 'post_tag' ];
 
 		$this->wxr_cache    = new Wpml2mlp_Wxr_Cache();
-		$this->wxr_filename = 'wpml_export_' . $loc . '.xml';
+		$this->wxr_filename = 'wpml_export_' . $locale . '.xml';
 
 	}
 
@@ -273,7 +273,7 @@ class Wpml_Wxr_Export {
 			unset( $wxr_items );
 
 			#buddy take a break, its hard work i now ;)
-			if( $i >= 50 ){
+			if ( $i >= 50 ) {
 				sleep( 2 );
 				$i = 0;
 			}
@@ -423,7 +423,7 @@ EOF;
 
 	}
 
-	private function get_wxr_footer(){
+	private function get_wxr_footer() {
 
 		return <<<EOF
 
@@ -445,18 +445,15 @@ EOF;
 
 		$this->wxr_cache->unlink_wxr( $this->wxr_filename );
 
-
 		$this->wxr_cache->write( $this->get_wxr_header(), $this->wxr_filename );
 		$this->wxr_cache->write( $this->wxr_authors_list( $post_ids ), $this->wxr_filename );
 		$this->wxr_cache->write( $this->wxr_get_categories(), $this->wxr_filename );
 
 		$this->wxr_get_post_items();
 
-		$this->wxr_cache->write( $this->get_wxr_footer(), $this->wxr_filename, true );
+		$this->wxr_cache->write( $this->get_wxr_footer(), $this->wxr_filename, TRUE );
 
 		unset( $wxr_items );
-
-
 
 		$wxr = $this->wxr_cache->get_wxr_stack();
 
