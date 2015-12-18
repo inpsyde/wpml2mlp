@@ -26,7 +26,7 @@ class Wpml_Wxr_Export {
 	 */
 	public function __construct( $locale, $locale_obj ) {
 
-		$this->current_$locale = $locale;
+		$this->current_locale = $locale;
 		$this->posts           = $locale_obj[ 'posts' ];
 		$this->categories      = $locale_obj[ 'category' ];
 		$this->post_tags       = $locale_obj[ 'post_tag' ];
