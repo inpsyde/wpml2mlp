@@ -16,9 +16,9 @@ class Wpml2mlp_Helper {
 		$termtypes = array( 'category', 'post_tag' );
 
 		$posttypes = array(
-			'post' => 'post',
+			'post'       => 'post',
 			'page'       => 'page',
-			#'attachment' => 'attachment'
+			'attachment' => 'attachment'
 		);
 
 		$query_params = array(
