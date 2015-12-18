@@ -18,7 +18,7 @@ class Wpml2mlp_Helper {
 		$posttypes = array(
 			'post' => 'post',
 			'page'       => 'page',
-			'attachment' => 'attachment'
+			#'attachment' => 'attachment'
 		);
 
 		$query_params = array(
@@ -38,12 +38,12 @@ class Wpml2mlp_Helper {
 
 			if ( $query->found_posts > 0 ) {
 
-				$all_posts[ $lang_code ]['posts'] = $query->posts;
+				$all_posts[ $lang_data['default_locale'] ]['posts'] = $query->posts;
 
 				foreach( $termtypes as $term ){
 
 					if( ! empty( get_terms( $term ) ) ) {
-						$all_posts[ $lang_code ][ $term ] = get_terms( $term );
+						$all_posts[ $lang_data['default_locale'] ][ $term ] = get_terms( $term );
 					}
 
 				}

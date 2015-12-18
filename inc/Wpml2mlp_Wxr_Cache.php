@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Class to dynamically create and handle xliff files as gz
+ * Class to dynamically create and handle wxr files as gz
  */
 class Wpml2mlp_Wxr_Cache {
 
 	/**
-	 * @var array hold generatet xliff files
+	 * @var array hold generatet wxr files
 	 */
-	public $xliff = array();
+	public $wxr = array();
 
 	/**
 	 * @var int
@@ -16,32 +16,47 @@ class Wpml2mlp_Wxr_Cache {
 	public $oldOffset = 0;
 
 	/**
-	 * @return array retruns a stack of generatet translation xliff files
+	 * @return array retruns a stack of generatet translation wxr files
 	 */
-	public function get_xlifff_stack(){
+	public function get_wxr_stack(){
 
-		return $this->xliff;
+		return $this->wxr;
 
 	}
 
 	/**
-	 * Cleat the xliff stack and delete generatet xliff files
+	 * Cleat the wxr stack and delete generatet wxr files
 	 */
-	public function clear_xlifff_stack(){
+	public function clear_wxr_stack(){
 
-		if( count( $this->xliff ) > 0){
+		if( count( $this->wxr ) > 0){
 
-			foreach( $this->xliff as $file ){
+			foreach( $this->wxr as $file ){
 
 				unlink( $file );
 
 			}
 
-			$this->xliff = array();
+			$this->wxr = array();
 		}
 
 	}
 
+	/**
+	 * @return array retruns a stack of generatet translation wxr files
+	 */
+	public function unlink_wxr( $wxr_cache_name ){
+
+		$wxr_filepath = apply_filters( 'wpml2mlp_wxr_filepath', WP_CONTENT_DIR . '/uploads/wpml2mlp' );
+		$wxr_filename = $wxr_filepath . apply_filters( 'wpml2mlp_wxr_filename', $wxr_cache_name );
+
+		if ( file_exists( $wxr_filename ) ) {
+
+			unlink( $wxr_filename );
+
+		}
+
+	}
 
 	/**
 	 * Function to add file(s) to the specified directory in the archive
@@ -52,40 +67,31 @@ class Wpml2mlp_Wxr_Cache {
 	 * @return void
 	 * @access public
 	 */
-	public function add( $xliff_data, $xliff_cache_name ) {
+	public function write( $wxr_data, $wxr_cache_name, $gz = false ) {
 
-		$xliff_filepath = apply_filters( 'wpml2mlp_xliff_filepath', WP_CONTENT_DIR . '/uploads/' );
-		$xliff_filename = $xliff_filepath . apply_filters( 'wpml2mlp_xliff_filename', $xliff_cache_name );
+		$wxr_filepath = apply_filters( 'wpml2mlp_wxr_filepath', WP_CONTENT_DIR . '/uploads/wpml2mlp/' );
+		$wxr_filename = $wxr_filepath . apply_filters( 'wpml2mlp_wxr_filename', $wxr_cache_name );
 
-		if ( ! file_exists( $xliff_filepath ) ) {
-			mkdir( $xliff_filepath, 0777, TRUE );
+		if ( ! file_exists( $wxr_filepath ) ) {
+			mkdir( $wxr_filepath, 0777, TRUE );
 		}
+
+		file_put_contents( $wxr_filename, $wxr_data, FILE_APPEND | LOCK_EX );
+		$this->wxr[ $wxr_cache_name ] = $wxr_filename;
 
 		/**
 		 * GZ file compression
 		 *
-		 * The xliff files are defauldy gz compressed.
-		 * Compression can turn off by a Filter "wpml2mlp_xliff_crompress"
+		 * The wxr files are defauldy gz compressed.
+		 * Compression can turn off by a Filter "wpml2mlp_wxr_crompress"
 		 *
 		 * Example:
-		 * add_filter( 'wpml2mlp_xliff_crompress', function( retrun false; ) );
+		 * add_filter( 'wpml2mlp_wxr_crompress', function( retrun false; ) );
 		 *
 		 */
-		if ( apply_filters( 'wpml2mlp_xliff_crompress', TRUE ) === TRUE ) {
+		if ( $gz === TRUE ) {
 
-			file_put_contents( $xliff_filename, $xliff_data );
-			$this->xliff[] = $this->gzCompressFile( $xliff_filename );
-
-		} else {
-
-			if ( file_exists( $xliff_filename ) ) {
-
-				unlink( $xliff_filename );
-
-			}
-
-			file_put_contents( $xliff_filename, $xliff_data );
-			$this->xliff[] = $xliff_filename;
+			$this->wxr[ $wxr_cache_name ] = $this->gzCompressFile( $wxr_filename );
 
 		}
 

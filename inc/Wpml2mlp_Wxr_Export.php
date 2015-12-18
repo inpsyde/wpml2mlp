@@ -31,6 +31,9 @@ class Wpml_Wxr_Export {
 		$this->categories  = $lng_obj[ 'category' ];
 		$this->post_tags   = $lng_obj[ 'post_tag' ];
 
+		$this->wxr_cache    = new Wpml2mlp_Wxr_Cache();
+		$this->wxr_filename = 'wpml_export_' . $lng . '.xml';
+
 	}
 
 	/**
@@ -230,7 +233,7 @@ class Wpml_Wxr_Export {
 
 		$wxr_items = FALSE;
 
-		foreach ( $this->posts as $post ) {
+		foreach ( $this->posts as $i => $post ) {
 
 			$wxr_items .= "\n\t\t<item>\n";
 			$wxr_items .= "\t\t\t<title>" . apply_filters( 'the_title_rss', $post->post_title ) . "</title>\n";
@@ -265,9 +268,19 @@ class Wpml_Wxr_Export {
 
 			$wxr_items .= "\n\t\t</item>\n";
 
+			$this->wxr_cache->write( $wxr_items, $this->wxr_filename );
+
+			unset( $wxr_items );
+
+			#buddy take a break, its hard work i now ;)
+			if( $i >= 50 ){
+				sleep( 2 );
+				$i = 0;
+			}
+
 		}
 
-		return $wxr_items;
+		return;
 
 	}
 
@@ -375,7 +388,7 @@ class Wpml_Wxr_Export {
 		return $return_me;
 	}
 
-	private function get_wxr_output( $items ) {
+	private function get_wxr_header() {
 
 		$wxr_version   = Wpml_Wxr_Export::WXR_VERSION;
 		$wxr_site_url  = $this->wxr_site_url();
@@ -406,8 +419,15 @@ class Wpml_Wxr_Export {
 		<wp:wxr_version>{$wxr_version}</wp:wxr_version>
 		<wp:base_site_url>{$wxr_site_url}</wp:base_site_url>
 		<wp:base_blog_url>{$blog_url}</wp:base_blog_url>
-		{$items}
-	</channel>
+EOF;
+
+	}
+
+	private function get_wxr_footer(){
+
+		return <<<EOF
+
+		</channel>
 </rss>
 EOF;
 
@@ -423,13 +443,22 @@ EOF;
 	 */
 	public function get_wxr() {
 
-		$wxr_items = $this->wxr_authors_list( $post_ids );
-		$wxr_items .= $this->wxr_get_categories();
-		$wxr_items .= $this->wxr_get_post_items();
+		$this->wxr_cache->unlink_wxr( $this->wxr_filename );
 
-		$wxr = $this->get_wxr_output( $wxr_items );
+
+		$this->wxr_cache->write( $this->get_wxr_header(), $this->wxr_filename );
+		$this->wxr_cache->write( $this->wxr_authors_list( $post_ids ), $this->wxr_filename );
+		$this->wxr_cache->write( $this->wxr_get_categories(), $this->wxr_filename );
+
+		$this->wxr_get_post_items();
+
+		$this->wxr_cache->write( $this->get_wxr_footer(), $this->wxr_filename, true );
 
 		unset( $wxr_items );
+
+
+
+		$wxr = $this->wxr_cache->get_wxr_stack();
 
 		return $wxr;
 
