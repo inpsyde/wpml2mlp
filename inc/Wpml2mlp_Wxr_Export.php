@@ -22,7 +22,7 @@ class Wpml_Wxr_Export {
 	const WXR_VERSION = '1.2';
 
 	/**
-	 * Constructs new Wpml_WXR_Export instance.
+	 * Constructs new Wpml_WXR_Export instance.git checkout
 	 */
 	public function __construct( $loc, $loc_obj ) {
 
