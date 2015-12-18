@@ -24,15 +24,15 @@ class Wpml_Wxr_Export {
 	/**
 	 * Constructs new Wpml_WXR_Export instance.
 	 */
-	public function __construct( $lng, $lng_obj ) {
+	public function __construct( $loc, $loc_obj ) {
 
-		$this->current_lng = $lng;
-		$this->posts       = $lng_obj[ 'posts' ];
-		$this->categories  = $lng_obj[ 'category' ];
-		$this->post_tags   = $lng_obj[ 'post_tag' ];
+		$this->current_lng = $loc;
+		$this->posts       = $loc_obj[ 'posts' ];
+		$this->categories  = $loc_obj[ 'category' ];
+		$this->post_tags   = $loc_obj[ 'post_tag' ];
 
 		$this->wxr_cache    = new Wpml2mlp_Wxr_Cache();
-		$this->wxr_filename = 'wpml_export_' . $lng . '.xml';
+		$this->wxr_filename = 'wpml_export_' . $loc . '.xml';
 
 	}
 
