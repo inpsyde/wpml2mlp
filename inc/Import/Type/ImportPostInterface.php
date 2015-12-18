@@ -2,10 +2,7 @@
 
 namespace W2M\Import\Type;
 
-/**
- * Interface ImportPost
- */
-interface ImportPost extends ImportElementInterface {
+interface ImportPostInterface extends ImportElementInterface {
 
 	/**
 	 * @return string

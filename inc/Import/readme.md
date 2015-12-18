@@ -8,7 +8,7 @@ Wrapps around XMLReader to iterate over entity objects (terms, users, posts)
 
 ## Types 
 
-`ImportPost`, `ImportTerm`, etc.
+`ImportPostInterface`, `ImportTerm`, etc.
 
 To have a clear defined interface to the importing data. Types are almost immutable. The only value that can changed 
 once in the object live time is the id of the object, as this gets created when inserting it into DB. This change will 

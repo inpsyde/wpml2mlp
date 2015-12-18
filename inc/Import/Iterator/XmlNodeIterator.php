@@ -73,6 +73,8 @@ class XmlNodeIterator implements Iterator {
 
 	/**
 	 * closes the reader and re-open the URI
+	 *
+	 * Todo: consider if it is necessary or even reliable
 	 */
 	public function rewind() {
 
