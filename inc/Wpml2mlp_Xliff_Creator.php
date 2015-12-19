@@ -121,9 +121,9 @@ class Wpml2mlp_Xliff_Creator {
 
 		if ( is_array( $data ) && count( $data ) > 0 ) {
 
-			foreach ( $data as $lng => $posts ) {
+			foreach ( $data as $locale => $posts ) {
 
-				$wxr[ $lng ] = $this->get_wxr_file( $lng, $posts );
+				$wxr[ $locale ] = $this->get_wxr_file( $locale, $posts );
 
 				#buddy take a break, its hard work but now we have a wxr export file created :)
 				sleep(2);
@@ -175,9 +175,9 @@ class Wpml2mlp_Xliff_Creator {
 	}
 
 
-	function get_wxr_file( $local, $posts ) {
+	function get_wxr_file( $locale, $posts ) {
 
-		$wxr = new Wpml_Wxr_Export( $local, $posts );
+		$wxr = new Wpml_Wxr_Export( $locale, $posts );
 
 		$wxr_file = $wxr->get_wxr();
 
