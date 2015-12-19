@@ -175,9 +175,9 @@ class Wpml2mlp_Xliff_Creator {
 	}
 
 
-	function get_wxr_file( $lng, $posts ) {
+	function get_wxr_file( $local, $posts ) {
 
-		$wxr = new Wpml_Wxr_Export( $lng, $posts );
+		$wxr = new Wpml_Wxr_Export( $local, $posts );
 
 		$wxr_file = $wxr->get_wxr();
 

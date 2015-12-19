@@ -55,7 +55,6 @@ class Wpml2mlp_Helper {
 
 		}
 
-
 		if ( ! empty( $all_posts ) ) {
 
 			return $all_posts;

@@ -26,10 +26,12 @@ class Wpml_Wxr_Export {
 	 */
 	public function __construct( $locale, $locale_obj ) {
 
+		set_time_limit( 0 );
+
 		$this->current_locale = $locale;
-		$this->posts           = $locale_obj[ 'posts' ];
-		$this->categories      = $locale_obj[ 'category' ];
-		$this->post_tags       = $locale_obj[ 'post_tag' ];
+		$this->posts          = $locale_obj[ 'posts' ];
+		$this->categories     = $locale_obj[ 'category' ];
+		$this->post_tags      = $locale_obj[ 'post_tag' ];
 
 		$this->wxr_cache    = new Wpml2mlp_Wxr_Cache();
 		$this->wxr_filename = 'wpml_export_' . $locale . '.xml';
@@ -268,13 +270,14 @@ class Wpml_Wxr_Export {
 
 			$wxr_items .= "\n\t\t</item>\n";
 
-			$this->wxr_cache->write( $wxr_items, $this->wxr_filename );
-
-			unset( $wxr_items );
 
 			#buddy take a break, its hard work i now ;)
 			if ( $i >= 50 ) {
-				sleep( 2 );
+
+				$this->wxr_cache->write( $wxr_items, $this->wxr_filename );
+
+				unset( $wxr_items );
+
 				$i = 0;
 			}
 
