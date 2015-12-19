@@ -1,5 +1,5 @@
 # WPML to MultilingualPress
-[![GitHub release](https://img.shields.io/badge/status-beta-lightgrey.svg)](https://github.com/inpsyde/wpml2mlp/edit/maste)
+[![GitHub release](https://img.shields.io/badge/status-beta-lightgrey.svg)](https://github.com/inpsyde/wpml2mlp/edit/master)
 
 Convert posts from an existing WPML multilingual site via XLIFF Export/Import for MultilingualPress
 
