@@ -115,31 +115,24 @@ class Wpml2mlp_Xliff_Creator {
 	 */
 	function store_wxr_export() {
 
+		$data = $this->contentForExport;
 
-		#TODO remove this filter to aktivate gz compressing for xliff files
-		#add_filter( 'wpml2mlp_xliff_crompress', function(){ return FALSE; } );
-
-		$data= $this->contentForExport;
-
-
-		$wxr_cache = new Wpml2mlp_Wxr_Cache();
 
 
 		if ( is_array( $data ) && count( $data ) > 0 ) {
 
-			foreach ( $data as $lng => $posts ) {
+			foreach ( $data as $locale => $posts ) {
 
-				$wxr_file       = $this->get_wxr_file( $lng, $posts );
-				$wxr_cache_name = 'wpml_export_' . $lng . '.xml';
+				$wxr[ $locale ] = $this->get_wxr_file( $locale, $posts );
 
-				$wxr_cache->add( $wxr_file, $wxr_cache_name );
+				#buddy take a break, its hard work but now we have a wxr export file created :)
+				sleep(2);
 
 			}
 
 		}
 
-		debug( $wxr_cache->get_xlifff_stack() );
-		debug( 'xliff' );
+		debug( $wxr );
 
 	}
 
@@ -182,9 +175,9 @@ class Wpml2mlp_Xliff_Creator {
 	}
 
 
-	function get_wxr_file( $lng, $posts ) {
+	function get_wxr_file( $locale, $posts ) {
 
-		$wxr = new Wpml_Wxr_Export( $lng, $posts );
+		$wxr = new Wpml_Wxr_Export( $locale, $posts );
 
 		$wxr_file = $wxr->get_wxr();
 

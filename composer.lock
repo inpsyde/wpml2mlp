@@ -1,0 +1,108 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "36aac44c980550e88e80322a6aadeb95",
+    "content-hash": "88005d0b5f01e2875e72a1df7c2fa0d7",
+    "packages": [],
+    "packages-dev": [
+        {
+            "name": "inpsyde/wordpress-dev",
+            "version": "4.4.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/inpsyde/wordpress-dev.git",
+                "reference": "778e948f71b458de8d82804688afcd85d645dbae"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/inpsyde/wordpress-dev/zipball/778e948f71b458de8d82804688afcd85d645dbae",
+                "reference": "778e948f71b458de8d82804688afcd85d645dbae",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.4"
+            },
+            "type": "wordpress-core",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "WordPress Community",
+                    "homepage": "http://wordpress.org/about/"
+                }
+            ],
+            "description": "WordPress is web software you can use to create a beautiful website or blog.",
+            "homepage": "http://wordpress.org/",
+            "keywords": [
+                "blog",
+                "cms",
+                "wordpress"
+            ],
+            "time": "2015-12-19 12:21:44"
+        },
+        {
+            "name": "inpsyde/wp-tests-starter",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/inpsyde/WP-Tests-Starter.git",
+                "reference": "c57efe23eea8095ae6704b2f7a6366fc23e12427"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/inpsyde/WP-Tests-Starter/zipball/c57efe23eea8095ae6704b2f7a6366fc23e12427",
+                "reference": "c57efe23eea8095ae6704b2f7a6366fc23e12427",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "inpsyde/wordpress-dev": "dev-master"
+            },
+            "suggest": {
+                "inpsyde/wordpress-dev": "WordPress development composer package."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "WpTestsStarter\\": "src/WpTestsStarter"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "David Naber",
+                    "email": "d.naber@inpsyde.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A package that helps you setting up WordPress integration test environment quickly.",
+            "keywords": [
+                "integration tests",
+                "tests",
+                "wordpress"
+            ],
+            "time": "2015-11-17 15:49:50"
+        }
+    ],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "inpsyde/wordpress-dev": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">5.3.0"
+    },
+    "platform-dev": []
+}

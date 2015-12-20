@@ -16,7 +16,7 @@ class Wpml2mlp_Helper {
 		$termtypes = array( 'category', 'post_tag' );
 
 		$posttypes = array(
-			'post' => 'post',
+			'post'       => 'post',
 			'page'       => 'page',
 			'attachment' => 'attachment'
 		);
@@ -38,12 +38,12 @@ class Wpml2mlp_Helper {
 
 			if ( $query->found_posts > 0 ) {
 
-				$all_posts[ $lang_code ]['posts'] = $query->posts;
+				$all_posts[ $lang_data['default_locale'] ]['posts'] = $query->posts;
 
 				foreach( $termtypes as $term ){
 
 					if( ! empty( get_terms( $term ) ) ) {
-						$all_posts[ $lang_code ][ $term ] = get_terms( $term );
+						$all_posts[ $lang_data['default_locale'] ][ $term ] = get_terms( $term );
 					}
 
 				}
@@ -54,7 +54,6 @@ class Wpml2mlp_Helper {
 			unset( $query );
 
 		}
-
 
 		if ( ! empty( $all_posts ) ) {
 
