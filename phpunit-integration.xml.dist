@@ -7,6 +7,13 @@
 	convertNoticesToExceptions="true"
 	convertWarningsToExceptions="true"
 	>
+	<php>
+		<const name="W2M\Test\DB_NAME" value="" />
+		<const name="W2M\Test\DB_USER" value="" />
+		<const name="W2M\Test\DB_PASS" value="" />
+		<const name="W2M\Test\DB_HOST" value="localhost" />
+		<const name="W2M\Test\TABLE_PREFIX" value="w2m_" />
+	</php>
 	<testsuites>
 		<testsuite name="integration">
 			<directory suffix="Test.php">tests/phpunit/Integration</directory>
