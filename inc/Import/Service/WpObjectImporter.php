@@ -31,7 +31,7 @@ class WpObjectImporter implements ObjectImporterInterface {
 	public function __construct(
 		TranslationConnectorInterface $translation_connector,
 		Data\IdMapperInterface $id_mapper,
-		$ancestor_resolver
+		$ancestor_resolver = NULL
 	) {
 
 		$this->translation_connector = $translation_connector;
