@@ -20,5 +20,9 @@
   },
   "require": {
     "php": ">5.3.0"
+  },
+  "require-dev": {
+    "inpsyde/wp-tests-starter": "^1.0",
+    "inpsyde/wordpress-dev": "4.4.x-dev"
   }
 }
