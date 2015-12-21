@@ -26,6 +26,11 @@
       "W2M\\Import\\": "inc/Import/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "W2M\\Test\\Helper\\": "tests/Helper/"
+    }
+  },
   "require-dev": {
     "inpsyde/wp-tests-starter": "^1.0",
     "inpsyde/wordpress-dev": "4.4.x-dev"
