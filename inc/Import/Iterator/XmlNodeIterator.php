@@ -1,11 +1,19 @@
 <?php # -*- coding: utf-8 -*-
 
-namespace W2M\Import\Xml;
+namespace W2M\Import\Iterator;
 
 use
 	XMLReader,
 	Iterator;
 
+/**
+ * Class XmlNodeIterator
+ *
+ * Iterates over all given nodes with the given
+ * node name. current() returns the nodes inner XML
+ *
+ * @package W2M\Import\Xml
+ */
 class XmlNodeIterator implements Iterator {
 
 	/**
@@ -28,7 +36,7 @@ class XmlNodeIterator implements Iterator {
 	 * @param string $node_name Name of the element to iterate over
 	 * @param XMLReader $reader Optional
 	 */
-	public function __construct( $uri, $node_name, XMLReader $reader = NULL ) {
+	public function __construct( $uri, $node_name = '', XMLReader $reader = NULL ) {
 
 		$this->uri = (string) $uri;
 		$this->node_name = (string) $node_name;
@@ -41,18 +49,30 @@ class XmlNodeIterator implements Iterator {
 	}
 
 	/**
-	 * @return string
-	 */
-	public function current() {
-		// TODO: Implement current() method.
-	}
-
-	/**
 	 * @return bool
 	 */
 	public function next() {
 
-		return $this->reader->next( $this->node_name );
+		/**
+		 * this is a bit tricky. XMLReader does not
+		 * separate next() and read() in fact read()
+		 * moves the cursor forward.
+		 *
+		 * Todo: verify this!
+		 */
+
+		return TRUE;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function current() {
+
+		$xml = $this->reader->readInnerXml();
+		return ! empty( $this->node_name )
+			? sprintf( '<%1$s>%2$s</%1$s>', $this->node_name, $xml )
+			: $xml;
 	}
 
 	/**
@@ -64,11 +84,21 @@ class XmlNodeIterator implements Iterator {
 	}
 
 	/**
+	 * Move the cursor to the specified element
+	 *
 	 * @return bool
 	 */
 	public function valid() {
 
-		return $this->node_name === $this->reader->name;
+		while ( $this->reader->read() ) {
+			if (
+				$this->node_name === $this->reader->name
+			 && XML_ELEMENT_NODE === $this->reader->nodeType
+			)
+				return TRUE;
+		}
+
+		return FALSE;
 	}
 
 	/**
@@ -81,5 +111,4 @@ class XmlNodeIterator implements Iterator {
 		$this->reader->close();
 		$this->reader->open( $this->uri );
 	}
-
 }
