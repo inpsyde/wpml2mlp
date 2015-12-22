@@ -1,4 +1,5 @@
 vendor/
 tests/tmp/
 phpunit*.xml
-.*
+.DS_Store
+._*
