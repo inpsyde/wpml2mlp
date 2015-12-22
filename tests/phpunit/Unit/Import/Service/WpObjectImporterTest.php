@@ -1,4 +1,4 @@
-<?php  # -*- coding: utf-8 -*-
+<?php # -*- coding: utf-8 -*-
 
 namespace W2M\Test\Unit\Service;
 
@@ -13,9 +13,9 @@ class WpObjectImporterTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * runs before each test
 	 */
-	protected function setUp(){
+	protected function setUp() {
 
-		if( ! $this->fs_helper ){
+		if ( !$this->fs_helper ) {
 			$this->fs_helper = new Helper\FileSystem;
 		}
 
@@ -38,7 +38,7 @@ class WpObjectImporterTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @group rene
 	 */
-	public function test_import_term(){
+	public function test_import_term() {
 
 		$translation_connector_mock = $this->getMockBuilder( 'W2M\Import\Service\TranslationConnectorInterface' )
 			->getMock();
@@ -46,7 +46,6 @@ class WpObjectImporterTest extends \PHPUnit_Framework_TestCase {
 			->getMock();
 
 		$testee = new Service\WpObjectImporter( $translation_connector_mock, $id_mapper_mock );
-
 
 	}
 
