@@ -49,7 +49,7 @@ class XmlNodeIterator implements Iterator {
 	}
 
 	/**
-	 * @return bool
+	 * @return void
 	 */
 	public function next() {
 
@@ -60,8 +60,6 @@ class XmlNodeIterator implements Iterator {
 		 *
 		 * Todo: verify this!
 		 */
-
-		return TRUE;
 	}
 
 	/**
