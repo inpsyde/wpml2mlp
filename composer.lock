@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "fccb3e2477b015b29a97d39a7440f797",
+    "hash": "a88235f304e1f1b8a8db1cdb7bbc1f25",
     "content-hash": "88005d0b5f01e2875e72a1df7c2fa0d7",
     "packages": [],
     "packages-dev": [
@@ -14,12 +14,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/inpsyde/wordpress-dev.git",
-                "reference": "cbd7d1de8f775271897443b40738f20fd30e35d5"
+                "reference": "40d7b8e06f41ff11ec0dd0621c0fbd600363f941"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/inpsyde/wordpress-dev/zipball/cbd7d1de8f775271897443b40738f20fd30e35d5",
-                "reference": "cbd7d1de8f775271897443b40738f20fd30e35d5",
+                "url": "https://api.github.com/repos/inpsyde/wordpress-dev/zipball/40d7b8e06f41ff11ec0dd0621c0fbd600363f941",
+                "reference": "40d7b8e06f41ff11ec0dd0621c0fbd600363f941",
                 "shasum": ""
             },
             "require": {
@@ -43,7 +43,7 @@
                 "cms",
                 "wordpress"
             ],
-            "time": "2015-12-21 08:41:20"
+            "time": "2015-12-22 11:01:27"
         },
         {
             "name": "inpsyde/wp-tests-starter",
