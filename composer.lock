@@ -14,12 +14,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/inpsyde/wordpress-dev.git",
-                "reference": "778e948f71b458de8d82804688afcd85d645dbae"
+                "reference": "cbd7d1de8f775271897443b40738f20fd30e35d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/inpsyde/wordpress-dev/zipball/778e948f71b458de8d82804688afcd85d645dbae",
-                "reference": "778e948f71b458de8d82804688afcd85d645dbae",
+                "url": "https://api.github.com/repos/inpsyde/wordpress-dev/zipball/cbd7d1de8f775271897443b40738f20fd30e35d5",
+                "reference": "cbd7d1de8f775271897443b40738f20fd30e35d5",
                 "shasum": ""
             },
             "require": {
@@ -43,7 +43,7 @@
                 "cms",
                 "wordpress"
             ],
-            "time": "2015-12-19 12:21:44"
+            "time": "2015-12-21 08:41:20"
         },
         {
             "name": "inpsyde/wp-tests-starter",
