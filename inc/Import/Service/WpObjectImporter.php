@@ -45,13 +45,28 @@ class WpObjectImporter implements ObjectImporterInterface {
 	 */
 	public function import_term( Type\ImportTermInterface $term ) {
 
-		print_r( 'test' );
-
 		// TODO: Implement import_term() method.
 
 		// 1. Insert Term via wp_insert_term()
 		// 2. set the new term_id(!) via $term->id( $new_term_id );
 		// 3. connect translations $this->translation_connector->link_term( $new_term, $term );
+
+		$term_args = array(
+			'description' => $term->description(),
+			// Todo: resolve imported relations
+			'parent'      => $term->origin_parent_term_id(),
+			'slug'        => $term->slug()
+		);
+
+		wp_insert_term(
+			$term->name(),
+			$term->taxonomy(),
+			$term_args
+		);
+
+		//Todo: resolve locale relations
+		$term->locale_relations();
+
 
 		/**
 		 * Todo: resolve ancestor relation
