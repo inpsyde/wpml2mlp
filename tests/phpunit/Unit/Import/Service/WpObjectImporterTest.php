@@ -75,12 +75,12 @@ class WpObjectImporterTest extends \PHPUnit_Framework_TestCase {
 		 *  - locale_relations()
 		 */
 		$test_data = array(
-			'taxonomy'    => 'category',
-			'name'        => 'My cat pics',
-			'slug'        => 'my-cat-pics',
-			'description' => "Collection of my funniest cat photos.\n\n You should have a look at them.",
-			'parent_id'   => 42,
-			'locale_relations' => array(
+			'taxonomy'              => 'category',
+			'name'                  => 'My cat pics',
+			'slug'                  => 'my-cat-pics',
+			'description'           => "Collection of my funniest cat photos.\n\n You should have a look at them.",
+			'origin_parent_term_id' => 42,
+			'locale_relations'      => array(
 				'en_US' => 13,
 				'fr_CH' => 32
 			)
@@ -98,8 +98,6 @@ class WpObjectImporterTest extends \PHPUnit_Framework_TestCase {
 		foreach ( $test_data as $method => $return_value ) {
 			if ( 'taxonomy' === $method )
 				continue; // we already have this one
-			if ( 'parent_id' === $method )
-				$method = 'origin_parent_term_id';
 
 			$term_mock->expects( $this->atLeast( 1 ) )
 				->method( $method )
@@ -128,7 +126,7 @@ class WpObjectImporterTest extends \PHPUnit_Framework_TestCase {
 				array(
 					'slug'        => $test_data[ 'slug' ],
 					'description' => $test_data[ 'description' ],
-					'parent'      => $test_data[ 'parent_id' ]
+					'parent'      => $test_data[ 'origin_parent_term_id' ]
 				)
 			)
 			->andReturn( $wp_term_data );
