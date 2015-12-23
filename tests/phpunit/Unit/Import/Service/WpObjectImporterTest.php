@@ -2,10 +2,9 @@
 
 namespace W2M\Test\Unit\Service;
 
-use
-	W2M\Import\Service,
-	W2M\Test\Helper,
-	Brain;
+use Brain;
+use W2M\Import\Service;
+use W2M\Test\Helper;
 
 class WpObjectImporterTest extends \PHPUnit_Framework_TestCase {
 
@@ -42,7 +41,7 @@ class WpObjectImporterTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @group rene
+	 * @group import_term
 	 */
 	public function test_import_term() {
 
@@ -85,6 +84,7 @@ class WpObjectImporterTest extends \PHPUnit_Framework_TestCase {
 				'fr_CH' => 32
 			)
 		);
+
 		// Here we go ...
 		// Term-Mock expects ( at least one  ) invocation(s) ...
 		$term_mock->expects( $this->atLeast( 1 ) )
@@ -104,6 +104,12 @@ class WpObjectImporterTest extends \PHPUnit_Framework_TestCase {
 				->willReturn( $return_value );
 		}
 
+		$new_parent_id = 15;
+		$id_mapper_mock->expects( $this->atLeast( 1 ) )
+		               ->method( 'local_id' )
+		               ->with( 'term', $test_data['origin_parent_term_id'] )
+					   ->willReturn( $new_parent_id );
+
 		/**
 		 * Okay, now we have a real-world representation of our import data.
 		 *
@@ -118,6 +124,7 @@ class WpObjectImporterTest extends \PHPUnit_Framework_TestCase {
 			'term_id' => 45,
 			'term_taxonomy_id' => 45
 		);
+
 		Brain\Monkey\Functions::expect( 'wp_insert_term' )
 			->atLeast()->once()
 			->with(
@@ -126,7 +133,7 @@ class WpObjectImporterTest extends \PHPUnit_Framework_TestCase {
 				array(
 					'slug'        => $test_data[ 'slug' ],
 					'description' => $test_data[ 'description' ],
-					'parent'      => $test_data[ 'origin_parent_term_id' ]
+					'parent'      => $new_parent_id
 				)
 			)
 			->andReturn( $wp_term_data );
