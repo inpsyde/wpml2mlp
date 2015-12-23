@@ -34,7 +34,7 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 		$this->id_mapper        = $id_mapper;
 	}
 	/**
-	 * @param $new_term
+	 * @param object $new_term
 	 * @param Type\ImportTermInterface $import_term
 	 * @return bool|WP_Error
 	 */
