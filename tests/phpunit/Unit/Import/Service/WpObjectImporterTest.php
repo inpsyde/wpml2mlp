@@ -1,6 +1,6 @@
 <?php # -*- coding: utf-8 -*-
 
-namespace W2M\Test\Unit\Service;
+namespace W2M\Test\Unit\Import\Service;
 
 use Brain;
 use W2M\Import\Service;
