@@ -2,9 +2,8 @@
 
 namespace W2M\Import\Service;
 
-use
-	W2M\Import\Type,
-	W2M\Import\Data;
+use W2M\Import\Data;
+use W2M\Import\Type;
 
 class WpObjectImporter implements ObjectImporterInterface {
 
