@@ -116,6 +116,10 @@ class WpObjectImporterTest extends \PHPUnit_Framework_TestCase {
 		 * @see wp_insert_term()
 		 * @link https://giuseppe-mazzapica.github.io/BrainMonkey/docs/functions-expect.html
 		 */
+		$wp_term_data = array(
+			'term_id' => 45,
+			'term_taxonomy_id' => 45
+		);
 		Brain\Monkey\Functions::expect( 'wp_insert_term' )
 			->atLeast()->once()
 			->with(
@@ -127,9 +131,15 @@ class WpObjectImporterTest extends \PHPUnit_Framework_TestCase {
 					'parent'      => $test_data[ 'parent_id' ]
 				)
 			)
-			->andReturn( array( 'term_id' => 45, 'term_taxonomy_id' => 45 ) );
+			->andReturn( $wp_term_data );
 
-		//*/
+		// wp_insert_term() is now configured and expects and return concrete values.
+		// the testee has to pass the ID of the newly created term to the import element ...
+		$term_mock->expects( $this->atLeast( 1 ) )
+			->method( 'id' )
+			->with( $wp_term_data[ 'term_id' ] )
+			->willReturn( $wp_term_data[ 'term_id' ] );
+
 		/**
 		 * Todo:
 		 * Currently the test and implementation assuming a simple pass-through
@@ -148,7 +158,5 @@ class WpObjectImporterTest extends \PHPUnit_Framework_TestCase {
 		 * gets invoked by the testee
 		 */
 		$testee->import_term( $term_mock );
-
 	}
-
 }

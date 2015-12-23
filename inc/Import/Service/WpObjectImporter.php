@@ -58,11 +58,13 @@ class WpObjectImporter implements ObjectImporterInterface {
 			'slug'        => $term->slug()
 		);
 
-		wp_insert_term(
+		$result = wp_insert_term(
 			$term->name(),
 			$term->taxonomy(),
 			$term_args
 		);
+		// @Todo: Implement a check on is_wp_error( $result )
+		$term->id( $result[ 'term_id' ] );
 
 		//Todo: resolve locale relations
 		$term->locale_relations();
