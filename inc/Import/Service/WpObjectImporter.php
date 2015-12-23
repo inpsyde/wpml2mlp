@@ -69,10 +69,9 @@ class WpObjectImporter implements ObjectImporterInterface {
 
 		}
 
-
 		$term->id( $result[ 'term_id' ] );
 
-		$wp_term = get_term_by( 'id', $term->id(), $term->taxonomy() );
+		$wp_term = get_term_by( 'id', $result[ 'term_id' ], $term->taxonomy() );
 
 		//Todo: resolve locale relations
 		$term->locale_relations();
