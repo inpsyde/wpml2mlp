@@ -47,9 +47,10 @@ class WpObjectImporter implements ObjectImporterInterface {
 
 		// TODO: Implement import_term() method.
 
-		// 1. Insert Term via wp_insert_term()
-		// 2. set the new term_id(!) via $term->id( $new_term_id );
-		// 3. connect translations $this->translation_connector->link_term( $new_term, $term );
+		// 1.[✓] Insert Term via wp_insert_term()
+		// 2.[✓] set the new term_id(!) via $term->id( $new_term_id );
+		// 3.[ ] map origin_parent_term_id() via $this->id_mapper->local_id( 'term', $origin_parent_id )
+		// 4.[ ] connect translations $this->translation_connector->link_term( $new_term, $term );
 
 		$term_args = array(
 			'description' => $term->description(),
