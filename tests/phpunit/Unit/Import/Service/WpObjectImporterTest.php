@@ -124,60 +124,24 @@ class WpObjectImporterTest extends \PHPUnit_Framework_TestCase {
 		 * Our test candidate (WpObjectImporter::import_term()) obviously calls
 		 * wp_insert_term(). As it is not available, remember, these are unit-tests
 		 * we have to mock it.
+		 *
+		 * @see wp_insert_term()
+		 * @link https://giuseppe-mazzapica.github.io/BrainMonkey/docs/functions-expect.html
 		 */
-		$test_case = $this;
-		Brain\Monkey\Functions::when( 'wp_insert_term' )->alias(
-			/**
-			 * use this anonymous function as 'alias' for the following wp_insert_term() invocations
-			 *
-			 * @see wp_insert_term()
-			 *
-			 * @param
-			 */
-			function( $term, $taxonomy, $args ) use ( $test_case, $test_data ) {
+		Brain\Monkey\Functions::expect( 'wp_insert_term' )
+			->atLeast()->once()
+			->with(
+				$test_data[ 'name' ],
+				$test_data[ 'taxonomy' ],
+				array(
+					'slug'        => $test_data[ 'slug' ],
+					'description' => $test_data[ 'description' ],
+					'parent'      => $test_data[ 'parent_id' ]
+				)
+			)
+			->andReturn( array( 'term_id' => 45, 'term_taxonomy_id' => 45 ) );
 
-				// check the proper term name
-				$test_case->assertSame(
-					$test_data[ 'name' ],
-					$term,
-					"First parameter of wp_insert_term() does not match expected value"
-				);
-
-				// check 'taxonomy'
-				$test_case->assertSame(
-					$test_data[ 'taxonomy' ],
-					$taxonomy,
-					"Second parameter of wp_insert_term() does not match expected value"
-				);
-
-				$test_case->assertTrue(
-					is_array( $args ),
-					"Third parameter of wp_insert_term() is not an array as expected."
-				);
-
-				// check 'slug'
-				$test_case->assertSame(
-					$test_data[ 'slug' ],
-					$args[ 'slug' ],
-					"Argument parameter 'slug' does not match"
-				);
-
-				// check 'description'
-				$test_case->assertSame(
-					$test_data[ 'description' ],
-					$args[ 'description' ],
-					"Argument parameter 'description' does not match"
-				);
-
-				// check 'parent'
-				$test_case->assertSame(
-					$test_data[ 'parent_id' ],
-					$args[ 'parent' ],
-					"Argument parameter 'parent' does not match"
-				);
-			}
-		);
-
+		//*/
 		/**
 		 * Todo:
 		 * Currently the test and implementation assuming a simple pass-through
