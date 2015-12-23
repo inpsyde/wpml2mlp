@@ -59,8 +59,6 @@ class WpObjectImporter implements ObjectImporterInterface {
 			'slug'        => $term->slug()
 		);
 
-		#print_r( $term_args );
-
 		$result = wp_insert_term(
 			$term->name(),
 			$term->taxonomy(),
