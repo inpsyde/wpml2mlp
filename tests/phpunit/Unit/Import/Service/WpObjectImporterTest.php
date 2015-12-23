@@ -87,14 +87,14 @@ class WpObjectImporterTest extends \PHPUnit_Framework_TestCase {
 
 
 		foreach ( $test_data as $method => $return_value ) {
+			if ( 'locale_relations' === $method )
+				continue; // we already have this one
 
 			$term_mock->expects( $this->atLeast( 1 ) )
 				->method( $method )
 				->willReturn( $return_value );
 
 		}
-
-		$term_mock->locale_relations();
 
 		$new_parent_id = 15;
 		$id_mapper_mock->expects( $this->atLeast( 1 ) )
