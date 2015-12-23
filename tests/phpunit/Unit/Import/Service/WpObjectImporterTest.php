@@ -138,6 +138,20 @@ class WpObjectImporterTest extends \PHPUnit_Framework_TestCase {
 			)
 			->andReturn( $wp_term_data );
 
+		Brain\Monkey\Functions::when( 'is_wp_error' )->justReturn( FALSE );
+
+		$wp_term_mock = $this->getMock( 'WP_Term' );
+
+		Brain\Monkey\Functions::expect( 'get_term_by' )
+			->atLeast()->once()
+			->with(
+				'id',
+				$wp_term_data[ 'term_id' ],
+				$test_data[ 'taxonomy' ]
+			)
+			->andReturn( $wp_term_mock );
+
+
 		// wp_insert_term() is now configured and expects and return concrete values.
 		// the testee has to pass the ID of the newly created term to the import element ...
 		$term_mock->expects( $this->atLeast( 1 ) )
