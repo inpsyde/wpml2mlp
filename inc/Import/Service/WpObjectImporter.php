@@ -48,12 +48,11 @@ class WpObjectImporter implements ObjectImporterInterface {
 
 		// 1.[✓] Insert Term via wp_insert_term()
 		// 2.[✓] set the new term_id(!) via $term->id( $new_term_id );
-		// 3.[✓ ] map origin_parent_term_id() via $this->id_mapper->local_id( 'term', $origin_parent_id )
+		// 3.[✓] map origin_parent_term_id() via $this->id_mapper->local_id( 'term', $origin_parent_id )
 		// 4.[ ] connect translations $this->translation_connector->link_term( $new_term, $term );
 
 		$term_args = array(
 			'description' => $term->description(),
-			// Todo: resolve imported relations
 			'parent'      => $this->id_mapper->local_id( 'term', $term->origin_parent_term_id() ),
 			'slug'        => $term->slug()
 		);
@@ -63,8 +62,17 @@ class WpObjectImporter implements ObjectImporterInterface {
 			$term->taxonomy(),
 			$term_args
 		);
-		// @Todo: Implement a check on is_wp_error( $result )
+
+		if( is_wp_error( $result ) ) {
+
+			do_action( 'w2m_import_term_error' );
+
+		}
+
+
 		$term->id( $result[ 'term_id' ] );
+
+		$wp_term = get_term_by( 'id', $term->id(), $term->taxonomy() );
 
 		//Todo: resolve locale relations
 		$term->locale_relations();
@@ -77,6 +85,9 @@ class WpObjectImporter implements ObjectImporterInterface {
 		 *
 		 * $ansestor_resolver->resolve_term( $new_term, $term );
 		 */
+
+		do_action( 'w2m_term_imported' );
+
 	}
 
 	/**
