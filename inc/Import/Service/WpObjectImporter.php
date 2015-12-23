@@ -63,14 +63,17 @@ class WpObjectImporter implements ObjectImporterInterface {
 			$term_args
 		);
 
-		if( is_wp_error( $result ) ) {
-
-			do_action( 'w2m_import_term_error' );
-
+		if ( is_wp_error( $result ) ) {
+			/**
+			 * Attach error handler/logger here
+			 *
+			 * @param WP_Error
+			 * @param Type\ImportTermInterface
+			 */
+			do_action( 'w2m_import_term_error', $result, $term );
 		}
 
 		$term->id( $result[ 'term_id' ] );
-
 		$wp_term = get_term_by( 'id', $result[ 'term_id' ], $term->taxonomy() );
 
 		//Todo: resolve locale relations
@@ -85,8 +88,11 @@ class WpObjectImporter implements ObjectImporterInterface {
 		 * $ansestor_resolver->resolve_term( $new_term, $term );
 		 */
 
-		do_action( 'w2m_term_imported' );
-
+		/**
+		 * @param stdClass|WP_Term
+		 * @param Type\ImportTermInterface
+		 */
+		do_action( 'w2m_term_imported', $wp_term, $term );
 	}
 
 	/**
