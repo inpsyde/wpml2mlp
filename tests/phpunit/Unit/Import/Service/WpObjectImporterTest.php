@@ -93,30 +93,18 @@ class WpObjectImporterTest extends \PHPUnit_Framework_TestCase {
 			// which will return 'category' each time
 			->willReturn( $test_data[ 'taxonomy' ] );
 
-		// name()
-		$term_mock->expects( $this->atLeast( 1 ) )
-			->method( 'name' )
-			->willReturn( $test_data[ 'name' ] );
+		// Okay I think the concept is clear … we just loop to the rest of the
+		// functions
+		foreach ( $test_data as $method => $return_value ) {
+			if ( 'taxonomy' === $method )
+				continue; // we already have this one
+			if ( 'parent_id' === $method )
+				$method = 'origin_parent_term_id';
 
-		// slug()
-		$term_mock->expects( $this->atLeast( 1 ) )
-			->method( 'slug' )
-			->willReturn( $test_data[ 'slug' ] );
-
-		// description()
-		$term_mock->expects( $this->atLeast( 1 ) )
-			->method( 'description' )
-			->willReturn( $test_data[ 'description' ] );
-
-		//origin_parent_term_id()
-		$term_mock->expects( $this->atLeast( 1 ) )
-			->method( 'origin_parent_term_id' )
-			->willReturn( $test_data[ 'parent_id' ] );
-
-		//locale_relations()
-		$term_mock->expects( $this->atLeast( 1 ) )
-			->method( 'locale_relations' )
-			->willReturn( $test_data[ 'locale_relations' ] );
+			$term_mock->expects( $this->atLeast( 1 ) )
+				->method( $method )
+				->willReturn( $return_value );
+		}
 
 		/**
 		 * Okay, now we have a real-world representation of our import data.
