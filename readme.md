@@ -24,7 +24,7 @@ You can follow our progress and development notices on our [developer blog](http
 
 ## Installation
 
-#### Requirements
+### Requirements
  * WordPress Multisite 3.4+
  * PHP 5.2.4, newer PHP versions will work faster.
  * [MultilingualPress](https://wordpress.org/plugins/multilingual-press/) plugin, also the [Premium](http://multilingualpress.pro/) Version
@@ -36,6 +36,10 @@ Use the installer via back-end of your install or ...
  3. Single Site: Activate the plugin through the **Plugins** menu in WordPress and click **Activate**
  4. Multisite: Activate the plugin through the **Network/Plugins** menu in WordPress and click **Network Activate**.
  5. Go to **Settings** on Multisite or **Tools** on single site, **WPML2MLP**, then start the export of the current WPML stuff.
+
+## Action & Filter Reference
+* `w2m_import_term_error` in `W2M\Import\Service::import_term()`
+* `w2m_term_imported` in `W2M\Import\Service::import_term()`
 
 ## Other Notes
 
