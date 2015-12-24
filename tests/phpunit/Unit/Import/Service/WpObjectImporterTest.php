@@ -85,23 +85,15 @@ class WpObjectImporterTest extends \PHPUnit_Framework_TestCase {
 			)
 		);
 
-		// Here we go ...
-		// Term-Mock expects ( at least one  ) invocation(s) ...
-		$term_mock->expects( $this->atLeast( 1 ) )
-			// of method 'taxonomy' ...
-			->method( 'taxonomy' )
-			// which will return 'category' each time
-			->willReturn( $test_data[ 'taxonomy' ] );
 
-		// Okay I think the concept is clear … we just loop to the rest of the
-		// functions
 		foreach ( $test_data as $method => $return_value ) {
-			if ( 'taxonomy' === $method )
+			if ( 'locale_relations' === $method )
 				continue; // we already have this one
 
 			$term_mock->expects( $this->atLeast( 1 ) )
 				->method( $method )
 				->willReturn( $return_value );
+
 		}
 
 		$new_parent_id = 15;
