@@ -20,6 +20,7 @@ class WpImportObjectBuilderTest extends \PHPUnit_Framework_TestCase {
 
 		$import_term = $testee->build_import_term( $element );
 
+		$this->markTestIncomplete( 'Under construction…' );
 		$this->assertInstanceOf(
 			$expected[ 'expected_type' ],
 			$import_term

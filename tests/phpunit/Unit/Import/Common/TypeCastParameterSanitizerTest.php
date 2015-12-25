@@ -184,8 +184,6 @@ class TypeCastParameterSanitizerTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @group debug
-	 *
 	 * @dataProvider sanitize_parameter_test_data
 	 *
 	 * @param array $mask
@@ -208,8 +206,6 @@ class TypeCastParameterSanitizerTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @group debug
-	 *
 	 * @dataProvider sanitize_parameter_test_data
 	 *
 	 * @param array $mask
