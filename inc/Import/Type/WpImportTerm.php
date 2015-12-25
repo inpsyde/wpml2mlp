@@ -2,28 +2,104 @@
 
 namespace W2M\Import\Type;
 
+use
+	W2M\Import\Common;
+
 class WpImportTerm implements ImportTermInterface {
 
+	/**
+	 * @var int
+	 */
 	private $origin_id = 0;
-	private $id = 0;
+
+	/**
+	 * @var int
+	 */
+	private $id = NULL;
+
+	/**
+	 * @var int
+	 */
 	private $taxonomy = 0;
+
+	/**
+	 * @var string
+	 */
 	private $name = '';
+
+	/**
+	 * @var string
+	 */
 	private $slug = '';
+
+	/**
+	 * @var string
+	 */
 	private $description = '';
+
+	/**
+	 * @var int
+	 */
 	private $origin_parent_term_id = 0;
+
+	/**
+	 * @var array
+	 */
 	private $locale_relations = array();
 
-	public function __construct( Array $data ) {
+	/**
+	 * @var Common\ParameterSanitizerInterface
+	 */
+	private $param_sanitizer;
 
-		$keys = array(
-			'origin_id' => 'int',
-			'taxonomy' => 'string',
-			'name' => 'string',
-			'slug' => 'string',
-			'description' => 'string',
+	/**
+	 * @param array $attributes {
+	 *      int $origin_id,
+	 *      string $taxonomy,
+	 *      string $name,
+	 *      string $slug,
+	 *      string $description,
+	 *      int $origin_parent_term_id,
+	 *      array $locale_relations
+	 * }
+	 * @param Common\ParameterSanitizerInterface $param_sanitizer (Optional)
+	 */
+	public function __construct(
+		Array $attributes,
+		Common\ParameterSanitizerInterface $param_sanitizer = NULL
+	) {
+
+		$this->param_sanitizer = $param_sanitizer
+			? $param_sanitizer
+			: new Common\TypeCastParameterSanitizer;
+
+		$this->set_attributes( $attributes );
+	}
+
+	/**
+	 * @param array $attributes
+	 */
+	private function set_attributes( Array $attributes ) {
+
+		$type_map = array(
+			'origin_id'             => 'int',
+			'taxonomy'              => 'string',
+			'name'                  => 'string',
+			'slug'                  => 'string',
+			'description'           => 'string',
 			'origin_parent_term_id' => 'int',
-			'locale_relations' => 'array'
+			'locale_relations'      => 'array'
 		);
+
+		$attributes = $this->param_sanitizer
+			->sanitize_parameter( $type_map, $attributes );
+
+		foreach ( $type_map as $key => $type ) {
+			if ( ! isset( $attributes[ $key ] ) ) {
+				continue;
+			}
+			$this->{$key} = $attributes[ $key ];
+		}
 	}
 
 	/**
@@ -32,7 +108,8 @@ class WpImportTerm implements ImportTermInterface {
 	 * @return int
 	 */
 	public function origin_id() {
-		// TODO: Implement origin_id() method.
+
+		return $this->origin_id;
 	}
 
 	/**
@@ -46,49 +123,67 @@ class WpImportTerm implements ImportTermInterface {
 	 * @return int
 	 */
 	public function id( $id = 0 ) {
-		// TODO: Implement id() method.
+
+		if ( ! is_null( $this->id ) ) {
+			return $this->id;
+		}
+
+		$this->id = (int) $id;
+
+		/**
+		 * This action allows an automated mapping of old/new
+		 * element ids
+		 *
+		 * @param ImportTermInterface $this
+		 */
+		do_action( 'w2m_import_set_term_id', $this );
 	}
 
 	/**
 	 * @return string
 	 */
 	public function taxonomy() {
-		// TODO: Implement taxonomy() method.
+
+		return $this->taxonomy;
 	}
 
 	/**
 	 * @return string
 	 */
 	public function name() {
-		// TODO: Implement name() method.
+
+		return $this->name;
 	}
 
 	/**
 	 * @return string
 	 */
 	public function slug() {
-		// TODO: Implement slug() method.
+
+		return $this->slug;
 	}
 
 	/**
 	 * @return string
 	 */
 	public function description() {
-		// TODO: Implement description() method.
+
+		return $this->description;
 	}
 
 	/**
 	 * @return int
 	 */
 	public function origin_parent_term_id() {
-		// TODO: Implement origin_parent_term_id() method.
+
+		return $this->origin_parent_term_id;
 	}
 
 	/**
 	 * @return array
 	 */
 	public function locale_relations() {
-		// TODO: Implement locale_relations() method.
-	}
 
+		return $this->locale_relations;
+	}
 }
