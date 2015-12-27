@@ -54,13 +54,13 @@ class WpImportTerm implements ImportTermInterface {
 
 	/**
 	 * @param array $attributes {
-	 *      int $origin_id,
+	 *      int    $origin_id,
 	 *      string $taxonomy,
 	 *      string $name,
 	 *      string $slug,
 	 *      string $description,
-	 *      int $origin_parent_term_id,
-	 *      array $locale_relations
+	 *      int    $origin_parent_term_id,
+	 *      array  $locale_relations
 	 * }
 	 * @param Common\ParameterSanitizerInterface $param_sanitizer (Optional)
 	 */
