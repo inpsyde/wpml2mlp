@@ -45,6 +45,26 @@ class TypeCastParameterSanitizer implements ParameterSanitizerInterface {
 	}
 
 	/**
+	 * @Todo: Unit test
+	 *
+	 * @param array $objects
+	 * @param string $type
+	 * @param array $context_data (Optional)
+	 *
+	 * @return mixed
+	 */
+	public function sanitize_object_list( Array $objects, $type, Array $context_data = array() ) {
+
+		foreach ( $objects as $key => $object ) {
+			if ( is_a( $objects, $type ) )
+				continue;
+			unset( $objects[ $key ] );
+		}
+
+		return $objects;
+	}
+
+	/**
 	 * Todo: Define how to handle scalar to non-scalar transitions
 	 *
 	 * @param mixed $value
