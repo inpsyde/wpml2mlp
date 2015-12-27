@@ -22,7 +22,7 @@ interface ImportPostInterface extends ImportElementInterface {
 	/**
 	 * @return string
 	 */
-	public function commment_status();
+	public function comment_status();
 
 	/**
 	 * @return string
