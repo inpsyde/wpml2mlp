@@ -124,8 +124,8 @@ class WpImportTerm implements ImportTermInterface {
 	 */
 	public function id( $id = 0 ) {
 
-		if ( ! is_null( $this->id ) ) {
-			return $this->id;
+		if ( ! is_null( $this->id ) || empty( $id ) ) {
+			return (int) $this->id;
 		}
 
 		$this->id = (int) $id;
