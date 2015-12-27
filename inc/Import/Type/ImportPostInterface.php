@@ -62,7 +62,7 @@ interface ImportPostInterface extends ImportElementInterface {
 	/**
 	 * @return int
 	 */
-	public function origin_post_parent_id();
+	public function origin_parent_post_id();
 
 	/**
 	 * @return int
