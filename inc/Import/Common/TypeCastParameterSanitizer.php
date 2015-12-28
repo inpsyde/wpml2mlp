@@ -45,8 +45,6 @@ class TypeCastParameterSanitizer implements ParameterSanitizerInterface {
 	}
 
 	/**
-	 * @Todo: Unit test
-	 *
 	 * @param array $objects
 	 * @param string $type
 	 * @param array $context_data (Optional)
@@ -55,10 +53,14 @@ class TypeCastParameterSanitizer implements ParameterSanitizerInterface {
 	 */
 	public function sanitize_object_list( Array $objects, $type, Array $context_data = array() ) {
 
-		foreach ( $objects as $key => $object ) {
-			if ( is_a( $objects, $type ) )
+		foreach ( $objects as $key => $instance ) {
+			if ( is_a( $instance, $type ) )
 				continue;
-			unset( $objects[ $key ] );
+
+			if ( $this->strip_unknown )
+				unset( $objects[ $key ] );
+			else
+				$objects[ $key ] = NULL;
 		}
 
 		return $objects;

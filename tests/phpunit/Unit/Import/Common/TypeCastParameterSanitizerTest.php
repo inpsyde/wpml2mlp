@@ -3,7 +3,10 @@
 namespace W2M\Test\Unit\Import\Common;
 
 use
-	W2M\Import\Common;
+	W2M\Import\Common,
+	DateTime,
+	DateTimeZone,
+	stdClass;
 
 class TypeCastParameterSanitizerTest extends \PHPUnit_Framework_TestCase {
 
@@ -279,6 +282,108 @@ class TypeCastParameterSanitizerTest extends \PHPUnit_Framework_TestCase {
 				'comments_open' => FALSE,
 				'ratings'       => array( '5' ),
 				'im_not_here' => TRUE
+			)
+		);
+
+		return $data;
+	}
+
+	/**
+	 * @dataProvider sanitize_object_list_test_data
+	 *
+	 * @param array $object_list
+	 * @param array $expected
+	 */
+	public function test_sanitize_object_list_strip_unknown( Array $object_list, Array $expected ) {
+
+		$testee = new Common\TypeCastParameterSanitizer();
+		$list = $testee->sanitize_object_list( $object_list, $expected[ 'type' ] );
+
+		$this->assertCount(
+			$expected[ 'count' ],
+			$list
+		);
+
+		foreach ( $list as $key => $instance ) {
+			$this->assertSame(
+				$object_list[ $key ],
+				$instance,
+				"Instances are not the same for key '{$key}'"
+			);
+		}
+	}
+
+	/**
+	 * @dataProvider sanitize_object_list_test_data
+	 *
+	 * @param array $object_list
+	 * @param array $expected
+	 */
+	public function test_sanitize_object_list_not_strip_unknown( Array $object_list, Array $expected ) {
+
+		$testee = new Common\TypeCastParameterSanitizer( FALSE );
+		$list = $testee->sanitize_object_list( $object_list, $expected[ 'type' ] );
+
+		$this->assertSame(
+			$expected[ 'object_list_not_stripped' ],
+			$list
+		);
+	}
+
+	/**
+	 * @see test_sanitize_object_list
+	 * @return array
+	 */
+	public function sanitize_object_list_test_data() {
+
+		$data = array();
+
+		$object_list = array(
+			new DateTime,
+			new DateTime( '-3 days', new DateTimeZone( 'Europe/Berlin' ) ),
+			new DateTime( '+4 minutes' )
+		);
+
+		$data[ 'only_date_time_list' ] = array(
+			# 1. Parameter: $object_list
+			$object_list,
+			# 2. Parameter $expected
+			array(
+				'type'                     => 'DateTime',
+				'count'                    => 3,
+				'object_list_stripped'     => $object_list,
+				'object_list_not_stripped' => $object_list,
+			)
+		);
+
+		$object_list = array(
+			new DateTime,
+			new stdClass,
+			new DateTime( '-3 days', new DateTimeZone( 'Europe/Berlin' ) ),
+			new stdClass,
+			new DateTime( '+4 minutes' )
+		);
+
+
+		$data[ 'mixed_date_time_list' ] = array(
+			# 1. Parameter: $object_list
+			$object_list,
+			# 2. Parameter $expected
+			array(
+				'type'                     => 'DateTime',
+				'count'                    => 3,
+				'object_list_stripped'     => array(
+					$object_list[ 0 ],
+					$object_list[ 2 ],
+					$object_list[ 4 ]
+				),
+				'object_list_not_stripped' => array(
+					$object_list[ 0 ],
+					NULL,
+					$object_list[ 2 ],
+					NULL,
+					$object_list[ 4 ]
+				)
 			)
 		);
 
