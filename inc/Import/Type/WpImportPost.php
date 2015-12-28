@@ -109,7 +109,7 @@ class WpImportPost implements ImportPostInterface {
 
 	/**
 	 * @param array $attributes
-	 * @param Common\ParameterSanitizerInterface|NULL $param_sanitizer
+	 * @param Common\ParameterSanitizerInterface $param_sanitizer (Optional)
 	 */
 	public function __construct(
 		Array $attributes,
@@ -183,7 +183,7 @@ class WpImportPost implements ImportPostInterface {
 	 */
 	public function id( $id = 0 ) {
 
-		if ( is_null( $this->id ) || empty( $id ) ) {
+		if ( ! is_null( $this->id ) || empty( $id ) ) {
 			return (int) $this->id;
 		}
 
