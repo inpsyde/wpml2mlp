@@ -3,7 +3,8 @@
 namespace W2M\Import\Type;
 
 use
-	W2M\Import\Common;
+	W2M\Import\Common,
+	DateTime;
 
 class WpImportPost implements ImportPostInterface {
 
@@ -108,7 +109,26 @@ class WpImportPost implements ImportPostInterface {
 	private $param_sanitizer;
 
 	/**
-	 * @param array $attributes
+	 * @param array $attributes {
+	 *      int      $origin_id,
+	 *      string   $title,
+	 *      string   $guid,
+	 *      DateTime $date,
+	 *      string   $comment_status,
+	 *      string   $ping_status,
+	 *      string   $type,
+	 *      bool     $is_sticky,
+	 *      string   $origin_link,
+	 *      string   $excerpt,
+	 *      string   $content
+	 *      string   $name,
+	 *      int      $origin_parent_post_id,
+	 *      int      $menu_order,
+	 *      string   $password,
+	 *      array    $terms,
+	 *      array    $meta,
+	 *      array    $locale_relations,
+	 * }
 	 * @param Common\ParameterSanitizerInterface $param_sanitizer (Optional)
 	 */
 	public function __construct(
@@ -122,13 +142,12 @@ class WpImportPost implements ImportPostInterface {
 		$this->set_attributes( $attributes );
 	}
 
-
 	/**
 	 * @param array $attributes
 	 */
 	private function set_attributes( Array $attributes ) {
 
-		//Todo handle 'date', validate 'terms' and 'meta'
+		//Todo handle validate 'terms' and 'meta'
 
 		$type_map = array(
 			'origin_id'             => 'int',
@@ -150,15 +169,21 @@ class WpImportPost implements ImportPostInterface {
 			'locale_relations'      => 'array'
 		);
 
-		$attributes = $this->param_sanitizer
+		$valid_attributes = $this->param_sanitizer
 			->sanitize_parameter( $type_map, $attributes );
 
 		foreach ( $type_map as $key => $type ) {
-			if ( ! isset( $attributes[ $key ] ) ) {
+			if ( ! isset( $valid_attributes[ $key ] ) ) {
 				continue;
 			}
-			$this->{$key} = $attributes[ $key ];
+			$this->{$key} = $valid_attributes[ $key ];
 		}
+
+		// Date
+		$this->date = isset( $attributes[ 'date' ] )
+			&& is_a( $attributes[ 'date' ], 'DateTime' )
+			? $attributes[ 'date' ]
+			: new DateTime;
 	}
 
 	/**

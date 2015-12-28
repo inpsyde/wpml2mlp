@@ -40,8 +40,6 @@ class WpImportPostTest extends Helper\MonkeyTestCase {
 		$testee = new Type\WpImportPost( $data );
 
 		foreach ( $data as $method => $expected ) {
-			if ( 'date' === $method )
-				continue; // Todo: see below
 			$this->assertSame(
 				$expected,
 				$testee->{$method}(),
