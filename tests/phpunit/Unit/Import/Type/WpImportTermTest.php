@@ -4,21 +4,10 @@ namespace W2M\Test\Unit\Import\Type;
 
 use
 	W2M\Import\Type,
+	W2M\Test\Helper,
 	Brain;
 
-class WpImportTermTest extends \PHPUnit_Framework_TestCase {
-
-	public function setUp() {
-
-		Brain\Monkey::setUp();
-		Brain\Monkey::setUpWP();
-	}
-
-	public function tearDown() {
-
-		Brain\Monkey::tearDown();
-		Brain\Monkey::tearDownWP();
-	}
+class WpImportTermTest extends Helper\MonkeyTestCase {
 
 	/**
 	 * @dataProvider term_test_data
