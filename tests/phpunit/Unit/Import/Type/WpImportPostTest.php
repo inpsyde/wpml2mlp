@@ -18,11 +18,11 @@ class WpImportPostTest extends Helper\MonkeyTestCase {
 
 		$testee = new Type\WpImportPost( $data );
 
-		// The action should not be fired
+		// This action must not be fired
 		Brain\Monkey::actions()
 			->expectFired( 'w2m_import_set_post_id' )
 			->never();
-		// id should be 0 at the moment
+		// id should be 0 at this moment
 		$id = $testee->id();
 		$this->assertSame(
 			0,
