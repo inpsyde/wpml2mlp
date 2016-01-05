@@ -123,4 +123,63 @@ class WpImportPostTest extends Helper\MonkeyTestCase {
 
 		return $data;
 	}
+
+	public function test_date_invalid_parameter() {
+
+		$testee = new Type\WpImportPost(
+			// Note: the date is not meant to be parsed, and thus we don't test it, and just check the proper type
+			array( 'date' => '2015-10-10' )
+		);
+
+		$this->assertInstanceOf(
+			'DateTime',
+			$testee->date()
+		);
+	}
+
+	public function test_consistent_types_with_no_data() {
+
+		$testee = new Type\WpImportPost( array() );
+
+		$string_returns = array(
+			'title', 'guid', 'comment_status', 'ping_status', 'type', 'origin_link',
+			'excerpt', 'content', 'name', 'password'
+		);
+		foreach ( $string_returns as $method ) {
+			$this->assertInternalType(
+				'string',
+				$testee->{$method}(),
+				"Test failed for method {$method}"
+			);
+		}
+
+		$int_returns = array(
+			'id', 'origin_id', 'origin_parent_post_id', 'menu_order'
+		);
+		foreach ( $int_returns as $method ) {
+			$this->assertInternalType(
+				'int',
+				$testee->{$method}(),
+				"Test failed for method {$method}"
+			);
+		}
+
+		$array_returns = array( 'terms', 'meta', 'locale_relations' );
+		foreach ( $array_returns as $method ) {
+			$this->assertInternalType(
+				'array',
+				$testee->{$method}(),
+				"Test failed for {$method}"
+			);
+		}
+
+		$this->assertInternalType(
+			'bool',
+			$testee->is_sticky()
+		);
+		$this->assertInstanceOf(
+			'DateTime',
+			$testee->date()
+		);
+	}
 }
