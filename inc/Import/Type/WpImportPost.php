@@ -79,9 +79,9 @@ class WpImportPost implements ImportPostInterface {
 	private $origin_parent_post_id = 0;
 
 	/**
-	 * @var string
+	 * @var int
 	 */
-	private $menu_order = '';
+	private $menu_order = 0;
 
 	/**
 	 * @var string
