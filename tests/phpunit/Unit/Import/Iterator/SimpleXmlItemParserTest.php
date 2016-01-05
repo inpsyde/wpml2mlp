@@ -4,17 +4,21 @@ namespace W2M\Test\Unit\Import\Iterator;
 
 use
 	W2M\Import\Iterator,
-	W2M\Test\Helper;
+	W2M\Test\Helper,
+	SimpleXMLElement;
 
 class SimpleXmlItemParserTest extends \PHPUnit_Framework_TestCase {
 
-	/**
-	 * @dataProvider current_test_data
-	 * @param $xml
-	 * @param array $expected
-	 */
-	public function test_current( $xml, Array $expected ) {
+	public function test_current_with_simple_xml() {
 
+		$item_id = '1';
+		$item_title = 'Hello World';
+		$xml = <<<XML
+<item>
+	<id>{$item_id}</id>
+	<title>{$item_title}</title>
+</item>
+XML;
 		$node_iterator_mock = $this->getMock( 'Iterator' );
 		$node_iterator_mock->expects( $this->any() )
 			->method( 'current' )
@@ -24,41 +28,65 @@ class SimpleXmlItemParserTest extends \PHPUnit_Framework_TestCase {
 			$node_iterator_mock
 		);
 
+		/* @type SimpleXMLElement $document */
 		$document = $testee->current();
 		$this->assertInstanceOf(
 			'SimpleXMLElement',
 			$document
 		);
+
+		$this->assertSame(
+			$item_id,
+			(string) $document->item->id
+		);
+		$this->assertSame(
+			$item_title,
+			(string) $document->item->title
+		);
 	}
 
-	/**
-	 * @see test_current
-	 * @return array
-	 */
-	public function current_test_data() {
+	public function test_current_with_namespaced_xml() {
 
-		$data = array();
-
+		$item_id = '1';
+		$item_title = 'Hello World';
 		$xml = <<<XML
-<item>
-	<id>1</id>
-	<title>Hello World</title>
-</item>
+<wp:item>
+	<wp:id>{$item_id}</wp:id>
+	<wp:title>{$item_title}</wp:title>
+</wp:item>
 XML;
+		$node_iterator_mock = $this->getMock( 'Iterator' );
+		$node_iterator_mock->expects( $this->any() )
+			->method( 'current' )
+			->willReturn( $xml );
 
-		$data[ 'single_item' ] = array(
-			# 1.Parameter $xml
-			$xml,
-			# 2.Parameter $expected
-			array(
-				'parameter' => array(
-					'id' => '1',
-					'title' => 'Hello World'
-				)
-			)
+		$namespaces = array( 'wp' => 'whatever' );
+		$testee = new Iterator\SimpleXmlItemParser(
+			$node_iterator_mock,
+			$namespaces
 		);
 
-		return $data;
+		/* @type SimpleXMLElement $document */
+		$document = $testee->current();
+		$this->assertInstanceOf(
+			'SimpleXMLElement',
+			$document
+		);
 
+		$doc_namespaces = $document->getDocNamespaces();
+		$this->assertSame(
+			$namespaces,
+			$doc_namespaces
+		);
+
+		$wp_items = $document->children( $namespaces[ 'wp' ] );
+		$this->assertSame(
+			$item_id,
+			(string) $wp_items->item->id
+		);
+		$this->assertSame(
+			$item_title,
+			(string) $wp_items->item->title
+		);
 	}
 }
