@@ -18,7 +18,7 @@ interface PostParserInterface {
 	/**
 	 * @param SimpleXMLElement $post
 	 *
-	 * @return Type\ImportPostInterface
+	 * @return Type\ImportPostInterface|NULL
 	 */
 	public function parse_post( SimpleXMLElement $post );
 }

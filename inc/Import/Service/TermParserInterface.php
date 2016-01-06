@@ -18,7 +18,7 @@ interface TermParserInterface {
 	/**
 	 * @param SimpleXMLElement $term
 	 *
-	 * @return Type\ImportTermInterface
+	 * @return Type\ImportTermInterface|NULL
 	 */
 	public function parse_term( SimpleXMLElement $term );
 }
