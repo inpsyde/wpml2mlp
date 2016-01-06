@@ -45,6 +45,9 @@ XML;
 		);
 	}
 
+	/**
+	 * this test is also a proof of concept on how to handle namespaced items
+	 */
 	public function test_current_with_namespaced_xml() {
 
 		$item_id = '1';
