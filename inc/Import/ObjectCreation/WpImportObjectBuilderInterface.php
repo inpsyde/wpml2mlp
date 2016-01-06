@@ -6,6 +6,9 @@ use
 	W2M\Import\Type,
 	SimpleXMLElement;
 
+/**
+ * @deprecated Use Service\*ParserInterface instead
+ */
 interface WpImportObjectBuilderInterface {
 
 	/**
