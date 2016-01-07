@@ -74,6 +74,11 @@ class WpImportPost implements ImportPostInterface {
 	private $name = '';
 
 	/**
+	 * @var string
+	 */
+	private $status = '';
+
+	/**
 	 * @var int
 	 */
 	private $origin_parent_post_id = 0;
@@ -122,6 +127,7 @@ class WpImportPost implements ImportPostInterface {
 	 *      string   $excerpt,
 	 *      string   $content
 	 *      string   $name,
+	 *      string   $status,
 	 *      int      $origin_parent_post_id,
 	 *      int      $menu_order,
 	 *      string   $password,
@@ -161,6 +167,7 @@ class WpImportPost implements ImportPostInterface {
 			'excerpt'               => 'string',
 			'content'               => 'string',
 			'name'                  => 'string',
+			'status'                => 'string',
 			'origin_parent_post_id' => 'int',
 			'menu_order'            => 'int',
 			'password'              => 'string',
@@ -312,6 +319,14 @@ class WpImportPost implements ImportPostInterface {
 	}
 
 	/**
+	 * @return string
+	 */
+	public function status() {
+
+		return $this->status;
+	}
+
+	/**
 	 * @return int
 	 */
 	public function origin_parent_post_id() {
@@ -336,7 +351,7 @@ class WpImportPost implements ImportPostInterface {
 	}
 
 	/**
-	 * @return array
+	 * @return array (List of W2M\Import\Type\TermReferenceInterface)
 	 */
 	public function terms() {
 
@@ -344,7 +359,7 @@ class WpImportPost implements ImportPostInterface {
 	}
 
 	/**
-	 * @return array
+	 * @return array (List of W2M\Import\Type\ImportMetaInterface)
 	 */
 	public function meta() {
 

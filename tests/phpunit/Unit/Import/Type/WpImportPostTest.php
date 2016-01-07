@@ -109,6 +109,7 @@ class WpImportPostTest extends Helper\MonkeyTestCase {
 				'excerpt'               => "Some cool\nExcerpt in here…",
 				'content'               => "Lorem ipsum dolor sit\n\namet sit dolor ipsum lorem.",
 				'name'                  => 'import-page',
+				'status'                => 'draft',
 				'origin_parent_post_id' => 7228,
 				'menu_order'            => 0,
 				'password'              => 'Top Secret!',
@@ -143,7 +144,7 @@ class WpImportPostTest extends Helper\MonkeyTestCase {
 
 		$string_returns = array(
 			'title', 'guid', 'comment_status', 'ping_status', 'type', 'origin_link',
-			'excerpt', 'content', 'name', 'password'
+			'excerpt', 'content', 'name', 'status', 'password'
 		);
 		foreach ( $string_returns as $method ) {
 			$this->assertInternalType(
