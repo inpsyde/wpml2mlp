@@ -153,8 +153,6 @@ class WpImportPost implements ImportPostInterface {
 	 */
 	private function set_attributes( Array $attributes ) {
 
-		//Todo handle validate 'terms' and 'meta'
-
 		$type_map = array(
 			'origin_id'             => 'int',
 			'title'                 => 'string',
@@ -183,6 +181,23 @@ class WpImportPost implements ImportPostInterface {
 			if ( ! isset( $valid_attributes[ $key ] ) ) {
 				continue;
 			}
+			if ( 'terms' === $key ) {
+				$valid_attributes[ $key ] = $this->param_sanitizer
+					->sanitize_object_list(
+						$valid_attributes[ $key ],
+						'W2M\Import\Type\TermReferenceInterface'
+					);
+			}
+			if ( 'meta' === $key ) {
+				$valid_attributes[ $key ] = $this->param_sanitizer
+					->sanitize_object_list(
+						$valid_attributes[ $key ],
+						'W2M\Import\Type\ImportMetaInterface'
+					);
+			}
+
+			// Todo: handle locale relations
+
 			$this->{$key} = $valid_attributes[ $key ];
 		}
 
