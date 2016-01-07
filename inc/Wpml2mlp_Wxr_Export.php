@@ -209,12 +209,14 @@ class Wpml_Wxr_Export {
 		$wxr_categories = FALSE;
 
 		foreach ( $this->categories as $category ) {
+
 			$wxr_categories .= "\n\t\t<wp:category>\n";
 			$wxr_categories .= "\t\t\t<wp:term_id>" . intval( $category->term_id ) . "</wp:term_id>\n";
 			$wxr_categories .= "\t\t\t<wp:category_nicename>" . $this->wxr_cdata( $category->slug ) . "</wp:category_nicename >\n";
 			$wxr_categories .= "\t\t\t<wp:category_parent>" . $this->wxr_cdata( $category->parent ? $category->parent : '' ) . " </wp:category_parent >\n";
 			$wxr_categories .= "\t\t\t<wp:cat_name>" . $this->wxr_cdata( $category->name ) . "</wp:cat_name>\n";
 			$wxr_categories .= "\t\t\t<wp:category_description>" . $this->wxr_cdata( $category->description ) . "</wp:category_description>\n";
+			$wxr_categories .= "\t\t\t<wp:taxonomy>" . $this->wxr_cdata( $category->taxonomy ) . "</wp:taxonomy>\n";
 			$wxr_categories .= "\t\t</wp:category>\n";
 		}
 
