@@ -36,7 +36,7 @@ class MockBuilder {
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function wp_factory( Array $methods = array() ) {
+	public function common_wp_factory( Array $methods = array() ) {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Common\WpFactory',
