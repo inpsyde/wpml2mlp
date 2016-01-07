@@ -115,35 +115,12 @@ XML;
 
 	/**
 	 * Test the behaviour when an optional attribute is missing
+	 *
+	 * @dataProvider missing_attribute_test_data
+	 * @param string $xml
+	 * @param array $expected
 	 */
-	public function test_parse_term_missing_attribute_error() {
-
-		$test_term = array(
-			'origin_id'             => 112,
-			'slug'                  => 'top-news',
-			'origin_parent_term_id' => 110,
-			'name'                  => 'Top News',
-			'taxonomy'              => 'category',
-			'description'           => ''
-		);
-		// Todo: Locale Relations
-		$xml = <<<XML
-<root
-	xmlns:wp="what-ever"
->
-	<wp:category>
-		<wp:term_id>{$test_term[ 'origin_id' ]}</wp:term_id>
-		<wp:category_nicename><![CDATA[{$test_term[ 'slug' ] }]]></wp:category_nicename >
-		<wp:category_parent>{$test_term[ 'origin_parent_term_id' ]}</wp:category_parent >
-		<wp:cat_name><![CDATA[{$test_term[ 'name' ]}]]></wp:cat_name>
-		<!--
-			The missing, optional item
-			<wp:category_description><![CDATA[{$test_term[ 'description' ]}]]></wp:category_description>
-		-->
-		<wp:taxonomy>category</wp:taxonomy>
-	</wp:category>
-</root>
-XML;
+	public function test_parse_term_missing_attribute_error( $xml, Array $expected ) {
 
 		$item            = new SimpleXMLElement( $xml );
 		$wp_error_mock   = $this->mock_builder->wp_error( array( 'add_data' ) );
@@ -153,9 +130,9 @@ XML;
 			->method( 'add_data' )
 			->with(
 				'attribute',
-				$this->callback( function( $context_data ) use ( $item ) {
+				$this->callback( function( $context_data ) use ( $expected, $item ) {
 					return
-						   'category_description' === $context_data[ 'data' ][ 'attribute' ]
+						   $expected[ 'missing_attribute' ] === $context_data[ 'data' ][ 'attribute' ]
 						&& $item === $context_data[ 'data' ][ 'element' ];
 				} )
 			);
@@ -176,7 +153,7 @@ XML;
 			'W2M\Import\Type\ImportTermInterface',
 			$result
 		);
-		foreach ( $test_term as $attribute => $expected ) {
+		foreach ( $expected[ 'term_data' ]  as $attribute => $expected ) {
 			$this->assertSame(
 				$expected,
 				$result->{$attribute}(),
@@ -186,9 +163,126 @@ XML;
 	}
 
 	/**
+	 * @see test_parse_term_missing_attribute_error
+	 * @return array
+	 */
+	public function missing_attribute_test_data() {
+
+		$data = array();
+
+		$term_data = array(
+			'origin_id'             => 112,
+			'slug'                  => 'top-news',
+			'origin_parent_term_id' => 110,
+			'name'                  => 'Top News',
+			'taxonomy'              => 'category',
+			'description'           => ''
+		);
+		$xml = <<<XML
+<root
+	xmlns:wp="what-ever"
+>
+	<wp:category>
+		<wp:term_id>{$term_data[ 'origin_id' ]}</wp:term_id>
+		<wp:category_nicename><![CDATA[{$term_data[ 'slug' ] }]]></wp:category_nicename >
+		<wp:category_parent>{$term_data[ 'origin_parent_term_id' ]}</wp:category_parent >
+		<wp:cat_name><![CDATA[{$term_data[ 'name' ]}]]></wp:cat_name>
+		<!--
+			The missing, optional item
+			<wp:category_description><![CDATA[{$term_data[ 'description' ]}]]></wp:category_description>
+		-->
+		<wp:taxonomy>category</wp:taxonomy>
+	</wp:category>
+</root>
+XML;
+
+		$data[ 'missing_term_description' ] = array(
+			# 1. Parameter $xml
+			$xml,
+			# 2. Parameter $expected
+			array(
+				'term_data' => $term_data,
+				'missing_attribute' => 'category_description'
+			)
+		);
+
+		$term_data = array(
+			'origin_id'             => 0,
+			'slug'                  => 'top-news',
+			'origin_parent_term_id' => 110,
+			'name'                  => 'Top News',
+			'taxonomy'              => 'category',
+			'description'           => ''
+		);
+		$xml = <<<XML
+<root
+	xmlns:wp="what-ever"
+>
+	<wp:category>
+		<!--
+			<wp:term_id>{$term_data[ 'origin_id' ]}</wp:term_id>
+		-->
+		<wp:category_nicename><![CDATA[{$term_data[ 'slug' ] }]]></wp:category_nicename >
+		<wp:category_parent>{$term_data[ 'origin_parent_term_id' ]}</wp:category_parent >
+		<wp:cat_name><![CDATA[{$term_data[ 'name' ]}]]></wp:cat_name>
+		<wp:category_description><![CDATA[{$term_data[ 'description' ]}]]></wp:category_description>
+		<wp:taxonomy>category</wp:taxonomy>
+	</wp:category>
+</root>
+XML;
+
+		$data[ 'missing_term_id' ] = array(
+			# 1. Parameter $xml
+			$xml,
+			# 2. Parameter $expected
+			array(
+				'term_data' => $term_data,
+				'missing_attribute' => 'term_id'
+			)
+		);
+
+		$term_data = array(
+			'origin_id'             => 112,
+			'slug'                  => 'top-news',
+			'origin_parent_term_id' => 0,
+			'name'                  => 'Top News',
+			'taxonomy'              => 'category',
+			'description'           => ''
+		);
+		$xml = <<<XML
+<root
+	xmlns:wp="what-ever"
+>
+	<wp:category>
+		<wp:term_id>{$term_data[ 'origin_id' ]}</wp:term_id>
+		<wp:category_nicename><![CDATA[{$term_data[ 'slug' ] }]]></wp:category_nicename >
+		<!--
+			<wp:category_parent>{$term_data[ 'origin_parent_term_id' ]}</wp:category_parent >
+		-->
+		<wp:cat_name><![CDATA[{$term_data[ 'name' ]}]]></wp:cat_name>
+		<wp:category_description><![CDATA[{$term_data[ 'description' ]}]]></wp:category_description>
+		<wp:taxonomy>category</wp:taxonomy>
+	</wp:category>
+</root>
+XML;
+
+		$data[ 'missing_term_parent' ] = array(
+			# 1. Parameter $xml
+			$xml,
+			# 2. Parameter $expected
+			array(
+				'term_data' => $term_data,
+				'missing_attribute' => 'category_parent'
+			)
+		);
+
+		return $data;
+	}
+
+	/**
 	 * Test the behaviour when a mandatory attribute is missing
 	 *
-	 * @dataProvider missing_mandatory_item_test_data
+	 * @dataProvider missing_mandatory_attribute_test_data
 	 *
 	 * @param string $xml
 	 * @param array $expected
@@ -228,7 +322,7 @@ XML;
 	/**
 	 * @see test_parse_term_missing_mandatory_attribute_error
 	 */
-	public function missing_mandatory_item_test_data() {
+	public function missing_mandatory_attribute_test_data() {
 
 		$data = array();
 
