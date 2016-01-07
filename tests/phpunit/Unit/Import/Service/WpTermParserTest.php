@@ -8,8 +8,11 @@ use
 	SimpleXMLElement,
 	Brain;
 
-class WpTermParserTest extends Helper\MonkeyTestCase {
+class WpTermParserTest extends Helper\UnitTestCase {
 
+	/**
+	 * Tests parse_term with a XML document considered valid
+	 */
 	public function test_parse_term() {
 
 		$test_term = array(
@@ -36,8 +39,7 @@ class WpTermParserTest extends Helper\MonkeyTestCase {
 </root>
 XML;
 
-		$wp_factory_mock = $this->getMockBuilder( 'W2M\Import\Common\WpFactory' )
-			->getMock();
+		$wp_factory_mock = $this->mock_builder->common_wp_factory();
 		$wp_factory_mock->expects( $this->never() )->method( 'wp_error' );
 
 		$item   = new SimpleXMLElement( $xml );
@@ -62,23 +64,26 @@ XML;
 		}
 	}
 
+	/**
+	 * Test the behaviour when the expected namespace is missing
+	 */
 	public function test_parse_term_missing_namespace_error() {
 
 		$xml = <<<XML
-<root>
-	<category>
-		<term_id>123</term_id>
-		<category_nicename><![CDATA[slug]]></category_nicename >
-		<category_parent>10</category_parent >
-		<cat_name><![CDATA[Name]]></cat_name>
-		<category_description><![CDATA[Description]]></category_description>
-		<taxonomy>category</taxonomy>
-	</category>
+<root
+	xmlns:notwp="whatever"
+>
+	<notwp:category>
+		<notwp:term_id>123</notwp:term_id>
+		<notwp:category_nicename><![CDATA[slug]]></notwp:category_nicename >
+		<notwp:category_parent>10</notwp:category_parent >
+		<notwp:cat_name><![CDATA[Name]]></notwp:cat_name>
+		<notwp:category_description><![CDATA[Description]]></notwp:category_description>
+		<notwp:taxonomy>category</notwp:taxonomy>
+	</notwp:category>
 </root>
 XML;
-		$wp_error_mock = $this->getMockBuilder( 'WP_Error' )
-			->setMethods( array( 'add_data' ) )
-			->getMock();
+		$wp_error_mock = $this->mock_builder->wp_error( array( 'add_data' ) );
 		$wp_error_mock->expects( $this->atLeast( 1 ) )
 			->method( 'add_data' )
 			->with(
@@ -86,8 +91,7 @@ XML;
 				$this->callback( 'is_array' )
 			);
 
-		$wp_factory_mock = $this->getMockBuilder( 'W2M\Import\Common\WpFactory' )
-			->getMock();
+		$wp_factory_mock = $this->mock_builder->common_wp_factory();
 		$wp_factory_mock->expects( $this->any() )
 			->method( 'wp_error' )
 			->with( 'namespace', $this->callback( 'is_string' ) )
@@ -104,6 +108,9 @@ XML;
 		$this->assertNull( $result );
 	}
 
+	/**
+	 * Test the behaviour when an optional attribute is missing
+	 */
 	public function test_parse_term_missing_attribute_error() {
 
 		$test_term = array(
@@ -132,9 +139,7 @@ XML;
 	</wp:category>
 </root>
 XML;
-		$wp_error_mock = $this->getMockBuilder( 'WP_Error' )
-			->setMethods( array( 'add_data' ) )
-			->getMock();
+		$wp_error_mock = $this->mock_builder->wp_error( array( 'add_data' ) );
 		$wp_error_mock->expects( $this->atLeast( 1 ) )
 			->method( 'add_data' )
 			->with(
@@ -142,8 +147,7 @@ XML;
 				$this->callback( 'is_array' )
 			);
 
-		$wp_factory_mock = $this->getMockBuilder( 'W2M\Import\Common\WpFactory' )
-			->getMock();
+		$wp_factory_mock = $this->mock_builder->common_wp_factory();
 		$wp_factory_mock->expects( $this->any() )
 			->method( 'wp_error' )
 			->with( 'attribute', $this->callback( 'is_string' ) )
@@ -170,11 +174,105 @@ XML;
 		}
 	}
 
-	public function test_parse_term_missing_mandatory_attribute_error() {
+	/**
+	 * Test the behaviour when a mandatory attribute is missing
+	 *
+	 * @dataProvider missing_mandatory_item_test_data
+	 *
+	 * @param string $xml
+	 * @param array $expected
+	 */
+	public function test_parse_term_missing_mandatory_attribute_error( $xml, Array $expected ) {
 
-		$this->markTestIncomplete( 'Under construction' );
+		$item = new SimpleXMLElement( $xml );
+
+		$wp_error_mock   = $this->mock_builder->wp_error( array( 'add_data' ) );
+		$wp_error_mock->expects( $this->once() )
+			->method( 'add_data' )
+			->with(
+				'attribute',
+				$this->callback( function( $context_data ) use ( $expected ) {
+					return $context_data[ 'data' ][ 'attribute' ] === $expected[ 'missing_term' ];
+				} )
+			);
+		$wp_factory_mock = $this->mock_builder->common_wp_factory();
+		$wp_factory_mock->expects( $this->atLeast( 1 ) )
+			->method( 'wp_error' )
+			->willReturn( $wp_error_mock );
+		$testee = new Service\WpTermParser( $wp_factory_mock );
+
+		Brain\Monkey::actions()->expectFired( 'w2m_import_parse_term_error' )
+			->once()
+			->with( $wp_error_mock );
+
+		$result = $testee->parse_term( $item );
+		$this->assertNull(
+			$result
+		);
 	}
 
+	/**
+	 * @see test_parse_term_missing_mandatory_attribute_error
+	 */
+	public function missing_mandatory_item_test_data() {
+
+		$data = array();
+
+		$xml = <<<XML
+<root
+	xmlns:wp="what-ever"
+>
+	<wp:category>
+		<wp:term_id>1</wp:term_id>
+		<wp:category_nicename>term</wp:category_nicename >
+		<wp:category_parent>0</wp:category_parent >
+		<!-- <wp:cat_name>Term</wp:cat_name> -->
+		<wp:category_description>Description</wp:category_description>
+		<wp:taxonomy>category</wp:taxonomy>
+	</wp:category>
+</root>
+XML;
+
+		$data[ 'missing_term_name' ] = array(
+			# 1. Parameter $xml
+			$xml,
+			# 2. Parameter $expected
+			array(
+				'missing_term' => 'cat_name'
+			)
+		);
+
+		$xml = <<<XML
+<root
+	xmlns:wp="what-ever"
+>
+	<wp:category>
+		<wp:term_id>1</wp:term_id>
+		<wp:category_nicename>term</wp:category_nicename >
+		<wp:category_parent>0</wp:category_parent >
+		<wp:cat_name>Term</wp:cat_name>
+		<wp:category_description>Description</wp:category_description>
+		<!--<wp:taxonomy>category</wp:taxonomy>-->
+	</wp:category>
+</root>
+XML;
+
+		$data[ 'missing_term_taxonomy' ] = array(
+			# 1. Parameter $xml
+			$xml,
+			# 2. Parameter $expected
+			array(
+				'missing_term' => 'taxonomy'
+			)
+		);
+
+		return $data;
+	}
+
+
+	/**
+	 * Test the behaviour when the complete item is missing
+	 */
 	public function test_parse_term_missing_item_error() {
 
 		$this->markTestIncomplete( 'Under construction' );
