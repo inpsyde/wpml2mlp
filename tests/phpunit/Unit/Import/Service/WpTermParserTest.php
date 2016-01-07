@@ -83,15 +83,21 @@ XML;
 	</notwp:category>
 </root>
 XML;
-		$wp_error_mock = $this->mock_builder->wp_error( array( 'add_data' ) );
+		$item            = new SimpleXMLElement( $xml );
+		$wp_error_mock   = $this->mock_builder->wp_error( array( 'add_data' ) );
+		$wp_factory_mock = $this->mock_builder->common_wp_factory();
+
 		$wp_error_mock->expects( $this->atLeast( 1 ) )
 			->method( 'add_data' )
 			->with(
 				'namespace',
-				$this->callback( 'is_array' )
+				$this->callback( function( $context_data ) use ( $item ) {
+					return
+						   'wp' === $context_data[ 'data' ][ 'namespace' ]
+						&& $item === $context_data[ 'data' ][ 'element' ];
+				} )
 			);
 
-		$wp_factory_mock = $this->mock_builder->common_wp_factory();
 		$wp_factory_mock->expects( $this->any() )
 			->method( 'wp_error' )
 			->with( 'namespace', $this->callback( 'is_string' ) )
@@ -101,7 +107,6 @@ XML;
 			->once()
 			->with( $wp_error_mock );
 
-		$item = new SimpleXMLElement( $xml );
 		$testee = new Service\WpTermParser( $wp_factory_mock );
 
 		$result = $testee->parse_term( $item );
@@ -139,15 +144,22 @@ XML;
 	</wp:category>
 </root>
 XML;
-		$wp_error_mock = $this->mock_builder->wp_error( array( 'add_data' ) );
+
+		$item            = new SimpleXMLElement( $xml );
+		$wp_error_mock   = $this->mock_builder->wp_error( array( 'add_data' ) );
+		$wp_factory_mock = $this->mock_builder->common_wp_factory();
+
 		$wp_error_mock->expects( $this->atLeast( 1 ) )
 			->method( 'add_data' )
 			->with(
 				'attribute',
-				$this->callback( 'is_array' )
+				$this->callback( function( $context_data ) use ( $item ) {
+					return
+						   'category_description' === $context_data[ 'data' ][ 'attribute' ]
+						&& $item === $context_data[ 'data' ][ 'element' ];
+				} )
 			);
 
-		$wp_factory_mock = $this->mock_builder->common_wp_factory();
 		$wp_factory_mock->expects( $this->any() )
 			->method( 'wp_error' )
 			->with( 'attribute', $this->callback( 'is_string' ) )
@@ -157,7 +169,6 @@ XML;
 			->once()
 			->with( $wp_error_mock );
 
-		$item = new SimpleXMLElement( $xml );
 		$testee = new Service\WpTermParser( $wp_factory_mock );
 
 		$result = $testee->parse_term( $item );
@@ -184,18 +195,21 @@ XML;
 	 */
 	public function test_parse_term_missing_mandatory_attribute_error( $xml, Array $expected ) {
 
-		$item = new SimpleXMLElement( $xml );
-
+		$item            = new SimpleXMLElement( $xml );
 		$wp_error_mock   = $this->mock_builder->wp_error( array( 'add_data' ) );
+		$wp_factory_mock = $this->mock_builder->common_wp_factory();
+
 		$wp_error_mock->expects( $this->once() )
 			->method( 'add_data' )
 			->with(
 				'attribute',
-				$this->callback( function( $context_data ) use ( $expected ) {
-					return $context_data[ 'data' ][ 'attribute' ] === $expected[ 'missing_term' ];
+				$this->callback( function( $context_data ) use ( $expected, $item ) {
+					return
+						   $context_data[ 'data' ][ 'attribute' ] === $expected[ 'missing_term' ]
+						&& $item === $context_data[ 'data' ][ 'element' ];
 				} )
 			);
-		$wp_factory_mock = $this->mock_builder->common_wp_factory();
+
 		$wp_factory_mock->expects( $this->atLeast( 1 ) )
 			->method( 'wp_error' )
 			->willReturn( $wp_error_mock );
@@ -271,10 +285,49 @@ XML;
 
 
 	/**
-	 * Test the behaviour when the complete item is missing
+	 * Test the behaviour when the complete item <wp:category/> is missing
 	 */
 	public function test_parse_term_missing_item_error() {
 
-		$this->markTestIncomplete( 'Under construction' );
+		$xml = <<<XML
+<root
+	xmlns:wp="whatever"
+>
+	<wp:post>
+		<wp:title>Some Title</wp:title>
+	</wp:post>
+</root>
+XML;
+
+		$item            = new SimpleXMLElement( $xml );
+		$wp_error_mock   = $this->mock_builder->wp_error( array( 'add_data' ) );
+		$wp_factory_mock = $this->mock_builder->common_wp_factory();
+
+		$wp_factory_mock->expects( $this->atLeast( 1 ) )
+			->method( 'wp_error' )
+			->willReturn( $wp_error_mock );
+
+		$wp_error_mock->expects( $this->once() )
+			->method( 'add_data' )
+			->with(
+				'item',
+				$this->callback( function( $context_data ) use ( $item ) {
+					return
+						   'category' === $context_data[ 'data' ][ 'item' ]
+						&& $item === $context_data[ 'data' ][ 'element' ];
+				} )
+			);
+
+		Brain\Monkey::actions()
+			->expectFired( 'w2m_import_parse_term_error' )
+			->once()
+			->with( $wp_error_mock );
+
+		$testee = new Service\WpTermParser( $wp_factory_mock );
+		$result = $testee->parse_term( $item );
+
+		$this->assertNull(
+			$result
+		);
 	}
 }
