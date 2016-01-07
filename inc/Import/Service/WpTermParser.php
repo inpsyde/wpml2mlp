@@ -159,7 +159,7 @@ class WpTermParser implements TermParserInterface {
 	}
 
 	/**
-	 * Fires an action
+	 * Fires the action w2m_import_parse_term_error
 	 *
 	 * @param WP_Error $error
 	 */
