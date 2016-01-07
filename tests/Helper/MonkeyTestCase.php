@@ -3,8 +3,7 @@
 namespace W2M\Test\Helper;
 
 use
-	Brain\Monkey,
-	PHPUnit_Framework_TestCase;
+	Brain\Monkey;
 
 /**
  * Class MonkeyTestCase
@@ -13,7 +12,7 @@ use
  *
  * @package W2M\Test\Helper
  */
-class MonkeyTestCase extends PHPUnit_Framework_TestCase {
+class MonkeyTestCase extends UnitTestCase {
 
 	public function setUp() {
 		parent::setUp();
