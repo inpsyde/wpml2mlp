@@ -44,6 +44,12 @@ class WpPostImporter implements PostImporterInterface {
 	 */
 	public function import_post( Type\ImportPostInterface $post ) {
 
+		$post->terms();
+		$post->meta();
+		$post->is_sticky();
+		$post->origin_link();
+		$post->locale_relations();
+
 		$post = array(
 			'post_content'   => $post->content(),
 			'post_name'      => $post->name(),
@@ -61,9 +67,7 @@ class WpPostImporter implements PostImporterInterface {
 			'comment_status' => $post->comment_status()
 		);
 
-		$post->terms();
-		$post->meta();
-		$post->locale_relations();
+
 
 
 		print_r( $post );

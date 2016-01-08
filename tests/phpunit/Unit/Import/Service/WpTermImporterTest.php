@@ -81,7 +81,7 @@ class WpTermImporterTest extends \PHPUnit_Framework_TestCase {
 			)
 		);
 
-		foreach ( $term_test_data as $method => $return_value ) {
+		foreach ( $test_data as $method => $return_value ) {
 			if ( 'locale_relations' === $method )
 				continue; // we already have this one
 

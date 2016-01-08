@@ -47,17 +47,18 @@ class WpPostImporterTest extends \PHPUnit_Framework_TestCase {
 	public function test_import_post() {
 
 		/**
-		 * Create mocks for the dependency of the testee (WpObjectImporter)
+		 * Create mocks for the dependency of the testee (WpPostImporter)
 		 */
 		$translation_connector_mock = $this->getMockBuilder( 'W2M\Import\Service\TranslationConnectorInterface' )
 		                                   ->getMock();
+
 		$id_mapper_mock = $this->getMockBuilder( 'W2M\Import\Data\IdMapperInterface' )
 		                       ->getMock();
 
 		$testee = new Service\WpPostImporter( $translation_connector_mock, $id_mapper_mock );
 
 		$post_mock = $this->getMockBuilder( 'W2M\Import\Type\ImportPostInterface' )
-		                       ->getMock();
+		                  ->getMock();
 
 		/**
 		 * Now define the behaviour of the mock object. Each of the specified
