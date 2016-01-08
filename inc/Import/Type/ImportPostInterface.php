@@ -65,6 +65,11 @@ interface ImportPostInterface extends ImportElementInterface {
 	public function name();
 
 	/**
+	 * @return string
+	 */
+	public function status();
+
+	/**
 	 * @return int
 	 */
 	public function origin_parent_post_id();
@@ -80,12 +85,12 @@ interface ImportPostInterface extends ImportElementInterface {
 	public function password();
 
 	/**
-	 * @return array
+	 * @return array (List of W2M\Import\Type\TermReferenceInterface)
 	 */
 	public function terms();
 
 	/**
-	 * @return array
+	 * @return array (List of W2M\Import\Type\ImportMetaInterface)
 	 */
 	public function meta();
 

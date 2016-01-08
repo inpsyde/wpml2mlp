@@ -74,6 +74,11 @@ class WpImportPost implements ImportPostInterface {
 	private $name = '';
 
 	/**
+	 * @var string
+	 */
+	private $status = '';
+
+	/**
 	 * @var int
 	 */
 	private $origin_parent_post_id = 0;
@@ -122,6 +127,7 @@ class WpImportPost implements ImportPostInterface {
 	 *      string   $excerpt,
 	 *      string   $content
 	 *      string   $name,
+	 *      string   $status,
 	 *      int      $origin_parent_post_id,
 	 *      int      $menu_order,
 	 *      string   $password,
@@ -147,8 +153,6 @@ class WpImportPost implements ImportPostInterface {
 	 */
 	private function set_attributes( Array $attributes ) {
 
-		//Todo handle validate 'terms' and 'meta'
-
 		$type_map = array(
 			'origin_id'             => 'int',
 			'title'                 => 'string',
@@ -162,6 +166,7 @@ class WpImportPost implements ImportPostInterface {
 			'excerpt'               => 'string',
 			'content'               => 'string',
 			'name'                  => 'string',
+			'status'                => 'string',
 			'origin_parent_post_id' => 'int',
 			'menu_order'            => 'int',
 			'password'              => 'string',
@@ -177,6 +182,23 @@ class WpImportPost implements ImportPostInterface {
 			if ( ! isset( $valid_attributes[ $key ] ) ) {
 				continue;
 			}
+			if ( 'terms' === $key ) {
+				$valid_attributes[ $key ] = $this->param_sanitizer
+					->sanitize_object_list(
+						$valid_attributes[ $key ],
+						'W2M\Import\Type\TermReferenceInterface'
+					);
+			}
+			if ( 'meta' === $key ) {
+				$valid_attributes[ $key ] = $this->param_sanitizer
+					->sanitize_object_list(
+						$valid_attributes[ $key ],
+						'W2M\Import\Type\ImportMetaInterface'
+					);
+			}
+
+			// Todo: handle locale relations
+
 			$this->{$key} = $valid_attributes[ $key ];
 		}
 
@@ -321,6 +343,14 @@ class WpImportPost implements ImportPostInterface {
 	}
 
 	/**
+	 * @return string
+	 */
+	public function status() {
+
+		return $this->status;
+	}
+
+	/**
 	 * @return int
 	 */
 	public function origin_parent_post_id() {
@@ -345,7 +375,7 @@ class WpImportPost implements ImportPostInterface {
 	}
 
 	/**
-	 * @return array
+	 * @return array (List of W2M\Import\Type\TermReferenceInterface)
 	 */
 	public function terms() {
 
@@ -353,7 +383,7 @@ class WpImportPost implements ImportPostInterface {
 	}
 
 	/**
-	 * @return array
+	 * @return array (List of W2M\Import\Type\ImportMetaInterface)
 	 */
 	public function meta() {
 

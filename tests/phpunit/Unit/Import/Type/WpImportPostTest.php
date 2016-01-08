@@ -92,6 +92,12 @@ class WpImportPostTest extends Helper\MonkeyTestCase {
 	 */
 	public function post_test_data() {
 
+		/**
+		 * it seems that the data provider is called before the setUp() method of the parent
+		 */
+		if ( ! $this->mock_builder )
+			$this->mock_builder = new Helper\MockBuilder( $this );
+
 		$data = array();
 
 		$data[ 'general' ] = array(
@@ -109,11 +115,12 @@ class WpImportPostTest extends Helper\MonkeyTestCase {
 				'excerpt'               => "Some cool\nExcerpt in here…",
 				'content'               => "Lorem ipsum dolor sit\n\namet sit dolor ipsum lorem.",
 				'name'                  => 'import-page',
+				'status'                => 'draft',
 				'origin_parent_post_id' => 7228,
 				'menu_order'            => 0,
 				'password'              => 'Top Secret!',
-				'terms'                 => array( '//Todo' ),
-				'meta'                  => array( '//Todo' ),
+				'terms'                 => array( $this->mock_builder->type_wp_term_reference() ),
+				'meta'                  => array( $this->mock_builder->type_wp_import_meta() ),
 				'locale_relations'      => array(
 					'en_GB' => 422,
 					'fr_BE' => 45
@@ -143,7 +150,7 @@ class WpImportPostTest extends Helper\MonkeyTestCase {
 
 		$string_returns = array(
 			'title', 'guid', 'comment_status', 'ping_status', 'type', 'origin_link',
-			'excerpt', 'content', 'name', 'password'
+			'excerpt', 'content', 'name', 'status', 'password'
 		);
 		foreach ( $string_returns as $method ) {
 			$this->assertInternalType(
