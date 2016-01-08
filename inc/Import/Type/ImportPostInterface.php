@@ -32,6 +32,11 @@ interface ImportPostInterface extends ImportElementInterface {
 	/**
 	 * @return string
 	 */
+	public function origin_author_id();
+
+	/**
+	 * @return string
+	 */
 	public function type();
 
 	/**
