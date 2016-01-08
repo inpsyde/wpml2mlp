@@ -159,7 +159,7 @@ class WpImportPost implements ImportPostInterface {
 			'guid'                  => 'string',
 			'comment_status'        => 'string',
 			'ping_status'           => 'string',
-			'status'                => 'string',
+			'origin_author_id'      => 'int',
 			'type'                  => 'string',
 			'is_sticky'             => 'bool',
 			'origin_link'           => 'string',
@@ -289,9 +289,9 @@ class WpImportPost implements ImportPostInterface {
 	/**
 	 * @return string
 	 */
-	public function status() {
+	public function origin_author_id() {
 
-		return $this->status;
+		return $this->origin_author_id;
 	}
 
 	/**

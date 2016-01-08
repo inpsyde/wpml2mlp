@@ -32,7 +32,7 @@ interface ImportPostInterface extends ImportElementInterface {
 	/**
 	 * @return string
 	 */
-	public function status();
+	public function origin_author_id();
 
 	/**
 	 * @return string
