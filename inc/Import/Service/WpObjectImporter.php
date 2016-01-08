@@ -111,6 +111,4 @@ class WpObjectImporter implements ObjectImporterInterface {
 		 */
 	}
 
-
-
 }
