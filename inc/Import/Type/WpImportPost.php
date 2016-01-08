@@ -155,6 +155,7 @@ class WpImportPost implements ImportPostInterface {
 			'guid'                  => 'string',
 			'comment_status'        => 'string',
 			'ping_status'           => 'string',
+			'status'                => 'string',
 			'type'                  => 'string',
 			'is_sticky'             => 'bool',
 			'origin_link'           => 'string',
@@ -261,6 +262,14 @@ class WpImportPost implements ImportPostInterface {
 	public function ping_status() {
 
 		return $this->ping_status;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function status() {
+
+		return $this->status;
 	}
 
 	/**
