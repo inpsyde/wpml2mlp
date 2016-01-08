@@ -5,7 +5,7 @@ namespace W2M\Import\Service;
 use W2M\Import\Data;
 use W2M\Import\Type;
 
-class WpObjectImporter implements ObjectImporterInterface {
+class WpTermImporter implements TermImporterInterface {
 
 	/**
 	 * @var TranslationConnectorInterface
@@ -44,13 +44,6 @@ class WpObjectImporter implements ObjectImporterInterface {
 	 */
 	public function import_term( Type\ImportTermInterface $term ) {
 
-		// TODO: Implement import_term() method.
-
-		// 1.[✓] Insert Term via wp_insert_term()
-		// 2.[✓] set the new term_id(!) via $term->id( $new_term_id );
-		// 3.[✓] map origin_parent_term_id() via $this->id_mapper->local_id( 'term', $origin_parent_id )
-		// 4.[ ] connect translations $this->translation_connector->link_term( $new_term, $term );
-
 		$term_args = array(
 			'description' => $term->description(),
 			'parent'      => $this->id_mapper->local_id( 'term', $term->origin_parent_term_id() ),
@@ -84,6 +77,7 @@ class WpObjectImporter implements ObjectImporterInterface {
 		 *
 		 * $ansestor_resolver->resolve_term( $new_term, $term );
 		 */
+		$this->translation_connector->link_term( $wp_term, $term );
 
 		/**
 		 * @param stdClass|WP_Term
@@ -91,26 +85,5 @@ class WpObjectImporter implements ObjectImporterInterface {
 		 */
 		do_action( 'w2m_term_imported', $wp_term, $term );
 	}
-
-	/**
-	 * @param Type\ImportPostInterface $post
-	 * @return bool|\WP_Error
-	 */
-	public function import_post( Type\ImportPostInterface $post ) {
-
-		// 1. Insert Term via wp_insert_term()
-		// 2. set the new term_id(!) via $term->id( $new_term_id );
-		// 3. connect translations $this->translation_connector->link_term( $new_post, $post );
-
-		/**
-		 * Todo: resolve ancestor relation
-		 * Here we don't know and should not depend on whether the parent was already
-		 * imported or not.
-		 *
-		 * $ansestor_resolver->resolve_term( $new_post, $post );
-		 */
-	}
-
-
 
 }

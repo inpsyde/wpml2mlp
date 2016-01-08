@@ -6,7 +6,7 @@ use Brain;
 use W2M\Import\Service;
 use W2M\Test\Helper;
 
-class WpObjectImporterTest extends \PHPUnit_Framework_TestCase {
+class WpTermImporterTest extends \PHPUnit_Framework_TestCase {
 
 	private $fs_helper;
 
@@ -53,14 +53,10 @@ class WpObjectImporterTest extends \PHPUnit_Framework_TestCase {
 		$id_mapper_mock = $this->getMockBuilder( 'W2M\Import\Data\IdMapperInterface' )
 			->getMock();
 
-		$testee = new Service\WpObjectImporter( $translation_connector_mock, $id_mapper_mock );
+		$testee = new Service\WpTermImporter( $translation_connector_mock, $id_mapper_mock );
 
-		/**
-		 * Create a mock to pass it as parameter to the intended method
-		 * ( WpObjectLog::import_term() )
-		 */
 		$term_mock = $this->getMockBuilder( 'W2M\Import\Type\ImportTermInterface' )
-			->getMock();
+		                       ->getMock();
 
 		/**
 		 * Now define the behaviour of the mock object. Each of the specified
@@ -85,14 +81,13 @@ class WpObjectImporterTest extends \PHPUnit_Framework_TestCase {
 			)
 		);
 
-
-		foreach ( $test_data as $method => $return_value ) {
+		foreach ( $term_test_data as $method => $return_value ) {
 			if ( 'locale_relations' === $method )
 				continue; // we already have this one
 
 			$term_mock->expects( $this->atLeast( 1 ) )
-				->method( $method )
-				->willReturn( $return_value );
+			          ->method( $method )
+			          ->willReturn( $return_value );
 
 		}
 
@@ -170,4 +165,5 @@ class WpObjectImporterTest extends \PHPUnit_Framework_TestCase {
 		 */
 		$testee->import_term( $term_mock );
 	}
+
 }
