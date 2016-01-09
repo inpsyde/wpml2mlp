@@ -50,7 +50,7 @@ class WpPostImporter implements PostImporterInterface {
 		$post->origin_link();
 		$post->locale_relations();
 
-		$post = array(
+		$postdata = array(
 			'post_content'   => $post->content(),
 			'post_name'      => $post->name(),
 			'post_title'     => $post->title(),
@@ -67,10 +67,10 @@ class WpPostImporter implements PostImporterInterface {
 			'comment_status' => $post->comment_status()
 		);
 
+		$post_id = wp_insert_post( $postdata, TRUE );
 
 
-
-		print_r( $post );
+		print_r( get_post( $post_id ) );
 
 	}
 
