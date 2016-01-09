@@ -40,7 +40,8 @@ Use the installer via back-end of your install or ...
 ## Action & Filter Reference
 * `w2m_import_term_error` in `W2M\Import\Service::import_term()`
 * `w2m_term_imported` in `W2M\Import\Service::import_term()`
-* `w2m_import_parse_term_error` in `W2M\Import\Service\WpTermParser::parse_term()`
+* `w2m_import_parse_term_error` in `W2M\Import\Service\WpTermParser::propagate_error()`
+* `w2m_import_parse_post_error` in `W2M\Import\Service\WpPostParser::propagate_error()`
 
 ## Other Notes
 
