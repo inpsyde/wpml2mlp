@@ -121,6 +121,7 @@ class WpImportPost implements ImportPostInterface {
 	 *      DateTime $date,
 	 *      string   $comment_status,
 	 *      string   $ping_status,
+	 *      int      $origin_author_id
 	 *      string   $type,
 	 *      bool     $is_sticky,
 	 *      string   $origin_link,
