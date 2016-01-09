@@ -8,10 +8,10 @@
 	convertWarningsToExceptions="true"
 	>
 	<php>
-		<const name="W2M\Test\DB_NAME" value="wpml2mlp-tests" />
-		<const name="W2M\Test\DB_USER" value="root" />
-		<const name="W2M\Test\DB_PASS" value="root" />
-		<const name="W2M\Test\DB_HOST" value="localhost" />
+		<const name="W2M\Test\DB_NAME" value="" />
+		<const name="W2M\Test\DB_USER" value="" />
+		<const name="W2M\Test\DB_PASS" value="" />
+		<const name="W2M\Test\DB_HOST" value="" />
 		<const name="W2M\Test\TABLE_PREFIX" value="w2m_" />
 	</php>
 	<testsuites>
