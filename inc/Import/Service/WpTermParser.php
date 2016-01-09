@@ -83,10 +83,10 @@ class WpTermParser implements TermParserInterface {
 	/**
 	 * Creating a missing namespace error
 	 *
-	 * @param SimpleXMLElement $term
+	 * @param SimpleXMLElement $document
 	 * @param string $namespace
 	 */
-	private function missing_namespace_error( SimpleXMLElement $term, $namespace = 'wp' ) {
+	private function missing_namespace_error( SimpleXMLElement $document, $namespace = 'wp' ) {
 
 		$error = $this->wp_factory->wp_error(
 			'namespace',
@@ -97,7 +97,7 @@ class WpTermParser implements TermParserInterface {
 			array(
 				'trigger' => __CLASS__,
 				'data'    => array(
-					'document'  => $term,
+					'document'  => $document,
 					'namespace' => $namespace
 				)
 			)
@@ -109,10 +109,10 @@ class WpTermParser implements TermParserInterface {
 	/**
 	 * Creating a missing item error
 	 *
-	 * @param SimpleXMLElement $term
+	 * @param SimpleXMLElement $document
 	 * @param string $item
 	 */
-	private function missing_item_error( SimpleXMLElement $term, $item = 'category' ) {
+	private function missing_item_error( SimpleXMLElement $document, $item = 'category' ) {
 
 		$error = $this->wp_factory->wp_error(
 			'item',
@@ -123,7 +123,7 @@ class WpTermParser implements TermParserInterface {
 			array(
 				'trigger' => __CLASS__,
 				'data'    => array(
-					'document' => $term,
+					'document' => $document,
 					'item'     => $item
 				)
 			)
@@ -135,10 +135,10 @@ class WpTermParser implements TermParserInterface {
 	/**
 	 * Creating a missing attribute error
 	 *
-	 * @param SimpleXMLElement $term
+	 * @param SimpleXMLElement $document
 	 * @param $attribute
 	 */
-	private function missing_attribute_error( SimpleXMLElement $term, $attribute ) {
+	private function missing_attribute_error( SimpleXMLElement $document, $attribute ) {
 
 		$error = $this->wp_factory->wp_error(
 			'attribute',
@@ -149,7 +149,7 @@ class WpTermParser implements TermParserInterface {
 			array(
 				'trigger' => __CLASS__,
 				'data'    => array(
-					'document'  => $term,
+					'document'  => $document,
 					'attribute' => $attribute
 				)
 			)
