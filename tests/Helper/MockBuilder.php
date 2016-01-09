@@ -65,6 +65,32 @@ class MockBuilder {
 	}
 
 	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
+	public function service_translation_connector( Array $methods = array() ) {
+
+		return $this->mock_without_constructor(
+			'W2M\Import\Service\TranslationConnectorInterface',
+			$methods
+		);
+	}
+
+	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
+	public function data_id_mapper( Array $methods = array() ) {
+
+		return $this->mock_without_constructor(
+			'W2M\Import\Data\IdMapperInterface',
+			$methods
+		);
+	}
+
+	/**
 	 * @param $class
 	 * @param array $methods
 	 *
