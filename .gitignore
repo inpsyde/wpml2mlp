@@ -1,5 +1,5 @@
 vendor/
 tests/tmp/
-phpunit*.xml
+phpunit*
 .DS_Store
 ._*
