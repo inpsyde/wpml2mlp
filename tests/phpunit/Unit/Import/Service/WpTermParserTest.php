@@ -94,7 +94,7 @@ XML;
 				$this->callback( function( $context_data ) use ( $item ) {
 					return
 						   'wp' === $context_data[ 'data' ][ 'namespace' ]
-						&& $item === $context_data[ 'data' ][ 'element' ];
+						&& $item === $context_data[ 'data' ][ 'document' ];
 				} )
 			);
 
@@ -133,7 +133,7 @@ XML;
 				$this->callback( function( $context_data ) use ( $expected, $item ) {
 					return
 						   $expected[ 'missing_attribute' ] === $context_data[ 'data' ][ 'attribute' ]
-						&& $item === $context_data[ 'data' ][ 'element' ];
+						&& $item === $context_data[ 'data' ][ 'document' ];
 				} )
 			);
 
@@ -300,7 +300,7 @@ XML;
 				$this->callback( function( $context_data ) use ( $expected, $item ) {
 					return
 						   $context_data[ 'data' ][ 'attribute' ] === $expected[ 'missing_term' ]
-						&& $item === $context_data[ 'data' ][ 'element' ];
+						&& $item === $context_data[ 'data' ][ 'document' ];
 				} )
 			);
 
@@ -408,7 +408,7 @@ XML;
 				$this->callback( function( $context_data ) use ( $item ) {
 					return
 						   'category' === $context_data[ 'data' ][ 'item' ]
-						&& $item === $context_data[ 'data' ][ 'element' ];
+						&& $item === $context_data[ 'data' ][ 'document' ];
 				} )
 			);
 

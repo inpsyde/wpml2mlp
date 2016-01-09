@@ -97,7 +97,7 @@ class WpTermParser implements TermParserInterface {
 			array(
 				'trigger' => __CLASS__,
 				'data'    => array(
-					'element'   => $term,
+					'document'  => $term,
 					'namespace' => $namespace
 				)
 			)
@@ -123,8 +123,8 @@ class WpTermParser implements TermParserInterface {
 			array(
 				'trigger' => __CLASS__,
 				'data'    => array(
-					'element' => $term,
-					'item'    => $item
+					'document' => $term,
+					'item'     => $item
 				)
 			)
 		);
@@ -149,7 +149,7 @@ class WpTermParser implements TermParserInterface {
 			array(
 				'trigger' => __CLASS__,
 				'data'    => array(
-					'element'   => $term,
+					'document'  => $term,
 					'attribute' => $attribute
 				)
 			)
