@@ -100,7 +100,12 @@ class WpPostImporterTest extends \PHPUnit_Framework_TestCase {
 
 		}
 
-
+		/**
+		 * Remove this line when the test is completely configured.
+		 * Currently the missing mock of wp_insert_post() lets the test
+		 * ends in a fatal error.
+		 */
+		$this->markTestIncomplete( 'Under Construction' );
 		$testee->import_post( $post_mock );
 
 	}
