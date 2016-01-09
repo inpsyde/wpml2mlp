@@ -5,8 +5,12 @@ namespace W2M\Test\Unit\Import\Service;
 use
 	W2M\Import\Service,
 	W2M\Test\Helper,
-	SimpleXMLElement;
+	SimpleXMLElement,
+	DateTimeZone;
 
+/**
+ * @group post_parser
+ */
 class WpPostParserTest extends Helper\MonkeyTestCase {
 
 	/**
@@ -14,12 +18,41 @@ class WpPostParserTest extends Helper\MonkeyTestCase {
 	 *
 	 * @dataProvider parse_post_test_data
 	 *
-	 * @param string $xml
+	 * @param SimpleXMLElement $item
 	 * @param array $expected
 	 */
-	public function test_parse_post_valid_item( $xml, Array $expected ) {
+	public function test_parse_post_valid_item( SimpleXMLElement $item, Array $expected ) {
 
-		$this->markTestIncomplete( 'Under construction' );
+		$testee = new Service\WpPostParser(
+			$this->mock_builder->common_wp_factory()
+		);
+
+		$result = $testee->parse_post( $item );
+
+		$this->assertInstanceOf(
+			'W2M\Import\Type\ImportPostInterface',
+			$result
+		);
+
+		foreach ( $expected[ 'post' ] as $method => $value ) {
+			if ( 'date' === $method )
+				continue;
+			$this->assertSame(
+				$value,
+				$result->{$method}(),
+				"Test failed for method '{$method}'"
+			);
+		}
+
+		$this->assertInstanceOf(
+			'DateTime',
+			$result->date()
+		);
+		$result->date()->setTimezone( new DateTimeZone( 'UTC' ) );
+		$this->assertSame(
+			$expected[ 'post' ][ 'date' ],
+			$result->date()->format( 'Y-m-d H:i:s' )
+		);
 	}
 
 	/**
@@ -31,21 +64,21 @@ class WpPostParserTest extends Helper\MonkeyTestCase {
 		$data = array();
 
 		$post = array(
-			'title' => 'This is the post title',
-			'guid'  => 'http://wpml.to.mlp/?p=4736',
-			'date'  => '2014-04-23 09:45:30',
-			'comment_status' => 'open',
-			'ping_status' => 'open',
-			'type' => 'post',
-			'is_sticky' => 0,
-			'origin_link' => 'http://wpml.to.mlp/this-is-the-post-title/',
-			'excerpt' => 'Some Excerpt',
-			'content' => 'Some Content',
-			'name' => 'this-is-the-post-title',
-			'status' => 'publish',
+			'title'                 => 'This is the post title',
+			'guid'                  => 'http://wpml.to.mlp/?p=4736',
+			'date'                  => '2014-04-23 09:45:30',
+			'comment_status'        => 'open',
+			'ping_status'           => 'open',
+			'type'                  => 'post',
+			'is_sticky'             => 0,
+			'origin_link'           => 'http://wpml.to.mlp/this-is-the-post-title/',
+			'excerpt'               => 'Some Excerpt',
+			'content'               => 'Some Content',
+			'name'                  => 'this-is-the-post-title',
+			'status'                => 'publish',
 			'origin_parent_post_id' => 0,
-			'menu_order' => 0,
-			'password' => ''
+			'menu_order'            => 0,
+			'password'              => ''
 		);
 
 		$xml = <<<XML
