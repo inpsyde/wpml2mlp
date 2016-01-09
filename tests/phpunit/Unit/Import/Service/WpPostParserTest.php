@@ -5,12 +5,10 @@ namespace W2M\Test\Unit\Import\Service;
 use
 	W2M\Import\Service,
 	W2M\Test\Helper,
+	Brain,
 	SimpleXMLElement,
 	DateTimeZone;
 
-/**
- * @group post_parser
- */
 class WpPostParserTest extends Helper\MonkeyTestCase {
 
 	/**
@@ -135,5 +133,123 @@ XML;
 		);
 
 		return $data;
+	}
+
+	/**
+	 * Todo: improve test
+	 */
+	public function test_parse_post_missing_item() {
+
+		$document = new SimpleXMLElement( '<root><not_item/></root>' );
+
+		$wp_error_mock   = $this->mock_builder->wp_error( array( 'add_data' ) );
+		$wp_factory_mock = $this->mock_builder->common_wp_factory();
+
+		$wp_factory_mock->expects( $this->atLeast( 1 ) )
+			->method( 'wp_error' )
+			->willReturn( $wp_error_mock );
+		$wp_error_mock->expects( $this->once() )
+			->method( 'add_data' )
+			->with( 'item', $this->callback( 'is_array' ) );
+
+		Brain\Monkey::actions()
+			->expectFired( 'w2m_import_parse_post_error' )
+			->once()
+			->with( $wp_error_mock );
+		$testee = new Service\WpPostParser( $wp_factory_mock );
+
+		$result = $testee->parse_post( $document );
+		$this->assertNull(
+			$result
+		);
+		$this->markTestIncomplete( 'Improve test, check the data passed to WP_Error' );
+	}
+
+	/**
+	 * Todo: improve test
+	 */
+	public function test_parse_post_missing_wp_namespace() {
+
+		$xml = <<<XML
+<root
+	xmlns:excerpt="excerpt"
+	xmlns:content="content"
+	xmlns:dc="dc"
+	>
+	<item>
+		<title>Title</title>
+		<link>http://wpml.to.mlp/this-is-the-post-title/</link>
+		<pubDate><![CDATA[2016-01-09 20:22:53]]></pubDate>
+		<dc:creator><![CDATA[]]></dc:creator>
+		<guid isPermaLink="false">http://wpml.to.mlp/?p=1234</guid>
+		<excerpt:encoded><![CDATA[The excerpt]]></excerpt:encoded>
+		<content:encoded><![CDATA[The content]]></content:encoded>
+	</item>
+</root>
+XML;
+		$document = new SimpleXMLElement( $xml );
+
+		$wp_error_mock   = $this->mock_builder->wp_error( array( 'add_data' ) );
+		$wp_factory_mock = $this->mock_builder->common_wp_factory();
+
+		$wp_factory_mock->expects( $this->atLeast( 1 ) )
+			->method( 'wp_error' )
+			->willReturn( $wp_error_mock );
+		$wp_error_mock->expects( $this->atLeast( 1 ) )
+			->method( 'add_data' )
+			->with( 'namespace', $this->callback( 'is_array' ) );
+
+		Brain\Monkey::actions()
+			->expectAdded( 'w2m_import_parse_post_error' )
+			->once()
+			->with( $wp_error_mock );
+
+		$testee = new Service\WpPostParser( $wp_factory_mock );
+		$result = $testee->parse_post( $document );
+		$this->assertNull(
+			$result
+		);
+
+		$this->markTestIncomplete( 'Improve test, check the data passed to WP_Error' );
+	}
+
+	/**
+	 * Todo: improve test
+	 *
+	 * @dataProvider parse_post_test_data
+	 *
+	 * @param SimpleXMLElement $document
+	 * @param array $expected
+	 */
+	public function test_parse_post_missing_title_attribute( SimpleXMLElement $document, Array $expected ) {
+
+		//remove <title/> from the document
+		list( $title ) = $document->xpath( '//item/title' );
+		unset( $title[ 0 ] );
+
+		$wp_error_mock   = $this->mock_builder->wp_error( array( 'add_data' ) );
+		$wp_factory_mock = $this->mock_builder->common_wp_factory();
+
+		$wp_factory_mock->expects( $this->atLeast( 1 ) )
+			->method( 'wp_error' )
+			->willReturn( $wp_error_mock );
+		$wp_error_mock->expects( $this->atLeast( 1 ) )
+			->method( 'add_data' )
+			->with( 'attribute', $this->callback( 'is_array' ) );
+
+		Brain\Monkey::actions()
+			->expectFired( 'w2m_import_parse_post_error' )
+			->once()
+			->with( $wp_error_mock );
+
+		$testee = new Service\WpPostParser( $wp_factory_mock );
+		$result = $testee->parse_post( $document );
+
+		$this->assertInstanceOf(
+			'W2M\Import\Type\ImportPostInterface',
+			$result
+		);
+
+		$this->markTestIncomplete( 'Improve test, check the data passed to WP_Error' );
 	}
 }

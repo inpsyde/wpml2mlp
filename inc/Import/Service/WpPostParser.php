@@ -51,18 +51,14 @@ class WpPostParser implements PostParserInterface {
 		foreach ( $namespaces as $ns ) {
 			if ( isset( $doc_ns[ $ns ] ) )
 				continue;
-			$this->missing_namespace_error( $ns, $document );
+			$this->missing_namespace_error( $document, $ns );
+			return;
 		}
 
-		$excerpt_ns = $doc_ns[ 'excerpt' ]
-			? $document->item->children( $doc_ns[ 'excerpt' ] )
-			: new stdClass;
-		$content_ns = $doc_ns[ 'content' ]
-			? $document->item->children( $doc_ns[ 'content' ] )
-			: new stdClass;
-
+		$excerpt_ns = $document->item->children( $doc_ns[ 'excerpt' ] );
+		$content_ns = $document->item->children( $doc_ns[ 'content' ] );
 		/* @type SimpleXMLElement $wp */
-		$wp = $document->item->children( $doc_ns[ 'wp' ] );
+		$wp         = $document->item->children( $doc_ns[ 'wp' ] );
 
 		// basic attributes w/o namespace
 		$basic_atts = array(
@@ -95,13 +91,13 @@ class WpPostParser implements PostParserInterface {
 			$this->missing_attribute_error( $document, 'excerpt:encoded' );
 		}
 
-		$string_cast = function( SimpleXMLElement $node ) {
+		$string_cast = function( $node ) {
 			return (string) $node;
 		};
-		$int_cast = function( SimpleXMLElement $node ) {
+		$int_cast = function( $node ) {
 			return (int) $node;
 		};
-		$bool_cast = function ( SimpleXMLElement $node ) {
+		$bool_cast = function ( $node ) {
 			// boolean cast of an SimpleXMLObject would always be true
 			return (bool) (string) $node;
 		};
@@ -178,30 +174,6 @@ class WpPostParser implements PostParserInterface {
 
 	/**
 	 * @param SimpleXMLElement $document
-	 * @param $namespace
-	 */
-	private function missing_namespace_error( SimpleXMLElement $document, $namespace ) {
-
-		$error = $this->wp_factory->wp_error(
-			'namespace',
-			"Missing namespace '{$namespace}' in XML post node"
-		);
-		$error->add_data(
-			'namespace',
-			array(
-				'trigger' => __CLASS__,
-				'data'    => array(
-					'document'  => $document,
-					'namespace' => $namespace
-				)
-			)
-		);
-
-		$this->propagate_error( $error );
-	}
-
-	/**
-	 * @param SimpleXMLElement $document
 	 * @param string $item (Optional)
 	 */
 	private function missing_item_error( SimpleXMLElement $document, $item = 'item' ) {
@@ -224,14 +196,38 @@ class WpPostParser implements PostParserInterface {
 		$this->propagate_error( $error );
 	}
 
+	/**
+	 * @param SimpleXMLElement $document
+	 * @param $namespace
+	 */
+	private function missing_namespace_error( SimpleXMLElement $document, $namespace ) {
+
+		$error = $this->wp_factory->wp_error(
+			'namespace',
+			"Missing namespace '{$namespace}' in XML post node"
+		);
+		$error->add_data(
+			'namespace',
+			array(
+				'trigger' => __CLASS__,
+				'data'    => array(
+					'document'  => $document,
+					'namespace' => $namespace
+				)
+			)
+		);
+
+		$this->propagate_error( $error );
+	}
+
 	private function missing_attribute_error( SimpleXMLElement $document, $attribute ) {
 
 		$error = $this->wp_factory->wp_error(
-			'item',
+			'attribute',
 			"Missing attribute '{$attribute}' in XML post node"
 		);
 		$error->add_data(
-			'item',
+			'attribute',
 			array(
 				'trigger' => __CLASS__,
 				'data'    => array(
