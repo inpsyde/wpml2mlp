@@ -90,7 +90,7 @@ class WpTermParser implements TermParserInterface {
 
 		$error = $this->wp_factory->wp_error(
 			'namespace',
-			"Missing namespace '{$namespace}' in XML document"
+			"Missing namespace '{$namespace}' in XML term node"
 		);
 		$error->add_data(
 			'namespace',
@@ -116,7 +116,7 @@ class WpTermParser implements TermParserInterface {
 
 		$error = $this->wp_factory->wp_error(
 			'item',
-			"Missing item node '{$item}' in XML document"
+			"Missing item node '{$item}' in XML term node"
 		);
 		$error->add_data(
 			'item',
@@ -142,7 +142,7 @@ class WpTermParser implements TermParserInterface {
 
 		$error = $this->wp_factory->wp_error(
 			'attribute',
-			"Missing attribute node '{$attribute}' in XML document"
+			"Missing attribute node '{$attribute}' in XML term node"
 		);
 		$error->add_data(
 			'attribute',
