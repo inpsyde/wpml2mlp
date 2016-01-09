@@ -63,26 +63,6 @@ class WpPostImporterTest extends \PHPUnit_Framework_TestCase {
 		/**
 		 * Now define the behaviour of the mock object. Each of the specified
 		 * methods ( @see ImportPostInterface ) should return a proper value!
-		 *
-		 *  - title()
-		 *  - status()
-		 *  - guid()
-		 *  - date()
-		 *  - comment_status()
-		 *  - ping_status()
-		 *  - origin_author_id()
-		 *  - type()
-		 *  - is_sticky()
-		 *  - origin_link()
-		 *  - excerpt()
-		 *  - content()
-		 *  - name()
-		 *  - origin_parent_post_id()
-		 *  - menu_order()
-		 *  - password()
-		 *  - terms()
-		 *  - meta()
-		 *  - locale_relations()
 		 */
 		$post_test_data = array(
 			'title'                 => 'Mocky test fight',
