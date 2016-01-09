@@ -250,6 +250,7 @@ class Wpml_Wxr_Export {
 
 			$wxr_items .= "\t\t\t<wp:post_id>" . intval( $post->ID ) . "</wp:post_id>\n";
 			$wxr_items .= "\t\t\t<wp:post_date>" . $this->wxr_cdata( $post->post_date ) . "</wp:post_date>\n";
+			$wxr_items .= "\t\t\t<wp:post_author>" . $this->wxr_cdata( $post->post_author ) . "</wp:post_author>\n";
 			$wxr_items .= "\t\t\t<wp:post_date_gmt>" . $this->wxr_cdata( $post->post_date_gmt ) . "</wp:post_date_gmt>\n";
 			$wxr_items .= "\t\t\t<wp:comment_status>" . $this->wxr_cdata( $post->comment_status ) . "</wp:comment_status>\n";
 			$wxr_items .= "\t\t\t<wp:ping_status>" . $this->wxr_cdata( $post->ping_status ) . "</wp:ping_status>\n";
@@ -271,7 +272,6 @@ class Wpml_Wxr_Export {
 			$wxr_items .= $this->wxr_comments( $post->ID );
 
 			$wxr_items .= "\n\t\t</item>\n";
-
 
 			#buddy take a break, its hard work i now ;)
 			if ( $i >= 50 ) {
