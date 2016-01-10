@@ -8,8 +8,7 @@ use
 	SimpleXMLElement,
 	DateTime,
 	DateTimeZone,
-	WP_Error,
-	stdClass;
+	WP_Error;
 
 class WpPostParser implements PostParserInterface {
 
@@ -24,13 +23,26 @@ class WpPostParser implements PostParserInterface {
 	private $wp_factory;
 
 	/**
-	 * @param Common\WpFactoryInterface $wp_factory (Optional)
+	 * @var Common\SimpleXmlTools
 	 */
-	public function __construct( Common\WpFactoryInterface $wp_factory = NULL ) {
+	private $xml_tools;
+
+	/**
+	 * @param Common\WpFactoryInterface|NULL $wp_factory
+	 * @param Common\SimpleXmlTools|NULL $xml_tools
+	 */
+	public function __construct(
+		Common\WpFactoryInterface $wp_factory = NULL,
+		Common\SimpleXmlTools $xml_tools = NULL
+	) {
 
 		$this->wp_factory = $wp_factory
 			? $wp_factory
 			: new Common\WpFactory;
+
+		$this->xml_tools = $xml_tools
+			? $xml_tools
+			: new Common\SimpleXmlTools;
 	}
 
 	/**
@@ -169,7 +181,139 @@ class WpPostParser implements PostParserInterface {
 			$this->missing_attribute_error( $document, 'date' );
 		}
 
+		$post_data[ 'terms' ]            = $this->parse_post_terms( $document );
+		$post_data[ 'meta' ]             = $this->parse_post_meta( $document );
+		$post_data[ 'locale_relations' ] = $this->parse_locale_relations( $document );
+
 		return new Type\WpImportPost( $post_data );
+	}
+
+	/**
+	 * Access to this method is public for better testability. It will not
+	 * raise errors on missing namespaces or general XML structure errors.
+	 *
+	 * @param SimpleXMLElement $document
+	 *
+	 * @return array
+	 */
+	public function parse_post_terms( SimpleXMLElement $document ) {
+
+		$terms = array();
+		if ( ! isset( $document->item ) )
+			return $terms;
+
+		foreach ( $document->item->category as $term ) {
+			if ( ! isset( $term[ 'domain' ] ) ) {
+				$this->missing_attribute_error( $document, 'category[@domain]' );
+				continue;
+			}
+			if ( ! isset( $term[ 'term_id' ] ) ) {
+				$this->missing_attribute_error( $document, 'category[@term_id]' );
+				continue;
+			}
+
+			$terms[] = new Type\WpTermReference(
+				(int) $term[ 'term_id' ],
+				(string) $term[ 'domain' ]
+			);
+		}
+
+		return $terms;
+	}
+
+
+	/**
+	 * Access to this method is public for better testability. It will not
+	 * raise errors on missing namespaces or general XML structure errors.
+	 *
+	 * @param SimpleXMLElement $document
+	 *
+	 * @return array
+	 */
+	public function parse_post_meta( SimpleXMLElement $document ) {
+
+		$meta_data  = array();
+		$wp_ns      = $this->xml_tools->get_doc_namespace( $document, 'wp' );
+		if ( ! $wp_ns )
+			return $meta_data;
+
+		if ( ! isset( $document->item ) )
+			return $meta_data;
+
+		/* @type SimpleXMLElement $wp */
+		$wp = $document->item->children( $wp_ns );
+		foreach ( $wp->postmeta as $post_meta ) {
+			if ( ! isset( $post_meta->meta_key ) ) {
+				$this->missing_attribute_error( $document, 'wp:meta_key' );
+				continue;
+			}
+			if ( ! isset( $post_meta->meta_value ) ) {
+				$this->missing_attribute_error( $document, 'wp:meta_value' );
+				continue;
+			}
+			$meta_key = (string) $post_meta->meta_key;
+			$meta_value = maybe_unserialize( (string) $post_meta->meta_value );
+			if ( ! isset( $meta_data[ $meta_key ] ) ) {
+				$meta_data[ $meta_key ] = array(
+					'values' => array( $meta_value ),
+					'is_single' => TRUE
+				);
+				continue;
+			}
+
+			$meta_data[ $meta_key ][ 'values' ][] = $meta_value;
+			if ( $meta_data[ $meta_key ][ 'is_single' ] )
+				$meta_data[ $meta_key ][ 'is_single' ] = FALSE;
+		}
+
+		$meta_objects = array();
+		foreach ( $meta_data as $key => $structure ) {
+			$is_single = $structure[ 'is_single' ];
+			$value = $is_single
+				? current( $structure[ 'values' ] )
+				: $structure[ 'values' ];
+			$meta_objects[] = new Type\WpImportMeta( $key, $value, $is_single );
+		}
+
+		return $meta_objects;
+	}
+
+	/**
+	 * Access to this method is public for better testability. It will not
+	 * raise errors on missing namespaces or general XML structure errors.
+	 *
+	 * @param SimpleXMLElement $document
+	 *
+	 * @return array
+	 */
+	public function parse_locale_relations( SimpleXMLElement $document ) {
+
+		$locale_relations  = array();
+		$wp_ns             = $this->xml_tools->get_doc_namespace( $document, 'wp' );
+		if ( ! $wp_ns )
+			return $locale_relations;
+
+		if ( ! isset( $document->item ) )
+			return $locale_relations;
+
+		/* @type SimpleXMLElement $wp */
+		$wp = $document->item->children( $wp_ns );
+		foreach ( $wp->translation as $translation ) {
+			if ( ! isset( $translation->element_id ) ) {
+				$this->missing_attribute_error( $document, 'wp:translation/wp:element_id' );
+				continue;
+			}
+			if ( ! isset( $translation->locale ) ) {
+				$this->missing_attribute_error( $document, 'wp:translation/wp:locale' );
+				continue;
+			}
+			$locale_relations[] = new Type\LocaleRelation(
+				(string) $translation->locale,
+				(int) $translation->element_id
+			);
+		}
+
+		return $locale_relations;
 	}
 
 	/**
@@ -220,6 +364,10 @@ class WpPostParser implements PostParserInterface {
 		$this->propagate_error( $error );
 	}
 
+	/**
+	 * @param SimpleXMLElement $document
+	 * @param $attribute
+	 */
 	private function missing_attribute_error( SimpleXMLElement $document, $attribute ) {
 
 		$error = $this->wp_factory->wp_error(

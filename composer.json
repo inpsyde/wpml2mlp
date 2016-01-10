@@ -19,7 +19,8 @@
     "docs": "https://github.com/inpsyde/wpml2mlp"
   },
   "require": {
-    "php": ">5.3.0"
+    "php": ">5.3.0",
+    "monolog/monolog": "~1.17"
   },
   "autoload": {
     "psr-4": {

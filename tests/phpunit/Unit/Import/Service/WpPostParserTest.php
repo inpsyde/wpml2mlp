@@ -4,6 +4,7 @@ namespace W2M\Test\Unit\Import\Service;
 
 use
 	W2M\Import\Service,
+	W2M\Import\Type,
 	W2M\Test\Helper,
 	Brain,
 	SimpleXMLElement,
@@ -20,6 +21,13 @@ class WpPostParserTest extends Helper\MonkeyTestCase {
 	 * @param array $expected
 	 */
 	public function test_parse_post_valid_item( SimpleXMLElement $item, Array $expected ) {
+
+		Brain\Monkey::actions()
+			->expectFired( 'w2m_import_parse_post_error' )
+			->never();
+		Brain\Monkey::functions()
+			->when( 'maybe_unserialize' )
+			->returnArg( 1 );
 
 		$testee = new Service\WpPostParser(
 			$this->mock_builder->common_wp_factory()
@@ -51,10 +59,50 @@ class WpPostParserTest extends Helper\MonkeyTestCase {
 			$expected[ 'post' ][ 'date' ],
 			$result->date()->format( 'Y-m-d H:i:s' )
 		);
+
+		// terms
+		$this->assertInternalType(
+			'array',
+			$result->terms()
+		);
+		foreach ( $result->terms() as $term_reference ) {
+			$this->assertInstanceOf(
+				'W2M\Import\Type\TermReferenceInterface',
+				$term_reference
+			);
+		}
+
+		// meta
+		$this->assertInternalType(
+			'array',
+			$result->meta()
+		);
+		foreach ( $result->meta() as $meta ) {
+			$this->assertInstanceOf(
+				'W2M\Import\Type\ImportMetaInterface',
+				$meta
+			);
+		}
+
+		// locale relations
+		$this->assertInternalType(
+			'array',
+			$result->locale_relations()
+		);
+
+		foreach ( $result->locale_relations() as $relation ) {
+			$this->assertInstanceOf(
+				'W2M\Import\Type\LocaleRelationInterface',
+				$relation
+			);
+		}
 	}
 
 	/**
 	 * @see test_parse_post_valid_item
+	 * @see test_parse_post_terms
+	 * @see test_parse_post_meta
+	 * @see test_parse_locale_relations
 	 * @return array
 	 */
 	public function parse_post_test_data() {
@@ -106,7 +154,8 @@ class WpPostParserTest extends Helper\MonkeyTestCase {
 		<wp:post_type><![CDATA[{$post[ 'type' ]}]]></wp:post_type>
 		<wp:post_password><![CDATA[{$post[ 'password' ]}]]></wp:post_password>
 		<wp:is_sticky>{$post[ 'is_sticky' ]}</wp:is_sticky>
-		<category domain="category" nicename="ta-65-nachrichten" term_id="112"><![CDATA[TA-65 Nachrichten]]></category>
+		<category domain="category" nicename="news" term_id="112"><![CDATA[News]]></category>
+		<category domain="post_tag" nicename="some-tag" term_id="98"><![CDATA[Some tag]]></category>
 
 		<wp:postmeta>
 			<wp:meta_key><![CDATA[_edit_lock]]></wp:meta_key>
@@ -117,6 +166,26 @@ class WpPostParserTest extends Helper\MonkeyTestCase {
 			<wp:meta_key><![CDATA[_edit_last]]></wp:meta_key>
 			<wp:meta_value><![CDATA[9]]></wp:meta_value>
 		</wp:postmeta>
+
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[multiple_values]]></wp:meta_key>
+			<wp:meta_value><![CDATA[foo]]></wp:meta_value>
+		</wp:postmeta>
+
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[multiple_values]]></wp:meta_key>
+			<wp:meta_value><![CDATA[bar]]></wp:meta_value>
+		</wp:postmeta>
+
+		<wp:translation>
+			<wp:locale><![CDATA[en_US]]></wp:locale>
+			<wp:element_id>44330</wp:element_id>
+		</wp:translation>
+
+		<wp:translation>
+			<wp:locale><![CDATA[nl_NL]]></wp:locale>
+			<wp:element_id>57664</wp:element_id>
+		</wp:translation>
 	</item>
 </root>
 XML;
@@ -128,7 +197,20 @@ XML;
 			new SimpleXMLElement( $xml ),
 			# 2. Parameter
 			array(
-				'post' => $post
+				'post' => $post,
+				'terms' => array(
+					array( 'origin_id' => 112, 'taxonomy' => 'category' ),
+					array( 'origin_id' => 98, 'taxonomy' => 'post_tag' )
+				),
+				'meta' => array(
+					array( 'key' => '_edit_lock', 'value' => '1414579147:9', 'is_single' => TRUE ),
+					array( 'key' => '_edit_last', 'value' => '9', 'is_single' => TRUE ),
+					array( 'key' => 'multiple_values', 'value' => array( 'foo', 'bar' ), 'is_single' => FALSE )
+				),
+				'locale_relations' => array(
+					array( 'locale' => 'en_US', 'origin_id' => 44330 ),
+					array( 'locale' => 'nl_NL', 'origin_id' => 57664 )
+				)
 			)
 		);
 
@@ -251,5 +333,124 @@ XML;
 		);
 
 		$this->markTestIncomplete( 'Improve test, check the data passed to WP_Error' );
+	}
+
+	/**
+	 * @dataProvider parse_post_test_data
+	 *
+	 * @param SimpleXMLElement $document
+	 * @param array $expected
+	 */
+	public function test_parse_post_terms( SimpleXMLElement $document, Array $expected ) {
+
+		Brain\Monkey::actions()
+			->expectFired( 'w2m_import_parse_post_error' )
+			->never();
+
+		$testee = new Service\WpPostParser;
+		$result = $testee->parse_post_terms( $document );
+
+		$this->assertInternalType(
+			'array',
+			$result
+		);
+		// don't care about array indices
+		$result = array_values( $result );
+
+		foreach ( $result as $index => $term_reference ) {
+			/* @type Type\TermReferenceInterface $term_reference */
+			$this->assertInstanceOf(
+				'W2M\Import\Type\TermReferenceInterface',
+				$term_reference
+			);
+			$this->assertSame(
+				$expected[ 'terms' ][ $index ][ 'origin_id' ],
+				$term_reference->origin_id()
+			);
+			$this->assertSame(
+				$expected[ 'terms' ][ $index ][ 'taxonomy' ],
+				$term_reference->taxonomy()
+			);
+		}
+	}
+
+	/**
+	 * @dataProvider parse_post_test_data
+	 *
+	 * @param SimpleXMLElement $document
+	 * @param array $expected
+	 */
+	public function test_parse_post_meta( SimpleXMLElement $document, Array $expected ) {
+
+		Brain\Monkey::actions()
+			->expectFired( 'w2m_import_parse_post_error' )
+			->never();
+
+		Brain\Monkey::functions()
+			->when( 'maybe_unserialize' )
+			->returnArg( 1 );
+		$testee = new Service\WpPostParser;
+		$result = $testee->parse_post_meta( $document );
+
+		$this->assertInternalType(
+			'array',
+			$result
+		);
+
+		foreach ( $result as $index => $meta ) {
+			$this->assertInstanceOf(
+				'W2M\Import\Type\ImportMetaInterface',
+				$meta
+			);
+			$this->assertSame(
+				$expected[ 'meta' ][ $index ][ 'key' ],
+				$meta->key()
+			);
+			$this->assertSame(
+				$expected[ 'meta' ][ $index ][ 'value' ],
+				$meta->value()
+			);
+			$this->assertSame(
+				$expected[ 'meta' ][ $index ][ 'is_single' ],
+				$meta->is_single()
+			);
+
+		}
+	}
+
+	/**
+	 * @dataProvider parse_post_test_data
+	 *
+	 * @param SimpleXMLElement $document
+	 * @param array $expected
+	 */
+	public function test_parse_locale_relations( SimpleXMLElement $document, Array $expected ) {
+
+		Brain\Monkey::actions()
+			->expectFired( 'w2m_import_parse_post_error' )
+			->never();
+
+		$testee = new Service\WpPostParser;
+		$result = $testee->parse_locale_relations( $document );
+
+		$this->assertInternalType(
+			'array',
+			$result
+		);
+
+		foreach ( $result as $index => $relation ) {
+			$this->assertInstanceOf(
+				'W2M\Import\Type\LocaleRelationInterface',
+				$relation
+			);
+			$this->assertSame(
+				$expected[ 'locale_relations' ][ $index ][ 'origin_id' ],
+				$relation->origin_id()
+			);
+			$this->assertSame(
+				$expected[ 'locale_relations' ][ $index ][ 'locale' ],
+				$relation->locale()
+			);
+		}
 	}
 }

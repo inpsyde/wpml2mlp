@@ -2,7 +2,30 @@
 
 namespace W2M\Import\Type;
 
-interface ImportUserInterface {
+interface ImportUserInterface extends ImportElementInterface {
 
-	// Todo: specify the methods
+	/**
+	 * @return string
+	 */
+	public function login();
+
+	/**
+	 * @return string
+	 */
+	public function email();
+
+	/**
+	 * @return string
+	 */
+	public function first_name();
+
+	/**
+	 * @return string
+	 */
+	public function last_name();
+
+	/**
+	 * @return string
+	 */
+	public function display_name();
 }
