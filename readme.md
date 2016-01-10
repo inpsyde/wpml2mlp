@@ -37,7 +37,8 @@ Use the installer via back-end of your install or ...
  4. Multisite: Activate the plugin through the **Network/Plugins** menu in WordPress and click **Network Activate**.
  5. Go to **Settings** on Multisite or **Tools** on single site, **WPML2MLP**, then start the export of the current WPML stuff.
 
-## Action & Filter Reference
+## Action & Filter 
+###Actions
 * `w2m_import_term_error` in `W2M\Import\Service::import_term()`
 * `w2m_term_imported` in `W2M\Import\Service::import_term()`
 * `w2m_import_parse_term_error` in `W2M\Import\Service\WpTermParser::propagate_error()`
