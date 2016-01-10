@@ -364,6 +364,10 @@ class WpPostParser implements PostParserInterface {
 		$this->propagate_error( $error );
 	}
 
+	/**
+	 * @param SimpleXMLElement $document
+	 * @param $attribute
+	 */
 	private function missing_attribute_error( SimpleXMLElement $document, $attribute ) {
 
 		$error = $this->wp_factory->wp_error(
