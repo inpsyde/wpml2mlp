@@ -22,6 +22,13 @@ class WpPostParserTest extends Helper\MonkeyTestCase {
 	 */
 	public function test_parse_post_valid_item( SimpleXMLElement $item, Array $expected ) {
 
+		Brain\Monkey::actions()
+			->expectFired( 'w2m_import_parse_post_error' )
+			->never();
+		Brain\Monkey::functions()
+			->when( 'maybe_unserialize' )
+			->returnArg( 1 );
+
 		$testee = new Service\WpPostParser(
 			$this->mock_builder->common_wp_factory()
 		);
@@ -53,15 +60,27 @@ class WpPostParserTest extends Helper\MonkeyTestCase {
 			$result->date()->format( 'Y-m-d H:i:s' )
 		);
 
+		// terms
+		$this->assertInternalType(
+			'array',
+			$result->terms()
+		);
+		foreach ( $result->terms() as $term_reference ) {
+			$this->assertInstanceOf(
+				'W2M\Import\Type\TermReferenceInterface',
+				$term_reference
+			);
+		}
+
 		// meta
 		$this->assertInternalType(
 			'array',
 			$result->meta()
 		);
-		foreach ( $result->meta() as $term_reference ) {
+		foreach ( $result->meta() as $meta ) {
 			$this->assertInstanceOf(
-				'W2M\Import\Type\TermReferenceInterface',
-				$term_reference
+				'W2M\Import\Type\ImportMetaInterface',
+				$meta
 			);
 		}
 	}
@@ -69,6 +88,7 @@ class WpPostParserTest extends Helper\MonkeyTestCase {
 	/**
 	 * @see test_parse_post_valid_item
 	 * @see test_parse_post_terms
+	 * @see test_parse_post_meta
 	 * @return array
 	 */
 	public function parse_post_test_data() {
@@ -132,6 +152,26 @@ class WpPostParserTest extends Helper\MonkeyTestCase {
 			<wp:meta_key><![CDATA[_edit_last]]></wp:meta_key>
 			<wp:meta_value><![CDATA[9]]></wp:meta_value>
 		</wp:postmeta>
+
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[multiple_values]]></wp:meta_key>
+			<wp:meta_value><![CDATA[foo]]></wp:meta_value>
+		</wp:postmeta>
+
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[multiple_values]]></wp:meta_key>
+			<wp:meta_value><![CDATA[bar]]></wp:meta_value>
+		</wp:postmeta>
+
+		<wp:translation>
+			<wp:locale><![CDATA[en_US]]></wp:locale>
+			<wp:element_id>44330</wp:element_id>
+		</wp:translation>
+
+		<wp:translation>
+			<wp:locale><![CDATA[nl_NL]]></wp:locale>
+			<wp:element_id>57664</wp:element_id>
+		</wp:translation>
 	</item>
 </root>
 XML;
@@ -147,6 +187,11 @@ XML;
 				'terms' => array(
 					array( 'origin_id' => 112, 'taxonomy' => 'category' ),
 					array( 'origin_id' => 98, 'taxonomy' => 'post_tag' )
+				),
+				'meta' => array(
+					array( 'key' => '_edit_lock', 'value' => '1414579147:9', 'is_single' => TRUE ),
+					array( 'key' => '_edit_last', 'value' => '9', 'is_single' => TRUE ),
+					array( 'key' => 'multiple_values', 'value' => array( 'foo', 'bar' ), 'is_single' => FALSE )
 				)
 			)
 		);
@@ -308,6 +353,50 @@ XML;
 				$expected[ 'terms' ][ $index ][ 'taxonomy' ],
 				$term_reference->taxonomy()
 			);
+		}
+	}
+
+	/**
+	 * @dataProvider parse_post_test_data
+	 *
+	 * @param SimpleXMLElement $document
+	 * @param array $expected
+	 */
+	public function test_parse_post_meta( SimpleXMLElement $document, Array $expected ) {
+
+		Brain\Monkey::actions()
+			->expectFired( 'w2m_import_parse_post_error' )
+			->never();
+
+		Brain\Monkey::functions()
+			->when( 'maybe_unserialize' )
+			->returnArg( 1 );
+		$testee = new Service\WpPostParser;
+		$result = $testee->parse_post_meta( $document );
+
+		$this->assertInternalType(
+			'array',
+			$result
+		);
+
+		foreach ( $result as $index => $meta ) {
+			$this->assertInstanceOf(
+				'W2M\Import\Type\ImportMetaInterface',
+				$meta
+			);
+			$this->assertSame(
+				$expected[ 'meta' ][ $index ][ 'key' ],
+				$meta->key()
+			);
+			$this->assertSame(
+				$expected[ 'meta' ][ $index ][ 'value' ],
+				$meta->value()
+			);
+			$this->assertSame(
+				$expected[ 'meta' ][ $index ][ 'is_single' ],
+				$meta->is_single()
+			);
+
 		}
 	}
 }
