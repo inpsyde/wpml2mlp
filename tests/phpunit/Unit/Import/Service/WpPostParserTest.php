@@ -4,6 +4,7 @@ namespace W2M\Test\Unit\Import\Service;
 
 use
 	W2M\Import\Service,
+	W2M\Import\Type,
 	W2M\Test\Helper,
 	Brain,
 	SimpleXMLElement,
@@ -51,10 +52,23 @@ class WpPostParserTest extends Helper\MonkeyTestCase {
 			$expected[ 'post' ][ 'date' ],
 			$result->date()->format( 'Y-m-d H:i:s' )
 		);
+
+		// meta
+		$this->assertInternalType(
+			'array',
+			$result->meta()
+		);
+		foreach ( $result->meta() as $term_reference ) {
+			$this->assertInstanceOf(
+				'W2M\Import\Type\TermReferenceInterface',
+				$term_reference
+			);
+		}
 	}
 
 	/**
 	 * @see test_parse_post_valid_item
+	 * @see test_parse_post_terms
 	 * @return array
 	 */
 	public function parse_post_test_data() {
@@ -106,7 +120,8 @@ class WpPostParserTest extends Helper\MonkeyTestCase {
 		<wp:post_type><![CDATA[{$post[ 'type' ]}]]></wp:post_type>
 		<wp:post_password><![CDATA[{$post[ 'password' ]}]]></wp:post_password>
 		<wp:is_sticky>{$post[ 'is_sticky' ]}</wp:is_sticky>
-		<category domain="category" nicename="ta-65-nachrichten" term_id="112"><![CDATA[TA-65 Nachrichten]]></category>
+		<category domain="category" nicename="news" term_id="112"><![CDATA[News]]></category>
+		<category domain="post_tag" nicename="some-tag" term_id="98"><![CDATA[Some tag]]></category>
 
 		<wp:postmeta>
 			<wp:meta_key><![CDATA[_edit_lock]]></wp:meta_key>
@@ -128,7 +143,11 @@ XML;
 			new SimpleXMLElement( $xml ),
 			# 2. Parameter
 			array(
-				'post' => $post
+				'post' => $post,
+				'terms' => array(
+					array( 'origin_id' => 112, 'taxonomy' => 'category' ),
+					array( 'origin_id' => 98, 'taxonomy' => 'post_tag' )
+				)
 			)
 		);
 
@@ -251,5 +270,44 @@ XML;
 		);
 
 		$this->markTestIncomplete( 'Improve test, check the data passed to WP_Error' );
+	}
+
+	/**
+	 * @dataProvider parse_post_test_data
+	 *
+	 * @param SimpleXMLElement $document
+	 * @param array $expected
+	 */
+	public function test_parse_post_terms( SimpleXMLElement $document, Array $expected ) {
+
+		Brain\Monkey::actions()
+			->expectFired( 'w2m_import_parse_post_error' )
+			->never();
+
+		$testee = new Service\WpPostParser;
+		$result = $testee->parse_post_terms( $document );
+
+		$this->assertInternalType(
+			'array',
+			$result
+		);
+		// don't care about array indices
+		$result = array_values( $result );
+
+		foreach ( $result as $index => $term_reference ) {
+			/* @type Type\TermReferenceInterface $term_reference */
+			$this->assertInstanceOf(
+				'W2M\Import\Type\TermReferenceInterface',
+				$term_reference
+			);
+			$this->assertSame(
+				$expected[ 'terms' ][ $index ][ 'origin_id' ],
+				$term_reference->origin_id()
+			);
+			$this->assertSame(
+				$expected[ 'terms' ][ $index ][ 'taxonomy' ],
+				$term_reference->taxonomy()
+			);
+		}
 	}
 }

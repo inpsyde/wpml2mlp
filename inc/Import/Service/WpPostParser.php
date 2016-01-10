@@ -8,8 +8,7 @@ use
 	SimpleXMLElement,
 	DateTime,
 	DateTimeZone,
-	WP_Error,
-	stdClass;
+	WP_Error;
 
 class WpPostParser implements PostParserInterface {
 
@@ -24,13 +23,26 @@ class WpPostParser implements PostParserInterface {
 	private $wp_factory;
 
 	/**
-	 * @param Common\WpFactoryInterface $wp_factory (Optional)
+	 * @var Common\SimpleXmlTools
 	 */
-	public function __construct( Common\WpFactoryInterface $wp_factory = NULL ) {
+	private $xml_tools;
+
+	/**
+	 * @param Common\WpFactoryInterface|NULL $wp_factory
+	 * @param Common\SimpleXmlTools|NULL $xml_tools
+	 */
+	public function __construct(
+		Common\WpFactoryInterface $wp_factory = NULL,
+		Common\SimpleXmlTools $xml_tools = NULL
+	) {
 
 		$this->wp_factory = $wp_factory
 			? $wp_factory
 			: new Common\WpFactory;
+
+		$this->xml_tools = $xml_tools
+			? $xml_tools
+			: new Common\SimpleXmlTools;
 	}
 
 	/**
@@ -169,8 +181,44 @@ class WpPostParser implements PostParserInterface {
 			$this->missing_attribute_error( $document, 'date' );
 		}
 
+		$post_data[ 'terms' ] = $this->parse_post_terms( $document );
+
 		return new Type\WpImportPost( $post_data );
 	}
+
+	/**
+	 * Access to this method is public for better testability. It will not
+	 * raise errors on missing namespaces or general XML structure errors.
+	 *
+	 * @param SimpleXMLElement $document
+	 *
+	 * @return array
+	 */
+	public function parse_post_terms( SimpleXMLElement $document ) {
+
+		$terms = array();
+		if ( ! isset( $document->item ) )
+			return $terms;
+
+		foreach ( $document->item->category as $term ) {
+			if ( ! isset( $term[ 'domain' ] ) ) {
+				$this->missing_attribute_error( $document, 'category[@domain]' );
+				continue;
+			}
+			if ( ! isset( $term[ 'term_id' ] ) ) {
+				$this->missing_attribute_error( $document, 'category[@term_id]' );
+				continue;
+			}
+
+			$terms[] = new Type\WpTermReference(
+				(int) $term[ 'term_id' ],
+				(string) $term[ 'domain' ]
+			);
+		}
+
+		return $terms;
+	}
+
 
 	/**
 	 * @param SimpleXMLElement $document
