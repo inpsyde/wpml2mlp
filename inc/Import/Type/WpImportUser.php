@@ -39,7 +39,10 @@ class WpImportUser implements ImportUserInterface {
 		Common\ParameterSanitizerInterface $param_sanitizer = NULL
 	) {
 
-		$this->param_sanitizer = $param_sanitizer;
+		$this->param_sanitizer = $param_sanitizer
+			? $param_sanitizer
+			: new Common\TypeCastParameterSanitizer;
+
 		$this->set_attributes( $attributes );
 	}
 
