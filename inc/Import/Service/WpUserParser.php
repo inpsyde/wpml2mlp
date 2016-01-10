@@ -1,0 +1,133 @@
+<?php # -*- coding: utf-8 -*-
+
+namespace W2M\Import\Service;
+
+use
+	W2M\Import\Type,
+	W2M\Import\Common,
+	WP_Error,
+	SimpleXMLElement;
+
+class WpUserParser implements UserParserInterface {
+
+	/**
+	 * @var Common\WpFactoryInterface
+	 */
+	private $wp_factory;
+
+	/**
+	 * @var Common\SimpleXmlTools
+	 */
+	private $xml_tools;
+
+	/**
+	 * @param Common\WpFactoryInterface|NULL $wp_factory
+	 * @param Common\SimpleXmlTools|NULL $xml_tools
+	 */
+	public function __construct(
+		Common\WpFactoryInterface $wp_factory = NULL,
+		Common\SimpleXmlTools $xml_tools = NULL
+	) {
+
+		$this->wp_factory = $wp_factory
+			? $wp_factory
+			: new Common\WpFactory;
+
+		$this->xml_tools = $xml_tools
+			? $xml_tools
+			: new Common\SimpleXmlTools;
+	}
+
+	/**
+	 * @param SimpleXMLElement $element
+	 *
+	 * @return Type\ImportUserInterface
+	 */
+	public function parse_user( SimpleXMLElement $element ) {
+
+		//Todo
+	}
+
+
+	/**
+	 * @param SimpleXMLElement $document
+	 * @param string $item (Optional)
+	 */
+	private function missing_item_error( SimpleXMLElement $document, $item = 'item' ) {
+
+		$error = $this->wp_factory->wp_error(
+			'item',
+			"Missing item node '{$item}' in XML user node"
+		);
+		$error->add_data(
+			'item',
+			array(
+				'trigger' => __CLASS__,
+				'data'    => array(
+					'document'  => $document,
+					'item'      => $item
+				)
+			)
+		);
+
+		$this->propagate_error( $error );
+	}
+
+	/**
+	 * @param SimpleXMLElement $document
+	 * @param $namespace
+	 */
+	private function missing_namespace_error( SimpleXMLElement $document, $namespace ) {
+
+		$error = $this->wp_factory->wp_error(
+			'namespace',
+			"Missing namespace '{$namespace}' in XML user node"
+		);
+		$error->add_data(
+			'namespace',
+			array(
+				'trigger' => __CLASS__,
+				'data'    => array(
+					'document'  => $document,
+					'namespace' => $namespace
+				)
+			)
+		);
+
+		$this->propagate_error( $error );
+	}
+
+	/**
+	 * @param SimpleXMLElement $document
+	 * @param $attribute
+	 */
+	private function missing_attribute_error( SimpleXMLElement $document, $attribute ) {
+
+		$error = $this->wp_factory->wp_error(
+			'attribute',
+			"Missing attribute '{$attribute}' in XML user node"
+		);
+		$error->add_data(
+			'attribute',
+			array(
+				'trigger' => __CLASS__,
+				'data'    => array(
+					'document'  => $document,
+					'attribute' => $attribute
+				)
+			)
+		);
+
+		$this->propagate_error( $error );
+	}
+
+	/**
+	 * Fires the action w2m_import_parse_user_error
+	 *
+	 * @param WP_Error $error
+	 */
+	private function propagate_error( WP_Error $error ) {
+
+		do_action( 'w2m_import_parse_user_error', $error );
+	}
+}
