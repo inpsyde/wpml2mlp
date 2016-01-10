@@ -239,8 +239,17 @@ class WpPostParser implements PostParserInterface {
 		if ( ! isset( $document->item ) )
 			return $meta_data;
 
+		/* @type SimpleXMLElement $wp */
 		$wp = $document->item->children( $wp_ns );
 		foreach ( $wp->postmeta as $post_meta ) {
+			if ( ! isset( $post_meta->meta_key ) ) {
+				$this->missing_attribute_error( $document, 'wp:meta_key' );
+				continue;
+			}
+			if ( ! isset( $post_meta->meta_value ) ) {
+				$this->missing_attribute_error( $document, 'wp:meta_value' );
+				continue;
+			}
 			$meta_key = (string) $post_meta->meta_key;
 			$meta_value = maybe_unserialize( (string) $post_meta->meta_value );
 			if ( ! isset( $meta_data[ $meta_key ] ) ) {
