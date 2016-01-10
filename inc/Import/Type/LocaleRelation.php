@@ -20,7 +20,7 @@ class LocaleRelation implements LocaleRelationInterface {
 	 */
 	public function __construct( $locale, $origin_id ) {
 
-		$this->locale = (string) $locale;
+		$this->locale    = (string) $locale;
 		$this->origin_id = (int) $origin_id;
 	}
 
