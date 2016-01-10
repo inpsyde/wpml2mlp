@@ -197,8 +197,13 @@ class WpImportPost implements ImportPostInterface {
 						'W2M\Import\Type\ImportMetaInterface'
 					);
 			}
-
-			// Todo: handle locale relations
+			if ( 'locale_relations' === $key ) {
+				$valid_attributes[ $key ] = $this->param_sanitizer
+					->sanitize_object_list(
+						$valid_attributes[ $key ],
+						'W2M\Import\Type\LocaleRelationInterface'
+					);
+			}
 
 			$this->{$key} = $valid_attributes[ $key ];
 		}
