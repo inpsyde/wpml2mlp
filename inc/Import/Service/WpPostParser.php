@@ -181,8 +181,9 @@ class WpPostParser implements PostParserInterface {
 			$this->missing_attribute_error( $document, 'date' );
 		}
 
-		$post_data[ 'terms' ] = $this->parse_post_terms( $document );
-		$post_data[ 'meta' ]  = $this->parse_post_meta( $document );
+		$post_data[ 'terms' ]            = $this->parse_post_terms( $document );
+		$post_data[ 'meta' ]             = $this->parse_post_meta( $document );
+		$post_data[ 'locale_relations' ] = $this->parse_locale_relations( $document );
 
 		return new Type\WpImportPost( $post_data );
 	}
@@ -275,6 +276,44 @@ class WpPostParser implements PostParserInterface {
 		}
 
 		return $meta_objects;
+	}
+
+	/**
+	 * Access to this method is public for better testability. It will not
+	 * raise errors on missing namespaces or general XML structure errors.
+	 *
+	 * @param SimpleXMLElement $document
+	 *
+	 * @return array
+	 */
+	public function parse_locale_relations( SimpleXMLElement $document ) {
+
+		$locale_relations  = array();
+		$wp_ns             = $this->xml_tools->get_doc_namespace( $document, 'wp' );
+		if ( ! $wp_ns )
+			return $locale_relations;
+
+		if ( ! isset( $document->item ) )
+			return $locale_relations;
+
+		/* @type SimpleXMLElement $wp */
+		$wp = $document->item->children( $wp_ns );
+		foreach ( $wp->translation as $translation ) {
+			if ( ! isset( $translation->element_id ) ) {
+				$this->missing_attribute_error( $document, 'wp:translation/wp:element_id' );
+				continue;
+			}
+			if ( ! isset( $translation->locale ) ) {
+				$this->missing_attribute_error( $document, 'wp:translation/wp:locale' );
+				continue;
+			}
+			$locale_relations[] = new Type\LocaleRelation(
+				(string) $translation->locale,
+				(int) $translation->element_id
+			);
+		}
+
+		return $locale_relations;
 	}
 
 	/**

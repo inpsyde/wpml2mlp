@@ -83,12 +83,26 @@ class WpPostParserTest extends Helper\MonkeyTestCase {
 				$meta
 			);
 		}
+
+		// locale relations
+		$this->assertInternalType(
+			'array',
+			$result->locale_relations()
+		);
+
+		foreach ( $result->locale_relations() as $relation ) {
+			$this->assertInstanceOf(
+				'W2M\Import\Type\LocaleRelationInterface',
+				$relation
+			);
+		}
 	}
 
 	/**
 	 * @see test_parse_post_valid_item
 	 * @see test_parse_post_terms
 	 * @see test_parse_post_meta
+	 * @see test_parse_locale_relations
 	 * @return array
 	 */
 	public function parse_post_test_data() {
@@ -192,6 +206,10 @@ XML;
 					array( 'key' => '_edit_lock', 'value' => '1414579147:9', 'is_single' => TRUE ),
 					array( 'key' => '_edit_last', 'value' => '9', 'is_single' => TRUE ),
 					array( 'key' => 'multiple_values', 'value' => array( 'foo', 'bar' ), 'is_single' => FALSE )
+				),
+				'locale_relations' => array(
+					array( 'locale' => 'en_US', 'origin_id' => 44330 ),
+					array( 'locale' => 'nl_NL', 'origin_id' => 57664 )
 				)
 			)
 		);
@@ -397,6 +415,42 @@ XML;
 				$meta->is_single()
 			);
 
+		}
+	}
+
+	/**
+	 * @dataProvider parse_post_test_data
+	 *
+	 * @param SimpleXMLElement $document
+	 * @param array $expected
+	 */
+	public function test_parse_locale_relations( SimpleXMLElement $document, Array $expected ) {
+
+		Brain\Monkey::actions()
+			->expectFired( 'w2m_import_parse_post_error' )
+			->never();
+
+		$testee = new Service\WpPostParser;
+		$result = $testee->parse_locale_relations( $document );
+
+		$this->assertInternalType(
+			'array',
+			$result
+		);
+
+		foreach ( $result as $index => $relation ) {
+			$this->assertInstanceOf(
+				'W2M\Import\Type\LocaleRelationInterface',
+				$relation
+			);
+			$this->assertSame(
+				$expected[ 'locale_relations' ][ $index ][ 'origin_id' ],
+				$relation->origin_id()
+			);
+			$this->assertSame(
+				$expected[ 'locale_relations' ][ $index ][ 'locale' ],
+				$relation->locale()
+			);
 		}
 	}
 }
