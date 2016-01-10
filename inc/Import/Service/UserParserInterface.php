@@ -11,7 +11,7 @@ interface UserParserInterface {
 	/**
 	 * @param SimpleXMLElement $element
 	 *
-	 * @return Type\ImportUserInterface
+	 * @return Type\ImportUserInterface|NULL
 	 */
 	public function parse_user( SimpleXMLElement $element );
 }

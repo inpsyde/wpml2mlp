@@ -39,13 +39,53 @@ class WpUserParser implements UserParserInterface {
 	}
 
 	/**
-	 * @param SimpleXMLElement $element
+	 * @param SimpleXMLElement $document
 	 *
-	 * @return Type\ImportUserInterface
+	 * @return Type\ImportUserInterface|NULL
 	 */
-	public function parse_user( SimpleXMLElement $element ) {
+	public function parse_user( SimpleXMLElement $document ) {
 
-		//Todo
+		$doc_ns = $document->getDocNamespaces();
+		if ( ! isset( $doc_ns[ 'wp' ] ) ) {
+			$this->missing_namespace_error( $doc_ns, 'wp' );
+			return;
+		}
+
+		/* @type SimpleXMLElement $wp */
+		$wp = $document->children( $doc_ns[ 'wp' ] );
+		if ( ! isset( $wp->author ) ) {
+			$this->missing_item_error( $document, 'wp:author' );
+			return;
+		}
+
+		$attributes = array(
+			'author_id'           => 'origin_id',
+			'author_login'        => 'login',
+			'author_email'        => 'email',
+			'author_first_name'   => 'first_name',
+			'author_last_name'    => 'last_name',
+			'author_display_name' => 'display_name'
+		);
+
+		$user_data = array();
+		foreach ( $attributes as $node => $method ) {
+			if ( ! isset( $wp->author->{$node} ) ) {
+				$this->missing_attribute_error( $document, "wp:{$node}" );
+				continue;
+			}
+			$value = 'origin_id' === $method
+				? (int) $wp->author->{$node}
+				: (string) $wp->author->{$node};
+
+			$user_data[ $method ] = $value;
+		}
+
+		//these two are mandatory
+		if ( ! isset( $user_data[ 'login' ] ) || ! isset( $user_data[ 'email' ] ) ) {
+			return;
+		}
+
+		return new Type\WpImportUser( $user_data );
 	}
 
 
