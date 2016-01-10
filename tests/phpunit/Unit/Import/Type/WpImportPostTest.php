@@ -121,10 +121,7 @@ class WpImportPostTest extends Helper\MonkeyTestCase {
 				'password'              => 'Top Secret!',
 				'terms'                 => array( $this->mock_builder->type_wp_term_reference() ),
 				'meta'                  => array( $this->mock_builder->type_wp_import_meta() ),
-				'locale_relations'      => array(
-					'en_GB' => 422,
-					'fr_BE' => 45
-				)
+				'locale_relations'      => array( $this->mock_builder->type_locale_relation() )
 			)
 		);
 

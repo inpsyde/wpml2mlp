@@ -36,6 +36,16 @@ class MockBuilder {
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
+	public function type_locale_relation( Array $methods = array() ) {
+
+		return $this->mock_without_constructor( 'W2M\Import\Type\LocaleRelation', $methods );
+	}
+
+	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
 	public function type_wp_term_reference( Array $methods = array() ) {
 
 		return $this->mock_without_constructor( 'W2M\Import\Type\WpTermReference', $methods );
