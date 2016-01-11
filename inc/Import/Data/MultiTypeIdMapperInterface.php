@@ -2,19 +2,20 @@
 
 namespace W2M\Import\Data;
 
-interface IdMapperInterface {
+interface MultiTypeIdMapperInterface {
 
 	/**
 	 * @param string $type
 	 * @param int $local_id
 	 * @return int
 	 */
-	public function remote_id( $type, $local_id );
+	public function origin_id( $type, $local_id );
 
 	/**
 	 * @param string $type
-	 * @param int $remote_id
+	 * @param int $origin_id
+	 *
 	 * @return int
 	 */
-	public function local_id( $type, $remote_id );
+	public function local_id( $type, $origin_id );
 }
