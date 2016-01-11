@@ -54,21 +54,22 @@ class WpPostImporter implements PostImporterInterface {
 		$post->locale_relations();
 
 		$postdata = array(
-			'post_content'   => $post->content(),
-			'post_name'      => $post->name(),
-			'post_title'     => $post->title(),
-			'post_status'    => $post->status(),
-			'post_type'      => $post->type(),
-			'post_author'    => $post->origin_author_id(),
-			'ping_status'    => $post->ping_status(),
-			'post_parent'    => $post->origin_parent_post_id(),
-			'menu_order'     => $post->menu_order(),
-			'post_password'  => $post->password(),
-			'guid'           => $post->guid(),
-			'post_excerpt'   => $post->excerpt(),
-			'post_date'      => $post->date(),
-			'comment_status' => $post->comment_status()
+			'post_title'            => $post->title(),
+			'post_author'           => $post->origin_author_id(),
+			'ping_status'           => $post->status(),
+			'guid'                  => $post->guid(),
+			'post_date'             => $post->date(),
+			'comment_status'        => $post->comment_status(),
+			'ping_status'           => $post->ping_status(),
+			'post_type'             => $post->type(),
+			'post_excerpt'          => $post->excerpt(),
+			'post_content'          => $post->content(),
+			'post_name'             => $post->name(),
+			'post_parent'           => $post->origin_parent_post_id(),
+			'menu_order'            => $post->menu_order(),
+			'post_password'         => $post->password(),
 		);
+
 
 		$post_id = wp_insert_post( $postdata, TRUE );
 
@@ -78,8 +79,6 @@ class WpPostImporter implements PostImporterInterface {
 		 * @param Type\ImportPostInterface $post
 		 */
 		#do_action( 'w2m_import_post_error', $error, $post );
-
-		print_r( get_post( $post_id ) );
 
 		#$wp_post = get_post( $post_id );
 		//Todo: Fire this action, when the origin_post_parent_id() cannot be resolved by the id_mapper
