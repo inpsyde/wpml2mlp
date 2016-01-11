@@ -2,8 +2,11 @@
 
 namespace W2M\Import\Service;
 
-use W2M\Import\Data;
-use W2M\Import\Type;
+use
+	W2M\Import\Data,
+	W2M\Import\Type,
+	WP_Post,
+	WP_Error;
 
 class WpPostImporter implements PostImporterInterface {
 
@@ -69,8 +72,29 @@ class WpPostImporter implements PostImporterInterface {
 
 		$post_id = wp_insert_post( $postdata, TRUE );
 
+		//Todo: Fire this action, when the result is an WP_Error and return.
+		/**
+		 * @param WP_Error $error
+		 * @param Type\ImportPostInterface $post
+		 */
+		#do_action( 'w2m_import_post_error', $error, $post );
 
 		print_r( get_post( $post_id ) );
+
+		#$wp_post = get_post( $post_id );
+		//Todo: Fire this action, when the origin_post_parent_id() cannot be resolved by the id_mapper
+
+		/**
+		 * @param WP_Post $wp_post
+		 * @param Type\ImportPostInterface $post
+		 */
+		#do_action( 'w2m_import_missing_post_ancestor', $wp_post, $post );
+
+		/**
+		 * @param WP_Post $wp_post
+		 * @param Type\ImportPostInterface $post
+		 */
+		# do_action( 'w2m_post_imported', $wp_post, $post );
 
 	}
 
