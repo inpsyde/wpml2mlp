@@ -20,7 +20,8 @@
   },
   "require": {
     "php": ">5.4.0",
-    "monolog/monolog": "~1.17"
+    "monolog/monolog": "~1.17",
+    "level-2/dice": "dev-v2.0-PHP5.4-5.5"
   },
   "autoload": {
     "psr-4": {
