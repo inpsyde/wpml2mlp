@@ -51,6 +51,8 @@ class WpPostImporter implements PostImporterInterface {
 	 */
 	public function import_post( Type\ImportPostInterface $post ) {
 
+		$local_parent_id = $this->id_mapper->local_id( 'post', $post->origin_parent_post_id() );
+
 		$post->terms();
 		$post->meta();
 		$post->is_sticky();
@@ -69,11 +71,10 @@ class WpPostImporter implements PostImporterInterface {
 			'post_excerpt'          => $post->excerpt(),
 			'post_content'          => $post->content(),
 			'post_name'             => $post->name(),
-			'post_parent'           => $post->origin_parent_post_id(),
+			'post_parent'           => $local_parent_id,
 			'menu_order'            => $post->menu_order(),
 			'post_password'         => $post->password(),
 		);
-
 
 		$post_id = wp_insert_post( $postdata, TRUE );
 
@@ -89,9 +90,15 @@ class WpPostImporter implements PostImporterInterface {
 		}
 
 		$wp_post = get_post( $post_id, 'ARRAY_A' );
-		//Todo: Fire this action, when the origin_post_parent_id() cannot be resolved by the id_mapper
 
-		print_r( $wp_post );
+		if ( $post->origin_parent_term_id() && ! $local_parent_id ) {
+			/**
+			 * @param stdClass|WP_Term $wp_term
+			 * @param Type\ImportTermInterface $term
+			 */
+			do_action( 'w2m_import_missing_term_ancestor', $wp_term, $term );
+		}
+
 
 		/**
 		 * @param WP_Post $wp_post
