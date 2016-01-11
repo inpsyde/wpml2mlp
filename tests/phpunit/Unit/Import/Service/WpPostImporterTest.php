@@ -87,7 +87,7 @@ class WpPostImporterTest extends \PHPUnit_Framework_TestCase {
 				'en_US' => 13,
 				'fr_CH' => 32
 			)
-		)
+		);
 
 		$post = array(
 			'post_title'            => $postdata['title'],
