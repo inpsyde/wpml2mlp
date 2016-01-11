@@ -87,7 +87,7 @@ class WpPostImporterTest extends \PHPUnit_Framework_TestCase {
 				'en_US' => 13,
 				'fr_CH' => 32
 			)
-		);
+		)
 
 		$post = array(
 			'post_title'            => $postdata['title'],
@@ -131,13 +131,13 @@ class WpPostImporterTest extends \PHPUnit_Framework_TestCase {
 
 		$post_return = array(
 			'ID' => $post_id,
-            'to_ping' => FALSE,
-            'pinged' => FALSE,
-            'post_content_filtered' => FALSE,
-            'post_mime_type' => FALSE,
-            'comment_count' => 0,
-            'filter' => 'raw',
-            'ancestors' => array( 42 ),
+			'to_ping' => FALSE,
+			'pinged' => FALSE,
+			'post_content_filtered' => FALSE,
+			'post_mime_type' => FALSE,
+			'comment_count' => 0,
+			'filter' => 'raw',
+			'ancestors' => array( 42 ),
 			'post_category' => array( 1 ),
 			'tags_input' => array()
 		);

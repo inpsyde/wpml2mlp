@@ -53,6 +53,8 @@ class WpPostImporter implements PostImporterInterface {
 
 		$local_parent_id = $this->id_mapper->local_id( 'post', $post->origin_parent_post_id() );
 
+		print_r( $local_parent_id );
+
 		$post->terms();
 		$post->meta();
 		$post->is_sticky();
