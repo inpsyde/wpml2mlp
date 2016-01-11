@@ -56,9 +56,69 @@ class MockBuilder {
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
+	public function type_wp_import_post( Array $methods = array() ) {
+
+		return $this->mock_without_constructor( 'W2M\Import\Type\WpImportPost', $methods );
+	}
+
+	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
+	public function type_wp_import_term( Array $methods = array() ) {
+
+		return $this->mock_without_constructor( 'W2M\Import\Type\WpImportTerm', $methods );
+	}
+
+	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
+	public function type_wp_import_user( Array $methods = array() ) {
+
+		return $this->mock_without_constructor( 'W2M\Import\Type\WpImportUser', $methods );
+	}
+
+	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
 	public function wp_error( Array $methods = array() ) {
 
 		return $this->mock_without_constructor( 'WP_Error', $methods );
+	}
+
+	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
+	public function wp_post( Array $methods = array() ) {
+
+		return $this->mock_without_constructor( 'WP_Post', $methods );
+	}
+
+	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
+	public function wp_user( Array $methods = array() ) {
+
+		return $this->mock_without_constructor( 'WP_User', $methods );
+	}
+
+	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
+	public function wp_term( Array $methods = array() ) {
+
+		return $this->mock_without_constructor( 'WP_Term', $methods );
 	}
 
 	/**
