@@ -6,7 +6,7 @@ use Brain;
 use W2M\Import\Service;
 use W2M\Test\Helper;
 
-class WpPostImporterTest extends \PHPUnit_Framework_TestCase {
+class WpPostImporterTest extends Helper\MonkeyTestCase {
 
 	private $fs_helper;
 
@@ -19,8 +19,7 @@ class WpPostImporterTest extends \PHPUnit_Framework_TestCase {
 			$this->fs_helper = new Helper\FileSystem;
 		}
 
-		Brain\Monkey::setUp();
-		Brain\Monkey::setUpWP();
+		parent::setUp();
 
 		/**
 		 * Just create some mocks of these types to avoid
@@ -30,16 +29,6 @@ class WpPostImporterTest extends \PHPUnit_Framework_TestCase {
 		 */
 		$this->getMock( 'WP_Post' );
 	}
-
-	/**
-	 * runs after each test
-	 */
-	protected function tearDown() {
-
-		Brain\Monkey::tearDown();
-		Brain\Monkey::tearDownWP();
-	}
-
 
 	/**
 	 * @group import_post
@@ -52,8 +41,12 @@ class WpPostImporterTest extends \PHPUnit_Framework_TestCase {
 		$translation_connector_mock = $this->getMockBuilder( 'W2M\Import\Module\TranslationConnectorInterface' )
 		                                   ->getMock();
 
-		$id_mapper_mock = $this->getMockBuilder( 'W2M\Import\Data\MultiTypeIdMapperInterface' )
-		                       ->getMock();
+		$id_mapper_mock = $this->mock_builder->data_multi_type_id_mapper();
+		/*
+		$id_mapper_mock->method( '' ) // method name
+			->with() // expected parameter
+			->willReturn(); // return value
+		*/
 
 		$testee = new Service\WpPostImporter( $translation_connector_mock, $id_mapper_mock );
 
@@ -87,7 +80,7 @@ class WpPostImporterTest extends \PHPUnit_Framework_TestCase {
 				'en_US' => 13,
 				'fr_CH' => 32
 			)
-		)
+		);
 
 		$post = array(
 			'post_title'            => $postdata['title'],
