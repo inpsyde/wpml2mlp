@@ -92,10 +92,10 @@ class MockBuilder {
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function data_id_mapper( Array $methods = array() ) {
+	public function data_multi_type_id_mapper( Array $methods = array() ) {
 
 		return $this->mock_without_constructor(
-			'W2M\Import\Data\IdMapperInterface',
+			'W2M\Import\Data\MultiTypeIdMapperInterface',
 			$methods
 		);
 	}

@@ -13,7 +13,7 @@ class WpPostImporter implements PostImporterInterface {
 	private $translation_connector;
 
 	/**
-	 * @var Data\IdMapperInterface
+	 * @var Data\MultiTypeIdMapperInterface
 	 */
 	private $id_mapper;
 
@@ -24,12 +24,12 @@ class WpPostImporter implements PostImporterInterface {
 
 	/**
 	 * @param TranslationConnectorInterface $translation_connector
-	 * @param Data\IdMapperInterface $id_mapper
+	 * @param Data\MultiTypeIdMapperInterface $id_mapper
 	 * @param $ancestor_resolver (Not specified yet)
 	 */
 	public function __construct(
 		TranslationConnectorInterface $translation_connector,
-		Data\IdMapperInterface $id_mapper,
+		Data\MultiTypeIdMapperInterface $id_mapper,
 		$ancestor_resolver = NULL
 	) {
 

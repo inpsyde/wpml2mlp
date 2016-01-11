@@ -17,17 +17,17 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 	private $mlp_language_api;
 
 	/**
-	 * @var Data\IdMapperInterface
+	 * @var Data\MultiTypeIdMapperInterface
 	 */
 	private $id_mapper;
 
 	/**
 	 * @param Mlp_Language_Api_Interface $mlp_language_api
-	 * @param Data\IdMapperInterface $id_mapper
+	 * @param Data\MultiTypeIdMapperInterface $id_mapper
 	 */
 	public function __construct(
 		Mlp_Language_Api_Interface $mlp_language_api,
-		Data\IdMapperInterface $id_mapper
+		Data\MultiTypeIdMapperInterface $id_mapper
 	) {
 
 		$this->mlp_language_api = $mlp_language_api;

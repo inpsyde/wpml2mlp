@@ -2,7 +2,7 @@
 
 namespace W2M\Import\Data;
 
-interface IdMapperInterface {
+interface MultiTypeIdMapperInterface {
 
 	/**
 	 * @param string $type
