@@ -77,15 +77,21 @@ class WpPostImporter implements PostImporterInterface {
 
 		$post_id = wp_insert_post( $postdata, TRUE );
 
-		//Todo: Fire this action, when the result is an WP_Error and return.
-		/**
-		 * @param WP_Error $error
-		 * @param Type\ImportPostInterface $post
-		 */
-		#do_action( 'w2m_import_post_error', $error, $post );
+		if ( is_wp_error( $post_id ) ) {
+			/**
+			 * Attach error handler/logger here
+			 *
+			 * @param WP_Error
+			 * @param Type\ImportPostInterface $post
+			 */
+			do_action( 'w2m_import_post_error', $post_id, $postdata );
+			return;
+		}
 
-		#$wp_post = get_post( $post_id );
+		$wp_post = get_post( $post_id, 'ARRAY_A' );
 		//Todo: Fire this action, when the origin_post_parent_id() cannot be resolved by the id_mapper
+
+		print_r( $wp_post );
 
 		/**
 		 * @param WP_Post $wp_post
