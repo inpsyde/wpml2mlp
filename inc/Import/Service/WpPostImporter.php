@@ -84,8 +84,8 @@ class WpPostImporter implements PostImporterInterface {
 			/**
 			 * Attach error handler/logger here
 			 *
-			 * @param WP_Error
-			 * @param Type\ImportPostInterface $post
+			 * @param WP_Error $post_id
+			 * @param Type\ImportElementInterface $postdata
 			 */
 			do_action( 'w2m_import_post_error', $post_id, $postdata );
 			return;
