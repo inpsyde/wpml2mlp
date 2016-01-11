@@ -5,13 +5,17 @@ namespace W2M\Import\Service;
 use
 	W2M\Import\Data,
 	W2M\Import\Type,
+	W2M\Import\Module,
 	WP_Post,
 	WP_Error;
+
 
 class WpPostImporter implements PostImporterInterface {
 
 	/**
-	 * @var TranslationConnectorInterface
+	 * Todo: remove
+	 * @deprecated
+	 * @var Module\TranslationConnectorInterface
 	 */
 	private $translation_connector;
 
@@ -26,12 +30,12 @@ class WpPostImporter implements PostImporterInterface {
 	private $ancestor_resolver;
 
 	/**
-	 * @param TranslationConnectorInterface $translation_connector
+	 * @param Module\TranslationConnectorInterface $translation_connector
 	 * @param Data\MultiTypeIdMapperInterface $id_mapper
 	 * @param $ancestor_resolver (Not specified yet)
 	 */
 	public function __construct(
-		TranslationConnectorInterface $translation_connector,
+		Module\TranslationConnectorInterface $translation_connector,
 		Data\MultiTypeIdMapperInterface $id_mapper,
 		$ancestor_resolver = NULL
 	) {

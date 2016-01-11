@@ -13,7 +13,7 @@ class WpPostImporterTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function test_import_term() {
 
-		$translation_connector_mock = $this->getMockBuilder( 'W2M\Import\Service\TranslationConnectorInterface' )
+		$translation_connector_mock = $this->getMockBuilder( 'W2M\Import\Module\TranslationConnectorInterface' )
 		                                   ->getMock();
 		$id_mapper_mock = $this->getMockBuilder( 'W2M\Import\Data\MultiTypeIdMapperInterface' )
 		                       ->getMock();
