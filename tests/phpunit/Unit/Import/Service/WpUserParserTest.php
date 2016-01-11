@@ -7,9 +7,6 @@ use
 	SimpleXMLElement,
 	Brain;
 
-/**
- * @group user_parser
- */
 class WpUserParserTest extends \PHPUnit_Framework_TestCase {
 
 	/**
