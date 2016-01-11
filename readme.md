@@ -38,11 +38,25 @@ Use the installer via back-end of your install or ...
  5. Go to **Settings** on Multisite or **Tools** on single site, **WPML2MLP**, then start the export of the current WPML stuff.
 
 ## Action & Filter Reference
-* `w2m_import_term_error` in `W2M\Import\Service::import_term()`
-* `w2m_term_imported` in `W2M\Import\Service::import_term()`
+
+* `w2m_import_term_error` in `W2M\Import\Service\WpTermImporter::import_term()`
+* `w2m_import_missing_term_ancestor` in `W2M\Import\Service\WpTermImporter::import_term()`
+* `w2m_term_imported` in `W2M\Import\Service\WpTermImporter::import_term()`
+
+* `w2m_import_post_error` in `W2M\Import\Service\WpPostImporter::import_post()`
+* `w2m_import_missing_post_ancestor` in `W2M\Import\Service\WpPostImporter::import_post()`
+* `w2m_post_imported` in `W2M\Import\Service\WpPostImporter::import_post()`
+
+* `w2m_import_user_error` in `W2M\Import\Service\WpUserImporter::import_user()`
+* `w2m_user_imported` in `W2M\Import\Service\WpUserImporter::import_user()`
+
 * `w2m_import_parse_term_error` in `W2M\Import\Service\WpTermParser::propagate_error()`
 * `w2m_import_parse_post_error` in `W2M\Import\Service\WpPostParser::propagate_error()`
+* `w2m_import_parse_user_error` in `W2M\Import\Service\WpUserParser::propagate_error()`
+
 * `w2m_import_set_user_id` in `W2M\Import\Type\WpImportUser::id()`
+* `w2m_import_set_post_id` in `W2M\Import\Type\WpImportPost::id()`
+* `w2m_import_set_term_id` in `W2M\Import\Type\WpImportTerm::id()`
 
 ## Other Notes
 
