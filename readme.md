@@ -37,14 +37,8 @@ Use the installer via back-end of your install or ...
  4. Multisite: Activate the plugin through the **Network/Plugins** menu in WordPress and click **Network Activate**.
  5. Go to **Settings** on Multisite or **Tools** on single site, **WPML2MLP**, then start the export of the current WPML stuff.
 
-<<<<<<< HEAD
-## Action & Filter 
-###Actions
-* `w2m_import_term_error` in `W2M\Import\Service::import_term()`
-* `w2m_term_imported` in `W2M\Import\Service::import_term()`
-=======
 ## Action & Filter Reference
-
+###Actions
 * `w2m_import_term_error` in `W2M\Import\Service\WpTermImporter::import_term()`
 * `w2m_import_missing_term_ancestor` in `W2M\Import\Service\WpTermImporter::import_term()`
 * `w2m_term_imported` in `W2M\Import\Service\WpTermImporter::import_term()`
@@ -56,7 +50,6 @@ Use the installer via back-end of your install or ...
 * `w2m_import_user_error` in `W2M\Import\Service\WpUserImporter::import_user()`
 * `w2m_user_imported` in `W2M\Import\Service\WpUserImporter::import_user()`
 
->>>>>>> f1d9c7c05f82044044691dce1f2940aa0b1b6e89
 * `w2m_import_parse_term_error` in `W2M\Import\Service\WpTermParser::propagate_error()`
 * `w2m_import_parse_post_error` in `W2M\Import\Service\WpPostParser::propagate_error()`
 * `w2m_import_parse_user_error` in `W2M\Import\Service\WpUserParser::propagate_error()`
