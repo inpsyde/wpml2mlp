@@ -2,8 +2,11 @@
 
 namespace W2M\Import\Service;
 
-use W2M\Import\Data;
-use W2M\Import\Type;
+use
+	W2M\Import\Data,
+	W2M\Import\Type,
+	WP_Term,
+	stdClass;
 
 class WpTermImporter implements TermImporterInterface {
 
@@ -23,9 +26,9 @@ class WpTermImporter implements TermImporterInterface {
 	private $ancestor_resolver;
 
 	/**
-	 * @param TranslationConnectorInterface $translation_connector
+	 * @param TranslationConnectorInterface $translation_connector (Deprecated, Todo: remove it)
 	 * @param Data\MultiTypeIdMapperInterface $id_mapper
-	 * @param $ancestor_resolver (Not specified yet)
+	 * @param $ancestor_resolver (Not specified yet) (Deprecated, Todo: remove it)
 	 */
 	public function __construct(
 		TranslationConnectorInterface $translation_connector,
@@ -44,9 +47,10 @@ class WpTermImporter implements TermImporterInterface {
 	 */
 	public function import_term( Type\ImportTermInterface $term ) {
 
+		$local_parent_id = $this->id_mapper->local_id( 'term', $term->origin_parent_term_id() );
 		$term_args = array(
 			'description' => $term->description(),
-			'parent'      => $this->id_mapper->local_id( 'term', $term->origin_parent_term_id() ),
+			'parent'      => $local_parent_id,
 			'slug'        => $term->slug()
 		);
 
@@ -64,20 +68,19 @@ class WpTermImporter implements TermImporterInterface {
 			 * @param Type\ImportTermInterface
 			 */
 			do_action( 'w2m_import_term_error', $result, $term );
+			return;
 		}
 
 		$term->id( $result[ 'term_id' ] );
 		$wp_term = get_term_by( 'id', $result[ 'term_id' ], $term->taxonomy() );
 
-
-		/**
-		 * Todo: resolve ancestor relation
-		 * Here we don't know and should not depend on whether the parent was already
-		 * imported or not.
-		 *
-		 * $ansestor_resolver->resolve_term( $new_term, $term );
-		 */
-		$this->translation_connector->link_term( $wp_term, $term );
+		if ( $term->origin_parent_term_id() && ! $local_parent_id ) {
+			/**
+			 * @param stdClass|WP_Term $wp_term
+			 * @param Type\ImportTermInterface $term
+			 */
+			do_action( 'w2m_import_missing_term_ancestor', $wp_term, $term );
+		}
 
 		/**
 		 * @param stdClass|WP_Term
