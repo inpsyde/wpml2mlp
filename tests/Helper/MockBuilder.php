@@ -142,7 +142,7 @@ class MockBuilder {
 	public function service_translation_connector( Array $methods = array() ) {
 
 		return $this->mock_without_constructor(
-			'W2M\Import\Service\TranslationConnectorInterface',
+			'W2M\Import\Module\TranslationConnectorInterface',
 			$methods
 		);
 	}

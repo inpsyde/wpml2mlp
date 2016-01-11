@@ -48,7 +48,7 @@ class WpTermImporterTest extends \PHPUnit_Framework_TestCase {
 		/**
 		 * Create mocks for the dependency of the testee (WpObjectImporter)
 		 */
-		$translation_connector_mock = $this->getMockBuilder( 'W2M\Import\Service\TranslationConnectorInterface' )
+		$translation_connector_mock = $this->getMockBuilder( 'W2M\Import\Module\TranslationConnectorInterface' )
 			->getMock();
 		$id_mapper_mock = $this->getMockBuilder( 'W2M\Import\Data\MultiTypeIdMapperInterface' )
 			->getMock();
