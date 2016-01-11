@@ -52,7 +52,7 @@ class WpPostImporterTest extends \PHPUnit_Framework_TestCase {
 		$translation_connector_mock = $this->getMockBuilder( 'W2M\Import\Service\TranslationConnectorInterface' )
 		                                   ->getMock();
 
-		$id_mapper_mock = $this->getMockBuilder( 'W2M\Import\Data\IdMapperInterface' )
+		$id_mapper_mock = $this->getMockBuilder( 'W2M\Import\Data\MultiTypeIdMapperInterface' )
 		                       ->getMock();
 
 		$testee = new Service\WpPostImporter( $translation_connector_mock, $id_mapper_mock );

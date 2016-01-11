@@ -50,7 +50,7 @@ class WpTermImporterTest extends \PHPUnit_Framework_TestCase {
 		 */
 		$translation_connector_mock = $this->getMockBuilder( 'W2M\Import\Service\TranslationConnectorInterface' )
 			->getMock();
-		$id_mapper_mock = $this->getMockBuilder( 'W2M\Import\Data\IdMapperInterface' )
+		$id_mapper_mock = $this->getMockBuilder( 'W2M\Import\Data\MultiTypeIdMapperInterface' )
 			->getMock();
 
 		$testee = new Service\WpTermImporter( $translation_connector_mock, $id_mapper_mock );
@@ -151,9 +151,9 @@ class WpTermImporterTest extends \PHPUnit_Framework_TestCase {
 		 * Currently the test and implementation assuming a simple pass-through
 		 * of the values coming from ImportTermInterface to wp_insert_term().
 		 *
-		 * both have to deal with the concept of IdMapperInterface::local_id().
+		 * both have to deal with the concept of MultiTypeIdMapperInterface::local_id().
 		 *
-		 * So the mock of IdMapperInterface::local_id should except the parent ID and should
+		 * So the mock of MultiTypeIdMapperInterface::local_id should except the parent ID and should
 		 * return another »local« id of the term. The mock of wp_insert_term() has to be adapted
 		 * to expect not the parent ID but the local id.
 		 */
