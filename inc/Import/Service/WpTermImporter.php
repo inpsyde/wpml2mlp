@@ -66,8 +66,8 @@ class WpTermImporter implements TermImporterInterface {
 			/**
 			 * Attach error handler/logger here
 			 *
-			 * @param WP_Error
-			 * @param Type\ImportTermInterface
+			 * @param WP_Error $result
+			 * @param Type\ImportElementInterface $term
 			 */
 			do_action( 'w2m_import_term_error', $result, $term );
 			return;

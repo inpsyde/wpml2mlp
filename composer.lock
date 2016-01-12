@@ -4,9 +4,52 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b2671515f04bc5eb55d6a620e5b1a1c5",
-    "content-hash": "48e6610151ab2368ce799d678d54375e",
+    "hash": "09ab5699a303cb4569a5168d7efddbee",
+    "content-hash": "b7f383471d8b6689293d2dc88ea244c5",
     "packages": [
+        {
+            "name": "level-2/dice",
+            "version": "dev-v2.0-PHP5.4-5.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Level-2/Dice.git",
+                "reference": "33e5401c4a577b7d8dc7dc04db295fe5084343c4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Level-2/Dice/zipball/33e5401c4a577b7d8dc7dc04db295fe5084343c4",
+                "reference": "33e5401c4a577b7d8dc7dc04db295fe5084343c4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Dice\\": "./"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Tom Butler",
+                    "email": "tom@r.je"
+                }
+            ],
+            "description": "A minimalist Dependency injection container (DIC) for PHP. Please note: This branch is only compatible with PHP5.6. 5.5, 5.4 and 5.3 compatible version is available as a separate branch on github. ",
+            "homepage": "http://r.je/dice.html",
+            "keywords": [
+                "dependency injection",
+                "dependency injection container",
+                "di",
+                "ioc"
+            ],
+            "time": "2015-11-30 17:19:11"
+        },
         {
             "name": "monolog/monolog",
             "version": "1.17.2",
@@ -279,7 +322,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/inpsyde/wordpress-dev/zipball/dd48d8b5441b3402c8b7e88a119e58185142d1cf",
+                "url": "https://api.github.com/repos/inpsyde/wordpress-dev/zipball/0c7f0fe0fc11d0ca2a01206033bebd3d7284f739",
                 "reference": "40d7b8e06f41ff11ec0dd0621c0fbd600363f941",
                 "shasum": ""
             },
@@ -423,12 +466,13 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "level-2/dice": 20,
         "inpsyde/wordpress-dev": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">5.3.0"
+        "php": ">5.4.0"
     },
     "platform-dev": []
 }
