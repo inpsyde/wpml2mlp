@@ -77,14 +77,6 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 												'name'                  => 'Mocky News',
 												'taxonomy'              => 'category',
 												'description'           => 'It doesn\'t really matter what stands here.'
-											),
-											array(
-												'term_id'               => 110,
-												'slug'                  => 'top-news',
-												'origin_parent_term_id' => 110,
-												'name'                  => 'Top News',
-												'taxonomy'              => 'category',
-												'description'           => 'It doesn\'t really matter what stands here.'
 											)
 										),
 			'meta'                  => array( 'meta' ),
