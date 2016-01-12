@@ -45,7 +45,7 @@ Use the installer via back-end of your install or ...
 
 * `w2m_import_post_error` in `W2M\Import\Service\WpPostImporter::import_post()`
 * `w2m_import_missing_post_ancestor` in `W2M\Import\Service\WpPostImporter::import_post()`
-* `w2m_import_post_set_post_terms_error` in `W2M\Import\Service\WpPostImporter::import_post()`
+* `w2m_import_set_post_terms_error` in `W2M\Import\Service\WpPostImporter::import_post()`
 * `w2m_post_imported` in `W2M\Import\Service\WpPostImporter::import_post()`
 
 * `w2m_import_user_error` in `W2M\Import\Service\WpUserImporter::import_user()`

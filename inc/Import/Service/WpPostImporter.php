@@ -120,7 +120,7 @@ class WpPostImporter implements PostImporterInterface {
 			 * @param array $term_ids
 			 * @param string $taxonomy
 			 */
-			do_action( 'w2m_import_post_set_post_terms_error', $set_post_terms_result, $post_id, $term_ids, $taxonomy );
+			do_action( 'w2m_import_set_post_terms_error', $set_post_terms_result, $post_id, $term_ids, $taxonomy );
 
 		}
 
