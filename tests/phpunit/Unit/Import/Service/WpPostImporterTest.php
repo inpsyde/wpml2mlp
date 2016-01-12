@@ -80,9 +80,7 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 											)
 										),
 			'meta'                  => array(
-											array( 'key' => '_edit_lock', 'value' => '1414579147:9', 'is_single' => TRUE ),
-											array( 'key' => '_edit_last', 'value' => '9', 'is_single' => TRUE ),
-											array( 'key' => 'multiple_values', 'value' => array( 'foo', 'bar' ), 'is_single' => FALSE )
+											array( 'key' => 'metakey', 'value' => 'metavalue' ),
 										),
 			'locale_relations'      => array(
 											array( 'locale' => 'en_US', 'origin_id' => 44330 ),
@@ -171,7 +169,14 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 
 		}
 
+		foreach( $postdata['meta'] as $meta ){
 
+			Brain\Monkey\Functions::expect( 'update_post_meta' )
+			                      ->atLeast()->once()
+			                      ->with( $post_id, $meta['key'], $meta['value'] )
+			                      ->andReturn( TRUE );
+
+		}
 
 
 		#/**
@@ -179,7 +184,7 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 		# * Currently the missing mock of wp_insert_post() lets the test
 		# * ends in a fatal error.
 		# */
-		#$this->markTestIncomplete( 'Under Construction' );
+		$this->markTestIncomplete( 'Under Construction' );
 		$testee->import_post( $post_mock );
 
 	}

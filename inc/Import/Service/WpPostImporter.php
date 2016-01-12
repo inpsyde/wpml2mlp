@@ -113,6 +113,8 @@ class WpPostImporter implements PostImporterInterface {
 			wp_set_post_terms( $post_id, $term_ids, $taxonomy );
 		}
 
+		update_post_meta( $this->post_id, 'bookingcode', self::$post->bookingcode );
+
 		/**
 		 * @param WP_Post $wp_post
 		 * @param Type\ImportPostInterface $post
