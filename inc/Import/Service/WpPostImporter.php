@@ -136,6 +136,9 @@ class WpPostImporter implements PostImporterInterface {
 			$update_post_meta_result = update_post_meta( $post_id, $meta['key'], $meta['value'] );
 
 			if ( $update_post_meta_result !== TRUE ) {
+
+				#TODO: if $update_post_meta_result false turn it into a wp_error object
+
 				/**
 				 * Attach error handler/logger here
 				 *
