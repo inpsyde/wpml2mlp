@@ -85,7 +85,7 @@ class WpPostImporter implements PostImporterInterface {
 			 * @param WP_Error
 			 * @param Type\ImportPostInterface $post
 			 */
-			do_action( 'w2m_import_post_error', $post_id, $postdata );
+			do_action( 'w2m_import_post_error', $post_id, $post );
 			return;
 		}
 
@@ -96,15 +96,8 @@ class WpPostImporter implements PostImporterInterface {
 			 * @param stdClass|WP_Term $wp_term
 			 * @param Type\ImportTermInterface $term
 			 */
-			do_action( 'w2m_import_missing_term_ancestor', $wp_term, $term );
+			do_action( 'w2m_import_missing_term_ancestor', $wp_post, $post );
 		}
-
-
-		/**
-		 * @param WP_Post $wp_post
-		 * @param Type\ImportPostInterface $post
-		 */
-		#do_action( 'w2m_import_missing_post_ancestor', $wp_post, $post );
 
 		/**
 		 * @param WP_Post $wp_post
