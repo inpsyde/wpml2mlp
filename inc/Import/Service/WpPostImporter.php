@@ -124,11 +124,10 @@ class WpPostImporter implements PostImporterInterface {
 		}
 
 		$post_metas = $post->meta();
+		$post_metas[1] = array( 'key' => 'is_sticky', 'value' => $post->is_sticky() );
+		$post_metas[2] = array( 'key' => 'origin_link', 'value' => $post->origin_link() );
 
-		print_r( $post_metas );
-
-		$post->is_sticky();
-		$post->origin_link();
+		#TODO: solve locale_relations
 		$post->locale_relations();
 
 		foreach( $post->meta() as $meta ){
