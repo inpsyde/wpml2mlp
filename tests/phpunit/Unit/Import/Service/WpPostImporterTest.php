@@ -81,9 +81,9 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 										),
 			'meta'                  => array( 'meta' ),
 			'locale_relations'      => array(
-				'en_US' => 13,
-				'fr_CH' => 32
-			)
+										array( 'locale' => 'en_US', 'origin_id' => 44330 ),
+										array( 'locale' => 'nl_NL', 'origin_id' => 57664 )
+									)
 		);
 
 		$post = array(
@@ -155,8 +155,7 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 
 
 		$taxonomies = array(
-						'category' => array( 112, 110 ),
-						'custom-category' => array( 113, 115 )
+						'category' => array( 112, 110 )
 		);
 
 		foreach( $taxonomies as $taxonomy => $term_ids ){
@@ -169,13 +168,12 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 		}
 
 
-
 		#/**
 		# * Remove this line when the test is completely configured.
 		# * Currently the missing mock of wp_insert_post() lets the test
 		# * ends in a fatal error.
 		# */
-		$this->markTestIncomplete( 'Under Construction' );
+		#$this->markTestIncomplete( 'Under Construction' );
 		$testee->import_post( $post_mock );
 
 	}
