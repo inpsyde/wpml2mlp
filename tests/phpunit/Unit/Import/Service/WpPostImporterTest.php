@@ -184,7 +184,7 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 		# * Currently the missing mock of wp_insert_post() lets the test
 		# * ends in a fatal error.
 		# */
-		$this->markTestIncomplete( 'Under Construction' );
+		#$this->markTestIncomplete( 'Under Construction' );
 		$testee->import_post( $post_mock );
 
 	}

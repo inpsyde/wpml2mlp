@@ -110,10 +110,25 @@ class WpPostImporter implements PostImporterInterface {
 
 		foreach( $taxonomies as $taxonomy => $term_ids ){
 
-			wp_set_post_terms( $post_id, $term_ids, $taxonomy );
+			$set_post_terms_result = wp_set_post_terms( $post_id, $term_ids, $taxonomy );
+
+			/**
+			 * Attach error handler/logger here
+			 *
+			 * @param WP_Error $set_post_terms_result
+			 * @param int $post_id
+			 * @param array $term_ids
+			 * @param string $taxonomy
+			 */
+			do_action( 'w2m_import_post_set_post_terms_error', $set_post_terms_result, $post_id, $term_ids, $taxonomy );
+
 		}
 
-		update_post_meta( $this->post_id, 'bookingcode', self::$post->bookingcode );
+		foreach( $postdata['meta'] as $meta ){
+
+			update_post_meta( $post_id, $meta['key'], $meta['value'] );
+
+		}
 
 		/**
 		 * @param WP_Post $wp_post
