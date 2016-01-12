@@ -58,7 +58,7 @@ class WpPostImporter implements PostImporterInterface {
 			'post_author'           => $post->origin_author_id(),
 			'post_status'           => $post->status(),
 			'guid'                  => $post->guid(),
-			'post_date'             => $post->date(),
+			'post_date_gmt'         => $post->date(),
 			'comment_status'        => $post->comment_status(),
 			'ping_status'           => $post->ping_status(),
 			'post_type'             => $post->type(),
@@ -83,16 +83,16 @@ class WpPostImporter implements PostImporterInterface {
 			return;
 		}
 
-		$wp_post = get_post( $post_id, 'ARRAY_A' );
+		$wp_post = get_post( $post_id );
 
-		if ( $post->origin_parent_term_id() && ! $local_parent_id ) {
-			/**
-			 * @param stdClass|WP_Term $wp_term
-			 * @param Type\ImportTermInterface $term
-			 */
-			do_action( 'w2m_import_missing_term_ancestor', $wp_post, $post );
-			return;
-		}
+		#if ( $post->origin_parent_term_id() && ! $local_parent_id ) {
+		#	/**
+		#	 * @param stdClass|WP_Term $wp_term
+		#	 * @param Type\ImportTermInterface $term
+		#	 */
+		#	do_action( 'w2m_import_missing_term_ancestor', $wp_post, $post );
+		#	return;
+		#}
 
 
 		$taxonomies = array();

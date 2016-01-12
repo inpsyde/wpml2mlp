@@ -88,19 +88,26 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 										)
 		);
 
+		$new_parent_id = 15;
+
+		$id_mapper_mock->expects( $this->atLeast( 1 ) )
+		               ->method( 'local_id' )
+		               ->with( 'post', $postdata['origin_parent_post_id'] )
+		               ->willReturn( $new_parent_id );
+
 		$post = array(
 			'post_title'            => $postdata['title'],
 			'post_author'           => $postdata['origin_author_id'],
 			'post_status'           => $postdata['status'],
 			'guid'                  => $postdata['guid'],
-			'post_date'             => $postdata['date'],
+			'post_date_gmt'         => $postdata['date'],
 			'comment_status'        => $postdata['comment_status'],
 			'ping_status'           => $postdata['ping_status'],
 			'post_type'             => $postdata['type'],
 			'post_excerpt'          => $postdata['excerpt'],
 			'post_content'          => $postdata['content'],
 			'post_name'             => $postdata['name'],
-			'post_parent'           => $postdata['origin_parent_post_id'],
+			'post_parent'           => $new_parent_id,
 			'menu_order'            => $postdata['menu_order'],
 			'post_password'         => $postdata['password']
 		);
@@ -127,6 +134,7 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 
 		Brain\Monkey\Functions::when( 'is_wp_error' )->justReturn( FALSE );
 
+
 		$post_return = array(
 			'ID' => $post_id,
 			'to_ping' => FALSE,
@@ -144,20 +152,14 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 
 		Brain\Monkey\Functions::expect( 'get_post' )
 		                      ->atLeast()->once()
-		                      ->with( $post_id, 'ARRAY_A' )
+		                      ->with( $post_id )
 		                      ->andReturn( $post_return );
 
 
-		$new_parent_id = 15;
-
-		$id_mapper_mock->expects( $this->atLeast( 1 ) )
-		               ->method( 'local_id' )
-		               ->with( 'post', $postdata['origin_parent_post_id'] )
-		               ->willReturn( $new_parent_id );
 
 
 		$taxonomies = array(
-						'category' => array( 112, 110 )
+						'category' => array( 112 )
 		);
 
 		foreach( $taxonomies as $taxonomy => $term_ids ){
@@ -177,6 +179,7 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 			                      ->andReturn( TRUE );
 
 		}
+
 
 
 		#/**
