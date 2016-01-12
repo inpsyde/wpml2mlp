@@ -69,7 +69,24 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 			'password'              => 'mocky',
 			'is_sticky'             => FALSE,
 			'origin_link'           => 'http://wpml2mlp.test/mocky',
-			'terms'                 => array( 'terms' ),
+			'terms'                 => array(
+											array(
+												'term_id'               => 112,
+												'slug'                  => 'mocky-news',
+												'origin_parent_term_id' => 110,
+												'name'                  => 'Mocky News',
+												'taxonomy'              => 'category',
+												'description'           => 'It doesn\'t really matter what stands here.'
+											),
+											array(
+												'term_id'               => 110,
+												'slug'                  => 'top-news',
+												'origin_parent_term_id' => 110,
+												'name'                  => 'Top News',
+												'taxonomy'              => 'category',
+												'description'           => 'It doesn\'t really matter what stands here.'
+											)
+										),
 			'meta'                  => array( 'meta' ),
 			'locale_relations'      => array(
 				'en_US' => 13,
@@ -143,6 +160,26 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 		               ->method( 'local_id' )
 		               ->with( 'post', $postdata['origin_parent_post_id'] )
 		               ->willReturn( $new_parent_id );
+
+
+		$taxonomies = array();
+
+		foreach( $postdata['terms'] as $term ){
+
+			$taxonomies[ $term['taxonomy'] ][] = $term['term_id'];
+
+		}
+
+		foreach( $taxonomies as $taxonomy => $term_ids ){
+
+			Brain\Monkey\Functions::expect( 'wp_set_post_terms' )
+			                      ->atLeast()->once()
+			                      ->with( $post_id, $term_ids, $taxonomy )
+			                      ->andReturn( TRUE );
+
+		}
+
+
 
 		#/**
 		# * Remove this line when the test is completely configured.

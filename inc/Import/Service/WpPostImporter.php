@@ -53,7 +53,7 @@ class WpPostImporter implements PostImporterInterface {
 
 		$local_parent_id = $this->id_mapper->local_id( 'post', $post->origin_parent_post_id() );
 
-		$post->terms();
+		;
 		$post->meta();
 		$post->is_sticky();
 		$post->origin_link();
@@ -97,6 +97,20 @@ class WpPostImporter implements PostImporterInterface {
 			 * @param Type\ImportTermInterface $term
 			 */
 			do_action( 'w2m_import_missing_term_ancestor', $wp_post, $post );
+		}
+
+
+		$taxonomies = array();
+
+		foreach( $postdata['terms'] as $term ){
+
+			$taxonomies[ $term['taxonomy'] ][] = $term['term_id'];
+
+		}
+
+		foreach( $taxonomies as $taxonomy => $term_ids ){
+
+			wp_set_post_terms( $post_id, $term_ids, $taxonomy );
 		}
 
 		/**
