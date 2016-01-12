@@ -62,7 +62,7 @@ class WpPostImporter implements PostImporterInterface {
 		$postdata = array(
 			'post_title'            => $post->title(),
 			'post_author'           => $post->origin_author_id(),
-			'ping_status'           => $post->status(),
+			'post_status'           => $post->status(),
 			'guid'                  => $post->guid(),
 			'post_date'             => $post->date(),
 			'comment_status'        => $post->comment_status(),

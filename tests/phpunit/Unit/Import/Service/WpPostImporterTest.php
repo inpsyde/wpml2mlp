@@ -80,7 +80,7 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 		$post = array(
 			'post_title'            => $postdata['title'],
 			'post_author'           => $postdata['origin_author_id'],
-			'ping_status'           => $postdata['status'],
+			'post_status'           => $postdata['status'],
 			'guid'                  => $postdata['guid'],
 			'post_date'             => $postdata['date'],
 			'comment_status'        => $postdata['comment_status'],
@@ -89,11 +89,10 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 			'post_excerpt'          => $postdata['excerpt'],
 			'post_content'          => $postdata['content'],
 			'post_name'             => $postdata['name'],
-			'post_parent'           => $postdata['origin_parent_post_id'],
-			'menu_order'            => $postdata['menu_order'],
-			'post_password'         => $postdata['password'],
+			'post_parent'           => $postdata['menu_order'],
+			'menu_order'            => $postdata['origin_parent_post_id'],
+			'post_password'         => $postdata['password']
 		);
-
 
 		foreach ( $postdata as $method => $return_value ) {
 			if ( 'locale_relations' === $method )
@@ -139,6 +138,7 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 
 
 		$new_parent_id = 15;
+
 		$id_mapper_mock->expects( $this->atLeast( 1 ) )
 		               ->method( 'local_id' )
 		               ->with( 'post', $postdata['origin_parent_post_id'] )
