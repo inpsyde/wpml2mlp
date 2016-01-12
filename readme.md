@@ -50,7 +50,7 @@ Use the installer via back-end of your install or ...
 * `w2m_post_imported` in `W2M\Import\Service\WpPostImporter::import_post()`
 
 * `w2m_import_user_error` in `W2M\Import\Service\WpUserImporter::import_user()`
-* `w2m_user_imported` in `W2M\Import\Service\WpUserImporter::import_user()`
+* `w2m_ser_imported` in `W2M\Import\Service\WpUserImporter::import_user()`
 
 * `w2m_import_parse_term_error` in `W2M\Import\Service\WpTermParser::propagate_error()`
 * `w2m_import_parse_post_error` in `W2M\Import\Service\WpPostParser::propagate_error()`
