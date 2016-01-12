@@ -97,6 +97,7 @@ class WpPostImporter implements PostImporterInterface {
 			 * @param Type\ImportTermInterface $term
 			 */
 			do_action( 'w2m_import_missing_term_ancestor', $wp_post, $post );
+			return;
 		}
 
 
@@ -112,22 +113,37 @@ class WpPostImporter implements PostImporterInterface {
 
 			$set_post_terms_result = wp_set_post_terms( $post_id, $term_ids, $taxonomy );
 
-			/**
-			 * Attach error handler/logger here
-			 *
-			 * @param WP_Error $set_post_terms_result
-			 * @param int $post_id
-			 * @param array $term_ids
-			 * @param string $taxonomy
-			 */
-			do_action( 'w2m_import_set_post_terms_error', $set_post_terms_result, $post_id, $term_ids, $taxonomy );
+			if ( is_wp_error( $set_post_terms_result ) ) {
+
+				/**
+				 * Attach error handler/logger here
+				 *
+				 * @param WP_Error $set_post_terms_result
+				 * @param int      $post_id
+				 * @param array    $term_ids
+				 * @param string   $taxonomy
+				 */
+				do_action( 'w2m_import_set_post_terms_error', $set_post_terms_result, $post_id, $term_ids, $taxonomy );
+
+			}
 
 		}
 
 		foreach( $postdata['meta'] as $meta ){
 
-			update_post_meta( $post_id, $meta['key'], $meta['value'] );
+			$update_post_meta_result = update_post_meta( $post_id, $meta['key'], $meta['value'] );
 
+			if ( $update_post_meta_result !== TRUE ) {
+				/**
+				 * Attach error handler/logger here
+				 *
+				 * @param boolean $update_post_meta_result
+				 * @param int     $post_id
+				 * @param array   $term_ids
+				 * @param string  $taxonomy
+				 */
+				do_action( 'w2m_import_update_post_meta_error', $update_post_meta_result, $post_id, $meta[ 'key' ], $meta[ 'value' ] );
+			}
 		}
 
 		/**
