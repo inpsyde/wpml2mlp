@@ -85,21 +85,21 @@ class WpPostImporter implements PostImporterInterface {
 
 		$wp_post = get_post( $post_id );
 
-		#if ( $post->origin_parent_term_id() && ! $local_parent_id ) {
-		#	/**
-		#	 * @param stdClass|WP_Term $wp_term
-		#	 * @param Type\ImportTermInterface $term
-		#	 */
-		#	do_action( 'w2m_import_missing_term_ancestor', $wp_post, $post );
-		#	return;
-		#}
+		if ( $post->origin_parent_post_id() && ! $local_parent_id ) {
+			/**
+			 * @param stdClass|WP_Post $wp_post
+			 * @param Type\ImportPostInterface $post
+			 */
+			do_action( 'w2m_import_missing_post_ancestor', $wp_post, $post );
+			return;
+		}
 
 
 		$taxonomies = array();
 
 		foreach( $post->terms() as $term ){
 
-			$taxonomies[ $term['taxonomy'] ][] = $term['term_id'];
+			$taxonomies[ $term->taxonomy() ][] = $term->origin_id();
 
 		}
 
@@ -123,21 +123,29 @@ class WpPostImporter implements PostImporterInterface {
 
 		}
 
-		$post_metas = $post->meta();
-		$post_metas[1] = array( 'key' => 'is_sticky', 'value' => $post->is_sticky() );
-		$post_metas[2] = array( 'key' => 'origin_link', 'value' => $post->origin_link() );
+		#TODO: is_sticky is not a meta, its a option
+		#$post_metas[1] = array( 'key' => 'is_sticky', 'value' => $post->is_sticky() );
 
-		#TODO: solve locale_relations
-		$post->locale_relations();
+		update_post_meta( $post_id, '_w2m_origin_link', $post->origin_link() );
 
 		foreach( $post->meta() as $meta ) {
 			/* @var Type\ImportMetaInterface $meta */
+
 			if ( $meta->is_single() ) {
 				$update_post_meta_result = update_post_meta(
 					$post_id,
 					$meta->key(),
 					$meta->value()
 				);
+
+				$this->meta_result(
+					$update_post_meta_result,
+					array(
+						'post_id' => $post_id,
+						'meta' => array( 'key' => $meta->key(), 'value' => $meta->value() )
+					)
+				);
+
 			} else {
 				foreach ( $meta->value() as $v ) {
 					add_post_meta(
@@ -149,21 +157,6 @@ class WpPostImporter implements PostImporterInterface {
 				}
 			}
 
-
-			if ( $update_post_meta_result !== TRUE ) {
-
-				#TODO: if $update_post_meta_result false turn it into a wp_error object
-
-				/**
-				 * Attach error handler/logger here
-				 *
-				 * @param boolean $update_post_meta_result
-				 * @param int     $post_id
-				 * @param array   $term_ids
-				 * @param string  $taxonomy
-				 */
-				do_action( 'w2m_import_update_post_meta_error', $update_post_meta_result, $post_id, $meta[ 'key' ], $meta[ 'value' ] );
-			}
 		}
 
 
@@ -177,6 +170,25 @@ class WpPostImporter implements PostImporterInterface {
 
 	}
 
+	private function meta_result( $meta_result, $attribute ){
 
+		print_r( $meta_result, $attribute );
+
+		if ( $meta_result !== TRUE ) {
+
+			#TODO: if $update_post_meta_result false turn it into a wp_error object
+
+			/**
+			 * Attach error handler/logger here
+			 *
+			 * @param boolean $meta_result
+			 * @param int     $post_id
+			 * @param array   $term_ids
+			 * @param string  $taxonomy
+			 */
+			do_action( 'w2m_import_update_post_meta_error', $meta_result, $attribute['post_id'], $attribute['meta']['key'], $attribute['meta']['value'] );
+		}
+
+	}
 
 }

@@ -15,7 +15,7 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 	 */
 	public function setUp() {
 
-		if ( !$this->fs_helper ) {
+		if ( ! $this->fs_helper ) {
 			$this->fs_helper = new Helper\FileSystem;
 		}
 
@@ -48,6 +48,20 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 		$post_mock = $this->getMockBuilder( 'W2M\Import\Type\ImportPostInterface' )
 		                  ->getMock();
 
+		$postmeta_mock_single = $this->mock_builder->type_wp_import_meta();
+		$postmeta_mock_single->method( 'key' )->willReturn( 'mocky' );
+		$postmeta_mock_single->method( 'value' )->willReturn( 'mocky' );
+		$postmeta_mock_single->method( 'is_single' )->willReturn( TRUE );
+
+		$postmeta_mock_array = $this->mock_builder->type_wp_import_meta();
+		$postmeta_mock_array->method( 'key' )->willReturn( 'mocky' );
+		$postmeta_mock_array->method( 'value' )->willReturn( array( 'mocky', 'mreed' ) );
+		$postmeta_mock_array->method( 'is_single' )->willReturn( FALSE );
+
+		$term_mock = $this->mock_builder->type_wp_term_reference();
+		$term_mock->method( 'origin_id' )->willReturn( 113 );
+		$term_mock->method( 'taxonomy' )->willReturn( 'category' );
+
 		/**
 		 * Now define the behaviour of the mock object. Each of the specified
 		 * methods ( @see ImportPostInterface ) should return a proper value!
@@ -57,7 +71,7 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 			'origin_author_id'      => 42,
 			'status'                => 'draft',
 			'guid'                  => 'mocky',
-			'date'                  => (new \DateTime( 'NOW' ))->format('Y-m-d H:i:s'),
+			'date'                  => ( new \DateTime( 'NOW' ) )->format( 'Y-m-d H:i:s' ),
 			'comment_status'        => 'open',
 			'ping_status'           => 'open',
 			'type'                  => 'post',
@@ -69,117 +83,84 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 			'password'              => 'mocky',
 			'is_sticky'             => FALSE,
 			'origin_link'           => 'http://wpml2mlp.test/mocky',
-			'terms'                 => array(
-											array(
-												'term_id'               => 112,
-												'slug'                  => 'mocky-news',
-												'origin_parent_term_id' => 110,
-												'name'                  => 'Mocky News',
-												'taxonomy'              => 'category',
-												'description'           => 'It doesn\'t really matter what stands here.'
-											)
-										),
-			'meta'                  => array(
-											array( 'key' => 'metakey', 'value' => 'metavalue' ),
-										),
-			'locale_relations'      => array(
-											array( 'locale' => 'en_US', 'origin_id' => 44330 ),
-											array( 'locale' => 'nl_NL', 'origin_id' => 57664 )
-										)
+			'terms'                 => array( $term_mock ),
+			'meta'                  => array( $postmeta_mock_single, $postmeta_mock_array )
 		);
 
 		$new_parent_id = 15;
 
-		$id_mapper_mock->expects( $this->atLeast( 1 ) )
-		               ->method( 'local_id' )
-		               ->with( 'post', $postdata['origin_parent_post_id'] )
-		               ->willReturn( $new_parent_id );
-
 		$post = array(
-			'post_title'            => $postdata['title'],
-			'post_author'           => $postdata['origin_author_id'],
-			'post_status'           => $postdata['status'],
-			'guid'                  => $postdata['guid'],
-			'post_date_gmt'         => $postdata['date'],
-			'comment_status'        => $postdata['comment_status'],
-			'ping_status'           => $postdata['ping_status'],
-			'post_type'             => $postdata['type'],
-			'post_excerpt'          => $postdata['excerpt'],
-			'post_content'          => $postdata['content'],
-			'post_name'             => $postdata['name'],
-			'post_parent'           => $new_parent_id,
-			'menu_order'            => $postdata['menu_order'],
-			'post_password'         => $postdata['password']
+			'post_title'     => $postdata[ 'title' ],
+			'post_author'    => $postdata[ 'origin_author_id' ],
+			'post_status'    => $postdata[ 'status' ],
+			'guid'           => $postdata[ 'guid' ],
+			'post_date_gmt'  => $postdata[ 'date' ],
+			'comment_status' => $postdata[ 'comment_status' ],
+			'ping_status'    => $postdata[ 'ping_status' ],
+			'post_type'      => $postdata[ 'type' ],
+			'post_excerpt'   => $postdata[ 'excerpt' ],
+			'post_content'   => $postdata[ 'content' ],
+			'post_name'      => $postdata[ 'name' ],
+			'post_parent'    => $new_parent_id,
+			'menu_order'     => $postdata[ 'menu_order' ],
+			'post_password'  => $postdata[ 'password' ]
 		);
 
+		$id_mapper_mock->expects( $this->atLeast( 1 ) )
+		               ->method( 'local_id' )
+		               ->with( 'post', $postdata[ 'origin_parent_post_id' ] )
+		               ->willReturn( $new_parent_id );
+
+
 		foreach ( $postdata as $method => $return_value ) {
-			if ( 'locale_relations' === $method )
-				continue; // we already have this one
 
 			$post_mock->expects( $this->atLeast( 1 ) )
-			               ->method( $method )
-			               ->willReturn( $return_value );
+			          ->method( $method )
+			          ->willReturn( $return_value );
 
 		}
 
 		$post_id = 3;
 
 		Brain\Monkey\Functions::expect( 'wp_insert_post' )
-		                      ->atLeast()->once()
+		                      ->atLeast()
+		                      ->once()
 		                      ->with(
 			                      $post,
 			                      TRUE
 		                      )
 		                      ->andReturn( $post_id );
 
-		Brain\Monkey\Functions::when( 'is_wp_error' )->justReturn( FALSE );
-
+		Brain\Monkey\Functions::when( 'is_wp_error' )
+		                      ->justReturn( FALSE );
 
 		$post_return = array(
-			'ID' => $post_id,
-			'to_ping' => FALSE,
-			'pinged' => FALSE,
+			'ID'                    => $post_id,
+			'to_ping'               => FALSE,
+			'pinged'                => FALSE,
 			'post_content_filtered' => FALSE,
-			'post_mime_type' => FALSE,
-			'comment_count' => 0,
-			'filter' => 'raw',
-			'ancestors' => array( 42 ),
-			'post_category' => array( 1 ),
-			'tags_input' => array()
+			'post_mime_type'        => FALSE,
+			'comment_count'         => 0,
+			'filter'                => 'raw',
+			'ancestors'             => array( 42 ),
+			'post_category'         => array( 1 ),
+			'tags_input'            => array()
 		);
 
 		$post_return = array_merge( $post, $post_return );
 
 		Brain\Monkey\Functions::expect( 'get_post' )
-		                      ->atLeast()->once()
+		                      ->atLeast()
+		                      ->once()
 		                      ->with( $post_id )
 		                      ->andReturn( $post_return );
 
 
 
+		Brain\Monkey\Functions::expect( 'wp_set_post_terms' )->once();
 
-		$taxonomies = array(
-						'category' => array( 112 )
-		);
-
-		foreach( $taxonomies as $taxonomy => $term_ids ){
-
-			Brain\Monkey\Functions::expect( 'wp_set_post_terms' )
-			                      ->atLeast()->once()
-			                      ->with( $post_id, $term_ids, $taxonomy )
-			                      ->andReturn( TRUE );
-
-		}
-
-		foreach( $postdata['meta'] as $meta ){
-
-			Brain\Monkey\Functions::expect( 'update_post_meta' )
-			                      ->atLeast()->once()
-			                      ->with( $post_id, $meta['key'], $meta['value'] )
-			                      ->andReturn( TRUE );
-
-		}
-
+		Brain\Monkey\Functions::expect( 'update_post_meta' )->times( 2 );
+		Brain\Monkey\Functions::expect( 'add_post_meta' )->twice();
 
 
 		#/**
