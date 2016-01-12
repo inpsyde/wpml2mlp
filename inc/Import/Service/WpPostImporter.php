@@ -53,12 +53,6 @@ class WpPostImporter implements PostImporterInterface {
 
 		$local_parent_id = $this->id_mapper->local_id( 'post', $post->origin_parent_post_id() );
 
-		;
-		$post->meta();
-		$post->is_sticky();
-		$post->origin_link();
-		$post->locale_relations();
-
 		$postdata = array(
 			'post_title'            => $post->title(),
 			'post_author'           => $post->origin_author_id(),
@@ -103,7 +97,7 @@ class WpPostImporter implements PostImporterInterface {
 
 		$taxonomies = array();
 
-		foreach( $postdata['terms'] as $term ){
+		foreach( $post->terms() as $term ){
 
 			$taxonomies[ $term['taxonomy'] ][] = $term['term_id'];
 
@@ -129,7 +123,15 @@ class WpPostImporter implements PostImporterInterface {
 
 		}
 
-		foreach( $postdata['meta'] as $meta ){
+		$post_metas = $post->meta();
+
+		print_r( $post_metas );
+
+		$post->is_sticky();
+		$post->origin_link();
+		$post->locale_relations();
+
+		foreach( $post->meta() as $meta ){
 
 			$update_post_meta_result = update_post_meta( $post_id, $meta['key'], $meta['value'] );
 
@@ -145,6 +147,9 @@ class WpPostImporter implements PostImporterInterface {
 				do_action( 'w2m_import_update_post_meta_error', $update_post_meta_result, $post_id, $meta[ 'key' ], $meta[ 'value' ] );
 			}
 		}
+
+
+
 
 		/**
 		 * @param WP_Post $wp_post
