@@ -85,14 +85,14 @@ class WpPostImporter implements PostImporterInterface {
 
 		$wp_post = get_post( $post_id );
 
-		#if ( $post->origin_parent_term_id() && ! $local_parent_id ) {
-		#	/**
-		#	 * @param stdClass|WP_Term $wp_term
-		#	 * @param Type\ImportTermInterface $term
-		#	 */
-		#	do_action( 'w2m_import_missing_term_ancestor', $wp_post, $post );
-		#	return;
-		#}
+		if ( $post->origin_parent_post_id() && ! $local_parent_id ) {
+			/**
+			 * @param stdClass|WP_Post $wp_post
+			 * @param Type\ImportPostInterface $post
+			 */
+			do_action( 'w2m_import_missing_post_ancestor', $wp_post, $post );
+			return;
+		}
 
 
 		$taxonomies = array();
@@ -124,11 +124,8 @@ class WpPostImporter implements PostImporterInterface {
 		}
 
 		$post_metas = $post->meta();
-		$post_metas[1] = array( 'key' => 'is_sticky', 'value' => $post->is_sticky() );
-		$post_metas[2] = array( 'key' => 'origin_link', 'value' => $post->origin_link() );
-
-		#TODO: solve locale_relations
-		$post->locale_relations();
+#		$post_metas[1] = array( 'key' => 'is_sticky', 'value' => $post->is_sticky() );
+		$post_metas[1] = array( 'key' => '_w2m_origin_link', 'value' => $post->origin_link() );
 
 		foreach( $post->meta() as $meta ){
 
