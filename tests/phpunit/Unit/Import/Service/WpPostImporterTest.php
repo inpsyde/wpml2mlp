@@ -48,6 +48,20 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 		$post_mock = $this->getMockBuilder( 'W2M\Import\Type\ImportPostInterface' )
 		                  ->getMock();
 
+		$postmeta_mock_single = $this->mock_builder->type_wp_import_meta();
+		$postmeta_mock_single->method( 'key' )->willReturn( 'mocky' );
+		$postmeta_mock_single->method( 'value' )->willReturn( 'mocky' );
+		$postmeta_mock_single->method( 'is_single' )->willReturn( TRUE );
+
+		$postmeta_mock_array = $this->mock_builder->type_wp_import_meta();
+		$postmeta_mock_array->method( 'key' )->willReturn( 'mocky' );
+		$postmeta_mock_array->method( 'value' )->willReturn( array( 'mocky', 'mreed' ) );
+		$postmeta_mock_array->method( 'is_single' )->willReturn( FALSE );
+
+		$term_mock = $this->mock_builder->type_wp_term_reference();
+		$term_mock->method( 'origin_id' )->willReturn( 113 );
+		$term_mock->method( 'taxonomy' )->willReturn( 'category' );
+
 		/**
 		 * Now define the behaviour of the mock object. Each of the specified
 		 * methods ( @see ImportPostInterface ) should return a proper value!
@@ -69,31 +83,11 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 			'password'              => 'mocky',
 			'is_sticky'             => FALSE,
 			'origin_link'           => 'http://wpml2mlp.test/mocky',
-			'terms'                 => array(
-				array(
-					'term_id'               => 112,
-					'slug'                  => 'mocky-news',
-					'origin_parent_term_id' => 110,
-					'name'                  => 'Mocky News',
-					'taxonomy'              => 'category',
-					'description'           => 'It doesn\'t really matter what stands here.'
-				)
-			),
-			'meta'                  => array(
-				array( 'key' => 'metakey', 'value' => 'metavalue' ),
-			),
-			'locale_relations'      => array(
-				array( 'locale' => 'en_US', 'origin_id' => 44330 ),
-				array( 'locale' => 'nl_NL', 'origin_id' => 57664 )
-			)
+			'terms'                 => array( $term_mock ),
+			'meta'                  => array( $postmeta_mock_single, $postmeta_mock_array )
 		);
 
 		$new_parent_id = 15;
-
-		$id_mapper_mock->expects( $this->atLeast( 1 ) )
-		               ->method( 'local_id' )
-		               ->with( 'post', $postdata[ 'origin_parent_post_id' ] )
-		               ->willReturn( $new_parent_id );
 
 		$post = array(
 			'post_title'     => $postdata[ 'title' ],
@@ -112,10 +106,13 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 			'post_password'  => $postdata[ 'password' ]
 		);
 
+		$id_mapper_mock->expects( $this->atLeast( 1 ) )
+		               ->method( 'local_id' )
+		               ->with( 'post', $postdata[ 'origin_parent_post_id' ] )
+		               ->willReturn( $new_parent_id );
+
+
 		foreach ( $postdata as $method => $return_value ) {
-			if ( 'locale_relations' === $method ) {
-				continue;
-			} // we already have this one
 
 			$post_mock->expects( $this->atLeast( 1 ) )
 			          ->method( $method )
@@ -158,29 +155,13 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 		                      ->with( $post_id )
 		                      ->andReturn( $post_return );
 
-		$taxonomies = array(
-			'category' => array( 112 )
-		);
 
-		foreach ( $taxonomies as $taxonomy => $term_ids ) {
 
-			Brain\Monkey\Functions::expect( 'wp_set_post_terms' )
-			                      ->atLeast()
-			                      ->once()
-			                      ->with( $post_id, $term_ids, $taxonomy )
-			                      ->andReturn( TRUE );
+		Brain\Monkey\Functions::expect( 'wp_set_post_terms' )->once();
 
-		}
+		Brain\Monkey\Functions::expect( 'update_post_meta' )->times( 2 );
+		Brain\Monkey\Functions::expect( 'add_post_meta' )->twice();
 
-		foreach ( $postdata[ 'meta' ] as $meta ) {
-
-			Brain\Monkey\Functions::expect( 'update_post_meta' )
-			                      ->atLeast()
-			                      ->once()
-			                      ->with( $post_id, $meta[ 'key' ], $meta[ 'value' ] )
-			                      ->andReturn( TRUE );
-
-		}
 
 		#/**
 		# * Remove this line when the test is completely configured.
