@@ -59,6 +59,7 @@ Use the installer via back-end of your install or ...
 * `w2m_import_set_user_id` in `W2M\Import\Type\WpImportUser::id()`
 * `w2m_import_set_post_id` in `W2M\Import\Type\WpImportPost::id()`
 * `w2m_import_set_term_id` in `W2M\Import\Type\WpImportTerm::id()`
+* `w2m_import_set_comment_id` in `W2M\Import\Type\WpImportComment::id()`
 
 ## Other Notes
 
