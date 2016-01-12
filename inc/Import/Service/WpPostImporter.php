@@ -127,9 +127,25 @@ class WpPostImporter implements PostImporterInterface {
 #		$post_metas[1] = array( 'key' => 'is_sticky', 'value' => $post->is_sticky() );
 		$post_metas[1] = array( 'key' => '_w2m_origin_link', 'value' => $post->origin_link() );
 
-		foreach( $post->meta() as $meta ){
+		foreach( $post->meta() as $meta ) {
+			/* @var Type\ImportMetaInterface $meta */
+			if ( $meta->is_single() ) {
+				$update_post_meta_result = update_post_meta(
+					$post_id,
+					$meta->key(),
+					$meta->value()
+				);
+			} else {
+				foreach ( $meta->value() as $v ) {
+					add_post_meta(
+						$post_id,
+						$meta->key(),
+						$v,
+						FALSE // not unique
+					);
+				}
+			}
 
-			$update_post_meta_result = update_post_meta( $post_id, $meta['key'], $meta['value'] );
 
 			if ( $update_post_meta_result !== TRUE ) {
 
