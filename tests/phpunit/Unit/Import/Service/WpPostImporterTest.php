@@ -13,7 +13,7 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 	/**
 	 * runs before each test
 	 */
-	protected function setUp() {
+	public function setUp() {
 
 		if ( !$this->fs_helper ) {
 			$this->fs_helper = new Helper\FileSystem;
