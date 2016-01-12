@@ -42,11 +42,6 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 		                                   ->getMock();
 
 		$id_mapper_mock = $this->mock_builder->data_multi_type_id_mapper();
-		/*
-		$id_mapper_mock->method( '' ) // method name
-			->with() // expected parameter
-			->willReturn(); // return value
-		*/
 
 		$testee = new Service\WpPostImporter( $translation_connector_mock, $id_mapper_mock );
 
@@ -142,6 +137,12 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 		                      ->with( $post_id, 'ARRAY_A' )
 		                      ->andReturn( $post_return );
 
+
+		$new_parent_id = 15;
+		$id_mapper_mock->expects( $this->atLeast( 1 ) )
+		               ->method( 'local_id' )
+		               ->with( 'post', $postdata['origin_parent_post_id'] )
+		               ->willReturn( $new_parent_id );
 
 		#/**
 		# * Remove this line when the test is completely configured.
