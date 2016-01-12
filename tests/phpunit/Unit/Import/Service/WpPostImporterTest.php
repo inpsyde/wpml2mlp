@@ -79,11 +79,15 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 												'description'           => 'It doesn\'t really matter what stands here.'
 											)
 										),
-			'meta'                  => array( 'meta' ),
+			'meta'                  => array(
+											array( 'key' => '_edit_lock', 'value' => '1414579147:9', 'is_single' => TRUE ),
+											array( 'key' => '_edit_last', 'value' => '9', 'is_single' => TRUE ),
+											array( 'key' => 'multiple_values', 'value' => array( 'foo', 'bar' ), 'is_single' => FALSE )
+										),
 			'locale_relations'      => array(
-										array( 'locale' => 'en_US', 'origin_id' => 44330 ),
-										array( 'locale' => 'nl_NL', 'origin_id' => 57664 )
-									)
+											array( 'locale' => 'en_US', 'origin_id' => 44330 ),
+											array( 'locale' => 'nl_NL', 'origin_id' => 57664 )
+										)
 		);
 
 		$post = array(
@@ -166,6 +170,8 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 			                      ->andReturn( TRUE );
 
 		}
+
+
 
 
 		#/**
