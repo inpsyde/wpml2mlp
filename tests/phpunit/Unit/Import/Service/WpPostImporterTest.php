@@ -162,13 +162,10 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 		               ->willReturn( $new_parent_id );
 
 
-		$taxonomies = array();
-
-		foreach( $postdata['terms'] as $term ){
-
-			$taxonomies[ $term['taxonomy'] ][] = $term['term_id'];
-
-		}
+		$taxonomies = array(
+						'category' => array( 112, 110 ),
+						'custom-category' => array( 113, 115 )
+		);
 
 		foreach( $taxonomies as $taxonomy => $term_ids ){
 
@@ -186,7 +183,7 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 		# * Currently the missing mock of wp_insert_post() lets the test
 		# * ends in a fatal error.
 		# */
-		#$this->markTestIncomplete( 'Under Construction' );
+		$this->markTestIncomplete( 'Under Construction' );
 		$testee->import_post( $post_mock );
 
 	}
