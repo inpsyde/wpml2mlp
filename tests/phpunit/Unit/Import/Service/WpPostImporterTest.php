@@ -106,8 +106,8 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 			'post_excerpt'          => $postdata['excerpt'],
 			'post_content'          => $postdata['content'],
 			'post_name'             => $postdata['name'],
-			'post_parent'           => $postdata['menu_order'],
-			'menu_order'            => $postdata['origin_parent_post_id'],
+			'post_parent'           => $postdata['origin_parent_post_id'],
+			'menu_order'            => $postdata['menu_order'],
 			'post_password'         => $postdata['password']
 		);
 
