@@ -130,9 +130,25 @@ class WpPostImporter implements PostImporterInterface {
 		#TODO: solve locale_relations
 		$post->locale_relations();
 
-		foreach( $post->meta() as $meta ){
+		foreach( $post->meta() as $meta ) {
+			/* @var Type\ImportMetaInterface $meta */
+			if ( $meta->is_single() ) {
+				$update_post_meta_result = update_post_meta(
+					$post_id,
+					$meta->key(),
+					$meta->value()
+				);
+			} else {
+				foreach ( $meta->value() as $v ) {
+					add_post_meta(
+						$post_id,
+						$meta->key(),
+						$v,
+						FALSE // not unique
+					);
+				}
+			}
 
-			$update_post_meta_result = update_post_meta( $post_id, $meta['key'], $meta['value'] );
 
 			if ( $update_post_meta_result !== TRUE ) {
 
