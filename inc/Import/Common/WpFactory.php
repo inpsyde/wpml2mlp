@@ -2,7 +2,9 @@
 
 namespace W2M\Import\Common;
 
-use WP_Error;
+use
+	WP_Error,
+	WP_Query;
 
 class WpFactory implements WpFactoryInterface {
 
@@ -32,4 +34,15 @@ class WpFactory implements WpFactoryInterface {
 
 		return $this->common_factory->create_object( 'WP_Error', func_get_args() );
 	}
+
+	/**
+	 * @param array|string $query
+	 *
+	 * @return WP_Query
+	 */
+	public function wp_query( $query ) {
+
+		return $this->common_factory->create_object( 'WP_Query', [ $query ] );
+	}
+
 }
