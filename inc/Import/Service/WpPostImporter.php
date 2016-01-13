@@ -171,14 +171,11 @@ class WpPostImporter implements PostImporterInterface {
 
 		}
 
-
-
-
 		/**
 		 * @param WP_Post $wp_post
 		 * @param Type\ImportPostInterface $post
 		 */
-		do_action( 'w2m_post_imported', $wp_post, $post );
+		do_action( 'w2m_post_imported', $post_id, $post );
 
 	}
 

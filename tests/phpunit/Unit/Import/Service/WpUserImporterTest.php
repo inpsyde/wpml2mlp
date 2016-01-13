@@ -24,10 +24,9 @@ class WpUserImporterTest extends Helper\MonkeyTestCase {
 	}
 
 	/**
-	 * @group import_post
+	 * @group import_user
 	 */
 	public function test_import_user() {
-
 
 		/**
 		 * Create mocks for the dependency of the testee (WpPostImporter)
@@ -38,6 +37,8 @@ class WpUserImporterTest extends Helper\MonkeyTestCase {
 		$id_mapper_mock = $this->mock_builder->data_multi_type_id_mapper();
 
 		$testee = new Service\WpUserImporter( $translation_connector_mock, $id_mapper_mock );
+
+		$this->markTestSkipped( 'Under construction…' );
 
 		/**
 		 * Now define the behaviour of the mock object. Each of the specified
