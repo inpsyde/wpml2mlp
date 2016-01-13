@@ -16,26 +16,15 @@ class WpUserParser implements UserParserInterface {
 	private $wp_factory;
 
 	/**
-	 * @var Common\SimpleXmlTools
-	 */
-	private $xml_tools;
-
-	/**
 	 * @param Common\WpFactoryInterface|NULL $wp_factory
-	 * @param Common\SimpleXmlTools|NULL $xml_tools
 	 */
 	public function __construct(
-		Common\WpFactoryInterface $wp_factory = NULL,
-		Common\SimpleXmlTools $xml_tools = NULL
+		Common\WpFactoryInterface $wp_factory = NULL
 	) {
 
 		$this->wp_factory = $wp_factory
 			? $wp_factory
 			: new Common\WpFactory;
-
-		$this->xml_tools = $xml_tools
-			? $xml_tools
-			: new Common\SimpleXmlTools;
 	}
 
 	/**
