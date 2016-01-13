@@ -83,14 +83,12 @@ class WpPostImporter implements PostImporterInterface {
 			return;
 		}
 
-		$wp_post = get_post( $post_id );
-
 		if ( $post->origin_parent_post_id() && ! $local_parent_id ) {
 			/**
 			 * @param stdClass|WP_Post $wp_post
 			 * @param Type\ImportPostInterface $post
 			 */
-			do_action( 'w2m_import_missing_post_ancestor', $wp_post, $post );
+			do_action( 'w2m_import_missing_post_ancestor', $post_id, $post );
 			return;
 		}
 
@@ -157,6 +155,16 @@ class WpPostImporter implements PostImporterInterface {
 						$v,
 						FALSE // not unique
 					);
+
+					#test if update_post_meta returned a error
+					$this->meta_result(
+						$update_post_meta_result,
+						array(
+							'post_id' => $post_id,
+							'meta' => array( 'key' => $meta->key(), 'value' => $v )
+						)
+					);
+
 				}
 			}
 
@@ -175,16 +183,14 @@ class WpPostImporter implements PostImporterInterface {
 
 	private function meta_result( $meta_result, $attribute ){
 
-		#print_r( $meta_result, $attribute );
-
 		if ( $meta_result !== TRUE ) {
 
-			#TODO: if $update_post_meta_result false turn it into a wp_error object
+			$meta_result = new WP_Error( 'broken', "Cant add or update postmeta." );
 
 			/**
 			 * Attach error handler/logger here
 			 *
-			 * @param boolean $meta_result
+			 * @param WP_Error $meta_result
 			 * @param int     $post_id
 			 * @param array   $term_ids
 			 * @param string  $taxonomy
