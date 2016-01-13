@@ -52,10 +52,13 @@ class WpPostImporter implements PostImporterInterface {
 	public function import_post( Type\ImportPostInterface $post ) {
 
 		$local_parent_id = $this->id_mapper->local_id( 'post', $post->origin_parent_post_id() );
+		$local_user_id = $this->id_mapper->local_id( 'user', $post->origin_author_id() );
+
+		print_r( $local_user_id );
 
 		$postdata = array(
 			'post_title'            => $post->title(),
-			'post_author'           => $post->origin_author_id(),
+			'post_author'           => $local_user_id,
 			'post_status'           => $post->status(),
 			'guid'                  => $post->guid(),
 			'post_date_gmt'         => $post->date(),

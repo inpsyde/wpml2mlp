@@ -72,7 +72,7 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 		 */
 		$postdata = array(
 			'title'                 => 'Mocky test fight',
-			'origin_author_id'      => 42,
+			'origin_author_id'      => 12,
 			'status'                => 'draft',
 			'guid'                  => 'mocky',
 			'date'                  => ( new \DateTime( 'NOW' ) )->format( 'Y-m-d H:i:s' ),
@@ -91,11 +91,20 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 			'meta'                  => array( $postmeta_mock_single, $postmeta_mock_array )
 		);
 
+		$post_id = 3;
 		$new_parent_id = 15;
+		$new_author_id = 3;
+
+		$id_mapper_mock->expects( $this->atLeast( 2 ) )
+		               ->method( 'local_id' )
+		               ->withConsecutive(
+			               array( 'post', $postdata[ 'origin_parent_post_id' ] ),
+			               array( 'user', $postdata[ 'origin_author_id' ] )
+		               )->will( $this->onConsecutiveCalls( $new_parent_id, $new_author_id ) );
 
 		$post = array(
 			'post_title'     => $postdata[ 'title' ],
-			'post_author'    => $postdata[ 'origin_author_id' ],
+			'post_author'    => $new_author_id,
 			'post_status'    => $postdata[ 'status' ],
 			'guid'           => $postdata[ 'guid' ],
 			'post_date_gmt'  => $postdata[ 'date' ],
@@ -110,12 +119,6 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 			'post_password'  => $postdata[ 'password' ]
 		);
 
-		$id_mapper_mock->expects( $this->atLeast( 1 ) )
-		               ->method( 'local_id' )
-		               ->with( 'post', $postdata[ 'origin_parent_post_id' ] )
-		               ->willReturn( $new_parent_id );
-
-
 		foreach ( $postdata as $method => $return_value ) {
 
 			$post_mock->expects( $this->atLeast( 1 ) )
@@ -123,8 +126,6 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 			          ->willReturn( $return_value );
 
 		}
-
-		$post_id = 3;
 
 		Brain\Monkey\Functions::expect( 'wp_insert_post' )
 		                      ->atLeast()
