@@ -5,7 +5,7 @@ namespace W2M\Import\Module;
 use
 	W2M\Import\Type,
 	W2M\Import\Data,
-	Mlp_Language_Api_Interface,
+	W2M\Import\Common,
 	Mlp_Content_Relations_Interface,
 	WP_Error,
 	WP_Query,
@@ -19,11 +19,6 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 	private $origin_id_post_meta_key = '_w2m_origin_post_id';
 
 	/**
-	 * @var Mlp_Language_Api_Interface
-	 */
-	private $mlp_language_api;
-
-	/**
 	 * @var Mlp_Content_Relations_Interface
 	 */
 	private $mlp_content_relations;
@@ -34,18 +29,26 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 	private $id_mapper;
 
 	/**
-	 * @param Mlp_Language_Api_Interface $mlp_language_api
+	 * @var Common\WpFactoryInterface
+	 */
+	private $wp_factory;
+
+	/**
 	 * @param Mlp_Content_Relations_Interface $mpl_content_relations
 	 * @param Data\MultiTypeIdMapperInterface $id_mapper
+	 * @param Common\WpFactoryInterface $wp_factory (Optional)
 	 */
 	public function __construct(
-		Mlp_Language_Api_Interface $mlp_language_api,
 		Mlp_Content_Relations_Interface $mpl_content_relations,
-		Data\MultiTypeIdMapperInterface $id_mapper
+		Data\MultiTypeIdMapperInterface $id_mapper,
+		Common\WpFactoryInterface $wp_factory = NULL
 	) {
 
-		$this->mlp_language_api = $mlp_language_api;
-		$this->id_mapper        = $id_mapper;
+		$this->mlp_content_relations = $mpl_content_relations;
+		$this->id_mapper             = $id_mapper;
+		$this->wp_factory            = $wp_factory
+			? $wp_factory
+			: new Common\WpFactory;
 	}
 
 	/**
@@ -139,8 +142,8 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 	public function get_remote_post_id( $blog_id, Type\LocaleRelationInterface $relation ) {
 
 		switch_to_blog( $blog_id );
-		$query = new WP_Query(
-			array(
+		$query = $this->wp_factory->wp_query(
+			[
 				'posts_per_page'         => 1,
 				'post_status'            => 'any',
 				'post_type'              => 'any',
@@ -149,7 +152,7 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 				'fields'                 => 'ids',
 				'update_post_meta_cache' => FALSE,
 				'update_post_term_cache' => FALSE
-			)
+			]
 		);
 		restore_current_blog();
 
@@ -170,7 +173,10 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 		Type\LocaleRelationInterface $locale_relation
 	) {
 
-		$error = new WP_Error( 'locale', "Cannot find blog for locale {$locale_relation->locale()}" );
+		$error = $this->wp_factory->wp_error(
+			'locale',
+			"Cannot find blog for locale {$locale_relation->locale()}"
+		);
 		$error->add_data(
 			'locale',
 			array (
@@ -194,7 +200,10 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 		Type\LocaleRelationInterface $locale_relation
 	) {
 
-		$error = new WP_Error( 'post', "Cannot find remote post for locale {$locale_relation->locale()}" );
+		$error = $this->wp_factory->wp_error(
+			'post',
+			"Cannot find remote post for locale {$locale_relation->locale()}"
+		);
 		$error->add_data(
 			'post',
 			array (
