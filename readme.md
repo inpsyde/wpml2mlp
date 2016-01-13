@@ -38,7 +38,7 @@ Use the installer via back-end of your install or ...
  5. Go to **Settings** on Multisite or **Tools** on single site, **WPML2MLP**, then start the export of the current WPML stuff.
 
 ## Action & Filter Reference
-###Actions
+### Actions
 * `w2m_import_term_error` in `W2M\Import\Service\WpTermImporter::import_term()`
 * `w2m_import_missing_term_ancestor` in `W2M\Import\Service\WpTermImporter::import_term()`
 * `w2m_term_imported` in `W2M\Import\Service\WpTermImporter::import_term()`
@@ -59,6 +59,7 @@ Use the installer via back-end of your install or ...
 * `w2m_import_set_user_id` in `W2M\Import\Type\WpImportUser::id()`
 * `w2m_import_set_post_id` in `W2M\Import\Type\WpImportPost::id()`
 * `w2m_import_set_term_id` in `W2M\Import\Type\WpImportTerm::id()`
+* `w2m_import_set_comment_id` in `W2M\Import\Type\WpImportComment::id()`
 
 ## Other Notes
 
