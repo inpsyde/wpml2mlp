@@ -123,8 +123,10 @@ class WpPostImporter implements PostImporterInterface {
 
 		}
 
-		#TODO: is_sticky is not a meta, its a option
-		#$post_metas[1] = array( 'key' => 'is_sticky', 'value' => $post->is_sticky() );
+		#Make this post sticky.
+		if( $post->is_sticky() ){
+			stick_post( $post_id );
+		}
 
 		update_post_meta( $post_id, '_w2m_origin_link', $post->origin_link() );
 
@@ -138,6 +140,7 @@ class WpPostImporter implements PostImporterInterface {
 					$meta->value()
 				);
 
+				#test if update_post_meta returned a error
 				$this->meta_result(
 					$update_post_meta_result,
 					array(
@@ -172,7 +175,7 @@ class WpPostImporter implements PostImporterInterface {
 
 	private function meta_result( $meta_result, $attribute ){
 
-		print_r( $meta_result, $attribute );
+		#print_r( $meta_result, $attribute );
 
 		if ( $meta_result !== TRUE ) {
 

@@ -159,15 +159,23 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 
 		Brain\Monkey\Functions::expect( 'wp_set_post_terms' )->once();
 
+		/**
+		 * update_post_meta needs expect 2 times.
+		 * At first save the _w2m_origin_link.
+		 * The second looped $post->meta() ( @see ImportPostInterface )
+		 */
 		Brain\Monkey\Functions::expect( 'update_post_meta' )->times( 2 );
+
+		/**
+		 * Is a postmeta value type array we have to add the Postmeta at the same metakey
+		 * @see $postmeta_mock_array
+		 */
 		Brain\Monkey\Functions::expect( 'add_post_meta' )->twice();
 
-
-		#/**
-		# * Remove this line when the test is completely configured.
-		# * Currently the missing mock of wp_insert_post() lets the test
-		# * ends in a fatal error.
-		# */
+		* # * Remove this line when the test is completely configured.
+		* # * Currently the missing mock of wp_insert_post() lets the test
+		* # * ends in a fatal error.
+		* # */
 		#$this->markTestIncomplete( 'Under Construction' );
 		$testee->import_post( $post_mock );
 
