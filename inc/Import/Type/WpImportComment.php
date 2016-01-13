@@ -94,7 +94,23 @@ class WpImportComment implements ImportCommentInterface {
 	private $param_sanitizer;
 
 	/**
-	 * @param array $attributes
+	 * @param array $attributes {
+	 *      int      $origin_id,
+	 *      int      $origin_post_id,
+	 *      string   $author_name,
+	 *      string   $author_email,
+	 *      string   $author_url,
+	 *      string   $author_ip,
+	 *      DateTime $date
+	 *      string   $content,
+	 *      string   $karma,
+	 *      string   $approved,
+	 *      string   $agent,
+	 *      string   $type,
+	 *      int      $origin_user_id,
+	 *      int      $origin_parent_comment_id,
+	 *      array    $meta
+	 * }
 	 * @param Common\ParameterSanitizerInterface $param_sanitizer (Optional)
 	 */
 	public function __construct( Array $attributes, Common\ParameterSanitizerInterface $param_sanitizer = NULL ) {
@@ -105,6 +121,9 @@ class WpImportComment implements ImportCommentInterface {
 		$this->set_attributes( $attributes );
 	}
 
+	/**
+	 * @param array $attributes
+	 */
 	private function set_attributes( Array $attributes ) {
 
 		$type_map = array(

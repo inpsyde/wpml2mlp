@@ -6,14 +6,15 @@ use
 	W2M\Import\Type,
 	W2M\Import\Common,
 	SimpleXMLElement,
-	WP_Error;
+	WP_Error,
+	DateTime;
 
-class WpTermParser implements TermParserInterface {
+class WpCommentParser implements CommentParserInterface {
 
 	/**
 	 * @var string
 	 */
-	private $item = 'category';
+	private $item = 'comment';
 
 	/**
 	 * @var Common\WpFactoryInterface
@@ -31,58 +32,66 @@ class WpTermParser implements TermParserInterface {
 	}
 
 	/**
-	 * @param SimpleXMLElement $term
+	 * @param SimpleXMLElement $document
 	 *
-	 * @return Type\ImportTermInterface|NULL
+	 * @return Type\ImportCommentInterface|NULL
 	 */
-	public function parse_term( SimpleXMLElement $term ) {
+	public function parse_comment( SimpleXMLElement $document ) {
 
-		// WP terms comes with namespaces elements
-		$namespaces = $term->getDocNamespaces();
+		$namespaces = $document->getDocNamespaces();
 		if ( ! isset( $namespaces[ 'wp' ] ) ) {
-			$this->missing_namespace_error( $term );
-			return;
-		}
-		$wp_ns    =  $namespaces[ 'wp' ];
-		$wp_terms = $term->children( $wp_ns );
-		$item     = $this->item;
-
-		if ( ! isset( $wp_terms->{$item} ) ) {
-			$this->missing_item_error( $term, $item );
+			$this->missing_namespace_error( $document );
 			return;
 		}
 
-		$term_data = array();
-		// map node names to type attributes
-		$attributes = array(
-			'term_id'              => 'origin_id',
-			'taxonomy'             => 'taxonomy',
-			'category_nicename'    => 'slug',
-			'category_parent'      => 'origin_parent_term_id',
-			'cat_name'             => 'name',
-			'category_description' => 'description'
-			// Todo: Locale relations
-		);
+		$wp   = $document->children( $namespaces[ 'wp' ] );
+		$item = $this->item;
+		if ( ! isset( $document->{$item} ) ) {
+			$this->missing_item_error( $document );
+			return;
+		}
+
+		$comment_data = [];
+		$attributes = [
+			'comment_ID'           => 'origin_id',
+			'comment_post_ID'      => 'origin_post_id',
+			'comment_author'       => 'author_name',
+			'comment_author_email' => 'author_email',
+			'comment_author_url'   => 'author_url',
+			'comment_author_IP'    => 'author_ip',
+			'comment_date_gmt'     => 'date',
+			'comment_content'      => 'content',
+			'comment_karma'        => 'karma',
+			'comment_approved'     => 'approved',
+			'comment_agent'        => 'agent',
+			'comment_type'         => 'type',
+			'comment_parent'       => 'parent',
+			'user_id'              => 'origin_user_id'
+		];
 
 		foreach ( $attributes as $node => $method ) {
-			if ( ! isset( $wp_terms->{$item}->{$node} ) ) {
-				$this->missing_attribute_error( $term, $node );
+			if ( ! isset( $wp->{$item}->{$node} ) ) {
+				$this->missing_attribute_error( $document, $node );
 				continue;
 			}
-			$term_data[ $method ] = $wp_terms->{$item}->{$node};
+			if ( 'date' === $method ) {
+				// Todo: validate DateTime instance (#38)
+				$date = DateTime::createFromFormat(
+					'Y-m-d H:i:s',
+					(string) $wp->{$item}->{$node}
+				);
+				if ( ! $date )
+					$date = new DateTime();
+				$comment_data[ $method ] = $date;
+				continue;
+			}
+			$comment_data[ $method ] = $wp->{$item}->$node;
 		}
 
-		if ( empty( $term_data[ 'taxonomy' ] ) || empty( $term_data[ 'name' ] ) ) {
-			// at least these two attributes are required
-			return;
-		}
-
-		return new Type\WpImportTerm( $term_data );
+		return new Type\WpImportComment( $comment_data );
 	}
 
 	/**
-	 * Creating a missing namespace error
-	 *
 	 * @param SimpleXMLElement $document
 	 * @param string $namespace
 	 */
@@ -90,7 +99,7 @@ class WpTermParser implements TermParserInterface {
 
 		$error = $this->wp_factory->wp_error(
 			'namespace',
-			"Missing namespace '{$namespace}' in XML term node"
+			"Missing namespace '{$namespace}' in XML comment node"
 		);
 		$error->add_data(
 			'namespace',
@@ -106,17 +115,18 @@ class WpTermParser implements TermParserInterface {
 		$this->propagate_error( $error );
 	}
 
+
 	/**
 	 * Creating a missing item error
 	 *
 	 * @param SimpleXMLElement $document
 	 * @param string $item
 	 */
-	private function missing_item_error( SimpleXMLElement $document, $item = 'category' ) {
+	private function missing_item_error( SimpleXMLElement $document, $item = 'comment' ) {
 
 		$error = $this->wp_factory->wp_error(
 			'item',
-			"Missing item node '{$item}' in XML term node"
+			"Missing item node '{$item}' in XML comment node"
 		);
 		$error->add_data(
 			'item',
@@ -142,7 +152,7 @@ class WpTermParser implements TermParserInterface {
 
 		$error = $this->wp_factory->wp_error(
 			'attribute',
-			"Missing attribute node '{$attribute}' in XML term node"
+			"Missing attribute node '{$attribute}' in XML comment node"
 		);
 		$error->add_data(
 			'attribute',
@@ -159,18 +169,16 @@ class WpTermParser implements TermParserInterface {
 	}
 
 	/**
-	 * Fires the action w2m_import_parse_term_error
+	 * Fires the action w2m_import_parse_comment_error
 	 *
 	 * @param WP_Error $error
 	 */
 	private function propagate_error( WP_Error $error ) {
 
 		/**
-		 * For error loggers
-		 *
 		 * @param WP_Error $error
 		 */
-		do_action( 'w2m_import_parse_term_error', $error );
+		do_action( 'w2m_import_parse_comment_error', $error );
 	}
 
 }

@@ -171,6 +171,7 @@ class WpPostParser implements PostParserInterface {
 		}
 
 		if ( isset( $wp->post_date_gmt ) ) {
+			// Todo: validate the DateTime instance (#38)
 			$post_data[ 'date' ] = DateTime::createFromFormat(
 				'Y-m-d H:i:s',
 				$wp->post_date_gmt,
