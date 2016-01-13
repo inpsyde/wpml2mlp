@@ -3,6 +3,7 @@
 namespace W2M\Import\Common;
 
 use
+	WP_Query,
 	WP_Error;
 
 interface WpFactoryInterface {
@@ -15,4 +16,11 @@ interface WpFactoryInterface {
 	 * @return WP_Error
 	 */
 	public function wp_error( $code = '', $message = '', $data = '' );
+
+	/**
+	 * @param array|string $query
+	 *
+	 * @return WP_Query
+	 */
+	public function wp_query( $query );
 }
