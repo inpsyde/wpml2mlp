@@ -120,18 +120,6 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 	}
 
 	/**
-	 * @param Type\ImportPostInterface $import_post
-	 */
-	private function set_origin_post_id_meta( Type\ImportPostInterface $import_post ) {
-
-		update_post_meta(
-			$import_post->id(),
-			$this->origin_id_post_meta_key,
-			$import_post->origin_id()
-		);
-	}
-
-	/**
 	 * Gets the remote post id by the origin id
 	 *
 	 * @param $blog_id
@@ -160,6 +148,18 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 			return 0;
 
 		return (int) current( $query->posts );
+	}
+
+	/**
+	 * @param Type\ImportPostInterface $import_post
+	 */
+	private function set_origin_post_id_meta( Type\ImportPostInterface $import_post ) {
+
+		update_post_meta(
+			$import_post->id(),
+			$this->origin_id_post_meta_key,
+			$import_post->origin_id()
+		);
 	}
 
 	/**
