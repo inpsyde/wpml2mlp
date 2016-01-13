@@ -28,6 +28,17 @@ class WpUserImporterTest extends Helper\MonkeyTestCase {
 	 */
 	public function test_import_user() {
 
+
+		/**
+		 * Create mocks for the dependency of the testee (WpPostImporter)
+		 */
+		$translation_connector_mock = $this->getMockBuilder( 'W2M\Import\Module\TranslationConnectorInterface' )
+		                                   ->getMock();
+
+		$id_mapper_mock = $this->mock_builder->data_multi_type_id_mapper();
+
+		$testee = new Service\WpUserImporter( $translation_connector_mock, $id_mapper_mock );
+
 		/**
 		 * Now define the behaviour of the mock object. Each of the specified
 		 * methods ( @see ImportUserInterface ) should return a proper value!

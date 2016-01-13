@@ -9,7 +9,7 @@ use
 	WP_Error;
 
 
-class WpUserImporter implements UserImporterInterface {
+class WpUserImporter implements UserParserInterface {
 
 	/**/
 	public function __construct() {}
@@ -19,6 +19,7 @@ class WpUserImporter implements UserImporterInterface {
 	 * @return bool|\WP_Error
 	 */
 	public function import_user( Type\ImportUserInterface $user ) {
+
 
 		$userdata = array();
 
