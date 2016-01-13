@@ -81,7 +81,7 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 			'origin_parent_post_id' => 42,
 			'menu_order'            => 1,
 			'password'              => 'mocky',
-			'is_sticky'             => FALSE,
+			'is_sticky'             => TRUE,
 			'origin_link'           => 'http://wpml2mlp.test/mocky',
 			'terms'                 => array( $term_mock ),
 			'meta'                  => array( $postmeta_mock_single, $postmeta_mock_array )
@@ -160,6 +160,12 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 		Brain\Monkey\Functions::expect( 'wp_set_post_terms' )->once();
 
 		/**
+		 * stick_post test.
+		 * The posttestdata is a sticky post so we have to test the stick_post methode
+		 */
+		Brain\Monkey\Functions::expect( 'stick_post' )->once();
+
+		/**
 		 * update_post_meta needs expect 2 times.
 		 * At first save the _w2m_origin_link.
 		 * The second looped $post->meta() ( @see ImportPostInterface )
@@ -172,10 +178,11 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 		 */
 		Brain\Monkey\Functions::expect( 'add_post_meta' )->twice();
 
-		* # * Remove this line when the test is completely configured.
-		* # * Currently the missing mock of wp_insert_post() lets the test
-		* # * ends in a fatal error.
-		* # */
+		/*
+		 * Remove this line when the test is completely configured.
+		 * Currently the missing mock of wp_insert_post() lets the test
+		 * ends in a fatal error.
+		 */
 		#$this->markTestIncomplete( 'Under Construction' );
 		$testee->import_post( $post_mock );
 
