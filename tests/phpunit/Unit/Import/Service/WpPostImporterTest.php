@@ -36,7 +36,6 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 	 */
 	public function test_import_post() {
 
-		$this->markTestSkipped( 'Under construction…' );
 		/**
 		 * Create mocks for the dependency of the testee (WpPostImporter)
 		 */
