@@ -28,6 +28,7 @@ class WpUserImporterTest extends Helper\MonkeyTestCase {
 	 */
 	public function test_import_user() {
 
+		$this->markTestSkipped( 'Under construction…' );
 		/**
 		 * Now define the behaviour of the mock object. Each of the specified
 		 * methods ( @see ImportUserInterface ) should return a proper value!
