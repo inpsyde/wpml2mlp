@@ -5,6 +5,11 @@ Convert posts from an existing WPML multilingual site via XLIFF Export/Import fo
 ## Description
 WPML stores each entry as a separate post and uses some custom tables to connect the translations. If you de-activate the plugin or have issues with functionality related to version updates, you get one site with multilingual confusion. This plugin migrate all data from WPML to [MultilingualPress](https://wordpress.org/plugins/multilingual-press/) plugin, also the [Premium](http://multilingualpress.pro/) Version.
 
+## Requirements
+
+ * PHP >= 5.4.0
+ * WP  >= 4.4.0
+
 ### Attention
 This plugin is not permanently under maintenance, use and tests. You can use the plugin, but **make a backup safely**. Please give us feedback if you see problems.
 The best way for feedback is an issue on the repository on [github.com/inpsyde/wpml2mlp](https://github.com/inpsyde/wpml2mlp).
@@ -55,6 +60,7 @@ Use the installer via back-end of your install or ...
 * `w2m_import_parse_term_error` in `W2M\Import\Service\WpTermParser::propagate_error()`
 * `w2m_import_parse_post_error` in `W2M\Import\Service\WpPostParser::propagate_error()`
 * `w2m_import_parse_user_error` in `W2M\Import\Service\WpUserParser::propagate_error()`
+* `w2m_import_parse_comment_error` in `W2M\Import\Service\WpCommentParser::propagate_error()`
 
 * `w2m_import_set_user_id` in `W2M\Import\Type\WpImportUser::id()`
 * `w2m_import_set_post_id` in `W2M\Import\Type\WpImportPost::id()`
