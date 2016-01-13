@@ -28,6 +28,7 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 		 * when mocking objects that type hint WP core components
 		 */
 		$this->getMock( 'WP_Post' );
+
 	}
 
 	/**
@@ -47,6 +48,9 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 
 		$post_mock = $this->getMockBuilder( 'W2M\Import\Type\ImportPostInterface' )
 		                  ->getMock();
+
+		$wp_error_update_post_meta = $this->mock_builder->wp_error( array( 'add_data' ) );
+		$wp_error_update_post_meta->method( 'add_data' )->with( '404' )->willReturn( "I've fallen and can't get up" );
 
 		$postmeta_mock_single = $this->mock_builder->type_wp_import_meta();
 		$postmeta_mock_single->method( 'key' )->willReturn( 'mocky' );
@@ -155,8 +159,6 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 		                      ->with( $post_id )
 		                      ->andReturn( $post_return );
 
-
-
 		Brain\Monkey\Functions::expect( 'wp_set_post_terms' )->once();
 
 		/**
@@ -178,12 +180,6 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 		 */
 		Brain\Monkey\Functions::expect( 'add_post_meta' )->twice();
 
-		/*
-		 * Remove this line when the test is completely configured.
-		 * Currently the missing mock of wp_insert_post() lets the test
-		 * ends in a fatal error.
-		 */
-		#$this->markTestIncomplete( 'Under Construction' );
 		$testee->import_post( $post_mock );
 
 	}
