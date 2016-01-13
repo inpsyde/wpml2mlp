@@ -69,7 +69,7 @@ class WpTermParser implements TermParserInterface {
 				$this->missing_attribute_error( $term, $node );
 				continue;
 			}
-			$term_data[ $method ] = $wp_terms->category->{$node};
+			$term_data[ $method ] = $wp_terms->{$item}->{$node};
 		}
 
 		if ( empty( $term_data[ 'taxonomy' ] ) || empty( $term_data[ 'name' ] ) ) {
