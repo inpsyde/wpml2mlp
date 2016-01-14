@@ -65,7 +65,7 @@ class MlpTranslationConnectorTest extends Helper\MonkeyTestCase {
 		$data_mapper_mock          = $this->mock_builder->data_multi_type_id_mapper();
 		$wp_factory_mock           = $this->mock_builder->common_wp_factory();
 		$wp_query_mock             = $this->mock_builder->wp_query();
-		$wp_query_mock->posts = [ $post_id ];
+		$wp_query_mock->posts      = [ $post_id ];
 
 		$wp_factory_mock->expects( $this->once() )
 			->method( 'wp_query' )
