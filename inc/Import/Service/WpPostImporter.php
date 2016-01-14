@@ -173,8 +173,6 @@ class WpPostImporter implements PostImporterInterface {
 
 		}
 
-
-
 		/**
 		 * @param WP_Post $wp_post
 		 * @param Type\ImportPostInterface $post
