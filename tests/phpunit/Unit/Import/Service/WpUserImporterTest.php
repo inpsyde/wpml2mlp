@@ -33,7 +33,7 @@ class WpUserImporterTest extends Helper\MonkeyTestCase {
 		$user_mock = $this->getMockBuilder( 'W2M\Import\Type\ImportUserInterface' )
 		                  ->getMock();
 
-		$wp_user_mock = $this->mock_builder->type_wp_import_user();
+		$wp_user_mock = $this->getMock( 'WP_User' );
 
 		$testee = new Service\WpUserImporter( $id_mapper_mock );
 
@@ -81,8 +81,6 @@ class WpUserImporterTest extends Helper\MonkeyTestCase {
 		                      ->once()
 		                      ->with( 'id', $local_user_id )
 		                      ->andReturn( $wp_user_mock );
-
-		#$this->markTestSkipped( 'Under construction…' );
 
 		$testee->import_user( $user_mock );
 
