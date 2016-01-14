@@ -153,6 +153,16 @@ class MockBuilder {
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
+	public function type_wp_import_comment( Array $methods = array() ) {
+
+		return $this->mock_without_constructor( 'W2M\Import\Type\WpImportComment', $methods );
+	}
+
+	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
 	public function type_wp_import_meta( Array $methods = array() ) {
 
 		return $this->mock_without_constructor( 'W2M\Import\Type\WpImportMeta', $methods );
