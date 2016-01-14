@@ -5,9 +5,10 @@ namespace W2M\Test\Unit\Import\Iterator;
 use
 	W2M\Import\Iterator,
 	W2M\Test\Helper,
+	Brain,
 	SimpleXMLElement;
 
-class SimpleXmlItemWrapperTest extends \PHPUnit_Framework_TestCase {
+class SimpleXmlItemWrapperTest extends Helper\MonkeyTestCase {
 
 	public function test_current_with_simple_xml() {
 
@@ -91,5 +92,63 @@ XML;
 			$item_title,
 			(string) $wp_items->item->title
 		);
+	}
+
+	public function test_current_with_invalid_xml() {
+
+		$xml_string =
+			"<item><foo <bar & \">/item>";
+		$iterator_mock = $this->getMock( 'Iterator' );
+		$iterator_mock->method( 'current' )
+			->willReturn(
+				$xml_string
+			);
+
+		$wp_error_mock   = $this->mock_builder->wp_error( [ 'add_data' ] );
+		$wp_factory_mock = $this->mock_builder->common_wp_factory();
+
+		$wp_factory_mock->expects( $this->once() )
+			->method( 'wp_error' )
+			->with(
+				'xml',
+				$this->callback( 'is_string' )
+			)
+			->willReturn( $wp_error_mock );
+
+		$wp_error_mock->expects( $this->once() )
+			->method( 'add_data' )
+			->with(
+				'xml',
+				$this->callback(
+					function( $data ) use ( $xml_string ) {
+
+						return
+							FALSE !== strpos( $data[ 'data' ][ 'xml_string' ], $xml_string )
+						 && is_array( $data[ 'data' ][ 'xml_errors' ] )
+						 && 0 < count( $data[ 'data' ][ 'xml_errors' ] );
+
+					}
+				)
+			);
+
+		Brain\Monkey::actions()
+			->expectFired( 'w2m_import_xml_parser_error' )
+			->with( $wp_error_mock );
+
+		// check the previous state is not affected by the object
+		libxml_use_internal_errors( FALSE );
+		$testee = new Iterator\SimpleXmlItemWrapper(
+			$iterator_mock,
+			[],
+			'root',
+			[],
+			$wp_factory_mock
+		);
+
+		$testee->current();
+
+		// check the
+		$this->assertFalse( libxml_use_internal_errors() );
+
 	}
 }

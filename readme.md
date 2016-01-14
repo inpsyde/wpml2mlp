@@ -67,6 +67,8 @@ Use the installer via back-end of your install or ...
 * `w2m_import_set_term_id` in `W2M\Import\Type\WpImportTerm::id()`
 * `w2m_import_set_comment_id` in `W2M\Import\Type\WpImportComment::id()`
 
+* `w2m_import_xml_parser_error` in `W2M\Import\Iterator\SimpleXmlItemWrapper::propagate_error()`
+
 ## Other Notes
 
 ### Made by [Inpsyde](http://inpsyde.com) &middot; We love WordPress
