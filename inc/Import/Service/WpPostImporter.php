@@ -25,7 +25,8 @@ class WpPostImporter implements PostImporterInterface {
 	private $id_mapper;
 
 	/**
-	 * Todo: specify this
+	 * Todo: remove
+	 * @deprecated
 	 */
 	private $ancestor_resolver;
 
