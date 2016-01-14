@@ -30,7 +30,7 @@ class PostIteratorTest extends Helper\MonkeyTestCase {
 			->with( $sxml )
 			->willReturn( $import_post_mock );
 
-		$testee = new Iterator\PostIterator( $parser_mock, $iterator_mock );
+		$testee = new Iterator\PostIterator( $iterator_mock, $parser_mock );
 		$this->assertSame(
 			$import_post_mock,
 			$testee->current()
