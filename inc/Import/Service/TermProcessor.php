@@ -31,7 +31,7 @@ class TermProcessor implements ElementProcessorInterface {
 	}
 
 	/**
-	 * Should fire an action when finished: `w2m_import_{type}s_done`
+	 * Import terms and fires the action `w2m_import_terms_done`
 	 *
 	 * @return void
 	 */

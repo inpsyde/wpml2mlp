@@ -31,7 +31,7 @@ class UserProcessor implements ElementProcessorInterface {
 	}
 
 	/**
-	 * Should fire an action when finished: `w2m_import_{type}s_done`
+	 * Import users and fires the action `w2m_import_users_done`
 	 *
 	 * @return void
 	 */
