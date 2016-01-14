@@ -75,7 +75,7 @@ class TermIterator implements Iterator {
 	 */
 	public function valid() {
 
-		$this->iterator->valid();
+		return $this->iterator->valid();
 	}
 
 	/**
