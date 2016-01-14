@@ -9,14 +9,15 @@ use
 	WP_Error;
 
 
-class WpUserImporter implements UserParserInterface {
+class WpUserImporter implements UserImporterInterface {
 
 	/**/
 	public function __construct() {}
 
 	/**
-	 * @param Type\ImportUserInterface $post
-	 * @return bool|\WP_Error
+	 * @param Type\ImportUserInterface $user
+	 *
+	 * @return bool|WP_Error
 	 */
 	public function import_user( Type\ImportUserInterface $user ) {
 
