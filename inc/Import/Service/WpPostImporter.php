@@ -85,6 +85,8 @@ class WpPostImporter implements PostImporterInterface {
 			return;
 		}
 
+		$wp_post = get_post( $post_id );
+
 		if ( $post->origin_parent_post_id() && ! $local_parent_id ) {
 			/**
 			 * @param stdClass|WP_Post $wp_post
@@ -176,7 +178,7 @@ class WpPostImporter implements PostImporterInterface {
 		 * @param WP_Post $wp_post
 		 * @param Type\ImportPostInterface $post
 		 */
-		do_action( 'w2m_post_imported', $post_id, $post );
+		do_action( 'w2m_post_imported', $wp_post, $post );
 
 	}
 

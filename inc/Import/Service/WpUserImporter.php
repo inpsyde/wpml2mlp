@@ -32,8 +32,6 @@ class WpUserImporter implements UserImporterInterface {
 	 */
 	public function import_user( Type\ImportUserInterface $user ) {
 
-		$local_user_id = $this->id_mapper->local_id( 'user', $user->origin_user_id() );
-
 		$userdata = array(
 			'user_login'    => $user->login(),
 			'user_email'    => $user->email(),
@@ -52,15 +50,17 @@ class WpUserImporter implements UserImporterInterface {
 			 * @param Type\ImportElementInterface $userdata
 			 */
 			do_action( 'w2m_import_user_error', $user_id, $user );
-			return;
+				return;
 		}
 
+		$wp_user = get_user_by( 'id', $user_id );
+		$user->id( $user_id );
 
 		/**
-		 * @param WP_User $user_id
+		 * @param WP_User $wp_user
 		 * @param Type\ImportUserInterface $user
 		 */
-		do_action( 'w2m_user_imported', $user_id, $userdata );
+		do_action( 'w2m_user_imported', $wp_user, $userdata );
 
 	}
 
