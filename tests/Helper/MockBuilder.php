@@ -52,6 +52,19 @@ class MockBuilder {
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
+	public function iterator_simple_xml_item_wrapper ( Array $methods = [] ) {
+
+		return $this->mock_without_constructor(
+			'W2M\Import\Iterator\SimpleXmlItemWrapper',
+			$methods
+		);
+	}
+
+	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
 	public function module_translation_connector( Array $methods = array() ) {
 
 		return $this->mock_without_constructor(
