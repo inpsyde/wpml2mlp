@@ -29,27 +29,61 @@ class WpUserImporterTest extends Helper\MonkeyTestCase {
 	public function test_import_user() {
 
 		/**
-		 * Create mocks for the dependency of the testee (WpPostImporter)
+		 * Create mocks for the dependency of the testee (WpUserImporter)
 		 */
-		$translation_connector_mock = $this->getMockBuilder( 'W2M\Import\Module\TranslationConnectorInterface' )
-		                                   ->getMock();
+		#$translation_connector_mock = $this->getMockBuilder( 'W2M\Import\Module\TranslationConnectorInterface' )
+		#                                   ->getMock();
 
-		$id_mapper_mock = $this->mock_builder->data_multi_type_id_mapper();
+		#$id_mapper_mock = $this->mock_builder->data_multi_type_id_mapper();
 
-		$testee = new Service\WpUserImporter( $translation_connector_mock, $id_mapper_mock );
+		$user_mock = $this->getMockBuilder( 'W2M\Import\Type\ImportUserInterface' )
+		                  ->getMock();
 
-		$this->markTestSkipped( 'Under construction…' );
+		$testee = new Service\WpUserImporter();
 
 		/**
 		 * Now define the behaviour of the mock object. Each of the specified
 		 * methods ( @see ImportUserInterface ) should return a proper value!
 		 */
-		$userdata = array();
+		$user_test_data = array(
+			'login'         => 'mocky',
+			'email'         => 'mocky@wordpress.com',
+		    'first_name'    => 'Mocky',
+		    'last_name'     => 'Walboa',
+		    'display_name'  => 'Mocky the tester'
+		);
+
+		$user = array(
+			'user_login'    => $user_test_data[ 'login' ],
+			'user_email'    => $user_test_data[ 'email' ],
+			'first_name'    => $user_test_data[ 'first_name' ],
+			'last_name'     => $user_test_data[ 'last_name' ],
+			'display_name'  => $user_test_data[ 'display_name' ]
+		);
 
 		$origin_user_id = 3;
 		$local_user_id = 15;
 
+		foreach ( $user_test_data as $method => $return_value ) {
+
+			$user_mock->expects( $this->atLeast( 1 ) )
+			          ->method( $method )
+			          ->willReturn( $return_value );
+
+		}
+
+		Brain\Monkey\Functions::expect( 'wp_insert_user' )
+		                      ->atLeast()
+		                      ->once()
+		                      ->with( $user )
+		                      ->andReturn( $local_user_id );
+
+
+
+		#$this->markTestSkipped( 'Under construction…' );
+
 		$testee->import_user( $user_mock );
+
 
 	}
 

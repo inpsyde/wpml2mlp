@@ -22,7 +22,15 @@ class WpUserImporter implements UserImporterInterface {
 	public function import_user( Type\ImportUserInterface $user ) {
 
 
-		$userdata = array();
+		$userdata = array(
+			'user_login'    => $user->login(),
+			'user_email'    => $user->email(),
+			'first_name'    => $user->first_name(),
+			'last_name'     => $user->last_name(),
+			'display_name'  => $user->display_name()
+		);
+
+		$user_id = wp_insert_user( $userdata );
 
 		if ( is_wp_error( $user_id ) ) {
 			/**
