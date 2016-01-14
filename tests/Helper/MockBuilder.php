@@ -91,10 +91,49 @@ class MockBuilder {
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
+	public function service_comment_parser_interface( Array $methods = array() ) {
+
+		return $this->mock_without_constructor(
+			'W2M\Import\Service\CommentParserInterface',
+			$methods
+		);
+	}
+
+	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
 	public function service_post_parser_interface( Array $methods = array() ) {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Service\PostParserInterface',
+			$methods
+		);
+	}
+
+	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
+	public function service_term_parser_interface( Array $methods = array() ) {
+
+		return $this->mock_without_constructor(
+			'W2M\Import\Service\TermParserInterface',
+			$methods
+		);
+	}
+
+	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
+	public function service_user_parser_interface( Array $methods = array() ) {
+
+		return $this->mock_without_constructor(
+			'W2M\Import\Service\UserParserInterface',
 			$methods
 		);
 	}
