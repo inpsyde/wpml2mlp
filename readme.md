@@ -67,6 +67,8 @@ Use the installer via back-end of your install or ...
 * `w2m_import_set_term_id` in `W2M\Import\Type\WpImportTerm::id()`
 * `w2m_import_set_comment_id` in `W2M\Import\Type\WpImportComment::id()`
 
+* `w2m_import_posts_done` in `W2M\Import\Service\PostProcessor::process_elements()`
+
 * `w2m_import_xml_parser_error` in `W2M\Import\Iterator\SimpleXmlItemWrapper::propagate_error()`
 
 ## Other Notes
