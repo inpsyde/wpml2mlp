@@ -31,7 +31,7 @@ class UserIterator implements Iterator {
 	/**
 	 * Return the current ImportComment
 	 *
-	 * @return Type\ImportCommentInterface
+	 * @return Type\ImportUserInterface
 	 */
 	public function current() {
 
