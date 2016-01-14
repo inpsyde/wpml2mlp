@@ -7,7 +7,7 @@ use
 	W2M\Test\Helper,
 	SimpleXMLElement;
 
-class SimpleXmlItemParserTest extends \PHPUnit_Framework_TestCase {
+class SimpleXmlItemWrapperTest extends \PHPUnit_Framework_TestCase {
 
 	public function test_current_with_simple_xml() {
 
@@ -24,7 +24,7 @@ XML;
 			->method( 'current' )
 			->willReturn( $xml );
 
-		$testee = new Iterator\SimpleXmlItemParser(
+		$testee = new Iterator\SimpleXmlItemWrapper(
 			$node_iterator_mock
 		);
 
@@ -64,7 +64,7 @@ XML;
 			->willReturn( $xml );
 
 		$namespaces = array( 'wp' => 'whatever' );
-		$testee = new Iterator\SimpleXmlItemParser(
+		$testee = new Iterator\SimpleXmlItemWrapper(
 			$node_iterator_mock,
 			$namespaces
 		);
