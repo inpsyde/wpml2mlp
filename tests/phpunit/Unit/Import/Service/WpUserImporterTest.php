@@ -28,16 +28,12 @@ class WpUserImporterTest extends Helper\MonkeyTestCase {
 	 */
 	public function test_import_user() {
 
-		/**
-		 * Create mocks for the dependency of the testee (WpUserImporter)
-		 */
-		#$translation_connector_mock = $this->getMockBuilder( 'W2M\Import\Module\TranslationConnectorInterface' )
-		#                                   ->getMock();
-
 		$id_mapper_mock = $this->mock_builder->data_multi_type_id_mapper();
 
 		$user_mock = $this->getMockBuilder( 'W2M\Import\Type\ImportUserInterface' )
 		                  ->getMock();
+
+		$wp_user_mock = $this->mock_builder->type_wp_import_user();
 
 		$testee = new Service\WpUserImporter( $id_mapper_mock );
 
@@ -46,12 +42,11 @@ class WpUserImporterTest extends Helper\MonkeyTestCase {
 		 * methods ( @see ImportUserInterface ) should return a proper value!
 		 */
 		$user_test_data = array(
-			'login'             => 'mocky',
-			'email'             => 'mocky@wordpress.com',
-		    'first_name'        => 'Mocky',
-		    'last_name'         => 'Walboa',
-		    'display_name'      => 'Mocky the tester',
-			'origin_user_id'    => 33
+			'login'         => 'mocky',
+			'email'         => 'mocky@wordpress.com',
+		    'first_name'    => 'Mocky',
+		    'last_name'     => 'Walboa',
+		    'display_name'  => 'Mocky the tester',
 		);
 
 		$user = array(
@@ -62,7 +57,6 @@ class WpUserImporterTest extends Helper\MonkeyTestCase {
 			'display_name'  => $user_test_data[ 'display_name' ]
 		);
 
-		$origin_user_id = 3;
 		$local_user_id = 15;
 
 		foreach ( $user_test_data as $method => $return_value ) {
@@ -81,6 +75,12 @@ class WpUserImporterTest extends Helper\MonkeyTestCase {
 
 		Brain\Monkey\Functions::when( 'is_wp_error' )
 		                      ->justReturn( FALSE );
+
+		Brain\Monkey\Functions::expect( 'get_user_by' )
+		                      ->atLeast()
+		                      ->once()
+		                      ->with( 'id', $local_user_id )
+		                      ->andReturn( $wp_user_mock );
 
 		#$this->markTestSkipped( 'Under construction…' );
 
