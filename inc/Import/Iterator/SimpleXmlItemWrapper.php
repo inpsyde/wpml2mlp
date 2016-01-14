@@ -5,7 +5,7 @@ namespace W2M\Import\Iterator;
 use
 	Iterator;
 
-class SimpleXmlItemParser implements Iterator {
+class SimpleXmlItemWrapper implements Iterator {
 
 	/**
 	 * @var Iterator
