@@ -20,16 +20,16 @@ class TermIterator implements Iterator {
 	private $parser;
 
 	/**
-	 * @param Service\TermParserInterface $parser
 	 * @param SimpleXmlItemWrapper $iterator
+	 * @param Service\TermParserInterface $parser
 	 */
 	public function __construct(
-		Service\TermParserInterface $parser,
-		SimpleXmlItemWrapper $iterator
+		SimpleXmlItemWrapper $iterator,
+		Service\TermParserInterface $parser
 	) {
 
-		$this->parser   = $parser;
 		$this->iterator = $iterator;
+		$this->parser   = $parser;
 	}
 
 	/**

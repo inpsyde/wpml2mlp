@@ -31,8 +31,8 @@ class TermIteratorTest extends Helper\MonkeyTestCase {
 			->willReturn( $import_term_mock );
 
 		$testee = new Iterator\TermIterator(
-			$parser_mock,
-			$iterator_mock
+			$iterator_mock,
+			$parser_mock
 		);
 		$this->assertSame(
 			$import_term_mock,
