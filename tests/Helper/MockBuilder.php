@@ -149,7 +149,7 @@ class MockBuilder {
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function service_translation_connector( Array $methods = array() ) {
+	public function module_translation_connector( Array $methods = array() ) {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Module\TranslationConnectorInterface',
