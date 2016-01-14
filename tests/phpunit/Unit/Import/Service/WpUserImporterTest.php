@@ -34,23 +34,24 @@ class WpUserImporterTest extends Helper\MonkeyTestCase {
 		#$translation_connector_mock = $this->getMockBuilder( 'W2M\Import\Module\TranslationConnectorInterface' )
 		#                                   ->getMock();
 
-		#$id_mapper_mock = $this->mock_builder->data_multi_type_id_mapper();
+		$id_mapper_mock = $this->mock_builder->data_multi_type_id_mapper();
 
 		$user_mock = $this->getMockBuilder( 'W2M\Import\Type\ImportUserInterface' )
 		                  ->getMock();
 
-		$testee = new Service\WpUserImporter();
+		$testee = new Service\WpUserImporter( $id_mapper_mock );
 
 		/**
 		 * Now define the behaviour of the mock object. Each of the specified
 		 * methods ( @see ImportUserInterface ) should return a proper value!
 		 */
 		$user_test_data = array(
-			'login'         => 'mocky',
-			'email'         => 'mocky@wordpress.com',
-		    'first_name'    => 'Mocky',
-		    'last_name'     => 'Walboa',
-		    'display_name'  => 'Mocky the tester'
+			'login'             => 'mocky',
+			'email'             => 'mocky@wordpress.com',
+		    'first_name'        => 'Mocky',
+		    'last_name'         => 'Walboa',
+		    'display_name'      => 'Mocky the tester',
+			'origin_user_id'    => 33
 		);
 
 		$user = array(
@@ -78,7 +79,8 @@ class WpUserImporterTest extends Helper\MonkeyTestCase {
 		                      ->with( $user )
 		                      ->andReturn( $local_user_id );
 
-
+		Brain\Monkey\Functions::when( 'is_wp_error' )
+		                      ->justReturn( FALSE );
 
 		#$this->markTestSkipped( 'Under construction…' );
 

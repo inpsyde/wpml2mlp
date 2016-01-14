@@ -28,4 +28,9 @@ interface ImportUserInterface extends ImportElementInterface {
 	 * @return string
 	 */
 	public function display_name();
+
+	/**
+	 * @return int
+	 */
+	public function origin_user_id();
 }

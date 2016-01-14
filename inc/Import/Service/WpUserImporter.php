@@ -11,8 +11,19 @@ use
 
 class WpUserImporter implements UserImporterInterface {
 
+	/**
+	 * @var Data\MultiTypeIdMapperInterface
+	 */
+	private $id_mapper;
+
 	/**/
-	public function __construct() {}
+	public function __construct(
+		Data\MultiTypeIdMapperInterface $id_mapper
+	){
+
+		$this->id_mapper = $id_mapper;
+
+	}
 
 	/**
 	 * @param Type\ImportUserInterface $user
@@ -21,6 +32,7 @@ class WpUserImporter implements UserImporterInterface {
 	 */
 	public function import_user( Type\ImportUserInterface $user ) {
 
+		$local_user_id = $this->id_mapper->local_id( 'user', $user->origin_user_id() );
 
 		$userdata = array(
 			'user_login'    => $user->login(),
