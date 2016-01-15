@@ -52,10 +52,62 @@ class MockBuilder {
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function iterator_simple_xml_item_wrapper ( Array $methods = [] ) {
+	public function iterator_simple_xml_item_wrapper( Array $methods = [ ] ) {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Iterator\SimpleXmlItemWrapper',
+			$methods
+		);
+	}
+
+	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
+	public function iterator_comment_iterator( Array $methods = [ ] ) {
+
+		return $this->mock_without_constructor(
+			'W2M\Import\Iterator\CommentIterator',
+			$methods
+		);
+	}
+
+	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
+	public function iterator_post_iterator( Array $methods = [ ] ) {
+
+		return $this->mock_without_constructor(
+			'W2M\Import\Iterator\PostIterator',
+			$methods
+		);
+	}
+
+	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
+	public function iterator_term_iterator( Array $methods = [ ] ) {
+
+		return $this->mock_without_constructor(
+			'W2M\Import\Iterator\TermIterator',
+			$methods
+		);
+	}
+
+	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
+	public function iterator_user_iterator( Array $methods = [ ] ) {
+
+		return $this->mock_without_constructor(
+			'W2M\Import\Iterator\UserIterator',
 			$methods
 		);
 	}
@@ -78,10 +130,49 @@ class MockBuilder {
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
+	public function service_comment_importer_interface( Array $methods = array() ) {
+
+		return $this->mock_without_constructor(
+			'W2M\Import\Service\CommentImporterInterface',
+			$methods
+		);
+	}
+
+		/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
 	public function service_post_importer_interface( Array $methods = array() ) {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Service\PostImporterInterface',
+			$methods
+		);
+	}
+
+	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
+	public function service_term_importer_interface( Array $methods = array() ) {
+
+		return $this->mock_without_constructor(
+			'W2M\Import\Service\TermImporterInterface',
+			$methods
+		);
+	}
+
+	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
+	public function service_user_importer_interface( Array $methods = array() ) {
+
+		return $this->mock_without_constructor(
+			'W2M\Import\Service\UserImporterInterface',
 			$methods
 		);
 	}
@@ -221,7 +312,6 @@ class MockBuilder {
 		);
 	}
 
-
 	/**
 	 * @param array $methods
 	 *
@@ -282,8 +372,9 @@ class MockBuilder {
 
 		$mockBuilder = $this->test_case->getMockBuilder( $class )
 			->disableOriginalConstructor();
-		if ( $methods )
+		if ( $methods ) {
 			$mockBuilder->setMethods( $methods );
+		}
 
 		return $mockBuilder->getMock();
 	}

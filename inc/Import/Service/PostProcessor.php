@@ -19,11 +19,11 @@ class PostProcessor implements ElementProcessorInterface {
 
 	/**
 	 * @param Iterator\PostIterator $iterator
-	 * @param WpPostImporter $importer
+	 * @param PostImporterInterface $importer
 	 */
 	public function __construct(
 		Iterator\PostIterator $iterator,
-		WpPostImporter $importer
+		PostImporterInterface $importer
 	) {
 		$this->iterator = $iterator;
 		$this->importer = $importer;
