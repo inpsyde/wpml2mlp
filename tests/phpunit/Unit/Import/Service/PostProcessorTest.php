@@ -14,7 +14,7 @@ class PostProcessorTest extends Helper\MonkeyTestCase {
 		$iterator_mock = $this->mock_builder->iterator_post_iterator();
 		$importer_mock = $this->mock_builder->service_post_importer_interface();
 
-		$import_posts = [
+		$posts = [
 			$this->mock_builder->type_wp_import_post(),
 			NULL, // test skipping some invalid posts
 			$this->mock_builder->type_wp_import_post(),
@@ -38,11 +38,11 @@ class PostProcessorTest extends Helper\MonkeyTestCase {
 			->method( 'current' )
 			->will(
 				$this->onConsecutiveCalls(
-					$import_posts[ 0 ],
-					$import_posts[ 1 ],
-					$import_posts[ 2 ],
-					$import_posts[ 3 ],
-					$import_posts[ 4 ]
+					$posts[ 0 ],
+					$posts[ 1 ],
+					$posts[ 2 ],
+					$posts[ 3 ],
+					$posts[ 4 ]
 				)
 			);
 		$iterator_mock->expects( $this->exactly( 5 ) )
@@ -51,9 +51,9 @@ class PostProcessorTest extends Helper\MonkeyTestCase {
 		$importer_mock->expects( $this->exactly( 3 ) )
 			->method( 'import_post' )
 			->withConsecutive(
-				$import_posts[ 0 ],
-				$import_posts[ 2 ],
-				$import_posts[ 4 ]
+				$posts[ 0 ],
+				$posts[ 2 ],
+				$posts[ 4 ]
 			);
 
 		Brain\Monkey::actions()
