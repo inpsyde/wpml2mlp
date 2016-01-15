@@ -31,41 +31,41 @@ class WpCommentImporter implements CommentImporterInterface {
 	}
 
 	/**
-	 * @param Type\ImportCommentInterface $Comment
+	 * @param Type\ImportCommentInterface $import_comment
 	 * @return bool|\WP_Error
 	 */
-	public function import_Comment( Type\ImportCommentInterface $comment ) {
+	public function import_Comment( Type\ImportCommentInterface $import_comment ) {
 
-		$local_parent_comment_id = $this->id_mapper->local_id( 'comment', $comment->origin_parent_comment_id() );
-		$local_user_id = $this->id_mapper->local_id( 'user', $comment->origin_user_id() );
+		$local_parent_comment_id = $this->id_mapper->local_id( 'comment', $import_comment->origin_parent_comment_id() );
+		$local_user_id = $this->id_mapper->local_id( 'user', $import_comment->origin_user_id() );
 
 		$commentdata = array(
 			'comment_author'        => $local_user_id,
-			'comment_author_email'  => $comment->author_name(),
-			'comment_author_url'    => $comment->author_email(),
-			'comment_author_IP'     => $comment->author_url(),
-			'comment_date'          => $comment->author_ip(),
-			'comment_date_gmt'      => $comment->date(),
-			'comment_content'       => $comment->content(),
-			'comment_karma'         => $comment->karma(),
-			'comment_approved'      => $comment->approved(),
-			'comment_agent'         => $comment->agent(),
-			'comment_type'          => $comment->type(),
-			'comment_post_ID'       => $comment->origin_post_id(),
+			'comment_author_email'  => $import_comment->author_name(),
+			'comment_author_url'    => $import_comment->author_email(),
+			'comment_author_IP'     => $import_comment->author_url(),
+			'comment_date'          => $import_comment->author_ip(),
+			'comment_date_gmt'      => $import_comment->date(),
+			'comment_content'       => $import_comment->content(),
+			'comment_karma'         => $import_comment->karma(),
+			'comment_approved'      => $import_comment->approved(),
+			'comment_agent'         => $import_comment->agent(),
+			'comment_type'          => $import_comment->type(),
+			'comment_post_ID'       => $import_comment->origin_post_id(),
 			'comment_parent'        => $local_parent_comment_id,
-			'comment_meta'          => $comment->meta(),
+			'comment_meta'          => $import_comment->meta(),
 		);
 
-		$comment_id = wp_insert_Comment( $commentdata, TRUE );
+		$local_id = wp_insert_Comment( $commentdata, TRUE );
 
-		if ( is_wp_error( $comment_id ) ) {
+		if ( is_wp_error( $local_id ) ) {
 			/**
 			 * Attach error handler/logger here
 			 *
-			 * @param WP_Error $comment_id
-			 * @param Type\ImportElementInterface $commentdata
+			 * @param WP_Error $local_id
+			 * @param Type\ImportElementInterface $import_comment
 			 */
-			do_action( 'w2m_import_comment_error', $comment_id, $commentdata );
+			do_action( 'w2m_import_comment_error', $local_id, $import_comment );
 			return;
 		}
 
@@ -73,27 +73,22 @@ class WpCommentImporter implements CommentImporterInterface {
 		 * pull the imported comment to commit the $post_comment data
 		 * at the action w2m_import_missing_comment_ancestor
 		 */
-		$post_comment = get_Comment( $comment_id );
+		$wp_comment = get_Comment( $local_id );
 
-		if ( $comment->origin_parent_comment_id() && ! $local_parent_comment_id ) {
+		if ( $import_comment->origin_parent_comment_id() && ! $local_parent_comment_id ) {
 			/**
 			 * @param stdClass|WP_Comment $post_comment
 			 * @param Type\ImportCommentInterface $Comment
 			 */
-			do_action( 'w2m_import_missing_comment_ancestor', $comment_id, $post_comment );
+			do_action( 'w2m_import_missing_comment_ancestor', $wp_comment, $import_comment );
 			return;
 		}
-
-		/**
-		 * TODO: check if we have to store origin data as meta
-		 */
-		#update_Comment_meta( $comment_id, '_w2m_origin_...', $Comment->... );
 
 		/**
 		 * @param WP_Comment $post_comment
 		 * @param Type\ImportCommentInterface $comment
 		 */
-		do_action( 'w2m_comment_imported', $post_comment, $commentdata );
+		do_action( 'w2m_comment_imported', $wp_comment, $import_comment );
 
 	}
 
