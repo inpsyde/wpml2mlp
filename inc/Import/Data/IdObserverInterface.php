@@ -28,7 +28,7 @@ interface IdObserverInterface {
 	/**
 	 * @wp-hook w2m_import_set_term_id
 	 *
-	 * @param Type\ImportPostInterface|Type\ImportTermInterface $import_term
+	 * @param Type\ImportTermInterface $import_term
 	 *
 	 * @return
 	 */
