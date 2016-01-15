@@ -89,13 +89,11 @@ class WpCommentImporter implements CommentImporterInterface {
 		 */
 		#update_Comment_meta( $comment_id, '_w2m_origin_...', $Comment->... );
 
-		#TODO: Import the comment meta
-
 		/**
 		 * @param WP_Comment $post_comment
 		 * @param Type\ImportCommentInterface $comment
 		 */
-		#do_action( 'w2m_comment_imported', $post_comment, $commentdata );
+		do_action( 'w2m_comment_imported', $post_comment, $commentdata );
 
 	}
 

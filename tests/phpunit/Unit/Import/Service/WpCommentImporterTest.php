@@ -48,15 +48,10 @@ class WpCommentImporterTest extends Helper\MonkeyTestCase {
 		$wp_error_update_comment_meta = $this->mock_builder->wp_error( array( 'add_data' ) );
 		$wp_error_update_comment_meta->method( 'add_data' )->with( '404' )->willReturn( "I've fallen and can't get up" );
 
-		$commentmeta_mock_single = $this->mock_builder->type_wp_import_meta();
-		$commentmeta_mock_single->method( 'key' )->willReturn( 'mocky' );
-		$commentmeta_mock_single->method( 'value' )->willReturn( 'mocky' );
-		$commentmeta_mock_single->method( 'is_single' )->willReturn( TRUE );
-
-		$commentmeta_mock_array = $this->mock_builder->type_wp_import_meta();
-		$commentmeta_mock_array->method( 'key' )->willReturn( 'mocky' );
-		$commentmeta_mock_array->method( 'value' )->willReturn( array( 'mocky', 'mreed' ) );
-		$commentmeta_mock_array->method( 'is_single' )->willReturn( FALSE );
+		$commentmeta_mock = $this->mock_builder->type_wp_import_meta();
+		$commentmeta_mock->method( 'key' )->willReturn( 'mocky' );
+		$commentmeta_mock->method( 'value' )->willReturn( 'mocky' );
+		$commentmeta_mock->method( 'is_single' )->willReturn( TRUE );
 
 		/**
 		 * Now define the behaviour of the mock object. Each of the specified
@@ -76,7 +71,7 @@ class WpCommentImporterTest extends Helper\MonkeyTestCase {
 			'type'                      => '',
 			'origin_post_id'            => 13,
 			'origin_parent_comment_id'  => 45,
-			'meta'                      => array( $commentmeta_mock_single, $commentmeta_mock_array )
+			'meta'                      => array( $commentmeta_mock )
 		);
 
 		$comment_id = 3;
@@ -133,13 +128,6 @@ class WpCommentImporterTest extends Helper\MonkeyTestCase {
 		                      ->once()
 		                      ->with( $comment_id )
 		                      ->andReturn( $wp_comment_mock );
-
-		/**
-		 * update_comment_meta needs expect 2 times.
-		 * At first save the _w2m_origin_link.
-		 * The second looped $comment->meta() ( @see ImportCommentInterface )
-		 */
-		#Brain\Monkey\Functions::expect( 'update_comment_meta' )->times( 2 );
 
 		/**
 		 * Is a commentmeta value type array we have to add the Commentmeta at the same metakey
