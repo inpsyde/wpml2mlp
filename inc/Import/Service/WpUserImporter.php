@@ -26,41 +26,45 @@ class WpUserImporter implements UserImporterInterface {
 	}
 
 	/**
-	 * @param Type\ImportUserInterface $user
+	 * @param Type\ImportUserInterface $import_user
 	 *
 	 * @return bool|WP_Error
 	 */
-	public function import_user( Type\ImportUserInterface $user ) {
+	public function import_user( Type\ImportUserInterface $import_user ) {
 
 		$userdata = array(
-			'user_login'    => $user->login(),
-			'user_email'    => $user->email(),
-			'first_name'    => $user->first_name(),
-			'last_name'     => $user->last_name(),
-			'display_name'  => $user->display_name()
+			'user_login'    => $import_user->login(),
+			'user_email'    => $import_user->email(),
+			'first_name'    => $import_user->first_name(),
+			'last_name'     => $import_user->last_name(),
+			'display_name'  => $import_user->display_name()
 		);
 
-		$user_id = wp_insert_user( $userdata );
+		$local_id = wp_insert_user( $userdata );
 
-		if ( is_wp_error( $user_id ) ) {
+		if ( is_wp_error( $local_id ) ) {
+
+			$error = $local_id;
+
 			/**
 			 * Attach error handler/logger here
 			 *
 			 * @param WP_Error $user_id
 			 * @param Type\ImportElementInterface $userdata
 			 */
-			do_action( 'w2m_import_user_error', $user_id, $user );
+			do_action( 'w2m_import_user_error', $error, $import_user );
 				return;
 		}
 
-		$wp_user = get_user_by( 'id', $user_id );
-		$user->id( $user_id );
+
+		$import_user->id( $local_id );
+		$wp_user = get_user_by( 'id', $local_id );
 
 		/**
 		 * @param WP_User $wp_user
-		 * @param Type\ImportUserInterface $user
+		 * @param Type\ImportUserInterface $import_user
 		 */
-		do_action( 'w2m_user_imported', $wp_user, $userdata );
+		do_action( 'w2m_user_imported', $wp_user, $import_user );
 
 	}
 
