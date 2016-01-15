@@ -13,12 +13,11 @@ class ImportListeningTypeIdMapperTest extends Helper\MonkeyTestCase {
 		$origin_id = 124;
 		$local_id  = 523;
 
-		$wp_post_mock = $this->mock_builder->wp_post();
-		$wp_post_mock->ID = $local_id;
-
 		$import_post_mock = $this->mock_builder->type_wp_import_post();
 		$import_post_mock->method( 'origin_id' )
 			->willReturn( $origin_id );
+		$import_post_mock->method( 'id' )
+			->willReturn( $local_id );
 
 		$testee = new Data\ImportListeningTypeIdMapper;
 
@@ -31,7 +30,7 @@ class ImportListeningTypeIdMapperTest extends Helper\MonkeyTestCase {
 			$testee->local_id( 'post', $origin_id )
 		);
 
-		$testee->record_post( $wp_post_mock, $import_post_mock );
+		$testee->record_post( $import_post_mock );
 
 		$this->assertSame(
 			$origin_id,
@@ -48,12 +47,11 @@ class ImportListeningTypeIdMapperTest extends Helper\MonkeyTestCase {
 		$origin_id = 465;
 		$local_id  = 632;
 
-		$wp_term_mock = $this->mock_builder->wp_term();
-		$wp_term_mock->term_id = $local_id;
-
 		$import_term_mock = $this->mock_builder->type_wp_import_term();
 		$import_term_mock->method( 'origin_id' )
 			->willReturn( $origin_id );
+		$import_term_mock->method( 'id' )
+			->willReturn( $local_id );
 
 		$testee = new Data\ImportListeningTypeIdMapper;
 
@@ -66,7 +64,7 @@ class ImportListeningTypeIdMapperTest extends Helper\MonkeyTestCase {
 			$testee->local_id( 'term', $origin_id )
 		);
 
-		$testee->record_term( $wp_term_mock, $import_term_mock );
+		$testee->record_term( $import_term_mock );
 
 		$this->assertSame(
 			$origin_id,
@@ -83,12 +81,11 @@ class ImportListeningTypeIdMapperTest extends Helper\MonkeyTestCase {
 		$origin_id = 1;
 		$local_id  = 2;
 
-		$wp_user_mock = $this->mock_builder->wp_user();
-		$wp_user_mock->ID = $local_id;
-
 		$import_user_mock = $this->mock_builder->type_wp_import_user();
 		$import_user_mock->method( 'origin_id' )
 			->willReturn( $origin_id );
+		$import_user_mock->method( 'id' )
+			->willReturn( $local_id );
 
 		$testee = new Data\ImportListeningTypeIdMapper;
 
@@ -101,7 +98,7 @@ class ImportListeningTypeIdMapperTest extends Helper\MonkeyTestCase {
 			$testee->local_id( 'user', $origin_id )
 		);
 
-		$testee->record_user( $wp_user_mock, $import_user_mock );
+		$testee->record_user( $import_user_mock );
 
 		$this->assertSame(
 			$origin_id,

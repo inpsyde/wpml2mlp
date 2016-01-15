@@ -3,12 +3,7 @@
 namespace W2M\Import\Data;
 
 use
-	W2M\Import\Type,
-	stdClass,
-	WP_Term,
-	WP_User,
-	WP_Post;
-use WP_Comment;
+	W2M\Import\Type;
 
 /**
  * Class ImportListeningTypeIdMapper
@@ -71,59 +66,55 @@ class ImportListeningTypeIdMapper implements MultiTypeIdMapperInterface, IdObser
 	}
 
 	/**
-	 * @wp-hook w2m_term_imported
+	 * @wp-hook w2m_import_set_term_id
 	 *
-	 * @param stdClass|WP_Term $wp_term
 	 * @param Type\ImportTermInterface $import_term
 	 */
-	public function record_term( $wp_term, Type\ImportTermInterface $import_term ) {
+	public function record_term( Type\ImportTermInterface $import_term ) {
 
 		if ( isset( $this->map[ 'term' ] ) ) {
 			$this->map[ 'term' ] = array();
 		}
 
-		$this->map[ 'term' ][ $import_term->origin_id() ] = (int) $wp_term->term_id;
+		$this->map[ 'term' ][ $import_term->origin_id() ] = $import_term->id();
 	}
 
 	/**
-	 * @wp-hook w2m_user_imported
+	 * @wp-hook w2m_import_set_user_id
 	 *
-	 * @param WP_User $wp_user
 	 * @param Type\ImportUserInterface $import_user
 	 */
-	public function record_user( WP_User $wp_user, Type\ImportUserInterface $import_user ) {
+	public function record_user( Type\ImportUserInterface $import_user ) {
 
 		if ( ! isset( $this->map[ 'user' ] ) ) {
 			$this->map[ 'user' ] = array();
 		}
 
-		$this->map[ 'user' ][ $import_user->origin_id() ] = (int) $wp_user->ID;
+		$this->map[ 'user' ][ $import_user->origin_id() ] = $import_user->id();
 	}
 
 	/**
-	 * @wp-hook w2m_post_imported
+	 * @wp-hook w2m_import_set_post_id
 	 *
-	 * @param WP_Post $wp_post
 	 * @param Type\ImportPostInterface $import_post
 	 */
-	public function record_post( WP_Post $wp_post, Type\ImportPostInterface $import_post ) {
+	public function record_post( Type\ImportPostInterface $import_post ) {
 
 		if ( ! isset( $this->map[ 'post' ] ) ) {
 			$this->map[ 'post' ] = array();
 		}
 
-		$this->map[ 'post' ][ $import_post->origin_id() ] = (int) $wp_post->ID;
+		$this->map[ 'post' ][ $import_post->origin_id() ] = $import_post->id();
 	}
 
 	/**
-	 * @wp-hook w2m_comment_imported
+	 * @wp-hook w2m_import_set_comment_id
 	 *
-	 * @param WP_Comment|stdClass $wp_comment
 	 * @param Type\ImportCommentInterface $import_comment
 	 *
 	 * @return void
 	 */
-	public function record_comment( $wp_comment, Type\ImportCommentInterface $import_comment ) {
+	public function record_comment( Type\ImportCommentInterface $import_comment ) {
 		// TODO: Implement record_comment() method.
 	}
 
