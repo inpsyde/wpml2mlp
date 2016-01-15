@@ -70,18 +70,19 @@ class WpCommentImporter implements CommentImporterInterface {
 		}
 
 		/**
-		 * pull the imported comment, compare the parent ids
+		 * pull the imported comment to commit the $post_comment data
+		 * at the action w2m_import_missing_comment_ancestor
 		 */
 		$post_comment = get_Comment( $comment_id );
 
-		#if ( $comment->origin_parent_comment_id() && ! $local_parent_id ) {
+		if ( $comment->origin_parent_comment_id() && ! $local_parent_comment_id ) {
 			/**
 			 * @param stdClass|WP_Comment $post_comment
 			 * @param Type\ImportCommentInterface $Comment
 			 */
-		#	do_action( 'w2m_import_missing_comment_ancestor', $comment_id, $post_comment );
-		#	return;
-		#}
+			do_action( 'w2m_import_missing_comment_ancestor', $comment_id, $post_comment );
+			return;
+		}
 
 		/**
 		 * TODO: check if we have to store origin data as meta
