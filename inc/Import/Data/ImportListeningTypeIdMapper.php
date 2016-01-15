@@ -21,7 +21,7 @@ use
  *
  * @package W2M\Import\Data
  */
-class ImportListeningTypeIdMapper implements MultiTypeIdMapperInterface, IdObserverInterface {
+class ImportListeningTypeIdMapper implements MultiTypeIdMapperInterface, IdObserverInterface, MultiTypeIdListInterface {
 
 	/**
 	 * @var array {
@@ -76,6 +76,24 @@ class ImportListeningTypeIdMapper implements MultiTypeIdMapperInterface, IdObser
 			return 0;
 
 		return $this->map[ $type ][ $origin_id ];
+	}
+
+	/**
+	 * Returns a list of origin->local ID pairs
+	 *
+	 * Todo: Write test for
+	 *
+	 * @param $type
+	 *
+	 * @return array {
+	 *      int [origin_id] => int [local_id]
+	 * }
+	 */
+	public function id_map( $type ) {
+
+		return isset( $this->map[ $type ] )
+			? $this->map[ $type ]
+			: [];
 	}
 
 	/**

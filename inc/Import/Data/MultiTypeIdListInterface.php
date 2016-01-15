@@ -12,6 +12,8 @@ namespace W2M\Import\Data;
 interface MultiTypeIdListInterface {
 
 	/**
+	 * Returns a list of origin->local ID pairs
+	 *
 	 * @param $type
 	 *
 	 * @return array {
