@@ -17,7 +17,7 @@ use
  *
  * @package W2M\Import\Data
  */
-class ImportListeningMTAncestorList implements MultiTypeAncestorRelationList {
+class ImportListeningMTAncestorList implements MultiTypeAncestorRelationListInterface {
 
 	/**
 	 * @var array {

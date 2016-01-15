@@ -6,13 +6,13 @@ use
 	W2M\Import\Type;
 
 /**
- * Interface MultiTypeAncestorRelationList
+ * Interface MultiTypeAncestorRelationListInterface
  *
  * The AncestorQueue stores unresolved ancestor-descendant relations
  *
  * @package W2M\Import\Data
  */
-interface MultiTypeAncestorRelationList {
+interface MultiTypeAncestorRelationListInterface {
 
 	/**
 	 * @param string $type
