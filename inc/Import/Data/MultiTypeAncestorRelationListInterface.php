@@ -8,7 +8,7 @@ use
 /**
  * Interface MultiTypeAncestorRelationListInterface
  *
- * The AncestorQueue stores unresolved ancestor-descendant relations
+ * This list stores unresolved ancestor-descendant relations
  *
  * @package W2M\Import\Data
  */
