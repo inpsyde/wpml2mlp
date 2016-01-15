@@ -1,0 +1,22 @@
+<?php # -*- coding: utf-8 -*-
+
+namespace W2M\Import\Data;
+
+/**
+ * Interface MultiTypeIdListInterface
+ *
+ * This list can return the complete stored data by type
+ *
+ * @package W2M\Import\Data
+ */
+interface MultiTypeIdListInterface {
+
+	/**
+	 * @param $type
+	 *
+	 * @return array {
+	 *      int [origin_id] => int [local_id]
+	 * }
+	 */
+	public function id_map( $type );
+}
