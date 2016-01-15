@@ -85,24 +85,24 @@ class WpCommentImporterTest extends Helper\MonkeyTestCase {
 		               ->method( 'local_id' )
 		               ->withConsecutive(
 			               array( 'comment', $commentdata[ 'origin_parent_comment_id' ] ),
-			               array( 'user', $commentdata[ 'origin_author_id' ] )
+			               array( 'user', $commentdata[ 'origin_user_id' ] )
 		               )->will( $this->onConsecutiveCalls( $new_parent_id, $new_author_id ) );
 
 		$comment = array(
 			'comment_author'        => $new_author_id,
-			'comment_author_email'  => $commentdata->author_name(),
-			'comment_author_url'    => $commentdata->author_email(),
-			'comment_author_IP'     => $commentdata->author_url(),
-			'comment_date'          => $commentdata->author_ip(),
-			'comment_date_gmt'      => $commentdata->date(),
-			'comment_content'       => $commentdata->content(),
-			'comment_karma'         => $commentdata->karma(),
-			'comment_approved'      => $commentdata->approved(),
-			'comment_agent'         => $commentdata->agent(),
-			'comment_type'          => $commentdata->type(),
-			'comment_post_ID'       => $commentdata->origin_post_id(),
+			'comment_author_email'  => $commentdata['author_name'],
+			'comment_author_url'    => $commentdata['author_email'],
+			'comment_author_IP'     => $commentdata['author_url'],
+			'comment_date'          => $commentdata['author_ip'],
+			'comment_date_gmt'      => $commentdata['date'],
+			'comment_content'       => $commentdata['content'],
+			'comment_karma'         => $commentdata['karma'],
+			'comment_approved'      => $commentdata['approved'],
+			'comment_agent'         => $commentdata['agent'],
+			'comment_type'          => $commentdata['type'],
+			'comment_post_ID'       => $commentdata['origin_post_id'],
 			'comment_parent'        => $new_parent_id,
-			'comment_meta'          => $commentdata->meta(),
+			'comment_meta'          => $commentdata['meta'],
 		);
 
 		foreach ( $commentdata as $method => $return_value ) {
