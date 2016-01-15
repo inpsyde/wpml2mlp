@@ -31,6 +31,7 @@ class ElementImporter implements Service\ElementProcessorInterface {
 			$comment
 		];
 	}
+
 	/**
 	 * Should fire an action when finished: `w2m_import_{type}s_done`
 	 *
