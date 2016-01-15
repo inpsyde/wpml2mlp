@@ -30,7 +30,20 @@ class ImportListeningTypeIdMapper implements MultiTypeIdMapperInterface, IdObser
 	 *      }
 	 * }
 	 */
-	private $map = array();
+	private $map = [];
+
+	/**
+	 * Set up internal structures
+	 */
+	public function __construct() {
+
+		$this->map = [
+			'comment' => [],
+			'post' => [],
+			'term' => [],
+			'user' => []
+		];
+	}
 
 	/**
 	 * @param string $type
@@ -72,10 +85,6 @@ class ImportListeningTypeIdMapper implements MultiTypeIdMapperInterface, IdObser
 	 */
 	public function record_term( Type\ImportTermInterface $import_term ) {
 
-		if ( isset( $this->map[ 'term' ] ) ) {
-			$this->map[ 'term' ] = array();
-		}
-
 		$this->map[ 'term' ][ $import_term->origin_id() ] = $import_term->id();
 	}
 
@@ -86,10 +95,6 @@ class ImportListeningTypeIdMapper implements MultiTypeIdMapperInterface, IdObser
 	 */
 	public function record_user( Type\ImportUserInterface $import_user ) {
 
-		if ( ! isset( $this->map[ 'user' ] ) ) {
-			$this->map[ 'user' ] = array();
-		}
-
 		$this->map[ 'user' ][ $import_user->origin_id() ] = $import_user->id();
 	}
 
@@ -99,10 +104,6 @@ class ImportListeningTypeIdMapper implements MultiTypeIdMapperInterface, IdObser
 	 * @param Type\ImportPostInterface $import_post
 	 */
 	public function record_post( Type\ImportPostInterface $import_post ) {
-
-		if ( ! isset( $this->map[ 'post' ] ) ) {
-			$this->map[ 'post' ] = array();
-		}
 
 		$this->map[ 'post' ][ $import_post->origin_id() ] = $import_post->id();
 	}
