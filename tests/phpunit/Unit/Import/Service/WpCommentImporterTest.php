@@ -43,6 +43,8 @@ class WpCommentImporterTest extends Helper\MonkeyTestCase {
 		$comment_mock = $this->getMockBuilder( 'W2M\Import\Type\ImportCommentInterface' )
 		                     ->getMock();
 
+		$wp_comment_mock = $this->getMock( 'WP_Comment' );
+
 		$wp_error_update_comment_meta = $this->mock_builder->wp_error( array( 'add_data' ) );
 		$wp_error_update_comment_meta->method( 'add_data' )->with( '404' )->willReturn( "I've fallen and can't get up" );
 
@@ -125,17 +127,13 @@ class WpCommentImporterTest extends Helper\MonkeyTestCase {
 		Brain\Monkey\Functions::when( 'is_wp_error' )
 		                      ->justReturn( FALSE );
 
-		/*
-		$comment_return = array();
-
-		$comment_return = array_merge( $comment, $comment_return );
 
 		Brain\Monkey\Functions::expect( 'get_comment' )
 		                      ->atLeast()
 		                      ->once()
 		                      ->with( $comment_id )
-		                      ->andReturn( $comment_return );
-		*/
+		                      ->andReturn( $wp_comment_mock );
+
 		/**
 		 * update_comment_meta needs expect 2 times.
 		 * At first save the _w2m_origin_link.

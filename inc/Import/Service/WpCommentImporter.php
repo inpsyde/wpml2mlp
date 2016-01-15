@@ -70,11 +70,9 @@ class WpCommentImporter implements CommentImporterInterface {
 		}
 
 		/**
-		 * TODO: implement & test this pull
-		 *
 		 * pull the imported comment, compare the parent ids
 		 */
-		#$post_comment = get_Comment( $comment_id );
+		$post_comment = get_Comment( $comment_id );
 
 		#if ( $comment->origin_parent_comment_id() && ! $local_parent_id ) {
 			/**
