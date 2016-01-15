@@ -97,23 +97,4 @@ class WpCommentImporter implements CommentImporterInterface {
 
 	}
 
-	private function meta_result( $meta_result, $attribute ){
-
-		if ( $meta_result !== TRUE ) {
-
-			$meta_result = new WP_Error( 'broken', "Cant add or update Commentmeta." );
-
-			/**
-			 * Attach error handler/logger here
-			 *
-			 * @param WP_Error $meta_result
-			 * @param int     $comment_id
-			 * @param array   $term_ids
-			 * @param string  $taxonomy
-			 */
-			do_action( 'w2m_import_update_comment_meta_error', $meta_result, $attribute['comment_id'], $attribute['meta']['key'], $attribute['meta']['value'] );
-		}
-
-	}
-
 }
