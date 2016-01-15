@@ -130,10 +130,49 @@ class MockBuilder {
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
+	public function service_comment_importer_interface( Array $methods = array() ) {
+
+		return $this->mock_without_constructor(
+			'W2M\Import\Service\CommentImporterInterface',
+			$methods
+		);
+	}
+
+		/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
 	public function service_post_importer_interface( Array $methods = array() ) {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Service\PostImporterInterface',
+			$methods
+		);
+	}
+
+	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
+	public function service_term_importer_interface( Array $methods = array() ) {
+
+		return $this->mock_without_constructor(
+			'W2M\Import\Service\TermImporterInterface',
+			$methods
+		);
+	}
+
+	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
+	public function service_user_importer_interface( Array $methods = array() ) {
+
+		return $this->mock_without_constructor(
+			'W2M\Import\Service\UserImporterInterface',
 			$methods
 		);
 	}
