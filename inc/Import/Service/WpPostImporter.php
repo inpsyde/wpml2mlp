@@ -47,59 +47,62 @@ class WpPostImporter implements PostImporterInterface {
 	}
 
 	/**
-	 * @param Type\ImportPostInterface $post
+	 * @param Type\ImportPostInterface $import_post
 	 * @return bool|\WP_Error
 	 */
-	public function import_post( Type\ImportPostInterface $post ) {
+	public function import_post( Type\ImportPostInterface $import_post ) {
 
-		$local_parent_id = $this->id_mapper->local_id( 'post', $post->origin_parent_post_id() );
-		$local_user_id = $this->id_mapper->local_id( 'user', $post->origin_author_id() );
+		$local_parent_id = $this->id_mapper->local_id( 'post', $import_post->origin_parent_post_id() );
+		$local_user_id = $this->id_mapper->local_id( 'user', $import_post->origin_author_id() );
 
-		$postdata = array(
-			'post_title'            => $post->title(),
+		$import_postdata = array(
+			'post_title'            => $import_post->title(),
 			'post_author'           => $local_user_id,
-			'post_status'           => $post->status(),
-			'guid'                  => $post->guid(),
-			'post_date_gmt'         => $post->date(),
-			'comment_status'        => $post->comment_status(),
-			'ping_status'           => $post->ping_status(),
-			'post_type'             => $post->type(),
-			'post_excerpt'          => $post->excerpt(),
-			'post_content'          => $post->content(),
-			'post_name'             => $post->name(),
+			'post_status'           => $import_post->status(),
+			'guid'                  => $import_post->guid(),
+			'post_date_gmt'         => $import_post->date(),
+			'comment_status'        => $import_post->comment_status(),
+			'ping_status'           => $import_post->ping_status(),
+			'post_type'             => $import_post->type(),
+			'post_excerpt'          => $import_post->excerpt(),
+			'post_content'          => $import_post->content(),
+			'post_name'             => $import_post->name(),
 			'post_parent'           => $local_parent_id,
-			'menu_order'            => $post->menu_order(),
-			'post_password'         => $post->password(),
+			'menu_order'            => $import_post->menu_order(),
+			'post_password'         => $import_post->password(),
 		);
 
-		$post_id = wp_insert_post( $postdata, TRUE );
+		$local_id = wp_insert_post( $import_postdata, TRUE );
 
-		if ( is_wp_error( $post_id ) ) {
+		if ( is_wp_error( $local_id ) ) {
+
+			$error = $local_id;
+
 			/**
 			 * Attach error handler/logger here
 			 *
-			 * @param WP_Error $post_id
-			 * @param Type\ImportElementInterface $postdata
+			 * @param WP_Error $error
+			 * @param Type\ImportElementInterface $import_postdata
 			 */
-			do_action( 'w2m_import_post_error', $post_id, $post );
+			do_action( 'w2m_import_post_error', $error, $import_post );
 			return;
 		}
 
-		$wp_post = get_post( $post_id );
+		$wp_post = get_post( $local_id );
 
-		if ( $post->origin_parent_post_id() && ! $local_parent_id ) {
+		if ( $import_post->origin_parent_post_id() && ! $local_parent_id ) {
 			/**
 			 * @param stdClass|WP_Post $wp_post
-			 * @param Type\ImportPostInterface $post
+			 * @param Type\ImportPostInterface $import_post
 			 */
-			do_action( 'w2m_import_missing_post_ancestor', $post_id, $post );
+			do_action( 'w2m_import_missing_post_ancestor', $wp_post, $import_post );
 			return;
 		}
 
 
 		$taxonomies = array();
 
-		foreach( $post->terms() as $term ){
+		foreach( $import_post->terms() as $term ){
 
 			$taxonomies[ $term->taxonomy() ][] = $term->origin_id();
 
@@ -107,7 +110,7 @@ class WpPostImporter implements PostImporterInterface {
 
 		foreach( $taxonomies as $taxonomy => $term_ids ){
 
-			$set_post_terms_result = wp_set_post_terms( $post_id, $term_ids, $taxonomy );
+			$set_post_terms_result = wp_set_post_terms( $local_id, $term_ids, $taxonomy );
 
 			if ( is_wp_error( $set_post_terms_result ) ) {
 
@@ -115,29 +118,29 @@ class WpPostImporter implements PostImporterInterface {
 				 * Attach error handler/logger here
 				 *
 				 * @param WP_Error $set_post_terms_result
-				 * @param int      $post_id
+				 * @param int      $import_post_id
 				 * @param array    $term_ids
 				 * @param string   $taxonomy
 				 */
-				do_action( 'w2m_import_set_post_terms_error', $set_post_terms_result, $post_id, $term_ids, $taxonomy );
+				do_action( 'w2m_import_set_post_terms_error', $set_post_terms_result, $local_id, $term_ids, $taxonomy );
 
 			}
 
 		}
 
 		#Make this post sticky.
-		if( $post->is_sticky() ){
-			stick_post( $post_id );
+		if( $import_post->is_sticky() ){
+			stick_post( $local_id );
 		}
 
-		update_post_meta( $post_id, '_w2m_origin_link', $post->origin_link() );
+		update_post_meta( $local_id, '_w2m_origin_link', $import_post->origin_link() );
 
-		foreach( $post->meta() as $meta ) {
+		foreach( $import_post->meta() as $meta ) {
 			/* @var Type\ImportMetaInterface $meta */
 
 			if ( $meta->is_single() ) {
 				$update_post_meta_result = update_post_meta(
-					$post_id,
+					$import_post_id,
 					$meta->key(),
 					$meta->value()
 				);
@@ -146,7 +149,7 @@ class WpPostImporter implements PostImporterInterface {
 				$this->meta_result(
 					$update_post_meta_result,
 					array(
-						'post_id' => $post_id,
+						'post_id' => $local_id,
 						'meta' => array( 'key' => $meta->key(), 'value' => $meta->value() )
 					)
 				);
@@ -154,7 +157,7 @@ class WpPostImporter implements PostImporterInterface {
 			} else {
 				foreach ( $meta->value() as $v ) {
 					add_post_meta(
-						$post_id,
+						$local_id,
 						$meta->key(),
 						$v,
 						FALSE // not unique
@@ -164,7 +167,7 @@ class WpPostImporter implements PostImporterInterface {
 					$this->meta_result(
 						$update_post_meta_result,
 						array(
-							'post_id' => $post_id,
+							'post_id' => $local_id,
 							'meta' => array( 'key' => $meta->key(), 'value' => $v )
 						)
 					);
@@ -176,9 +179,9 @@ class WpPostImporter implements PostImporterInterface {
 
 		/**
 		 * @param WP_Post $wp_post
-		 * @param Type\ImportPostInterface $post
+		 * @param Type\ImportPostInterface $import_post
 		 */
-		do_action( 'w2m_post_imported', $wp_post, $post );
+		do_action( 'w2m_post_imported', $wp_post, $import_post );
 
 	}
 
@@ -186,13 +189,13 @@ class WpPostImporter implements PostImporterInterface {
 
 		if ( $meta_result !== TRUE ) {
 
-			$meta_result = new WP_Error( 'broken', "Cant add or update postmeta." );
+			$meta_result = new WP_Error( 'meta_update_failed', "Cant add or update postmeta." );
 
 			/**
 			 * Attach error handler/logger here
 			 *
 			 * @param WP_Error $meta_result
-			 * @param int     $post_id
+			 * @param int     $import_post_id
 			 * @param array   $term_ids
 			 * @param string  $taxonomy
 			 */
