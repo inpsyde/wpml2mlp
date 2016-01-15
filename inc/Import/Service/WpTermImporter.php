@@ -44,22 +44,22 @@ class WpTermImporter implements TermImporterInterface {
 	}
 
 	/**
-	 * @param Type\ImportTermInterface $term
+	 * @param Type\ImportTermInterface $import_term
 	 * @return bool|\WP_Error
 	 */
-	public function import_term( Type\ImportTermInterface $term ) {
+	public function import_term( Type\ImportTermInterface $import_term ) {
 
-		$local_parent_id = $this->id_mapper->local_id( 'term', $term->origin_parent_term_id() );
-		$term_args = array(
-			'description' => $term->description(),
+		$local_parent_id = $this->id_mapper->local_id( 'term', $import_term->origin_parent_term_id() );
+		$import_term_args = array(
+			'description' => $import_term->description(),
 			'parent'      => $local_parent_id,
-			'slug'        => $term->slug()
+			'slug'        => $import_term->slug()
 		);
 
 		$result = wp_insert_term(
-			$term->name(),
-			$term->taxonomy(),
-			$term_args
+			$import_term->name(),
+			$import_term->taxonomy(),
+			$import_term_args
 		);
 
 		if ( is_wp_error( $result ) ) {
@@ -67,28 +67,29 @@ class WpTermImporter implements TermImporterInterface {
 			 * Attach error handler/logger here
 			 *
 			 * @param WP_Error $result
-			 * @param Type\ImportElementInterface $term
+			 * @param Type\ImportElementInterface $import_term
 			 */
-			do_action( 'w2m_import_term_error', $result, $term );
+			do_action( 'w2m_import_term_error', $result, $import_term );
 			return;
 		}
 
-		$term->id( $result[ 'term_id' ] );
-		$wp_term = get_term_by( 'id', $result[ 'term_id' ], $term->taxonomy() );
+		$import_term->id( $result[ 'term_id' ] );
 
-		if ( $term->origin_parent_term_id() && ! $local_parent_id ) {
+		$wp_term = get_term_by( 'id', $result[ 'term_id' ], $import_term->taxonomy() );
+
+		if ( $import_term->origin_parent_term_id() && ! $local_parent_id ) {
 			/**
 			 * @param stdClass|WP_Term $wp_term
-			 * @param Type\ImportTermInterface $term
+			 * @param Type\ImportTermInterface $import_term
 			 */
-			do_action( 'w2m_import_missing_term_ancestor', $wp_term, $term );
+			do_action( 'w2m_import_missing_term_ancestor', $wp_term, $import_term );
 		}
 
 		/**
 		 * @param stdClass|WP_Term
 		 * @param Type\ImportTermInterface
 		 */
-		do_action( 'w2m_term_imported', $wp_term, $term );
+		do_action( 'w2m_term_imported', $wp_term, $import_term );
 	}
 
 }

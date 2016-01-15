@@ -140,7 +140,7 @@ class WpPostImporter implements PostImporterInterface {
 
 			if ( $meta->is_single() ) {
 				$update_post_meta_result = update_post_meta(
-					$import_post_id,
+					$local_id,
 					$meta->key(),
 					$meta->value()
 				);
