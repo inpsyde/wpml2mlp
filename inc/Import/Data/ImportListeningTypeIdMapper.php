@@ -8,9 +8,13 @@ use
 	WP_Term,
 	WP_User,
 	WP_Post;
+use WP_Comment;
 
 /**
  * Class ImportListeningTypeIdMapper
+ *
+ * A single instance of this list is used by each importer to
+ * resolve relations on the fly.
  *
  * Listens to the actions
  *
@@ -22,7 +26,7 @@ use
  *
  * @package W2M\Import\Data
  */
-class ImportListeningTypeIdMapper implements MultiTypeIdMapperInterface {
+class ImportListeningTypeIdMapper implements MultiTypeIdMapperInterface, IdObserverInterface {
 
 	/**
 	 * @var array {
@@ -110,4 +114,17 @@ class ImportListeningTypeIdMapper implements MultiTypeIdMapperInterface {
 
 		$this->map[ 'post' ][ $import_post->origin_id() ] = (int) $wp_post->ID;
 	}
+
+	/**
+	 * @wp-hook w2m_comment_imported
+	 *
+	 * @param WP_Comment|stdClass $wp_comment
+	 * @param Type\ImportCommentInterface $import_comment
+	 *
+	 * @return void
+	 */
+	public function record_comment( $wp_comment, Type\ImportCommentInterface $import_comment ) {
+		// TODO: Implement record_comment() method.
+	}
+
 }
