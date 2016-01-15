@@ -44,35 +44,61 @@ class ImportListeningTypeIdMapperTest extends Helper\MonkeyTestCase {
 
 	public function test_record_term() {
 
-		$origin_id = 465;
-		$local_id  = 632;
+		$origin_ids = [ 465, 632 ];
+		$local_ids  = [ 632, 839 ];
 
-		$import_term_mock = $this->mock_builder->type_wp_import_term();
-		$import_term_mock->method( 'origin_id' )
-			->willReturn( $origin_id );
-		$import_term_mock->method( 'id' )
-			->willReturn( $local_id );
+		$import_term_mocks = [];
+		$import_term_mocks[] = $this->mock_builder->type_wp_import_term();
+		$import_term_mocks[ 0 ]->method( 'origin_id' )
+			->willReturn( $origin_ids[ 0 ] );
+		$import_term_mocks[ 0 ]->method( 'id' )
+			->willReturn( $local_ids[ 0 ] );
+
+		$import_term_mocks[] = $this->mock_builder->type_wp_import_term();
+		$import_term_mocks[ 1 ] ->method( 'origin_id' )
+			->willReturn( $origin_ids[ 1 ] );
+		$import_term_mocks[ 1 ]->method( 'id' )
+			->willReturn( $local_ids[ 1 ] );
 
 		$testee = new Data\ImportListeningTypeIdMapper;
 
 		$this->assertSame(
 			0,
-			$testee->origin_id( 'term', $local_id )
+			$testee->origin_id( 'term', $local_ids[ 0 ] )
 		);
 		$this->assertSame(
 			0,
-			$testee->local_id( 'term', $origin_id )
+			$testee->local_id( 'term', $origin_ids[ 0 ] )
 		);
 
-		$testee->record_term( $import_term_mock );
+		$testee->record_term( $import_term_mocks[ 0 ] );
 
 		$this->assertSame(
-			$origin_id,
-			$testee->origin_id( 'term', $local_id )
+			$origin_ids[ 0 ],
+			$testee->origin_id( 'term', $local_ids[ 0 ] )
 		);
 		$this->assertSame(
-			$local_id,
-			$testee->local_id( 'term', $origin_id )
+			$local_ids[ 0 ],
+			$testee->local_id( 'term', $origin_ids[ 0 ] )
+		);
+
+		$testee->record_term( $import_term_mocks[ 1 ] );
+
+		$this->assertSame(
+			$origin_ids[ 0 ],
+			$testee->origin_id( 'term', $local_ids[ 0 ] )
+		);
+		$this->assertSame(
+			$local_ids[ 0 ],
+			$testee->local_id( 'term', $origin_ids[ 0 ] )
+		);
+		$this->assertSame(
+			$origin_ids[ 1 ],
+			$testee->origin_id( 'term', $local_ids[ 1 ] )
+		);
+		$this->assertSame(
+			$local_ids[ 1 ],
+			$testee->local_id( 'term', $origin_ids[ 1 ] )
 		);
 	}
 
