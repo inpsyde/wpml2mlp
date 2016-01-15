@@ -65,7 +65,7 @@ class WpCommentImporter implements CommentImporterInterface {
 			 * @param WP_Error $comment_id
 			 * @param Type\ImportElementInterface $commentdata
 			 */
-			do_action( 'w2m_import_Comment_error', $comment_id, $commentdata );
+			do_action( 'w2m_import_comment_error', $comment_id, $commentdata );
 			return;
 		}
 
@@ -74,14 +74,14 @@ class WpCommentImporter implements CommentImporterInterface {
 		 *
 		 * pull the imported comment, compare the parent ids
 		 */
-		#$post_comment = get_Comment( $Comment_id );
+		#$post_comment = get_Comment( $comment_id );
 
-		#if ( $Comment->origin_parent_Comment_id() && ! $local_parent_id ) {
+		#if ( $comment->origin_parent_comment_id() && ! $local_parent_id ) {
 			/**
 			 * @param stdClass|WP_Comment $post_comment
 			 * @param Type\ImportCommentInterface $Comment
 			 */
-		#	do_action( 'w2m_import_missing_Comment_ancestor', $comment_id, $post_comment );
+		#	do_action( 'w2m_import_missing_comment_ancestor', $comment_id, $post_comment );
 		#	return;
 		#}
 
@@ -110,11 +110,11 @@ class WpCommentImporter implements CommentImporterInterface {
 			 * Attach error handler/logger here
 			 *
 			 * @param WP_Error $meta_result
-			 * @param int     $Comment_id
+			 * @param int     $comment_id
 			 * @param array   $term_ids
 			 * @param string  $taxonomy
 			 */
-			do_action( 'w2m_import_update_Comment_meta_error', $meta_result, $attribute['Comment_id'], $attribute['meta']['key'], $attribute['meta']['value'] );
+			do_action( 'w2m_import_update_comment_meta_error', $meta_result, $attribute['comment_id'], $attribute['meta']['key'], $attribute['meta']['value'] );
 		}
 
 	}
