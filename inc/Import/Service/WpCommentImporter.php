@@ -18,23 +18,19 @@ class WpCommentImporter implements CommentImporterInterface {
 	private $id_mapper;
 
 	/**
-	 * @param Module\TranslationConnectorInterface $translation_connector
 	 * @param Data\MultiTypeIdMapperInterface $id_mapper
-	 * @param $ancestor_resolver (Not specified yet)
 	 */
 	public function __construct(
 		Data\MultiTypeIdMapperInterface $id_mapper
 	) {
-
-		#$this->translation_connector = $translation_connector;
 		$this->id_mapper             = $id_mapper;
 	}
 
 	/**
 	 * @param Type\ImportCommentInterface $import_comment
-	 * @return bool|\WP_Error
+	 * @return bool|WP_Error
 	 */
-	public function import_Comment( Type\ImportCommentInterface $import_comment ) {
+	public function import_comment( Type\ImportCommentInterface $import_comment ) {
 
 		$local_parent_comment_id = $this->id_mapper->local_id( 'comment', $import_comment->origin_parent_comment_id() );
 		$local_user_id = $this->id_mapper->local_id( 'user', $import_comment->origin_user_id() );
@@ -56,7 +52,9 @@ class WpCommentImporter implements CommentImporterInterface {
 			'comment_meta'          => $import_comment->meta(),
 		);
 
-		$local_id = wp_insert_Comment( $commentdata, TRUE );
+
+
+		$local_id = wp_insert_comment( $commentdata );
 
 		if ( is_wp_error( $local_id ) ) {
 			/**
@@ -73,20 +71,20 @@ class WpCommentImporter implements CommentImporterInterface {
 		 * pull the imported comment to commit the $post_comment data
 		 * at the action w2m_import_missing_comment_ancestor
 		 */
-		$wp_comment = get_Comment( $local_id );
+		$wp_comment = get_comment( $local_id );
 
 		if ( $import_comment->origin_parent_comment_id() && ! $local_parent_comment_id ) {
 			/**
-			 * @param stdClass|WP_Comment $post_comment
-			 * @param Type\ImportCommentInterface $Comment
+			 * @param stdClass|WP_Comment $wp_comment
+			 * @param Type\ImportCommentInterface $import_comment
 			 */
 			do_action( 'w2m_import_missing_comment_ancestor', $wp_comment, $import_comment );
 			return;
 		}
 
 		/**
-		 * @param WP_Comment $post_comment
-		 * @param Type\ImportCommentInterface $comment
+		 * @param stdClass|WP_Comment $wp_comment
+		 * @param Type\ImportCommentInterface $import_comment
 		 */
 		do_action( 'w2m_comment_imported', $wp_comment, $import_comment );
 

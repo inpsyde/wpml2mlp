@@ -6,6 +6,7 @@ use
 	W2M\Import\Data,
 	W2M\Import\Type,
 	W2M\Import\Module,
+	WP_User,
 	WP_Error;
 
 
@@ -44,15 +45,13 @@ class WpUserImporter implements UserImporterInterface {
 
 		if ( is_wp_error( $local_id ) ) {
 
-			$error = $local_id;
-
 			/**
 			 * Attach error handler/logger here
 			 *
-			 * @param WP_Error $user_id
-			 * @param Type\ImportElementInterface $userdata
+			 * @param WP_Error $local_id
+			 * @param Type\ImportElementInterface $import_user
 			 */
-			do_action( 'w2m_import_user_error', $error, $import_user );
+			do_action( 'w2m_import_user_error', $local_id, $import_user );
 				return;
 		}
 
