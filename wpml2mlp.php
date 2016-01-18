@@ -10,6 +10,36 @@
 
 defined( 'ABSPATH' ) or die( 'No direct access!' );
 
+/**
+ * Searches the environment for evidence of existing WP-CLI
+ *
+ * @return bool
+ */
+function w2m_is_wp_cli() {
+
+	return
+		defined( 'WP_CLI' )
+		&& WP_CLI
+		&& class_exists( 'WP_CLI_Command' );
+}
+/**
+ * Note: this is a temporary bootstrap for the importer module
+ * coming with version 2.0.0
+ *
+ * It will be refactored later
+ */
+add_action( 'wp_loaded', function() {
+
+	if ( ! w2m_is_wp_cli() )
+		return;
+
+	$autoload = __DIR__ . '/vendor/autoload.php';
+	if ( file_exists( $autoload ) )
+		require_once $autoload;
+
+	WP_CLI::add_command( 'w2m', 'W2M\Cli\WpCliW2MCommand' );
+} );
+
 # Load plugin
 #add_action( 'admin_init', 'wpml2mlp_prerequisites' );
 
