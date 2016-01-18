@@ -36,14 +36,10 @@ class WpPostImporter implements PostImporterInterface {
 	 * @param $ancestor_resolver (Not specified yet)
 	 */
 	public function __construct(
-		Module\TranslationConnectorInterface $translation_connector,
-		Data\MultiTypeIdMapperInterface $id_mapper,
-		$ancestor_resolver = NULL
+		Data\MultiTypeIdMapperInterface $id_mapper
 	) {
 
-		$this->translation_connector = $translation_connector;
-		$this->id_mapper             = $id_mapper;
-		$this->ancestor_resolver     = $ancestor_resolver;
+		$this->id_mapper  = $id_mapper;
 	}
 
 	/**
@@ -76,15 +72,13 @@ class WpPostImporter implements PostImporterInterface {
 
 		if ( is_wp_error( $local_id ) ) {
 
-			$error = $local_id;
-
 			/**
 			 * Attach error handler/logger here
 			 *
-			 * @param WP_Error $error
-			 * @param Type\ImportElementInterface $import_postdata
+			 * @param WP_Error $local_id
+			 * @param array $import_postdata
 			 */
-			do_action( 'w2m_import_post_error', $error, $import_post );
+			do_action( 'w2m_import_post_error', $local_id, $import_postdata );
 			return;
 		}
 
@@ -136,6 +130,7 @@ class WpPostImporter implements PostImporterInterface {
 		update_post_meta( $local_id, '_w2m_origin_link', $import_post->origin_link() );
 
 		foreach( $import_post->meta() as $meta ) {
+
 			/* @var Type\ImportMetaInterface $meta */
 
 			if ( $meta->is_single() ) {
@@ -155,6 +150,7 @@ class WpPostImporter implements PostImporterInterface {
 				);
 
 			} else {
+
 				foreach ( $meta->value() as $v ) {
 					add_post_meta(
 						$local_id,

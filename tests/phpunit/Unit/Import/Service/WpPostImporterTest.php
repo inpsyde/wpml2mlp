@@ -36,15 +36,9 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 	 */
 	public function test_import_post() {
 
-		/**
-		 * Create mocks for the dependency of the testee (WpPostImporter)
-		 */
-		$translation_connector_mock = $this->getMockBuilder( 'W2M\Import\Module\TranslationConnectorInterface' )
-		                                   ->getMock();
-
 		$id_mapper_mock = $this->mock_builder->data_multi_type_id_mapper();
 
-		$testee = new Service\WpPostImporter( $translation_connector_mock, $id_mapper_mock );
+		$testee = new Service\WpPostImporter( $id_mapper_mock );
 
 		$post_mock = $this->getMockBuilder( 'W2M\Import\Type\ImportPostInterface' )
 		                  ->getMock();
