@@ -32,7 +32,7 @@ class TmpLogController {
 	/**
 	 * setup and assign all log recorder
 	 */
-	public function setup_logger() {
+	public function register_log_recorder() {
 
 		$parser_error_recorder = new Recorder\DefaultElementParserError( $this->logger );
 		add_action( 'w2m_import_parse_user_error',    [ $parser_error_recorder, 'record' ] );
