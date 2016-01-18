@@ -6,7 +6,7 @@ use
 	Monolog,
 	WP_Error;
 
-class DefaultParserTermError implements WpErrorRecorderInterface {
+class DefaultElementParserError implements WpErrorRecorderInterface {
 
 	/**
 	 * @var Monolog\Logger
@@ -25,6 +25,7 @@ class DefaultParserTermError implements WpErrorRecorderInterface {
 	 * @wp-hook w2m_import_parse_term_error
 	 * @wp-hook w2m_import_parse_post_error
 	 * @wp-hook w2m_import_parse_user_error
+	 * @wp-hook w2m_import_parse_comment_error
 	 *
 	 * @param WP_Error $error
 	 *

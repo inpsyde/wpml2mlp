@@ -13,12 +13,11 @@ class ImportListeningTypeIdMapperTest extends Helper\MonkeyTestCase {
 		$origin_id = 124;
 		$local_id  = 523;
 
-		$wp_post_mock = $this->mock_builder->wp_post();
-		$wp_post_mock->ID = $local_id;
-
 		$import_post_mock = $this->mock_builder->type_wp_import_post();
 		$import_post_mock->method( 'origin_id' )
 			->willReturn( $origin_id );
+		$import_post_mock->method( 'id' )
+			->willReturn( $local_id );
 
 		$testee = new Data\ImportListeningTypeIdMapper;
 
@@ -31,7 +30,7 @@ class ImportListeningTypeIdMapperTest extends Helper\MonkeyTestCase {
 			$testee->local_id( 'post', $origin_id )
 		);
 
-		$testee->record_post( $wp_post_mock, $import_post_mock );
+		$testee->record_post( $import_post_mock );
 
 		$this->assertSame(
 			$origin_id,
@@ -45,36 +44,61 @@ class ImportListeningTypeIdMapperTest extends Helper\MonkeyTestCase {
 
 	public function test_record_term() {
 
-		$origin_id = 465;
-		$local_id  = 632;
+		$origin_ids = [ 465, 632 ];
+		$local_ids  = [ 632, 839 ];
 
-		$wp_term_mock = $this->mock_builder->wp_term();
-		$wp_term_mock->term_id = $local_id;
+		$import_term_mocks = [];
+		$import_term_mocks[] = $this->mock_builder->type_wp_import_term();
+		$import_term_mocks[ 0 ]->method( 'origin_id' )
+			->willReturn( $origin_ids[ 0 ] );
+		$import_term_mocks[ 0 ]->method( 'id' )
+			->willReturn( $local_ids[ 0 ] );
 
-		$import_term_mock = $this->mock_builder->type_wp_import_term();
-		$import_term_mock->method( 'origin_id' )
-			->willReturn( $origin_id );
+		$import_term_mocks[] = $this->mock_builder->type_wp_import_term();
+		$import_term_mocks[ 1 ] ->method( 'origin_id' )
+			->willReturn( $origin_ids[ 1 ] );
+		$import_term_mocks[ 1 ]->method( 'id' )
+			->willReturn( $local_ids[ 1 ] );
 
 		$testee = new Data\ImportListeningTypeIdMapper;
 
 		$this->assertSame(
 			0,
-			$testee->origin_id( 'term', $local_id )
+			$testee->origin_id( 'term', $local_ids[ 0 ] )
 		);
 		$this->assertSame(
 			0,
-			$testee->local_id( 'term', $origin_id )
+			$testee->local_id( 'term', $origin_ids[ 0 ] )
 		);
 
-		$testee->record_term( $wp_term_mock, $import_term_mock );
+		$testee->record_term( $import_term_mocks[ 0 ] );
 
 		$this->assertSame(
-			$origin_id,
-			$testee->origin_id( 'term', $local_id )
+			$origin_ids[ 0 ],
+			$testee->origin_id( 'term', $local_ids[ 0 ] )
 		);
 		$this->assertSame(
-			$local_id,
-			$testee->local_id( 'term', $origin_id )
+			$local_ids[ 0 ],
+			$testee->local_id( 'term', $origin_ids[ 0 ] )
+		);
+
+		$testee->record_term( $import_term_mocks[ 1 ] );
+
+		$this->assertSame(
+			$origin_ids[ 0 ],
+			$testee->origin_id( 'term', $local_ids[ 0 ] )
+		);
+		$this->assertSame(
+			$local_ids[ 0 ],
+			$testee->local_id( 'term', $origin_ids[ 0 ] )
+		);
+		$this->assertSame(
+			$origin_ids[ 1 ],
+			$testee->origin_id( 'term', $local_ids[ 1 ] )
+		);
+		$this->assertSame(
+			$local_ids[ 1 ],
+			$testee->local_id( 'term', $origin_ids[ 1 ] )
 		);
 	}
 
@@ -83,12 +107,11 @@ class ImportListeningTypeIdMapperTest extends Helper\MonkeyTestCase {
 		$origin_id = 1;
 		$local_id  = 2;
 
-		$wp_user_mock = $this->mock_builder->wp_user();
-		$wp_user_mock->ID = $local_id;
-
 		$import_user_mock = $this->mock_builder->type_wp_import_user();
 		$import_user_mock->method( 'origin_id' )
 			->willReturn( $origin_id );
+		$import_user_mock->method( 'id' )
+			->willReturn( $local_id );
 
 		$testee = new Data\ImportListeningTypeIdMapper;
 
@@ -101,7 +124,7 @@ class ImportListeningTypeIdMapperTest extends Helper\MonkeyTestCase {
 			$testee->local_id( 'user', $origin_id )
 		);
 
-		$testee->record_user( $wp_user_mock, $import_user_mock );
+		$testee->record_user( $import_user_mock );
 
 		$this->assertSame(
 			$origin_id,

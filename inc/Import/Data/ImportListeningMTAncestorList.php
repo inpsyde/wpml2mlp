@@ -4,20 +4,19 @@ namespace W2M\Import\Data;
 
 use
 	W2M\Import\Type,
+	WP_Comment,
 	WP_Post,
 	WP_Term,
-	WP_User,
 	stdClass;
 
 /**
  * Class ImportListeningMTAncestorList
- *
  * Listens to specific hooks to record
  * unresolvable ancestor-descendant relations with their **origin ids**!
  *
  * @package W2M\Import\Data
  */
-class ImportListeningMTAncestorList implements MultiTypeAncestorRelationList {
+class ImportListeningMTAncestorList implements MultiTypeAncestorRelationListInterface {
 
 	/**
 	 * @var array {
@@ -26,14 +25,15 @@ class ImportListeningMTAncestorList implements MultiTypeAncestorRelationList {
 	 *      }
 	 * }
 	 */
-	private $relations = array();
+	private $relations = [];
 
 	public function __construct() {
 
-		$this->relations = array(
-			'post' => array(),
-			'term' => array()
-		);
+		$this->relations = [
+			'comment' => [],
+			'post'    => [],
+			'term'    => []
+		];
 	}
 
 	/**
@@ -49,6 +49,29 @@ class ImportListeningMTAncestorList implements MultiTypeAncestorRelationList {
 	}
 
 	/**
+	 * Todo: Write test for
+	 *
+	 * @wp-hook w2m_import_missing_comment_ancestor
+	 *
+	 * @param stdClass|WP_Comment $comment
+	 * @param Type\ImportCommentInterface $import_comment
+	 */
+	public function record_comment_ancestor( $comment, Type\ImportCommentInterface $import_comment ) {
+
+		if ( !$import_comment->origin_parent_comment_id() ) {
+			return;
+		}
+
+		$relation = new Type\AncestorRelation(
+			$import_comment->origin_parent_comment_id(),
+			$import_comment->origin_id()
+		);
+		$key      = "{$import_comment->origin_parent_comment_id()}:{$import_comment->origin_id()}";
+
+		$this->relations[ 'comment' ][ $key ] = $relation;
+	}
+
+	/**
 	 * @wp-hook w2m_import_missing_post_ancestor
 	 *
 	 * @param WP_Post $wp_post
@@ -56,14 +79,15 @@ class ImportListeningMTAncestorList implements MultiTypeAncestorRelationList {
 	 */
 	public function record_post_ancestor( WP_Post $wp_post, Type\ImportPostInterface $import_post ) {
 
-		if ( ! $import_post->origin_parent_post_id() )
+		if ( !$import_post->origin_parent_post_id() ) {
 			return;
+		}
 
 		$relation = new Type\AncestorRelation(
 			$import_post->origin_parent_post_id(),
 			$import_post->origin_id()
 		);
-		$key = "{$import_post->origin_parent_post_id()}:{$import_post->origin_id()}";
+		$key      = "{$import_post->origin_parent_post_id()}:{$import_post->origin_id()}";
 
 		$this->relations[ 'post' ][ $key ] = $relation;
 	}
@@ -76,14 +100,15 @@ class ImportListeningMTAncestorList implements MultiTypeAncestorRelationList {
 	 */
 	public function record_term_ancestor( $wp_term, Type\ImportTermInterface $import_term ) {
 
-		if ( ! $import_term->origin_parent_term_id() )
+		if ( !$import_term->origin_parent_term_id() ) {
 			return;
+		}
 
 		$relation = new Type\AncestorRelation(
 			$import_term->origin_parent_term_id(),
 			$import_term->origin_id()
 		);
-		$key = "{$import_term->origin_parent_term_id()}:{$import_term->origin_id()}";
+		$key      = "{$import_term->origin_parent_term_id()}:{$import_term->origin_id()}";
 
 		$this->relations[ 'term' ][ $key ] = $relation;
 	}

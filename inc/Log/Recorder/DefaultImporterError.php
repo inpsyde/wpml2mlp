@@ -26,6 +26,7 @@ class DefaultImporterError implements ImporterErrorInterface {
 	 * @wp-hook w2m_import_post_error
 	 * @wp-hook w2m_import_term_error
 	 * @wp-hook w2m_import_user_error
+	 * @wp-hook w2m_import_comment_error
 	 *
 	 * @param WP_Error $error
 	 * @param Type\ImportElementInterface $import_element
