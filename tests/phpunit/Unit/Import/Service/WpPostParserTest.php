@@ -12,6 +12,15 @@ use
 
 class WpPostParserTest extends Helper\MonkeyTestCase {
 
+	public function setUp() {
+
+		parent::setUp();
+
+		Brain\Monkey::functions()
+			->when( 'maybe_unserialize' )
+			->returnArg( 1 );
+	}
+
 	/**
 	 * Test the parsing of a XML that is considered valid.
 	 *
@@ -22,12 +31,11 @@ class WpPostParserTest extends Helper\MonkeyTestCase {
 	 */
 	public function test_parse_post_valid_item( SimpleXMLElement $item, Array $expected ) {
 
+		$this->markTestSkipped( "Implement Type\\ImportPostInterface::origin_attachment_url first. See #41" );
 		Brain\Monkey::actions()
 			->expectFired( 'w2m_import_parse_post_error' )
 			->never();
-		Brain\Monkey::functions()
-			->when( 'maybe_unserialize' )
-			->returnArg( 1 );
+
 
 		$testee = new Service\WpPostParser(
 			$this->mock_builder->common_wp_factory()
@@ -43,6 +51,7 @@ class WpPostParserTest extends Helper\MonkeyTestCase {
 		foreach ( $expected[ 'post' ] as $method => $value ) {
 			if ( 'date' === $method )
 				continue;
+
 			$this->assertSame(
 				$value,
 				$result->{$method}(),
@@ -110,6 +119,7 @@ class WpPostParserTest extends Helper\MonkeyTestCase {
 		$data = array();
 
 		$post = array(
+			'origin_id'             => 4736,
 			'title'                 => 'This is the post title',
 			'guid'                  => 'http://wpml.to.mlp/?p=4736',
 			'date'                  => '2014-04-23 09:45:30',
@@ -124,7 +134,8 @@ class WpPostParserTest extends Helper\MonkeyTestCase {
 			'status'                => 'publish',
 			'origin_parent_post_id' => 0,
 			'menu_order'            => 0,
-			'password'              => ''
+			'password'              => '',
+
 		);
 
 		$xml = <<<XML
@@ -136,13 +147,13 @@ class WpPostParserTest extends Helper\MonkeyTestCase {
 	>
 	<item>
 		<title>{$post[ 'title' ]}</title>
-		<link>http://wpml.to.mlp/this-is-the-post-title/</link>
+		<link>{$post['origin_link']}</link>
 		<pubDate><![CDATA[{$post[ 'date' ]}]]></pubDate>
 		<dc:creator><![CDATA[]]></dc:creator>
 		<guid isPermaLink="false">{$post[ 'guid' ]}</guid>
 		<excerpt:encoded><![CDATA[{$post[ 'excerpt' ]}]]></excerpt:encoded>
 		<content:encoded><![CDATA[{$post[ 'content' ]}]]></content:encoded>
-		<wp:post_id>4736</wp:post_id>
+		<wp:post_id>{$post[ 'origin_id' ]}</wp:post_id>
 		<wp:post_date><![CDATA[{$post[ 'date' ]}]]></wp:post_date>
 		<wp:post_date_gmt><![CDATA[{$post[ 'date' ]}]]></wp:post_date_gmt>
 		<wp:comment_status><![CDATA[{$post[ 'comment_status' ]}]]></wp:comment_status>
@@ -214,6 +225,94 @@ XML;
 			)
 		);
 
+
+		$post = array(
+			'origin_id'             => 4096,
+			'title'                 => 'hello-world-2.jpeg',
+			'guid'                  => 'http://wpml.to.mlp/wp-content/uploads/2013/10/hello-world-2.jpeg',
+			'date'                  => '2013-10-27 20:13:05',
+			'comment_status'        => 'open',
+			'ping_status'           => 'open',
+			'type'                  => 'post',
+			'is_sticky'             => 0,
+			'origin_link'           => 'http://wpml.to.mlp/hello-world/',
+			'excerpt'               => '',
+			'content'               => 'http://wpml.to.mlp/wp-content/uploads/2013/10/hello-world-2.jpeg',
+			'name'                  => 'hello-world-2',
+			'status'                => 'inherit',
+			'origin_parent_post_id' => 0,
+			'menu_order'            => 0,
+			'password'              => '',
+			'origin_attachment_url' => 'http://wpml.to.mlp/wp-content/uploads/2015/03/hello-world.jpeg'
+		);
+
+		$xml = <<<XML
+<root
+	xmlns:wp="wp"
+	xmlns:excerpt="excerpt"
+	xmlns:content="content"
+	xmlns:dc="dc"
+	>
+	<item>
+			<title>{$post['title']}</title>
+			<link>{$post['origin_link']}</link>
+			<pubDate><![CDATA[{$post['date']}]]></pubDate>
+			<dc:creator><![CDATA[]]></dc:creator>
+			<guid isPermaLink="false">{$post['guid']}</guid>
+			<excerpt:encoded><![CDATA[{$post['excerpt']}]]></excerpt:encoded>
+			<content:encoded><![CDATA[{$post['content']}]]></content:encoded>
+			<wp:post_id>{$post['origin_id']}</wp:post_id>
+			<wp:post_date><![CDATA[]]></wp:post_date>
+			<wp:post_date_gmt><![CDATA[{$post['date']}]]></wp:post_date_gmt>
+			<wp:comment_status><![CDATA[{$post['comment_status']}]]></wp:comment_status>
+			<wp:ping_status><![CDATA[{$post['ping_status']}]]></wp:ping_status>
+			<wp:post_name><![CDATA[{$post['name']}]]></wp:post_name>
+			<wp:status><![CDATA[{$post['status']}]]></wp:status>
+			<wp:post_parent>{$post['origin_parent_post_id']}</wp:post_parent>
+			<wp:menu_order>{$post['menu_order']}</wp:menu_order>
+			<wp:post_type><![CDATA[{$post['type']}]]></wp:post_type>
+			<wp:post_password><![CDATA[{$post['password']}]]></wp:post_password>
+			<wp:is_sticky>{$post['is_sticky']}</wp:is_sticky>
+			<wp:attachment_url><![CDATA[{$post['origin_attachment_url']}]]></wp:attachment_url>
+
+			<wp:postmeta>
+				<wp:meta_key><![CDATA[wpml_media_processed]]></wp:meta_key>
+				<wp:meta_value><![CDATA[1]]></wp:meta_value>
+			</wp:postmeta>
+
+			<wp:postmeta>
+				<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
+				<wp:meta_value><![CDATA[2013/10/hello-world-2.jpeg]]></wp:meta_value>
+			</wp:postmeta>
+
+			<wp:translation>
+				<wp:locale><![CDATA[en_US]]></wp:locale>
+				<wp:element_id>4096</wp:element_id>
+			</wp:translation>
+
+		</item>
+</root>
+XML;
+
+		$post[ 'is_sticky' ] = (bool) $post[ 'is_sticky' ];
+
+		$data[ 'valid_attachment' ] = array(
+			# 1. Parameter $item
+			new SimpleXMLElement( $xml ),
+			# 2. Parameter
+			array(
+				'post' => $post,
+				'terms' => [],
+				'meta' => [
+					[ 'key' => 'wpml_media_processed', 'value' => '1', 'is_single' => TRUE ],
+					[ 'key' => '_wp_attached_file', 'value' => '2013/10/hello-world-2.jpeg', 'is_single' => TRUE ]
+				],
+				'locale_relations' => [
+					[ 'locale' => 'en_US', 'origin_id' => 4096 ],
+				]
+			)
+		);
+
 		return $data;
 	}
 
@@ -238,6 +337,7 @@ XML;
 			->expectFired( 'w2m_import_parse_post_error' )
 			->once()
 			->with( $wp_error_mock );
+
 		$testee = new Service\WpPostParser( $wp_factory_mock );
 
 		$result = $testee->parse_post( $document );
@@ -386,9 +486,6 @@ XML;
 			->expectFired( 'w2m_import_parse_post_error' )
 			->never();
 
-		Brain\Monkey::functions()
-			->when( 'maybe_unserialize' )
-			->returnArg( 1 );
 		$testee = new Service\WpPostParser;
 		$result = $testee->parse_post_meta( $document );
 
