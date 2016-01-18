@@ -23,7 +23,7 @@ class WpCommentImporter implements CommentImporterInterface {
 	public function __construct(
 		Data\MultiTypeIdMapperInterface $id_mapper
 	) {
-		$this->id_mapper             = $id_mapper;
+		$this->id_mapper = $id_mapper;
 	}
 
 	/**
@@ -35,7 +35,7 @@ class WpCommentImporter implements CommentImporterInterface {
 		$local_parent_comment_id = $this->id_mapper->local_id( 'comment', $import_comment->origin_parent_comment_id() );
 		$local_user_id = $this->id_mapper->local_id( 'user', $import_comment->origin_user_id() );
 
-		$commentdata = array(
+		$comment_data = array(
 			'comment_author'        => $local_user_id,
 			'comment_author_email'  => $import_comment->author_name(),
 			'comment_author_url'    => $import_comment->author_email(),
@@ -49,12 +49,9 @@ class WpCommentImporter implements CommentImporterInterface {
 			'comment_type'          => $import_comment->type(),
 			'comment_post_ID'       => $import_comment->origin_post_id(),
 			'comment_parent'        => $local_parent_comment_id,
-			'comment_meta'          => $import_comment->meta(),
 		);
 
-
-
-		$local_id = wp_insert_comment( $commentdata );
+		$local_id = wp_insert_comment( $comment_data );
 
 		if ( is_wp_error( $local_id ) ) {
 			/**
