@@ -233,7 +233,7 @@ XML;
 			'date'                  => '2013-10-27 20:13:05',
 			'comment_status'        => 'open',
 			'ping_status'           => 'open',
-			'type'                  => 'post',
+			'type'                  => 'attachment',
 			'is_sticky'             => 0,
 			'origin_link'           => 'http://wpml.to.mlp/hello-world/',
 			'excerpt'               => '',
@@ -312,6 +312,8 @@ XML;
 				]
 			)
 		);
+
+		print_r( $data );
 
 		return $data;
 	}
