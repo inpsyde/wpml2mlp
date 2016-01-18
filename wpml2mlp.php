@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) or die( 'No direct access!' );
 
 # Load plugin
-add_action( 'admin_init', 'wpml2mlp_prerequisites' );
+#add_action( 'admin_init', 'wpml2mlp_prerequisites' );
 
 /**
  * Reqiure needed files and heck the prerequisites to chose the way of use
@@ -25,6 +25,8 @@ add_action( 'admin_init', 'wpml2mlp_prerequisites' );
  *
  */
 function wpml2mlp_prerequisites() {
+
+	set_time_limit( 0 );
 
 	$class_mappings = array(
 		'Wpml2mlp_Categorie_Creator'    => 'Wpml2mlp_Categorie_Creator.php',
@@ -74,4 +76,11 @@ function wpml2mlp_prerequisites() {
 	$wpml2mlp = new Wpml2mlp_Load();
 	$wpml2mlp->_load();
 
+}
+
+add_filter( 'wpml2mlp_supported_posttypes', 'add_woo' );
+
+function add_woo( $posttypes ){
+	$posttypes['product'] = 'product';
+	return $posttypes;
 }

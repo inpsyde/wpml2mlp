@@ -47,7 +47,7 @@ class Wpml2mlp_Wxr_Cache {
 	 */
 	public function unlink_wxr( $wxr_cache_name ){
 
-		$wxr_filepath = apply_filters( 'wpml2mlp_wxr_filepath', WP_CONTENT_DIR . '/uploads/wpml2mlp' );
+		$wxr_filepath = apply_filters( 'wpml2mlp_wxr_filepath', WP_CONTENT_DIR . '/uploads/wpml2mlp/' );
 		$wxr_filename = $wxr_filepath . apply_filters( 'wpml2mlp_wxr_filename', $wxr_cache_name );
 
 		if ( file_exists( $wxr_filename ) ) {
