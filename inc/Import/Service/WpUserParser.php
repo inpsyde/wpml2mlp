@@ -36,7 +36,7 @@ class WpUserParser implements UserParserInterface {
 
 		$doc_ns = $document->getDocNamespaces();
 		if ( ! isset( $doc_ns[ 'wp' ] ) ) {
-			$this->missing_namespace_error( $doc_ns, 'wp' );
+			$this->missing_namespace_error( $document, 'wp' );
 			return;
 		}
 
