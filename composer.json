@@ -25,7 +25,7 @@
   },
   "autoload": {
     "psr-4": {
-      "W2M\\Import\\": "inc/Import/"
+      "W2M\\": "inc/"
     }
   },
   "autoload-dev": {
