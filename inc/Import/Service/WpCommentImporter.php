@@ -65,6 +65,14 @@ class WpCommentImporter implements CommentImporterInterface {
 		}
 
 		/**
+		 * If metadata is provided, store it.
+		 * methods ( @see ImportMetaInterface ) should return a proper value!
+		 **/
+		foreach ( $import_comment->meta() as $meta ) {
+			add_comment_meta( $local_id, $meta->key(), $meta->value(), true );
+		}
+
+		/**
 		 * pull the imported comment to commit the $post_comment data
 		 * at the action w2m_import_missing_comment_ancestor
 		 */

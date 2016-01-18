@@ -49,8 +49,8 @@ class WpCommentImporterTest extends Helper\MonkeyTestCase {
 		$wp_error_update_comment_meta->method( 'add_data' )->with( '404' )->willReturn( "I've fallen and can't get up" );
 
 		$commentmeta_mock = $this->mock_builder->type_wp_import_meta();
-		$commentmeta_mock->method( 'key' )->willReturn( 'mocky' );
-		$commentmeta_mock->method( 'value' )->willReturn( 'mocky' );
+		$commentmeta_mock->method( 'key' )->willReturn( 'comment_meta_key' );
+		$commentmeta_mock->method( 'value' )->willReturn( 'comment_meta_value' );
 		$commentmeta_mock->method( 'is_single' )->willReturn( TRUE );
 
 		/**
@@ -68,7 +68,7 @@ class WpCommentImporterTest extends Helper\MonkeyTestCase {
 			'karma'                     => 0,
 			'approved'                  => 1,
 			'agent'                     => 'Mozilla Haven sdk/45.566.7',
-			'type'                      => '',
+			'type'                      => 'spam',
 			'origin_post_id'            => 13,
 			'origin_parent_comment_id'  => 45,
 			'meta'                      => array( $commentmeta_mock )
@@ -99,7 +99,6 @@ class WpCommentImporterTest extends Helper\MonkeyTestCase {
 			'comment_type'          => $commentdata['type'],
 			'comment_post_ID'       => $commentdata['origin_post_id'],
 			'comment_parent'        => $new_parent_id,
-			'comment_meta'          => $commentdata['meta'],
 		);
 
 		foreach ( $commentdata as $method => $return_value ) {
@@ -113,14 +112,16 @@ class WpCommentImporterTest extends Helper\MonkeyTestCase {
 		Brain\Monkey\Functions::expect( 'wp_insert_comment' )
 		                      ->atLeast()
 		                      ->once()
-		                      ->with(
-			                      $comment,
-			                      TRUE
-		                      )
+		                      ->with( $comment )
 		                      ->andReturn( $comment_id );
 
 		Brain\Monkey\Functions::when( 'is_wp_error' )
 		                      ->justReturn( FALSE );
+
+		/**
+		 * add_comment_meta ( @see ImportMetaInterface ).
+		 */
+		Brain\Monkey\Functions::expect( 'add_comment_meta' )->once();
 
 
 		Brain\Monkey\Functions::expect( 'get_comment' )
@@ -128,12 +129,6 @@ class WpCommentImporterTest extends Helper\MonkeyTestCase {
 		                      ->once()
 		                      ->with( $comment_id )
 		                      ->andReturn( $wp_comment_mock );
-
-		/**
-		 * Is a commentmeta value type array we have to add the Commentmeta at the same metakey
-		 * @see $commentmeta_mock_array
-		 */
-		#Brain\Monkey\Functions::expect( 'add_comment_meta' )->twice();
 
 		$testee->import_comment( $comment_mock );
 
