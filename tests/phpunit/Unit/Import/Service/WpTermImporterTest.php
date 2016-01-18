@@ -41,7 +41,7 @@ class WpTermImporterTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @group import_term
+	 * @group import
 	 */
 	public function test_import_term() {
 

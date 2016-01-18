@@ -24,7 +24,7 @@ class WpUserImporterTest extends Helper\MonkeyTestCase {
 	}
 
 	/**
-	 * @group import_user
+	 * @group import
 	 */
 	public function test_import_user() {
 

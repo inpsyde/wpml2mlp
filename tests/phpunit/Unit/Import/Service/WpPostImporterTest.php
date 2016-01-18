@@ -32,7 +32,7 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 	}
 
 	/**
-	 * @group import_post
+	 * @group import
 	 */
 	public function test_import_post() {
 

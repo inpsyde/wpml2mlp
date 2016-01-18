@@ -32,7 +32,7 @@ class WpCommentImporterTest extends Helper\MonkeyTestCase {
 	}
 
 	/**
-	 * @group import_comment
+	 * @group import
 	 */
 	public function test_import_comment() {
 
