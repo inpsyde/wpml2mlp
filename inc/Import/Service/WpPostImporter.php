@@ -252,7 +252,31 @@ class WpPostImporter implements PostImporterInterface {
 		$filetype = wp_check_filetype( basename( $attachemnt_url ), null );
 
 		// $filename should be the path to a file in the upload directory.
-		$wp_upload_dir = wp_upload_dir();
+		$wp_upload = wp_upload_dir();
+
+		$wp_upload_dir = $wp_upload['baseurl'] . $wp_upload['subdir']
+
+		if( ! file_exists( $wp_upload_dir ) ){
+
+			$mkdir = mkdir( $wp_upload_dir, 0777 , TRUE ) );
+
+			if( ! $mkdir ) {
+
+				$error = new WP_Error( 'mkdir_error', "Can't create uploads folder" );
+
+				/**
+				 * Attach error handler/logger here
+				 *
+				 * @param WP_Error $error
+				 * @param int      $import_post_id
+				 * @param array    $term_ids
+				 * @param string   $taxonomy
+				 */
+				do_action( 'w2m_import_attachment_mkidr_error', $error, $wp_upload_dir );
+			}
+
+		}
+
 
 	}
 
