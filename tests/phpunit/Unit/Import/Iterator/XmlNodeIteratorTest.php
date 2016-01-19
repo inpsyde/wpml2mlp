@@ -48,6 +48,7 @@ class XmlNodeIteratorTest extends \PHPUnit_Framework_TestCase {
 			$test_file,
 			$xml
 		);
+		$this->test_files[] = $test_file;
 
 		$testee = new Iterator\XmlNodeIterator( $abs_test_file, $node_name );
 		$index = 0;
