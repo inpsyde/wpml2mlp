@@ -46,6 +46,8 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 		$wp_error_update_post_meta = $this->mock_builder->wp_error( array( 'add_data' ) );
 		$wp_error_update_post_meta->method( 'add_data' )->with( '404' )->willReturn( "I've fallen and can't get up" );
 
+		$wp_http = $this->mock_builder->wp_http();
+
 		$postmeta_mock_single = $this->mock_builder->type_wp_import_meta();
 		$postmeta_mock_single->method( 'key' )->willReturn( 'mocky' );
 		$postmeta_mock_single->method( 'value' )->willReturn( 'mocky' );
@@ -91,6 +93,17 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 
 			$postdata[ 'origin_attachment_url' ] = 'https://images.unsplash.com/photo-1444858345149-8ff40887589b?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&s=1b5d1a032e0bc68e2bf514e1e348c138';
 
+			$wp_upload_dir_data = array(
+										'basedir' =>
+											str_replace(
+												'plugins/wpml2mlp/tests/phpunit/Unit/Import/Service',
+												'upload/wpml2mlp_test',
+												dirname( __FILE__ )
+											),
+										'baseurl' => 'http://mocky.test',
+										'subdir' => date( '/Y/m', time() )
+									);
+
 			Brain\Monkey\Functions::expect( 'wp_check_filetype' )
 			                      ->atLeast()
 			                      ->once()
@@ -104,18 +117,18 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 			Brain\Monkey\Functions::expect( 'wp_upload_dir' )
 			                      ->atLeast()
 			                      ->once()
+			                      ->andReturn( $wp_upload_dir_data );
+
+			Brain\Monkey\Functions::expect( 'wp_upload_bits' )
+			                      ->atLeast()
+			                      ->once()
 			                      ->andReturn( array(
-				                                   'basedir' =>
-				                                    str_replace(
-					                                    'plugins/wpml2mlp/tests/phpunit/Unit/Import/Service',
-					                                    'upload/wpml2mlp_test',
-					                                    dirname( __FILE__ )
-				                                    ),
-				                                   'baseurl' => 'http://mocky.test',
-				                                   'subdir' => date( '/Y/m', time() )
+				                                   'file'   => $wp_upload_dir_data['basedir'] . $wp_upload_dir_data['subdir'] . '/'. basename( $postdata[ 'origin_attachment_url' ] ),
+				                                   'url'    => $wp_upload_dir_data['baseurl'] . '/wp-content/' . $wp_upload_dir_data['basedir'] . $wp_upload_dir_data['subdir'] . '/'. basename( $postdata[ 'origin_attachment_url' ] ),
+				                                   'type'   => 'image/jpeg',
+				                                   'error'  => false
 			                                   )
 			                      );
-
 
 
 		}
