@@ -121,7 +121,8 @@ class WpImportPostTest extends Helper\MonkeyTestCase {
 				'password'              => 'Top Secret!',
 				'terms'                 => array( $this->mock_builder->type_wp_term_reference() ),
 				'meta'                  => array( $this->mock_builder->type_wp_import_meta() ),
-				'locale_relations'      => array( $this->mock_builder->type_locale_relation() )
+				'locale_relations'      => array( $this->mock_builder->type_locale_relation() ),
+				'origin_attachment_url' => 'https://images.unsplash.com/photo-1444858345149-8ff40887589b?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&s=1b5d1a032e0bc68e2bf514e1e348c138'
 			)
 		);
 
