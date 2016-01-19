@@ -7,9 +7,14 @@ use
 	W2M\Import\Type,
 	W2M\Import\Module,
 	WP_Post,
-	WP_Error;
+	WP_Error,
+	WP_Http;
 
-
+/**
+ * Class WpPostImporter
+ *
+ * @package W2M\Import\Service
+ */
 class WpPostImporter implements PostImporterInterface {
 
 	/**
@@ -205,7 +210,7 @@ class WpPostImporter implements PostImporterInterface {
 
 		if( $import_post->type() == 'attachment' ){
 
-			$this->import_attachment( $import_post->origin_attachment_url() );
+			$this->import_attachment( $import_post, $import_post->origin_attachment_url() );
 
 		}
 
@@ -232,9 +237,9 @@ class WpPostImporter implements PostImporterInterface {
 			 * Attach error handler/logger here
 			 *
 			 * @param WP_Error $meta_result
-			 * @param int     $import_post_id
-			 * @param array   $term_ids
-			 * @param string  $taxonomy
+			 * @param int     $attribute['post_id']
+			 * @param string  $attribute['meta']['key']
+			 * @param string  $attribute['meta']['value']
 			 */
 			do_action( 'w2m_import_update_post_meta_error', $meta_result, $attribute['post_id'], $attribute['meta']['key'], $attribute['meta']['value'] );
 		}
@@ -243,10 +248,11 @@ class WpPostImporter implements PostImporterInterface {
 
 	/**
 	 * Import attachments by origin attachemnt url
+	 *
+	 * @param int $import_post
 	 * @param string $attachemnt_url
 	 */
-	private function import_attachment( $attachemnt_url ){
-
+	private function import_attachment( Type\ImportPostInterface $import_post, $attachemnt_url ){
 
 		// Check the type of file. We'll use this as the 'post_mime_type'.
 		$filetype = wp_check_filetype( basename( $attachemnt_url ), null );
@@ -268,16 +274,40 @@ class WpPostImporter implements PostImporterInterface {
 				 * Attach error handler/logger here
 				 *
 				 * @param WP_Error $error
-				 * @param int      $import_post_id
-				 * @param array    $term_ids
-				 * @param string   $taxonomy
+				 * @param string $wp_upload_dir
 				 */
 				do_action( 'w2m_import_attachment_mkidr_error', $error, $wp_upload_dir );
 			}
 
 		}
 
+		// get placeholder file in the upload dir with a unique, sanitized filename
+		$upload = wp_upload_bits( basename( $attachemnt_url ), 0, '', $import_post->date() );
+
+		if ( $upload['error'] ) {
+
+			$error = new WP_Error( 'upload_bits_error', $upload['error'] );
+
+			/**
+			 * Attach error handler/logger here
+			 *
+			 * @param WP_Error $error
+			 * @param array $upload
+			 */
+			do_action( 'w2m_import_attachment_mkidr_error', $error, $upload );
+			return;
+		}
+
+
+		// fetch the remote url and write it to the placeholder file
+		$request = new WP_Http();
+		$header = $request->request( $attachemnt_url, $upload['file'] );
+
+
+		#rename( $upload['file'], $file_upload );
 
 	}
+
+
 
 }
