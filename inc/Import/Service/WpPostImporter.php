@@ -68,7 +68,36 @@ class WpPostImporter implements PostImporterInterface {
 			'post_password'         => $import_post->password(),
 		);
 
-		$local_id = wp_insert_post( $import_postdata, TRUE );
+		/**
+		 * Its a attachment, check if all there wat we need for a import.
+		 * (@see Type\ImportPostInterface $import_post)
+		 */
+		if( $import_post->type() == 'attachment' ) {
+
+			if( ! empty( $import_post->origin_attachment_url() ) ){
+
+				$local_id = wp_insert_post( $import_postdata, TRUE );
+
+			}else{
+
+				$error = new WP_Error( 'import_error', "The origin attachment url is empty." );
+
+				/**
+				 * Attach error handler/logger for missing origin_attachment_url
+				 *
+				 * @param WP_Error $error
+				 * @param array $import_postdata
+				 */
+				do_action( 'w2m_import_attachment_missing_origin_attachment_url', $error, $import_postdata );
+				return;
+
+			}
+
+		}else{
+
+			$local_id = wp_insert_post( $import_postdata, TRUE );
+
+		}
 
 		if ( is_wp_error( $local_id ) ) {
 
@@ -173,6 +202,13 @@ class WpPostImporter implements PostImporterInterface {
 
 		}
 
+
+		if( $import_post->type() == 'attachment' ){
+
+			$this->import_attachment( $import_post->origin_attachment_url() );
+
+		}
+
 		/**
 		 * @param WP_Post $wp_post
 		 * @param Type\ImportPostInterface $import_post
@@ -181,6 +217,11 @@ class WpPostImporter implements PostImporterInterface {
 
 	}
 
+	/**
+	 * If update_meta result throw error a action is calling for logging the error
+	 * @param $meta_result
+	 * @param $attribute
+	 */
 	private function meta_result( $meta_result, $attribute ){
 
 		if ( $meta_result !== TRUE ) {
@@ -197,6 +238,21 @@ class WpPostImporter implements PostImporterInterface {
 			 */
 			do_action( 'w2m_import_update_post_meta_error', $meta_result, $attribute['post_id'], $attribute['meta']['key'], $attribute['meta']['value'] );
 		}
+
+	}
+
+	/**
+	 * Import attachments by origin attachemnt url
+	 * @param string $attachemnt_url
+	 */
+	private function import_attachment( $attachemnt_url ){
+
+
+		// Check the type of file. We'll use this as the 'post_mime_type'.
+		$filetype = wp_check_filetype( basename( $attachemnt_url ), null );
+
+		// $filename should be the path to a file in the upload directory.
+		$wp_upload_dir = wp_upload_dir();
 
 	}
 
