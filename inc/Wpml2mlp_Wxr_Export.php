@@ -244,7 +244,7 @@ class Wpml_Wxr_Export {
 			$wxr_items .= "\t\t\t<link>" . get_permalink( $post->ID ) . "</link>\n";
 			$wxr_items .= "\t\t\t<pubDate>" . $this->wxr_cdata( $post->post_date ) . "</pubDate>\n";
 			$wxr_items .= "\t\t\t<dc:creator>" . $this->wxr_cdata( get_the_author_meta( $post->post_author ) ) . "</dc:creator>\n";
-			$wxr_items .= "\t\t\t<guid isPermaLink=\"false\">" . get_the_guid( $post->ID ) . "</guid>\n";
+			$wxr_items .= "\t\t\t<guid isPermaLink=\"false\">" . $this->wxr_cdata( get_the_guid( $post->ID ) ) . "</guid>\n";
 			$wxr_items .= "\t\t\t<excerpt:encoded>" . $this->wxr_cdata( $post->post_excerpt ) . "</excerpt:encoded>\n";
 			$wxr_items .= "\t\t\t<content:encoded>" . $this->wxr_cdata( $post->post_content ) . "</content:encoded>\n";
 
