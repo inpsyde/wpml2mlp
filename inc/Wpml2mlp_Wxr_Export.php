@@ -241,7 +241,7 @@ class Wpml_Wxr_Export {
 
 			$wxr_items .= "\n\t\t<item>\n";
 			$wxr_items .= "\t\t\t<title>" . apply_filters( 'the_title_rss', $post->post_title ) . "</title>\n";
-			$wxr_items .= "\t\t\t<link>" . get_permalink( $post->ID ) . "</link>\n";
+			$wxr_items .= "\t\t\t<link>" . $this->wxr_cdata( get_permalink( $post->ID ) ) . "</link>\n";
 			$wxr_items .= "\t\t\t<pubDate>" . $this->wxr_cdata( $post->post_date ) . "</pubDate>\n";
 			$wxr_items .= "\t\t\t<dc:creator>" . $this->wxr_cdata( get_the_author_meta( $post->post_author ) ) . "</dc:creator>\n";
 			$wxr_items .= "\t\t\t<guid isPermaLink=\"false\">" . $this->wxr_cdata( get_the_guid( $post->ID ) ) . "</guid>\n";
@@ -273,19 +273,9 @@ class Wpml_Wxr_Export {
 
 			$wxr_items .= "\n\t\t</item>\n";
 
-			#buddy take a break, its hard work i now ;)
-			if ( $i >= 50 ) {
-
-				$this->wxr_cache->write( $wxr_items, $this->wxr_filename );
-
-				unset( $wxr_items );
-
-				$i = 0;
-			}
-
 		}
 
-		return;
+		return $wxr_items;
 
 	}
 
@@ -454,9 +444,9 @@ EOF;
 		$this->wxr_cache->write( $this->wxr_authors_list( $post_ids ), $this->wxr_filename );
 		$this->wxr_cache->write( $this->wxr_get_categories(), $this->wxr_filename );
 
-		$this->wxr_get_post_items();
+		$this->wxr_cache->write( $this->wxr_get_post_items(), $this->wxr_filename );
 
-		$this->wxr_cache->write( $this->get_wxr_footer(), $this->wxr_filename, TRUE );
+		$this->wxr_cache->write( $this->get_wxr_footer(), $this->wxr_filename, FALSE );
 
 		unset( $wxr_items );
 
