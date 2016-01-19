@@ -83,8 +83,13 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 			'origin_link'           => 'http://wpml2mlp.test/mocky',
 			'terms'                 => array( $term_mock ),
 			'meta'                  => array( $postmeta_mock_single, $postmeta_mock_array ),
-			'origin_attachment_url' => 'https://images.unsplash.com/photo-1444858345149-8ff40887589b?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&s=1b5d1a032e0bc68e2bf514e1e348c138'
+
 		);
+
+		#test attachment import add testdata
+		if( $postdata[ 'type' ] == 'attachment' ){
+			$postdata[ 'origin_attachment_url' ] = 'https://images.unsplash.com/photo-1444858345149-8ff40887589b?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&s=1b5d1a032e0bc68e2bf514e1e348c138';
+		}
 
 		$post_id = 3;
 		$new_parent_id = 15;
