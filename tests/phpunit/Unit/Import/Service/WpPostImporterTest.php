@@ -72,7 +72,7 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 			'date'                  => ( new \DateTime( 'NOW' ) )->format( 'Y-m-d H:i:s' ),
 			'comment_status'        => 'open',
 			'ping_status'           => 'open',
-			'type'                  => 'post',
+			'type'                  => 'attachment',
 			'excerpt'               => 'Mocky the fighter',
 			'content'               => 'Mock will go for a greate fight.',
 			'name'                  => 'mocky',
@@ -82,7 +82,8 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 			'is_sticky'             => TRUE,
 			'origin_link'           => 'http://wpml2mlp.test/mocky',
 			'terms'                 => array( $term_mock ),
-			'meta'                  => array( $postmeta_mock_single, $postmeta_mock_array )
+			'meta'                  => array( $postmeta_mock_single, $postmeta_mock_array ),
+			'origin_attachment_url' => 'https://images.unsplash.com/photo-1444858345149-8ff40887589b?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&s=1b5d1a032e0bc68e2bf514e1e348c138'
 		);
 
 		$post_id = 3;
