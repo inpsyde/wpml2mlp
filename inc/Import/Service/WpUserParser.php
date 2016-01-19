@@ -89,14 +89,14 @@ class WpUserParser implements UserParserInterface {
 			"Missing item node '{$item}' in XML user node"
 		);
 		$error->add_data(
-			'item',
 			array(
 				'trigger' => __CLASS__,
 				'data'    => array(
 					'document'  => $document,
 					'item'      => $item
 				)
-			)
+			),
+			'item'
 		);
 
 		$this->propagate_error( $error );
@@ -113,14 +113,14 @@ class WpUserParser implements UserParserInterface {
 			"Missing namespace '{$namespace}' in XML user node"
 		);
 		$error->add_data(
-			'namespace',
 			array(
 				'trigger' => __CLASS__,
 				'data'    => array(
 					'document'  => $document,
 					'namespace' => $namespace
 				)
-			)
+			),
+			'namespace'
 		);
 
 		$this->propagate_error( $error );
@@ -137,14 +137,14 @@ class WpUserParser implements UserParserInterface {
 			"Missing attribute '{$attribute}' in XML user node"
 		);
 		$error->add_data(
-			'attribute',
 			array(
 				'trigger' => __CLASS__,
 				'data'    => array(
 					'document'  => $document,
 					'attribute' => $attribute
 				)
-			)
+			),
+			'attribute'
 		);
 
 		$this->propagate_error( $error );

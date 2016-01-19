@@ -232,7 +232,7 @@ XML;
 			->willReturn( $wp_error_mock );
 		$wp_error_mock->expects( $this->once() )
 			->method( 'add_data' )
-			->with( 'item', $this->callback( 'is_array' ) );
+			->with( $this->callback( 'is_array' ), 'item' );
 
 		Brain\Monkey::actions()
 			->expectFired( 'w2m_import_parse_post_error' )
@@ -279,7 +279,7 @@ XML;
 			->willReturn( $wp_error_mock );
 		$wp_error_mock->expects( $this->atLeast( 1 ) )
 			->method( 'add_data' )
-			->with( 'namespace', $this->callback( 'is_array' ) );
+			->with( $this->callback( 'is_array' ), 'namespace' );
 
 		Brain\Monkey::actions()
 			->expectAdded( 'w2m_import_parse_post_error' )
@@ -317,7 +317,7 @@ XML;
 			->willReturn( $wp_error_mock );
 		$wp_error_mock->expects( $this->atLeast( 1 ) )
 			->method( 'add_data' )
-			->with( 'attribute', $this->callback( 'is_array' ) );
+			->with( $this->callback( 'is_array' ), 'attribute' );
 
 		Brain\Monkey::actions()
 			->expectFired( 'w2m_import_parse_post_error' )

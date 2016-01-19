@@ -178,13 +178,13 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 			"Cannot find blog for locale {$locale_relation->locale()}"
 		);
 		$error->add_data(
-			'locale',
 			array (
 				'data' => array(
 					'locale_relation' => $locale_relation,
 					'import_post' => $import_post
 				)
-			)
+			),
+			'locale'
 		);
 		$this->propagate_error( $error );
 	}
@@ -205,13 +205,13 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 			"Cannot find remote post for locale {$locale_relation->locale()}"
 		);
 		$error->add_data(
-			'post',
 			array (
 				'data' => array(
 					'locale_relation' => $locale_relation,
 					'import_post' => $import_post
 				)
-			)
+			),
+			'post'
 		);
 		$this->propagate_error( $error );
 	}
