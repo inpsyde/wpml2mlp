@@ -98,4 +98,10 @@ interface ImportPostInterface extends ImportElementInterface {
 	 * @return array
 	 */
 	public function locale_relations();
+
+
+	/**
+	 * @return string
+	 */
+	public function origin_attachment_url();
 }

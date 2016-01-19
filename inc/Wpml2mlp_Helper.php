@@ -34,14 +34,13 @@ class Wpml2mlp_Helper {
 		$languages = wpml_get_active_languages_filter();
 
 		unset(
-			   $languages['en'],
-			   #$languages['nl'],
-			   #$languages['fr']
-			   $languages['it'],
-			   $languages['de'],
-			   $languages['es']
+			#$languages['en'],
+			#$languages['nl'],
+			#$languages['fr']
+			$languages['it'],
+			$languages['de'],
+			$languages['es']
 		);
-
 
 		foreach( $languages as $lang_code => $lang_data ){
 
