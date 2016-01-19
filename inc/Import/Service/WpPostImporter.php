@@ -254,11 +254,11 @@ class WpPostImporter implements PostImporterInterface {
 		// $filename should be the path to a file in the upload directory.
 		$wp_upload = wp_upload_dir();
 
-		$wp_upload_dir = $wp_upload['baseurl'] . $wp_upload['subdir']
+		$wp_upload_dir = $wp_upload['basedir'] . $wp_upload['subdir'];
 
 		if( ! file_exists( $wp_upload_dir ) ){
 
-			$mkdir = mkdir( $wp_upload_dir, 0777 , TRUE ) );
+			$mkdir = mkdir( $wp_upload_dir, 0777 , TRUE );
 
 			if( ! $mkdir ) {
 
