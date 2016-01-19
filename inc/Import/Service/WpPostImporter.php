@@ -210,7 +210,7 @@ class WpPostImporter implements PostImporterInterface {
 
 		if( $import_post->type() == 'attachment' ){
 
-			$this->import_attachment( $import_post, $import_post->origin_attachment_url() );
+			$this->import_attachment( $local_id, $import_post );
 
 		}
 
@@ -249,10 +249,12 @@ class WpPostImporter implements PostImporterInterface {
 	/**
 	 * Import attachments by origin attachemnt url
 	 *
-	 * @param int $import_post
-	 * @param string $attachemnt_url
+	 * @param int $attachment_id
+	 * @param Type\ImportPostInterface $import_post
 	 */
-	private function import_attachment( Type\ImportPostInterface $import_post, $attachemnt_url ){
+	private function import_attachment( $attachment_id, Type\ImportPostInterface $import_post ){
+
+		$attachemnt_url = $import_post->origin_attachment_url();
 
 		// Check the type of file. We'll use this as the 'post_mime_type'.
 		$filetype = wp_check_filetype( basename( $attachemnt_url ), null );
@@ -303,8 +305,12 @@ class WpPostImporter implements PostImporterInterface {
 		$request = new WP_Http();
 		$header = $request->request( $attachemnt_url, $upload['file'] );
 
-
 		#rename( $upload['file'], $file_upload );
+
+		// Generate the metadata for the attachment, and update the database record.
+		$attach_data = wp_generate_attachment_metadata( $attachment_id, $upload['file'] );
+		wp_update_attachment_metadata( $attachment_id, $attach_data );
+
 
 	}
 
