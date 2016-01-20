@@ -37,9 +37,7 @@ class WpPostImporter implements PostImporterInterface {
 	) {
 
 		$this->id_mapper  = $id_mapper;
-		$this->http       = $http
-			? $http
-			: new WP_Http;
+		$this->http       = $http ? $http : new WP_Http;
 	}
 
 	/**
