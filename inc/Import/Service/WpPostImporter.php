@@ -28,17 +28,18 @@ class WpPostImporter implements PostImporterInterface {
 	private $http;
 
 	/**
-	 * @param Module\TranslationConnectorInterface $translation_connector
 	 * @param Data\MultiTypeIdMapperInterface $id_mapper
-	 * @param $ancestor_resolver (Not specified yet)
+	 * @param WP_Http $http (Optional)
 	 */
 	public function __construct(
 		Data\MultiTypeIdMapperInterface $id_mapper,
-		WP_Http $http
+		WP_Http $http = NULL
 	) {
 
 		$this->id_mapper  = $id_mapper;
-		$this->http = $http;
+		$this->http       = $http
+			? $http
+			: new WP_Http;
 	}
 
 	/**
@@ -73,7 +74,7 @@ class WpPostImporter implements PostImporterInterface {
 		 */
 		if( $import_post->type() == 'attachment' ) {
 
-			if( ! empty( $import_post->origin_attachment_url() ) ){
+			if( ! $import_post->origin_attachment_url() ){
 
 				$local_id = wp_insert_post( $import_postdata, TRUE );
 
