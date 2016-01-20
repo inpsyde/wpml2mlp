@@ -33,11 +33,12 @@ class WpPostImporter implements PostImporterInterface {
 	 * @param $ancestor_resolver (Not specified yet)
 	 */
 	public function __construct(
-		WP_Http $http,
-		Data\MultiTypeIdMapperInterface $id_mapper
+		Data\MultiTypeIdMapperInterface $id_mapper,
+		WP_Http $http
 	) {
 
 		$this->id_mapper  = $id_mapper;
+		$this->http = $http;
 	}
 
 	/**
@@ -245,7 +246,7 @@ class WpPostImporter implements PostImporterInterface {
 	 * @param int $attachment_id
 	 * @param Type\ImportPostInterface $import_post
 	 */
-	private function import_attachment( $attachment_id, Type\ImportPostInterface $import_post ){
+	public function import_attachment( $attachment_id, Type\ImportPostInterface $import_post ){
 
 		$attachemnt_url = $import_post->origin_attachment_url();
 
