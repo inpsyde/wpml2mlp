@@ -38,15 +38,16 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 
 		$id_mapper_mock = $this->mock_builder->data_multi_type_id_mapper();
 
-		$testee = new Service\WpPostImporter( $id_mapper_mock );
+		$http = $this->getMockBuilder( 'WP_Http' )->disableOriginalConstructor()->getMock();
+		$http->method( 'request' )->willReturn( '..' );
+
+		$testee = new Service\WpPostImporter( $http, $id_mapper_mock );
 
 		$post_mock = $this->getMockBuilder( 'W2M\Import\Type\ImportPostInterface' )
 		                  ->getMock();
 
 		$wp_error_update_post_meta = $this->mock_builder->wp_error( array( 'add_data' ) );
 		$wp_error_update_post_meta->method( 'add_data' )->with( '404' )->willReturn( "I've fallen and can't get up" );
-
-		$wp_http = $this->mock_builder->wp_http();
 
 		$postmeta_mock_single = $this->mock_builder->type_wp_import_meta();
 		$postmeta_mock_single->method( 'key' )->willReturn( 'mocky' );
@@ -91,6 +92,7 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 		#test attachment import add testdata
 		if( $postdata[ 'type' ] == 'attachment' ){
 
+
 			$postdata[ 'origin_attachment_url' ] = 'https://images.unsplash.com/photo-1444858345149-8ff40887589b?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&s=1b5d1a032e0bc68e2bf514e1e348c138';
 
 			$wp_upload_dir_data = array(
@@ -103,6 +105,10 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 										'baseurl' => 'http://mocky.test',
 										'subdir' => date( '/Y/m', time() )
 									);
+
+			$wp_upload_file = $wp_upload_dir_data['basedir'] . $wp_upload_dir_data['subdir'] . '/'. basename( $postdata[ 'origin_attachment_url' ] );
+
+			$this->assertSame( '..', $testee->request() );
 
 			Brain\Monkey\Functions::expect( 'wp_check_filetype' )
 			                      ->atLeast()
@@ -123,7 +129,7 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 			                      ->atLeast()
 			                      ->once()
 			                      ->andReturn( array(
-				                                   'file'   => $wp_upload_dir_data['basedir'] . $wp_upload_dir_data['subdir'] . '/'. basename( $postdata[ 'origin_attachment_url' ] ),
+				                                   'file'   => $wp_upload_file,
 				                                   'url'    => $wp_upload_dir_data['baseurl'] . '/wp-content/' . $wp_upload_dir_data['basedir'] . $wp_upload_dir_data['subdir'] . '/'. basename( $postdata[ 'origin_attachment_url' ] ),
 				                                   'type'   => 'image/jpeg',
 				                                   'error'  => false

@@ -18,22 +18,14 @@ use
 class WpPostImporter implements PostImporterInterface {
 
 	/**
-	 * Todo: remove
-	 * @deprecated
-	 * @var Module\TranslationConnectorInterface
-	 */
-	private $translation_connector;
-
-	/**
 	 * @var Data\MultiTypeIdMapperInterface
 	 */
 	private $id_mapper;
 
 	/**
-	 * Todo: remove
-	 * @deprecated
+	 * @var WP_Http $http
 	 */
-	private $ancestor_resolver;
+	private $http;
 
 	/**
 	 * @param Module\TranslationConnectorInterface $translation_connector
@@ -41,6 +33,7 @@ class WpPostImporter implements PostImporterInterface {
 	 * @param $ancestor_resolver (Not specified yet)
 	 */
 	public function __construct(
+		WP_Http $http,
 		Data\MultiTypeIdMapperInterface $id_mapper
 	) {
 
@@ -300,16 +293,16 @@ class WpPostImporter implements PostImporterInterface {
 			return;
 		}
 
-
 		// fetch the remote url and write it to the placeholder file
-		$request = new WP_Http();
-		$header = $request->request( $attachemnt_url, $upload['file'] );
+		$header = $this->http->request( $attachemnt_url, $upload['file'] );
+
+		print_r( $header );
 
 		#rename( $upload['file'], $file_upload );
 
 		// Generate the metadata for the attachment, and update the database record.
-		$attach_data = wp_generate_attachment_metadata( $attachment_id, $upload['file'] );
-		wp_update_attachment_metadata( $attachment_id, $attach_data );
+		#$attach_data = wp_generate_attachment_metadata( $attachment_id, $upload['file'] );
+		#wp_update_attachment_metadata( $attachment_id, $attach_data );
 
 
 	}
