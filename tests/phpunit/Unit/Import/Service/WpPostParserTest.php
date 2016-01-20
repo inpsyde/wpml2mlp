@@ -31,14 +31,20 @@ class WpPostParserTest extends Helper\MonkeyTestCase {
 	 */
 	public function test_parse_post_valid_item( SimpleXMLElement $item, Array $expected ) {
 
-		$this->markTestSkipped( "Implement Type\\ImportPostInterface::origin_attachment_url first. See #41" );
+		if ( ! empty( $expected[ 'post' ][ 'origin_attachment_url' ] ) ) {
+			$this->markTestSkipped( "Implement Type\\ImportPostInterface::origin_attachment_url first. See #41" );
+		}
+
 		Brain\Monkey::actions()
 			->expectFired( 'w2m_import_parse_post_error' )
 			->never();
 
+		$factory_mock = $this->mock_builder->common_wp_factory();
+		$factory_mock->expects( $this->never() )
+			->method( 'wp_error' );
 
 		$testee = new Service\WpPostParser(
-			$this->mock_builder->common_wp_factory()
+			$factory_mock
 		);
 
 		$result = $testee->parse_post( $item );
@@ -118,6 +124,9 @@ class WpPostParserTest extends Helper\MonkeyTestCase {
 
 		$data = array();
 
+		/**
+		 * Valid post
+		 */
 		$post = array(
 			'origin_id'             => 4736,
 			'title'                 => 'This is the post title',
@@ -226,6 +235,9 @@ XML;
 		);
 
 
+		/**
+		 * valid attachment
+		 */
 		$post = array(
 			'origin_id'             => 4096,
 			'title'                 => 'hello-world-2.jpeg',
@@ -313,6 +325,112 @@ XML;
 			)
 		);
 
+
+		/**
+		 * valid post with local namespace attributes
+		 *
+		 */
+		$post = array(
+			'origin_id'             => 1252,
+			'title'                 => 'This is the post title',
+			'guid'                  => 'http://wpml.to.mlp/?p=4736',
+			'date'                  => '2014-04-23 09:45:30',
+			'comment_status'        => 'open',
+			'ping_status'           => 'open',
+			'type'                  => 'post',
+			'is_sticky'             => 0,
+			'origin_link'           => 'http://wpml.to.mlp/this-is-the-post-title/',
+			'excerpt'               => 'Some Excerpt',
+			'content'               => 'Some Content',
+			'name'                  => 'this-is-the-post-title',
+			'status'                => 'publish',
+			'origin_parent_post_id' => 0,
+			'menu_order'            => 0,
+			'password'              => '',
+
+		);
+
+		$xml = <<<XML
+<root>
+	<item>
+		<title>{$post[ 'title' ]}</title>
+		<link>{$post['origin_link']}</link>
+		<pubDate><![CDATA[{$post[ 'date' ]}]]></pubDate>
+		<dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/"><![CDATA[]]></dc:creator>
+		<guid isPermaLink="false">{$post[ 'guid' ]}</guid>
+		<excerpt:encoded xmlns:excerpt="http://wordpress.org/export/1.2/excerpt/"><![CDATA[{$post[ 'excerpt' ]}]]></excerpt:encoded>
+		<content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/"><![CDATA[{$post[ 'content' ]}]]></content:encoded>
+		<wp:post_id xmlns:wp="http://wordpress.org/export/1.2/">{$post[ 'origin_id' ]}</wp:post_id>
+		<wp:post_date xmlns:wp="http://wordpress.org/export/1.2/"><![CDATA[{$post[ 'date' ]}]]></wp:post_date>
+		<wp:post_date_gmt xmlns:wp="http://wordpress.org/export/1.2/"><![CDATA[{$post[ 'date' ]}]]></wp:post_date_gmt>
+		<wp:comment_status xmlns:wp="http://wordpress.org/export/1.2/"><![CDATA[{$post[ 'comment_status' ]}]]></wp:comment_status>
+		<wp:ping_status xmlns:wp="http://wordpress.org/export/1.2/"><![CDATA[{$post[ 'ping_status' ]}]]></wp:ping_status>
+		<wp:post_name xmlns:wp="http://wordpress.org/export/1.2/"><![CDATA[{$post[ 'name' ]}]]></wp:post_name>
+		<wp:status xmlns:wp="http://wordpress.org/export/1.2/"><![CDATA[{$post[ 'status' ]}]]></wp:status>
+		<wp:post_parent xmlns:wp="http://wordpress.org/export/1.2/">{$post[ 'origin_parent_post_id' ]}</wp:post_parent>
+		<wp:menu_order xmlns:wp="http://wordpress.org/export/1.2/">{$post[ 'menu_order' ]}</wp:menu_order>
+		<wp:post_type xmlns:wp="http://wordpress.org/export/1.2/"><![CDATA[{$post[ 'type' ]}]]></wp:post_type>
+		<wp:post_password xmlns:wp="http://wordpress.org/export/1.2/"><![CDATA[{$post[ 'password' ]}]]></wp:post_password>
+		<wp:is_sticky xmlns:wp="http://wordpress.org/export/1.2/">{$post[ 'is_sticky' ]}</wp:is_sticky>
+		<category domain="category" nicename="news" term_id="112"><![CDATA[News]]></category>
+		<category domain="post_tag" nicename="some-tag" term_id="98"><![CDATA[Some tag]]></category>
+
+		<wp:postmeta xmlns:wp="http://wordpress.org/export/1.2/">
+			<wp:meta_key><![CDATA[_edit_lock]]></wp:meta_key>
+			<wp:meta_value><![CDATA[1414579147:9]]></wp:meta_value>
+		</wp:postmeta>
+
+		<wp:postmeta xmlns:wp="http://wordpress.org/export/1.2/">
+			<wp:meta_key><![CDATA[_edit_last]]></wp:meta_key>
+			<wp:meta_value><![CDATA[9]]></wp:meta_value>
+		</wp:postmeta>
+
+		<wp:postmeta xmlns:wp="http://wordpress.org/export/1.2/">
+			<wp:meta_key><![CDATA[multiple_values]]></wp:meta_key>
+			<wp:meta_value><![CDATA[foo]]></wp:meta_value>
+		</wp:postmeta>
+
+		<wp:postmeta xmlns:wp="http://wordpress.org/export/1.2/">
+			<wp:meta_key><![CDATA[multiple_values]]></wp:meta_key>
+			<wp:meta_value><![CDATA[bar]]></wp:meta_value>
+		</wp:postmeta>
+
+		<wp:translation xmlns:wp="http://wordpress.org/export/1.2/">
+			<wp:locale><![CDATA[en_US]]></wp:locale>
+			<wp:element_id>44330</wp:element_id>
+		</wp:translation>
+
+		<wp:translation xmlns:wp="http://wordpress.org/export/1.2/">
+			<wp:locale><![CDATA[nl_NL]]></wp:locale>
+			<wp:element_id>57664</wp:element_id>
+		</wp:translation>
+	</item>
+</root>
+XML;
+
+		$post[ 'is_sticky' ] = (bool) $post[ 'is_sticky' ];
+
+		$data[ 'valid_post_local_namespace_references' ] = array(
+			# 1. Parameter $item
+			new SimpleXMLElement( $xml ),
+			# 2. Parameter
+			array(
+				'post' => $post,
+				'terms' => array(
+					array( 'origin_id' => 112, 'taxonomy' => 'category' ),
+					array( 'origin_id' => 98, 'taxonomy' => 'post_tag' )
+				),
+				'meta' => array(
+					array( 'key' => '_edit_lock', 'value' => '1414579147:9', 'is_single' => TRUE ),
+					array( 'key' => '_edit_last', 'value' => '9', 'is_single' => TRUE ),
+					array( 'key' => 'multiple_values', 'value' => array( 'foo', 'bar' ), 'is_single' => FALSE )
+				),
+				'locale_relations' => array(
+					array( 'locale' => 'en_US', 'origin_id' => 44330 ),
+					array( 'locale' => 'nl_NL', 'origin_id' => 57664 )
+				)
+			)
+		);
 		return $data;
 	}
 

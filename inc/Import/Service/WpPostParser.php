@@ -57,8 +57,7 @@ class WpPostParser implements PostParserInterface {
 			return;
 		}
 
-		// Todo: Validation, error handling
-		$doc_ns = $document->getDocNamespaces();
+		$doc_ns = $document->getDocNamespaces( TRUE );
 		$namespaces = array( 'wp', 'excerpt', 'content' );
 		foreach ( $namespaces as $ns ) {
 			if ( isset( $doc_ns[ $ns ] ) )
