@@ -109,6 +109,11 @@ class WpImportPost implements ImportPostInterface {
 	private $locale_relations = array();
 
 	/**
+	 * @var string
+	 */
+	private $origin_attachment_url = '';
+
+	/**
 	 * @var Common\ParameterSanitizerInterface
 	 */
 	private $param_sanitizer;
@@ -173,7 +178,8 @@ class WpImportPost implements ImportPostInterface {
 			'password'              => 'string',
 			'terms'                 => 'array',
 			'meta'                  => 'array',
-			'locale_relations'      => 'array'
+			'locale_relations'      => 'array',
+			'origin_attachment_url' => 'string'
 		);
 
 		$valid_attributes = $this->param_sanitizer
@@ -402,5 +408,14 @@ class WpImportPost implements ImportPostInterface {
 	public function locale_relations() {
 
 		return $this->locale_relations;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function origin_attachment_url() {
+
+		return $this->origin_attachment_url;
 	}
 }
