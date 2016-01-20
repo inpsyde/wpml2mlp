@@ -28,16 +28,18 @@ class WpPostImporter implements PostImporterInterface {
 	private $http;
 
 	/**
-	 * @param Module\TranslationConnectorInterface $translation_connector
 	 * @param Data\MultiTypeIdMapperInterface $id_mapper
-	 * @param $ancestor_resolver (Not specified yet)
+	 * @param WP_Http $http (Optional)
 	 */
 	public function __construct(
-		WP_Http $http,
-		Data\MultiTypeIdMapperInterface $id_mapper
+		Data\MultiTypeIdMapperInterface $id_mapper,
+		WP_Http $http = NULL
 	) {
 
 		$this->id_mapper  = $id_mapper;
+		$this->http       = $http
+			? $http
+			: new WP_Http;
 	}
 
 	/**
