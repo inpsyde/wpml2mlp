@@ -16,11 +16,6 @@ class SimpleXmlItemWrapper implements Iterator {
 	private $iterator;
 
 	/**
-	 * @var array
-	 */
-	private $namespaces = array();
-
-	/**
 	 * @var string
 	 */
 	private $root_el;
@@ -34,7 +29,6 @@ class SimpleXmlItemWrapper implements Iterator {
 
 	/**
 	 * @param Iterator $iterator
-	 * @param array $namespaces
 	 * @param string $root_el
 	 * @param array $simple_xml_config [
 	 *      string $class
@@ -43,14 +37,12 @@ class SimpleXmlItemWrapper implements Iterator {
 	 */
 	public function __construct(
 		Iterator $iterator,
-		Array $namespaces = array(),
 		$root_el = 'root',
 		Array $simple_xml_config = array(),
 		Common\WpFactoryInterface $wp_factory = NULL
 	) {
 
 		$this->iterator         = $iterator;
-		$this->namespaces       = $namespaces;
 		$this->root_el          = (string) $root_el;
 		$this->simple_xml_class = isset( $simple_xml_config[ 'class' ] )
 			? (string) $simple_xml_config[ 'class' ]
@@ -71,15 +63,9 @@ class SimpleXmlItemWrapper implements Iterator {
 	 */
 	public function current() {
 
-		$namespaces = array();
-		foreach ( $this->namespaces as $ns => $uri ) {
-			$namespaces[] = "xmlns:{$ns}='{$uri}'";
-		}
-
 		$xml = sprintf(
-			'<%1$s %2$s>%3$s</%1$s>',
+			'<%1$s>%2$s</%1$s>',
 			$this->root_el,
-			implode( ' ', $namespaces ),
 			$this->iterator->current()
 		);
 

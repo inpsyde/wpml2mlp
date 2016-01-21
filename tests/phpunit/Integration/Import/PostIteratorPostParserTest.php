@@ -57,7 +57,6 @@ class PostIteratorPostParserTest extends Helper\MonkeyTestCase {
 					$this->file_system->abs_path( $test_file ),
 					'item'
 				),
-				[  ],
 				'root',
 				[],
 				$wp_factory_mock
