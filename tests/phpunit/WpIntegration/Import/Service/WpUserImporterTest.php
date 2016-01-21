@@ -3,9 +3,9 @@ namespace W2M\Test\WpIntegration\Import\Service;
 
 use
 	W2M\Import\Service,
-	PHPUnit_Framework_TestCase;
+	WP_UnitTestCase;
 
-class WpUserImporterTest extends PHPUnit_Framework_TestCase {
+class WpUserImporterTest extends WP_UnitTestCase {
 
 	/**
 	 * @group import_user
