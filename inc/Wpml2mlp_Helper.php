@@ -24,17 +24,30 @@ class Wpml2mlp_Helper {
 		$query_params = array(
 			'posts_per_page'   => -1,
 			'post_type'        => apply_filters( 'wpml2mlp_supported_posttypes', $posttypes ),
-			'post_status'      => array( 'publish', 'pending', 'draft', 'future', 'private', )
+			'post_status'      => array( 'publish', 'pending', 'draft', 'future', 'private', 'inherit' )
 
 		);
 
+
 		$all_posts = array();
 
-		foreach( wpml_get_active_languages_filter() as $lang_code => $lang_data ){
+		$languages = wpml_get_active_languages_filter();
+
+		unset(
+			#$languages['en'],
+			#$languages['nl'],
+			#$languages['fr']
+			$languages['it'],
+			$languages['de'],
+			$languages['es']
+		);
+
+		foreach( $languages as $lang_code => $lang_data ){
 
 			$sitepress->switch_lang( $lang_code );
 
 			$query = new WP_Query( $query_params );
+
 
 			if ( $query->found_posts > 0 ) {
 
@@ -55,11 +68,13 @@ class Wpml2mlp_Helper {
 
 		}
 
+
 		if ( ! empty( $all_posts ) ) {
 
 			return $all_posts;
 
 		}
+
 
 	}
 

@@ -90,12 +90,12 @@ XML;
 		$wp_error_mock->expects( $this->atLeast( 1 ) )
 			->method( 'add_data' )
 			->with(
-				'namespace',
 				$this->callback( function( $context_data ) use ( $item ) {
 					return
 						   'wp' === $context_data[ 'data' ][ 'namespace' ]
 						&& $item === $context_data[ 'data' ][ 'document' ];
-				} )
+				} ),
+				'namespace'
 			);
 
 		$wp_factory_mock->expects( $this->any() )
@@ -129,12 +129,12 @@ XML;
 		$wp_error_mock->expects( $this->atLeast( 1 ) )
 			->method( 'add_data' )
 			->with(
-				'attribute',
 				$this->callback( function( $context_data ) use ( $expected, $item ) {
 					return
 						   $expected[ 'missing_attribute' ] === $context_data[ 'data' ][ 'attribute' ]
 						&& $item === $context_data[ 'data' ][ 'document' ];
-				} )
+				} ),
+				'attribute'
 			);
 
 		$wp_factory_mock->expects( $this->any() )
@@ -296,12 +296,12 @@ XML;
 		$wp_error_mock->expects( $this->once() )
 			->method( 'add_data' )
 			->with(
-				'attribute',
 				$this->callback( function( $context_data ) use ( $expected, $item ) {
 					return
 						   $context_data[ 'data' ][ 'attribute' ] === $expected[ 'missing_term' ]
 						&& $item === $context_data[ 'data' ][ 'document' ];
-				} )
+				} ),
+				'attribute'
 			);
 
 		$wp_factory_mock->expects( $this->atLeast( 1 ) )
@@ -404,12 +404,12 @@ XML;
 		$wp_error_mock->expects( $this->once() )
 			->method( 'add_data' )
 			->with(
-				'item',
 				$this->callback( function( $context_data ) use ( $item ) {
 					return
 						   'category' === $context_data[ 'data' ][ 'item' ]
 						&& $item === $context_data[ 'data' ][ 'document' ];
-				} )
+				} ),
+				'item'
 			);
 
 		Brain\Monkey::actions()

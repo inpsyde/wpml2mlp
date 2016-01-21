@@ -102,14 +102,14 @@ XML;
 		$wp_error_mock->expects( $this->exactly( 1 ) )
 			->method( 'add_data' )
 			->with(
-				'namespace',
 				$this->callback(
 					function ( $parameter ) use ( $document ) {
 
 						return 'wp' === $parameter[ 'data' ][ 'namespace' ]
 						&& $document === $parameter[ 'data' ][ 'document' ];
 					}
-				)
+				),
+				'namespace'
 			);
 
 		$wp_factory_mock = $this->mock_builder->common_wp_factory();
@@ -148,14 +148,14 @@ XML;
 		$wp_error_mock->expects( $this->exactly( 1 ) )
 			->method( 'add_data' )
 			->with(
-				'item',
 				$this->callback(
 					function ( $parameter ) use ( $document ) {
 
 						return 'comment' === $parameter[ 'data' ][ 'item' ]
 						&& $document === $parameter[ 'data' ][ 'document' ];
 					}
-				)
+				),
+				'item'
 			);
 
 		$wp_factory_mock = $this->mock_builder->common_wp_factory();
@@ -191,14 +191,14 @@ XML;
 		$wp_error_mock->expects( $this->exactly( 1 ) )
 			->method( 'add_data' )
 			->with(
-				'attribute',
 				$this->callback(
 					function ( $parameter ) use ( $expected, $document ) {
 
 						return $expected[ 'missing_attribute' ] === $parameter[ 'data' ][ 'attribute' ]
 						&& $document === $parameter[ 'data' ][ 'document' ];
 					}
-				)
+				),
+				'attribute'
 			);
 
 		$wp_factory_mock = $this->mock_builder->common_wp_factory();

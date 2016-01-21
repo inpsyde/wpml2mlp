@@ -89,13 +89,13 @@ class SimpleXmlItemWrapper implements Iterator {
 		if ( ! is_a( $document, $this->simple_xml_class ) ) {
 			$error = $this->wp_factory->wp_error( 'xml', "Invalid XML" );
 			$error->add_data(
-				'xml',
 				[
 					'data' => [
 						'xml_string' => $xml,
 						'xml_errors' => libxml_get_errors()
 					]
-				]
+				],
+				'xml'
 			);
 			libxml_clear_errors();
 			$this->propagate_invalid_xml_error( $error );

@@ -57,8 +57,7 @@ class WpPostParser implements PostParserInterface {
 			return;
 		}
 
-		// Todo: Validation, error handling
-		$doc_ns = $document->getDocNamespaces();
+		$doc_ns = $document->getDocNamespaces( TRUE );
 		$namespaces = array( 'wp', 'excerpt', 'content' );
 		foreach ( $namespaces as $ns ) {
 			if ( isset( $doc_ns[ $ns ] ) )
@@ -328,14 +327,14 @@ class WpPostParser implements PostParserInterface {
 			"Missing item node '{$item}' in XML post node"
 		);
 		$error->add_data(
-			'item',
 			array(
 				'trigger' => __CLASS__,
 				'data'    => array(
 					'document'  => $document,
 					'item'      => $item
 				)
-			)
+			),
+			'item'
 		);
 
 		$this->propagate_error( $error );
@@ -352,14 +351,14 @@ class WpPostParser implements PostParserInterface {
 			"Missing namespace '{$namespace}' in XML post node"
 		);
 		$error->add_data(
-			'namespace',
 			array(
 				'trigger' => __CLASS__,
 				'data'    => array(
 					'document'  => $document,
 					'namespace' => $namespace
 				)
-			)
+			),
+			'namespace'
 		);
 
 		$this->propagate_error( $error );
@@ -376,14 +375,14 @@ class WpPostParser implements PostParserInterface {
 			"Missing attribute '{$attribute}' in XML post node"
 		);
 		$error->add_data(
-			'attribute',
 			array(
 				'trigger' => __CLASS__,
 				'data'    => array(
 					'document'  => $document,
 					'attribute' => $attribute
 				)
-			)
+			),
+			'attribute'
 		);
 
 		$this->propagate_error( $error );

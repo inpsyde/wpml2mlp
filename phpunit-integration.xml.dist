@@ -16,7 +16,7 @@
 	</php>
 	<testsuites>
 		<testsuite name="integration">
-			<directory suffix="Test.php">tests/phpunit/Integration</directory>
+			<directory suffix="Test.php">tests/phpunit/WpIntegration</directory>
 		</testsuite>
 	</testsuites>
 </phpunit>
