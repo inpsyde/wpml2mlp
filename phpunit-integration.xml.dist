@@ -13,6 +13,13 @@
 		<const name="W2M\Test\DB_PASS" value="" />
 		<const name="W2M\Test\DB_HOST" value="" />
 		<const name="W2M\Test\TABLE_PREFIX" value="w2m_" />
+		<!--
+			You can specify an absolute path (like /tmp/w2mtest) here (in
+			your local copy phpunit.xml of this file).
+			Default TMP_DIR is set internally to [sys_get_tmp_dir() . "/w2mtest"] when leaving
+			this blank. Relative paths will NOT WORK here.
+		-->
+		<const name="W2M\Test\TMP_DIR" value="" />
 	</php>
 	<testsuites>
 		<testsuite name="integration">
