@@ -72,7 +72,7 @@ class WpPostImporter implements PostImporterInterface {
 		 */
 		if( $import_post->type() == 'attachment' ) {
 
-			if( ! $import_post->origin_attachment_url() ){
+			if( $import_post->origin_attachment_url() ){
 
 				$local_id = wp_insert_post( $import_postdata, TRUE );
 
