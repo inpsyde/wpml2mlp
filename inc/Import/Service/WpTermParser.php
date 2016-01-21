@@ -38,7 +38,7 @@ class WpTermParser implements TermParserInterface {
 	public function parse_term( SimpleXMLElement $term ) {
 
 		// WP terms comes with namespaces elements
-		$namespaces = $term->getDocNamespaces();
+		$namespaces = $term->getDocNamespaces( TRUE );
 		if ( ! isset( $namespaces[ 'wp' ] ) ) {
 			$this->missing_namespace_error( $term );
 			return;

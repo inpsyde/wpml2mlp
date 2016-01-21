@@ -76,12 +76,51 @@ class WpTermParserTest extends Helper\MonkeyTestCase {
 		<wp:category_parent>{$term_data[ 'origin_parent_term_id' ]}</wp:category_parent >
 		<wp:cat_name><![CDATA[{$term_data[ 'name' ]}]]></wp:cat_name>
 		<wp:category_description><![CDATA[{$term_data[ 'description' ]}]]></wp:category_description>
-		<wp:taxonomy>category</wp:taxonomy>
+		<wp:taxonomy>{$term_data[ 'taxonomy' ]}</wp:taxonomy>
 	</wp:category>
 </root>
 XML;
 
 		$data[ 'valid_xml_global_ns' ] = [
+			# 1. Parameter $document,
+			new SimpleXMLElement( $xml ),
+			# 2. Parameter $expected
+			[
+				'term_data' => $term_data
+			]
+		];
+
+		/**
+		 * Valid term, local namespace
+		 */
+
+		/**
+		 * Valid XML, global namespace
+		 */
+		$term_data = [
+			'origin_id'             => 41,
+			'slug'                  => 'cat-pics',
+			'origin_parent_term_id' => 0,
+			'name'                  => 'Cat Pictures',
+			'taxonomy'              => 'post_tag',
+			'description'           => 'My best cat photos.'
+		];
+		// Todo: Locale Relations
+
+		$xml = <<<XML
+<root>
+	<wp:category xmlns:wp="http://wordpress.org/export/1.2/">
+		<wp:term_id>{$term_data[ 'origin_id' ]}</wp:term_id>
+		<wp:category_nicename><![CDATA[{$term_data[ 'slug' ] }]]></wp:category_nicename >
+		<wp:category_parent>{$term_data[ 'origin_parent_term_id' ]}</wp:category_parent >
+		<wp:cat_name><![CDATA[{$term_data[ 'name' ]}]]></wp:cat_name>
+		<wp:category_description><![CDATA[{$term_data[ 'description' ]}]]></wp:category_description>
+		<wp:taxonomy>{$term_data[ 'taxonomy' ]}</wp:taxonomy>
+	</wp:category>
+</root>
+XML;
+
+		$data[ 'valid_xml_local_ns' ] = [
 			# 1. Parameter $document,
 			new SimpleXMLElement( $xml ),
 			# 2. Parameter $expected
