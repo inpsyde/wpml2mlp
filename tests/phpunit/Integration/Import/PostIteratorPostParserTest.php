@@ -8,7 +8,7 @@ use
 	W2M\Test\Helper,
 	SimpleXMLElement;
 
-class IteratorParserTest extends Helper\MonkeyTestCase {
+class PostIteratorPostParserTest extends Helper\MonkeyTestCase {
 
 	/**
 	 * @var Helper\FileSystem
@@ -40,9 +40,9 @@ class IteratorParserTest extends Helper\MonkeyTestCase {
 	 * @param SimpleXMLElement $document
 	 * @param array $expected
 	 */
-	public function test_post( SimpleXMLElement $document, Array $expected ) {
+	public function test_iteration( SimpleXMLElement $document, Array $expected ) {
 
-		$this->markTestSkipped( 'Under construction' );
+		#$this->markTestSkipped( 'Under construction' );
 		$test_file = implode( '-', [ __CLASS__, __FUNCTION__, time() ] ) . '.xml';
 		$this->file_system->file_put_contents( $test_file, $document->asXML() );
 		$this->test_files[] = $test_file;
@@ -57,7 +57,7 @@ class IteratorParserTest extends Helper\MonkeyTestCase {
 					$this->file_system->abs_path( $test_file ),
 					'item'
 				),
-				[ 'wp' => 'wp', 'content' => 'content', 'excerpt' => 'excerpt' ],
+				[  ],
 				'root',
 				[],
 				$wp_factory_mock
@@ -84,12 +84,12 @@ class IteratorParserTest extends Helper\MonkeyTestCase {
 		}
 		$this->assertSame(
 			$expected[ 'expected_posts' ],
-			$index + 1 // we started counting at '0'
+			$index
 		);
 	}
 
 	/**
-	 * @see test_post
+	 * @see test_iteration
 	 * @return array
 	 */
 	public function post_test_data() {
