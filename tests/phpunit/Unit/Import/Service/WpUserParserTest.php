@@ -22,7 +22,11 @@ class WpUserParserTest extends Helper\MonkeyTestCase {
 			->expectFired( 'w2m_import_parse_user_error' )
 			->never();
 
-		$testee = new Service\WpUserParser;
+		$factory_mock = $this->mock_builder->common_wp_factory();
+		$factory_mock->expects( $this->never() )
+			->method( 'wp_error' );
+
+		$testee = new Service\WpUserParser( $factory_mock );
 		$result = $testee->parse_user( $document );
 
 		$this->assertInstanceOf(
@@ -80,6 +84,45 @@ XML;
 				'user_data' => $user_data
 			]
 		];
+
+		/**
+		 * Valid user, local namespaces
+		 */
+
+		/**
+		 * Valid user, root namespace
+		 */
+		$user_data = [
+			'origin_id'    => 1,
+			'login'        => 'jane',
+			'email'        => 'jane.doe@wpml.to.mlp',
+			'first_name'   => 'Jane',
+			'last_name'    => 'Doe',
+			'display_name' => 'Jane D.'
+		];
+		$xml = <<<XML
+<root>
+	<wp:author xmlns:wp="http://wordpress.org/export/1.2/">
+		<wp:author_id>{$user_data[ 'origin_id' ]}</wp:author_id>
+		<wp:author_login><![CDATA[{$user_data[ 'login' ]}]]></wp:author_login>
+		<wp:author_email><![CDATA[{$user_data[ 'email' ]}]]></wp:author_email>
+		<wp:author_display_name><![CDATA[{$user_data[ 'display_name' ]}]]></wp:author_display_name>
+		<wp:author_first_name><![CDATA[{$user_data[ 'first_name' ]}]]></wp:author_first_name>
+		<wp:author_last_name><![CDATA[{$user_data[ 'last_name' ]}]]></wp:author_last_name>
+	</wp:author>
+</root>
+XML;
+
+
+		$data[ 'valid_user_local_ns' ] = [
+			# 1. Parameter $document
+			new SimpleXMLElement( $xml ),
+			# 2. Parameter $expected
+			[
+				'user_data' => $user_data
+			]
+		];
+
 
 		return $data;
 	}

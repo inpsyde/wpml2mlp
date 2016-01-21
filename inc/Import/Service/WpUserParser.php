@@ -34,7 +34,7 @@ class WpUserParser implements UserParserInterface {
 	 */
 	public function parse_user( SimpleXMLElement $document ) {
 
-		$doc_ns = $document->getDocNamespaces();
+		$doc_ns = $document->getDocNamespaces( TRUE );
 		if ( ! isset( $doc_ns[ 'wp' ] ) ) {
 			$this->missing_namespace_error( $document, 'wp' );
 			return;
