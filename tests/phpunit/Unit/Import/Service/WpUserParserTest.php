@@ -4,10 +4,11 @@ namespace W2M\Test\Unit\Import\Service;
 
 use
 	W2M\Import\Service,
+	W2M\Test\Helper,
 	SimpleXMLElement,
 	Brain;
 
-class WpUserParserTest extends \PHPUnit_Framework_TestCase {
+class WpUserParserTest extends Helper\MonkeyTestCase {
 
 	/**
 	 * @dataProvider import_user_test_data
@@ -21,7 +22,11 @@ class WpUserParserTest extends \PHPUnit_Framework_TestCase {
 			->expectFired( 'w2m_import_parse_user_error' )
 			->never();
 
-		$testee = new Service\WpUserParser;
+		$factory_mock = $this->mock_builder->common_wp_factory();
+		$factory_mock->expects( $this->never() )
+			->method( 'wp_error' );
+
+		$testee = new Service\WpUserParser( $factory_mock );
 		$result = $testee->parse_user( $document );
 
 		$this->assertInstanceOf(
@@ -43,16 +48,19 @@ class WpUserParserTest extends \PHPUnit_Framework_TestCase {
 	 */
 	public function import_user_test_data() {
 
-		$data = array();
+		$data = [];
 
-		$user_data = array(
+		/**
+		 * Valid user, root namespace
+		 */
+		$user_data = [
 			'origin_id'    => 9,
 			'login'        => 'john',
 			'email'        => 'john.doe@mail.tld',
 			'first_name'   => 'John',
 			'last_name'    => 'Doe',
 			'display_name' => 'John Doe'
-		);
+		];
 		$xml = <<<XML
 <root
 	xmlns:wp="wp"
@@ -68,15 +76,62 @@ class WpUserParserTest extends \PHPUnit_Framework_TestCase {
 </root>
 XML;
 
-		$data[ 'valid_user' ] = array(
+		$data[ 'valid_user_root_ns' ] = [
 			# 1. Parameter $document
 			new SimpleXMLElement( $xml ),
 			# 2. Parameter $expected
-			array(
+			[
 				'user_data' => $user_data
-			)
-		);
+			]
+		];
+
+		/**
+		 * Valid user, local namespaces
+		 */
+
+		/**
+		 * Valid user, root namespace
+		 */
+		$user_data = [
+			'origin_id'    => 1,
+			'login'        => 'jane',
+			'email'        => 'jane.doe@wpml.to.mlp',
+			'first_name'   => 'Jane',
+			'last_name'    => 'Doe',
+			'display_name' => 'Jane D.'
+		];
+		$xml = <<<XML
+<root>
+	<wp:author xmlns:wp="http://wordpress.org/export/1.2/">
+		<wp:author_id>{$user_data[ 'origin_id' ]}</wp:author_id>
+		<wp:author_login><![CDATA[{$user_data[ 'login' ]}]]></wp:author_login>
+		<wp:author_email><![CDATA[{$user_data[ 'email' ]}]]></wp:author_email>
+		<wp:author_display_name><![CDATA[{$user_data[ 'display_name' ]}]]></wp:author_display_name>
+		<wp:author_first_name><![CDATA[{$user_data[ 'first_name' ]}]]></wp:author_first_name>
+		<wp:author_last_name><![CDATA[{$user_data[ 'last_name' ]}]]></wp:author_last_name>
+	</wp:author>
+</root>
+XML;
+
+
+		$data[ 'valid_user_local_ns' ] = [
+			# 1. Parameter $document
+			new SimpleXMLElement( $xml ),
+			# 2. Parameter $expected
+			[
+				'user_data' => $user_data
+			]
+		];
+
 
 		return $data;
+	}
+
+	public function test_errors() {
+
+		/**
+		 * Todo: implement test for invalid xml to check correct error propagation
+		 */
+		$this->markTestIncomplete();
 	}
 }

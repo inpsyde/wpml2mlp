@@ -2,6 +2,9 @@
 
 namespace W2M\Test\Helper;
 
+use
+	W2M\Test;
+
 class FileSystem {
 
 	/**
@@ -23,7 +26,11 @@ class FileSystem {
 			$test_dir = self::get_test_dir();
 
 		$this->test_dir = $this->sanitize_path( $test_dir );
-		$this->tmp_dir = $this->test_dir . '/tmp';
+		$this->tmp_dir = sys_get_temp_dir() . '/w2mtest';
+		// defined in phpunit.xml(.dist)
+		if ( defined( 'W2M\Test\TMP_DIR' )  && Test\TMP_DIR ) {
+			$this->tmp_dir = Test\TMP_DIR;
+		}
 		$this->create_tmp_dir();
 	}
 

@@ -38,7 +38,7 @@ class WpCommentParser implements CommentParserInterface {
 	 */
 	public function parse_comment( SimpleXMLElement $document ) {
 
-		$namespaces = $document->getDocNamespaces();
+		$namespaces = $document->getDocNamespaces( TRUE );
 		if ( ! isset( $namespaces[ 'wp' ] ) ) {
 			$this->missing_namespace_error( $document );
 			return;
@@ -65,7 +65,7 @@ class WpCommentParser implements CommentParserInterface {
 			'comment_approved'     => 'approved',
 			'comment_agent'        => 'agent',
 			'comment_type'         => 'type',
-			'comment_parent'       => 'parent',
+			'comment_parent'       => 'origin_parent_comment_id',
 			'user_id'              => 'origin_user_id'
 		];
 
@@ -102,14 +102,14 @@ class WpCommentParser implements CommentParserInterface {
 			"Missing namespace '{$namespace}' in XML comment node"
 		);
 		$error->add_data(
-			'namespace',
 			array(
 				'trigger' => __CLASS__,
 				'data'    => array(
 					'document'  => $document,
 					'namespace' => $namespace
 				)
-			)
+			),
+			'namespace'
 		);
 
 		$this->propagate_error( $error );
@@ -129,14 +129,14 @@ class WpCommentParser implements CommentParserInterface {
 			"Missing item node '{$item}' in XML comment node"
 		);
 		$error->add_data(
-			'item',
 			array(
 				'trigger' => __CLASS__,
 				'data'    => array(
 					'document' => $document,
 					'item'     => $item
 				)
-			)
+			),
+			'item'
 		);
 
 		$this->propagate_error( $error );
@@ -155,14 +155,14 @@ class WpCommentParser implements CommentParserInterface {
 			"Missing attribute node '{$attribute}' in XML comment node"
 		);
 		$error->add_data(
-			'attribute',
 			array(
 				'trigger' => __CLASS__,
 				'data'    => array(
 					'document'  => $document,
 					'attribute' => $attribute
 				)
-			)
+			),
+			'attribute'
 		);
 
 		$this->propagate_error( $error );

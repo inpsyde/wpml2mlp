@@ -38,7 +38,7 @@ class WpTermParser implements TermParserInterface {
 	public function parse_term( SimpleXMLElement $term ) {
 
 		// WP terms comes with namespaces elements
-		$namespaces = $term->getDocNamespaces();
+		$namespaces = $term->getDocNamespaces( TRUE );
 		if ( ! isset( $namespaces[ 'wp' ] ) ) {
 			$this->missing_namespace_error( $term );
 			return;
@@ -93,14 +93,14 @@ class WpTermParser implements TermParserInterface {
 			"Missing namespace '{$namespace}' in XML term node"
 		);
 		$error->add_data(
-			'namespace',
 			array(
 				'trigger' => __CLASS__,
 				'data'    => array(
 					'document'  => $document,
 					'namespace' => $namespace
 				)
-			)
+			),
+			'namespace'
 		);
 
 		$this->propagate_error( $error );
@@ -119,14 +119,14 @@ class WpTermParser implements TermParserInterface {
 			"Missing item node '{$item}' in XML term node"
 		);
 		$error->add_data(
-			'item',
 			array(
 				'trigger' => __CLASS__,
 				'data'    => array(
 					'document' => $document,
 					'item'     => $item
 				)
-			)
+			),
+			'item'
 		);
 
 		$this->propagate_error( $error );
@@ -145,14 +145,14 @@ class WpTermParser implements TermParserInterface {
 			"Missing attribute node '{$attribute}' in XML term node"
 		);
 		$error->add_data(
-			'attribute',
 			array(
 				'trigger' => __CLASS__,
 				'data'    => array(
 					'document'  => $document,
 					'attribute' => $attribute
 				)
-			)
+			),
+			'attribute'
 		);
 
 		$this->propagate_error( $error );

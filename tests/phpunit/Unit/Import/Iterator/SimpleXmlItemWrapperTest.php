@@ -118,17 +118,17 @@ XML;
 		$wp_error_mock->expects( $this->once() )
 			->method( 'add_data' )
 			->with(
-				'xml',
 				$this->callback(
 					function( $data ) use ( $xml_string ) {
 
 						return
 							FALSE !== strpos( $data[ 'data' ][ 'xml_string' ], $xml_string )
-						 && is_array( $data[ 'data' ][ 'xml_errors' ] )
-						 && 0 < count( $data[ 'data' ][ 'xml_errors' ] );
+							&& is_array( $data[ 'data' ][ 'xml_errors' ] )
+							&& 0 < count( $data[ 'data' ][ 'xml_errors' ] );
 
 					}
-				)
+				),
+				'xml'
 			);
 
 		Brain\Monkey::actions()

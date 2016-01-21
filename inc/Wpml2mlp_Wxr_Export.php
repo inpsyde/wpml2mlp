@@ -26,8 +26,6 @@ class Wpml_Wxr_Export {
 	 */
 	public function __construct( $locale, $locale_obj ) {
 
-		set_time_limit( 0 );
-
 		$this->current_locale = $locale;
 		$this->posts          = $locale_obj[ 'posts' ];
 		$this->categories     = $locale_obj[ 'category' ];
@@ -212,8 +210,8 @@ class Wpml_Wxr_Export {
 
 			$wxr_categories .= "\n\t\t<wp:category>\n";
 			$wxr_categories .= "\t\t\t<wp:term_id>" . intval( $category->term_id ) . "</wp:term_id>\n";
-			$wxr_categories .= "\t\t\t<wp:category_nicename>" . $this->wxr_cdata( $category->slug ) . "</wp:category_nicename >\n";
-			$wxr_categories .= "\t\t\t<wp:category_parent>" . $this->wxr_cdata( $category->parent ? $category->parent : '' ) . " </wp:category_parent >\n";
+			$wxr_categories .= "\t\t\t<wp:category_nicename>" . $this->wxr_cdata( $category->slug ) . "</wp:category_nicename>\n";
+			$wxr_categories .= "\t\t\t<wp:category_parent>" . $this->wxr_cdata( $category->parent ? $category->parent : '' ) . " </wp:category_parent>\n";
 			$wxr_categories .= "\t\t\t<wp:cat_name>" . $this->wxr_cdata( $category->name ) . "</wp:cat_name>\n";
 			$wxr_categories .= "\t\t\t<wp:category_description>" . $this->wxr_cdata( $category->description ) . "</wp:category_description>\n";
 			$wxr_categories .= "\t\t\t<wp:taxonomy>" . $this->wxr_cdata( $category->taxonomy ) . "</wp:taxonomy>\n";
@@ -241,7 +239,7 @@ class Wpml_Wxr_Export {
 
 			$wxr_items .= "\n\t\t<item>\n";
 			$wxr_items .= "\t\t\t<title>" . apply_filters( 'the_title_rss', $post->post_title ) . "</title>\n";
-			$wxr_items .= "\t\t\t<link>" . get_permalink( $post->ID ) . "</link>\n";
+			$wxr_items .= "\t\t\t<link>" . $this->wxr_cdata( get_permalink( $post->ID ) ) . "</link>\n";
 			$wxr_items .= "\t\t\t<pubDate>" . $this->wxr_cdata( $post->post_date ) . "</pubDate>\n";
 			$wxr_items .= "\t\t\t<dc:creator>" . $this->wxr_cdata( get_the_author_meta( $post->post_author ) ) . "</dc:creator>\n";
 			$wxr_items .= "\t\t\t<guid isPermaLink=\"false\">" . $this->wxr_cdata( get_the_guid( $post->ID ) ) . "</guid>\n";
@@ -272,7 +270,8 @@ class Wpml_Wxr_Export {
 			$wxr_items .= $this->wxr_comments( $post->ID );
 
 			$wxr_items .= "\n\t\t</item>\n";
-
+<<<<<<< HEAD
+/*
 			#buddy take a break, its hard work i now ;)
 			if ( $i >= 50 ) {
 
@@ -281,11 +280,13 @@ class Wpml_Wxr_Export {
 				unset( $wxr_items );
 
 				$i = 0;
-			}
+			}*/
+=======
+>>>>>>> fix_44
 
 		}
 
-		return;
+		return $wxr_items;
 
 	}
 
@@ -454,9 +455,9 @@ EOF;
 		$this->wxr_cache->write( $this->wxr_authors_list( $post_ids ), $this->wxr_filename );
 		$this->wxr_cache->write( $this->wxr_get_categories(), $this->wxr_filename );
 
-		$this->wxr_get_post_items();
+		$this->wxr_cache->write( $this->wxr_get_post_items(), $this->wxr_filename );
 
-		$this->wxr_cache->write( $this->get_wxr_footer(), $this->wxr_filename, TRUE );
+		$this->wxr_cache->write( $this->get_wxr_footer(), $this->wxr_filename, FALSE );
 
 		unset( $wxr_items );
 

@@ -40,7 +40,7 @@ class DataIdObserverProvider {
 	/**
 	 * Provide action handler
 	 */
-	public function set_up() {
+	public function register_id_observer() {
 
 		add_action( 'w2m_import_set_comment_id_id', [ $this->id_mapper, 'record_comment' ] );
 		add_action( 'w2m_import_set_post_id', [ $this->id_mapper, 'record_post' ] );

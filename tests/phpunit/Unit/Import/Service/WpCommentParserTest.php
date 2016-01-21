@@ -10,8 +10,56 @@ use
 
 class WpCommentParserTest extends Helper\MonkeyTestCase {
 
-	public function test_parse_comment() {
+	/**
+	 * @dataProvider parse_comment_test_data
+	 *
+	 * @param SimpleXMLElement $document
+	 * @param array $expected
+	 */
+	public function test_parse_comment( SimpleXMLElement $document, Array $expected ) {
 
+		$wp_factory_mock = $this->mock_builder->common_wp_factory();
+		$wp_factory_mock->expects( $this->never() )
+			->method( 'wp_error' );
+
+		Brain\Monkey::actions()
+			->expectFired( 'w2m_import_parse_comment_error' )
+			->never();
+
+		$testee = new Service\WpCommentParser( $wp_factory_mock );
+		$result = $testee->parse_comment( $document );
+
+		$this->assertInstanceOf(
+			'W2M\Import\Type\ImportCommentInterface',
+			$result
+		);
+		foreach ( $expected[ 'comment_data' ] as $method => $value ) {
+			$this->assertSame(
+				$value,
+				$result->{$method}(),
+				"Test failed for method '{$method}'"
+			);
+		}
+
+		// check Date
+		$this->assertSame(
+			$expected[ 'date_str_gmt' ],
+			$result->date()
+				->format( 'Y-m-d H:i:s' )
+		);
+	}
+
+	/**
+	 * @see test_parse_comment
+	 * @return array
+	 */
+	public function parse_comment_test_data() {
+
+		$data = [];
+
+		/**
+		 * Valid XML, global namespace
+		 */
 		$comment_data = [
 			'origin_id'                => 171159,
 			'origin_post_id'           => 4543,
@@ -25,7 +73,7 @@ class WpCommentParserTest extends Helper\MonkeyTestCase {
 			'agent'                    => 'Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko',
 			'type'                     => 'comment',
 			'origin_parent_comment_id' => 0,
-			'origin_user_id'           => 0
+			'origin_user_id'           => 1
 		];
 		$date_str_gmt = '2016-01-13 17:07:32';
 		$date_str     = '1999-05-23 03:45:36';
@@ -54,38 +102,73 @@ class WpCommentParserTest extends Helper\MonkeyTestCase {
 </root>
 XML;
 
-		$document        = new SimpleXMLElement( $xml );
-		$wp_factory_mock = $this->mock_builder->common_wp_factory();
-		$wp_factory_mock->expects( $this->never() )
-			->method( 'wp_error' );
+		$data[ 'valid_xml_global_ns' ] = [
+			# 1. Parameter $document
+			new SimpleXMLElement( $xml ),
+			# 2. Parameter $expected
+			[
+				'comment_data' => $comment_data,
+				'date_str_gmt' => $date_str_gmt,
+				'date_str'     => $date_str
+			]
+		];
 
-		Brain\Monkey::actions()
-			->expectFired( 'w2m_import_parse_comment_error' )
-			->never();
+		/**
+		 * Valid xml, local namespace
+		 */
+		$comment_data = [
+			'origin_id'                => 171160,
+			'origin_post_id'           => 32,
+			'author_name'              => 'another test',
+			'author_email'             => 'foo@wpml.to.mlp',
+			'author_url'               => 'https://wpml.to.mlp/foo',
+			'author_ip'                => '192.168.0.1',
+			'content'                  => 'Lorem Ipsum dolor sit',
+			'karma'                    => -3,
+			'approved'                 => '0',
+			'agent'                    => 'Spambot/1.0',
+			'type'                     => 'pint',
+			'origin_parent_comment_id' => 171159,
+			'origin_user_id'           => 0
+		];
+		$date_str_gmt = '2015-12-31 23:59:58';
+		$date_str     = '1999-05-23 03:45:36';
 
-		$testee = new Service\WpCommentParser( $wp_factory_mock );
-		$result = $testee->parse_comment( $document );
+		$xml = <<<XML
+<root>
+	<wp:comment xmlns:wp="http://wordpress.org/export/1.2/">
+		<wp:comment_ID><![CDATA[{$comment_data['origin_id']}]]></wp:comment_ID>
+		<wp:comment_post_ID><![CDATA[{$comment_data['origin_post_id']}]]></wp:comment_post_ID>
+		<wp:comment_author><![CDATA[{$comment_data['author_name']}]]></wp:comment_author>
+		<wp:comment_author_email><![CDATA[{$comment_data['author_email']}]]></wp:comment_author_email>
+		<wp:comment_author_url><![CDATA[{$comment_data['author_url']}]]></wp:comment_author_url>
+		<wp:comment_author_IP><![CDATA[{$comment_data['author_ip']}]]></wp:comment_author_IP>
+		<wp:comment_date><![CDATA[{$date_str}]]></wp:comment_date>
+		<wp:comment_date_gmt><![CDATA[{$date_str_gmt}]]></wp:comment_date_gmt>
+		<wp:comment_content><![CDATA[{$comment_data['content']}]]></wp:comment_content>
+		<wp:comment_karma><![CDATA[{$comment_data['karma']}]]></wp:comment_karma>
+		<wp:comment_approved><![CDATA[{$comment_data['approved']}]]></wp:comment_approved>
+		<wp:comment_agent><![CDATA[{$comment_data['agent']}]]></wp:comment_agent>
+		<wp:comment_type><![CDATA[{$comment_data['type']}]]></wp:comment_type>
+		<wp:comment_parent>{$comment_data['origin_parent_comment_id']}</wp:comment_parent>
+		<wp:user_id><![CDATA[{$comment_data['origin_user_id']}]]></wp:user_id>
+	</wp:comment>
+</root>
+XML;
 
-		$this->assertInstanceOf(
-			'W2M\Import\Type\ImportCommentInterface',
-			$result
-		);
-		foreach ( $comment_data as $method => $value ) {
-			$this->assertSame(
-				$value,
-				$result->{$method}(),
-				"Test failed for method '{$method}'"
-			);
-		}
+		$data[ 'valid_xml_local_ns' ] = [
+			# 1. Parameter $document
+			new SimpleXMLElement( $xml ),
+			# 2. Parameter $expected
+			[
+				'comment_data' => $comment_data,
+				'date_str_gmt' => $date_str_gmt,
+				'date_str'     => $date_str
+			]
+		];
 
-		// check Date
-		$this->assertSame(
-			$date_str_gmt,
-			$result->date()
-				->format( 'Y-m-d H:i:s' )
-		);
+		return $data;
 	}
-
 	public function test_parse_comment_missing_namespace_error() {
 
 		$xml = <<<XML
@@ -102,14 +185,14 @@ XML;
 		$wp_error_mock->expects( $this->exactly( 1 ) )
 			->method( 'add_data' )
 			->with(
-				'namespace',
 				$this->callback(
 					function ( $parameter ) use ( $document ) {
 
 						return 'wp' === $parameter[ 'data' ][ 'namespace' ]
 						&& $document === $parameter[ 'data' ][ 'document' ];
 					}
-				)
+				),
+				'namespace'
 			);
 
 		$wp_factory_mock = $this->mock_builder->common_wp_factory();
@@ -148,14 +231,14 @@ XML;
 		$wp_error_mock->expects( $this->exactly( 1 ) )
 			->method( 'add_data' )
 			->with(
-				'item',
 				$this->callback(
 					function ( $parameter ) use ( $document ) {
 
 						return 'comment' === $parameter[ 'data' ][ 'item' ]
 						&& $document === $parameter[ 'data' ][ 'document' ];
 					}
-				)
+				),
+				'item'
 			);
 
 		$wp_factory_mock = $this->mock_builder->common_wp_factory();
@@ -191,14 +274,14 @@ XML;
 		$wp_error_mock->expects( $this->exactly( 1 ) )
 			->method( 'add_data' )
 			->with(
-				'attribute',
 				$this->callback(
 					function ( $parameter ) use ( $expected, $document ) {
 
 						return $expected[ 'missing_attribute' ] === $parameter[ 'data' ][ 'attribute' ]
 						&& $document === $parameter[ 'data' ][ 'document' ];
 					}
-				)
+				),
+				'attribute'
 			);
 
 		$wp_factory_mock = $this->mock_builder->common_wp_factory();
