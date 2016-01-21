@@ -3,9 +3,9 @@ namespace W2M\Test\WpIntegration\Import\Service;
 
 use
 	W2M\Import\Service,
-	WP_UnitTestCase;
+	W2M\Test\Helper;
 
-class WpUserImporterTest extends WP_UnitTestCase {
+class WpUserImporterTest extends Helper\WpIntegrationTestCase {
 
 	/**
 	 * @group import_user
@@ -14,11 +14,11 @@ class WpUserImporterTest extends WP_UnitTestCase {
 
 		$this->markTestSkipped( 'Under construction…' );
 
+		$user_mock = $this->mock_builder->type_wp_import_user();
 
-		$user_mock = $this->getMockBuilder( 'W2M\Import\Type\ImportUserInterface' )
-		                  ->getMock();
+		$id_mapper_mock = $this->mock_builder->data_multi_type_id_mapper();
 
-		$testee = new Service\WpUserImporter();
+		$testee = new Service\WpUserImporter( $id_mapper_mock );
 
 		/**
 		 * Now define the behaviour of the mock object. Each of the specified
