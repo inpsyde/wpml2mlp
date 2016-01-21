@@ -4,10 +4,11 @@ namespace W2M\Test\Unit\Import\Service;
 
 use
 	W2M\Import\Service,
+	W2M\Test\Helper,
 	SimpleXMLElement,
 	Brain;
 
-class WpUserParserTest extends \PHPUnit_Framework_TestCase {
+class WpUserParserTest extends Helper\MonkeyTestCase {
 
 	/**
 	 * @dataProvider import_user_test_data
