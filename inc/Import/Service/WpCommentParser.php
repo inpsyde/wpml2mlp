@@ -38,7 +38,7 @@ class WpCommentParser implements CommentParserInterface {
 	 */
 	public function parse_comment( SimpleXMLElement $document ) {
 
-		$namespaces = $document->getDocNamespaces();
+		$namespaces = $document->getDocNamespaces( TRUE );
 		if ( ! isset( $namespaces[ 'wp' ] ) ) {
 			$this->missing_namespace_error( $document );
 			return;
@@ -65,7 +65,7 @@ class WpCommentParser implements CommentParserInterface {
 			'comment_approved'     => 'approved',
 			'comment_agent'        => 'agent',
 			'comment_type'         => 'type',
-			'comment_parent'       => 'parent',
+			'comment_parent'       => 'origin_parent_comment_id',
 			'user_id'              => 'origin_user_id'
 		];
 
