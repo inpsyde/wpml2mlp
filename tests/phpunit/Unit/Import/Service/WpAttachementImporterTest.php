@@ -38,10 +38,10 @@ class WpAttachmentImporterTest extends Helper\MonkeyTestCase {
 
 		$id_mapper_mock = $this->mock_builder->data_multi_type_id_mapper();
 
-		$http = $this->getMockBuilder( 'WP_Http' )
-					 ->disableOriginalConstructor()
-					 ->setMethods( array( 'request' ) )
-					 ->getMock();
+		$http_mock = $this->getMockBuilder( 'WP_Http' )
+		                  ->disableOriginalConstructor()
+		                  ->setMethods( array( 'request' ) )
+		                  ->getMock();
 
 		$testee = new Service\WpPostImporter( $id_mapper_mock, $http );
 
@@ -232,7 +232,11 @@ class WpAttachmentImporterTest extends Helper\MonkeyTestCase {
 								'filename' => FALSE,
 							);
 
-		$http->method( 'request' )->with( 'a', 'b' )->willReturn( $request_testdata );
+		$http_mock->expects( $this->atLeast( 1 ) )
+		          ->method( 'request' )
+		          ->with( 'a', 'b' )
+		          ->willReturn( $request_testdata );
+
 
 		$testee->import_post( $post_mock );
 
