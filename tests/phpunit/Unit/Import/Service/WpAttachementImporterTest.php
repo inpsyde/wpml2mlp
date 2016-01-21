@@ -32,7 +32,7 @@ class WpAttachmentImporterTest extends Helper\MonkeyTestCase {
 	}
 
 	/**
-	 * @group import_attachment
+	 * @group import
 	 */
 	public function test_import_post() {
 
@@ -84,7 +84,6 @@ class WpAttachmentImporterTest extends Helper\MonkeyTestCase {
 			'origin_parent_post_id' => 42,
 			'menu_order'            => 1,
 			'password'              => 'mocky',
-			'is_sticky'             => FALSE,
 			'origin_link'           => 'http://wpml2mlp.test/mocky',
 			'terms'                 => array( $term_mock ),
 			'meta'                  => array( $postmeta_mock_single, $postmeta_mock_array ),
@@ -219,8 +218,21 @@ class WpAttachmentImporterTest extends Helper\MonkeyTestCase {
 		                                   )
 		                      );
 
+		/**
+		 * Testdata for a valid request response
+		 */
+		$request_testdata = array(
+								'headers' => array( 'content-type' => 'image/jpeg' ),
+								'body' => 'imagesource',
+								'response' => array(
+													'code' => 200,
+													'message' => 'OK',
+                                                ),
+								'cookies' => array(),
+								'filename' => FALSE,
+							);
 
-		$http->method( 'request' )->with( 's', 's' )->willReturn( '...' );
+		$http->method( 'request' )->with( 'a', 'b' )->willReturn( $request_testdata );
 
 		$testee->import_post( $post_mock );
 
