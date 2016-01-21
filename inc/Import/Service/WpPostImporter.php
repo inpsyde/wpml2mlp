@@ -222,6 +222,7 @@ class WpPostImporter implements PostImporterInterface {
 	 */
 	private function meta_result( $meta_result, $attribute ){
 
+
 		if ( $meta_result !== TRUE ) {
 
 			$meta_result = new WP_Error( 'meta_update_failed', "Cant add or update postmeta." );
@@ -308,6 +309,7 @@ class WpPostImporter implements PostImporterInterface {
 			return;
 		}
 
+		file_put_contents( $upload['file'], $response['body'] );
 
 		// Generate the metadata for the attachment, and update the database record.
 		$attachment_metadata = wp_generate_attachment_metadata( $attachment_id, $upload['file'] );
