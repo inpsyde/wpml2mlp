@@ -43,7 +43,7 @@ class WpAttachmentImporterTest extends Helper\MonkeyTestCase {
 		                  ->setMethods( array( 'request' ) )
 		                  ->getMock();
 
-		$testee = new Service\WpPostImporter( $id_mapper_mock, $http );
+		$testee = new Service\WpPostImporter( $id_mapper_mock, $http_mock );
 
 		$post_mock = $this->getMockBuilder( 'W2M\Import\Type\ImportPostInterface' )
 		                  ->getMock();
