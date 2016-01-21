@@ -64,7 +64,7 @@ XML;
 			->method( 'current' )
 			->willReturn( $xml );
 
-		$namespaces = array( 'wp' => 'whatever' );
+		$namespaces = [ 'wp' => 'whatever' ];
 		$testee = new Iterator\SimpleXmlItemWrapper(
 			$node_iterator_mock,
 			$namespaces
