@@ -8,41 +8,21 @@ use
 	SimpleXMLElement,
 	Brain;
 
-class WpTermParserTest extends Helper\UnitTestCase {
+class WpTermParserTest extends Helper\MonkeyTestCase {
 
 	/**
 	 * Tests parse_term with a XML document considered valid
+	 *
+	 * @dataProvider parse_term_test_data
+	 * @param SimpleXMLElement $document
+	 * @param array $expected
 	 */
-	public function test_parse_term() {
+	public function test_parse_term( SimpleXMLElement $document, Array $expected ) {
 
-		$test_term = array(
-			'origin_id'             => 112,
-			'slug'                  => 'top-news',
-			'origin_parent_term_id' => 110,
-			'name'                  => 'Top News',
-			'taxonomy'              => 'category',
-			'description'           => 'It doesn\'t really matter what stands here.'
-		);
-		// Todo: Locale Relations
-		$xml = <<<XML
-<root
-	xmlns:wp="what-ever"
->
-	<wp:category>
-		<wp:term_id>{$test_term[ 'origin_id' ]}</wp:term_id>
-		<wp:category_nicename><![CDATA[{$test_term[ 'slug' ] }]]></wp:category_nicename >
-		<wp:category_parent>{$test_term[ 'origin_parent_term_id' ]}</wp:category_parent >
-		<wp:cat_name><![CDATA[{$test_term[ 'name' ]}]]></wp:cat_name>
-		<wp:category_description><![CDATA[{$test_term[ 'description' ]}]]></wp:category_description>
-		<wp:taxonomy>category</wp:taxonomy>
-	</wp:category>
-</root>
-XML;
 
 		$wp_factory_mock = $this->mock_builder->common_wp_factory();
 		$wp_factory_mock->expects( $this->never() )->method( 'wp_error' );
 
-		$item   = new SimpleXMLElement( $xml );
 		$testee = new Service\WpTermParser( $wp_factory_mock );
 
 		// we don't expect an error here
@@ -50,18 +30,67 @@ XML;
 			->expectFired( 'w2m_import_parse_term_error' )
 			->never();
 
-		$result = $testee->parse_term( $item );
+		$result = $testee->parse_term( $document );
 		$this->assertInstanceOf(
 			'W2M\Import\Type\ImportTermInterface',
 			$result
 		);
-		foreach ( $test_term as $attribute => $expected ) {
+		foreach ( $expected[ 'term_data' ] as $attribute => $expected ) {
 			$this->assertSame(
 				$expected,
 				$result->{$attribute}(),
 				"Test failed for method '{$attribute}'"
 			);
 		}
+	}
+
+	/**
+	 * @see test_parse_term
+	 *
+	 * @return array
+	 */
+	public function parse_term_test_data() {
+
+		$data = [];
+
+		/**
+		 * Valid XML, global namespace
+		 */
+		$term_data = [
+			'origin_id'             => 112,
+			'slug'                  => 'top-news',
+			'origin_parent_term_id' => 110,
+			'name'                  => 'Top News',
+			'taxonomy'              => 'category',
+			'description'           => 'It doesn\'t really matter what stands here.'
+		];
+		// Todo: Locale Relations
+
+		$xml = <<<XML
+<root
+	xmlns:wp="what-ever"
+>
+	<wp:category>
+		<wp:term_id>{$term_data[ 'origin_id' ]}</wp:term_id>
+		<wp:category_nicename><![CDATA[{$term_data[ 'slug' ] }]]></wp:category_nicename >
+		<wp:category_parent>{$term_data[ 'origin_parent_term_id' ]}</wp:category_parent >
+		<wp:cat_name><![CDATA[{$term_data[ 'name' ]}]]></wp:cat_name>
+		<wp:category_description><![CDATA[{$term_data[ 'description' ]}]]></wp:category_description>
+		<wp:taxonomy>category</wp:taxonomy>
+	</wp:category>
+</root>
+XML;
+
+		$data[ 'valid_xml_global_ns' ] = [
+			# 1. Parameter $document,
+			new SimpleXMLElement( $xml ),
+			# 2. Parameter $expected
+			[
+				'term_data' => $term_data
+			]
+		];
+
+		return $data;
 	}
 
 	/**
@@ -84,7 +113,7 @@ XML;
 </root>
 XML;
 		$item            = new SimpleXMLElement( $xml );
-		$wp_error_mock   = $this->mock_builder->wp_error( array( 'add_data' ) );
+		$wp_error_mock   = $this->mock_builder->wp_error( [ 'add_data' ] );
 		$wp_factory_mock = $this->mock_builder->common_wp_factory();
 
 		$wp_error_mock->expects( $this->atLeast( 1 ) )
@@ -123,7 +152,7 @@ XML;
 	public function test_parse_term_missing_attribute_error( $xml, Array $expected ) {
 
 		$item            = new SimpleXMLElement( $xml );
-		$wp_error_mock   = $this->mock_builder->wp_error( array( 'add_data' ) );
+		$wp_error_mock   = $this->mock_builder->wp_error( [ 'add_data' ] );
 		$wp_factory_mock = $this->mock_builder->common_wp_factory();
 
 		$wp_error_mock->expects( $this->atLeast( 1 ) )
@@ -168,16 +197,16 @@ XML;
 	 */
 	public function missing_attribute_test_data() {
 
-		$data = array();
+		$data = [];
 
-		$term_data = array(
+		$term_data = [
 			'origin_id'             => 112,
 			'slug'                  => 'top-news',
 			'origin_parent_term_id' => 110,
 			'name'                  => 'Top News',
 			'taxonomy'              => 'category',
 			'description'           => ''
-		);
+		];
 		$xml = <<<XML
 <root
 	xmlns:wp="what-ever"
@@ -196,24 +225,24 @@ XML;
 </root>
 XML;
 
-		$data[ 'missing_term_description' ] = array(
+		$data[ 'missing_term_description' ] = [
 			# 1. Parameter $xml
 			$xml,
 			# 2. Parameter $expected
-			array(
+			[
 				'term_data' => $term_data,
 				'missing_attribute' => 'category_description'
-			)
-		);
+			]
+		];
 
-		$term_data = array(
+		$term_data = [
 			'origin_id'             => 0,
 			'slug'                  => 'top-news',
 			'origin_parent_term_id' => 110,
 			'name'                  => 'Top News',
 			'taxonomy'              => 'category',
 			'description'           => ''
-		);
+		];
 		$xml = <<<XML
 <root
 	xmlns:wp="what-ever"
@@ -231,24 +260,24 @@ XML;
 </root>
 XML;
 
-		$data[ 'missing_term_id' ] = array(
+		$data[ 'missing_term_id' ] = [
 			# 1. Parameter $xml
 			$xml,
 			# 2. Parameter $expected
-			array(
+			[
 				'term_data' => $term_data,
 				'missing_attribute' => 'term_id'
-			)
-		);
+			]
+		];
 
-		$term_data = array(
+		$term_data = [
 			'origin_id'             => 112,
 			'slug'                  => 'top-news',
 			'origin_parent_term_id' => 0,
 			'name'                  => 'Top News',
 			'taxonomy'              => 'category',
 			'description'           => ''
-		);
+		];
 		$xml = <<<XML
 <root
 	xmlns:wp="what-ever"
@@ -266,15 +295,15 @@ XML;
 </root>
 XML;
 
-		$data[ 'missing_term_parent' ] = array(
+		$data[ 'missing_term_parent' ] = [
 			# 1. Parameter $xml
 			$xml,
 			# 2. Parameter $expected
-			array(
+			[
 				'term_data' => $term_data,
 				'missing_attribute' => 'category_parent'
-			)
-		);
+			]
+		];
 
 		return $data;
 	}
@@ -290,7 +319,7 @@ XML;
 	public function test_parse_term_missing_mandatory_attribute_error( $xml, Array $expected ) {
 
 		$item            = new SimpleXMLElement( $xml );
-		$wp_error_mock   = $this->mock_builder->wp_error( array( 'add_data' ) );
+		$wp_error_mock   = $this->mock_builder->wp_error( [ 'add_data' ] );
 		$wp_factory_mock = $this->mock_builder->common_wp_factory();
 
 		$wp_error_mock->expects( $this->once() )
@@ -324,7 +353,7 @@ XML;
 	 */
 	public function missing_mandatory_attribute_test_data() {
 
-		$data = array();
+		$data = [];
 
 		$xml = <<<XML
 <root
@@ -341,14 +370,14 @@ XML;
 </root>
 XML;
 
-		$data[ 'missing_term_name' ] = array(
+		$data[ 'missing_term_name' ] = [
 			# 1. Parameter $xml
 			$xml,
 			# 2. Parameter $expected
-			array(
+			[
 				'missing_term' => 'cat_name'
-			)
-		);
+			]
+		];
 
 		$xml = <<<XML
 <root
@@ -365,14 +394,14 @@ XML;
 </root>
 XML;
 
-		$data[ 'missing_term_taxonomy' ] = array(
+		$data[ 'missing_term_taxonomy' ] = [
 			# 1. Parameter $xml
 			$xml,
 			# 2. Parameter $expected
-			array(
+			[
 				'missing_term' => 'taxonomy'
-			)
-		);
+			]
+		];
 
 		return $data;
 	}
@@ -394,7 +423,7 @@ XML;
 XML;
 
 		$item            = new SimpleXMLElement( $xml );
-		$wp_error_mock   = $this->mock_builder->wp_error( array( 'add_data' ) );
+		$wp_error_mock   = $this->mock_builder->wp_error( [ 'add_data' ] );
 		$wp_factory_mock = $this->mock_builder->common_wp_factory();
 
 		$wp_factory_mock->expects( $this->atLeast( 1 ) )
