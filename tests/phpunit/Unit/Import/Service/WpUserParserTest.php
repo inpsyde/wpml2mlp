@@ -79,4 +79,12 @@ XML;
 
 		return $data;
 	}
+
+	public function test_errors() {
+
+		/**
+		 * Todo: implement test for invalid xml to check correct error propagation
+		 */
+		$this->markTestIncomplete();
+	}
 }
