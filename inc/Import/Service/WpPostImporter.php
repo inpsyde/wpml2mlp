@@ -294,14 +294,12 @@ class WpPostImporter implements PostImporterInterface {
 		}
 
 		// fetch the remote url and write it to the placeholder file
-		$header = $this->http->request( $attachemnt_url, $upload['file'] );
+		$response = $this->http->request( $attachemnt_url, $upload['file'] );
 
-		print_r( $header );
-
-		#rename( $upload['file'], $file_upload );
+		print_r( $response );
 
 		// Generate the metadata for the attachment, and update the database record.
-		#$attach_data = wp_generate_attachment_metadata( $attachment_id, $upload['file'] );
+		#$attachment_metadata = wp_generate_attachment_metadata( $attachment_id, $upload['file'] );
 		#wp_update_attachment_metadata( $attachment_id, $attach_data );
 
 
