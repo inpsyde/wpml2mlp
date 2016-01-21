@@ -28,7 +28,7 @@ class FileSystem {
 		$this->test_dir = $this->sanitize_path( $test_dir );
 		$this->tmp_dir = sys_get_temp_dir() . '/w2mtest';
 		// defined in phpunit.xml(.dist)
-		if ( Test\TMP_DIR ) {
+		if ( defined( 'W2M\Test\TMP_DIR' )  && Test\TMP_DIR ) {
 			$this->tmp_dir = Test\TMP_DIR;
 		}
 		$this->create_tmp_dir();
