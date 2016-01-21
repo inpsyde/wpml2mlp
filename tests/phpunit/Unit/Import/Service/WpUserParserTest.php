@@ -43,16 +43,19 @@ class WpUserParserTest extends \PHPUnit_Framework_TestCase {
 	 */
 	public function import_user_test_data() {
 
-		$data = array();
+		$data = [];
 
-		$user_data = array(
+		/**
+		 * Valid user, root namespace
+		 */
+		$user_data = [
 			'origin_id'    => 9,
 			'login'        => 'john',
 			'email'        => 'john.doe@mail.tld',
 			'first_name'   => 'John',
 			'last_name'    => 'Doe',
 			'display_name' => 'John Doe'
-		);
+		];
 		$xml = <<<XML
 <root
 	xmlns:wp="wp"
@@ -68,14 +71,14 @@ class WpUserParserTest extends \PHPUnit_Framework_TestCase {
 </root>
 XML;
 
-		$data[ 'valid_user' ] = array(
+		$data[ 'valid_user_root_ns' ] = [
 			# 1. Parameter $document
 			new SimpleXMLElement( $xml ),
 			# 2. Parameter $expected
-			array(
+			[
 				'user_data' => $user_data
-			)
-		);
+			]
+		];
 
 		return $data;
 	}
