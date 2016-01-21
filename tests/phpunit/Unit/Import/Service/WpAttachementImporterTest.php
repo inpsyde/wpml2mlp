@@ -234,8 +234,20 @@ class WpAttachmentImporterTest extends Helper\MonkeyTestCase {
 
 		$http_mock->expects( $this->atLeast( 1 ) )
 		          ->method( 'request' )
-		          ->with( 'a', 'b' )
+		          ->with( $postdata[ 'origin_attachment_url' ], $wp_upload_file )
 		          ->willReturn( $request_testdata );
+
+
+		Brain\Monkey\Functions::expect( 'wp_generate_attachment_metadata' )
+		                      ->atLeast()
+		                      ->once()
+		                      ->with( $post_id, $wp_upload_file )
+		                      ->andReturn( array(
+			                                   array( 'metadata' ), $post_id
+		                                   )
+		                      );
+
+		Brain\Monkey\Functions::expect( 'wp_update_attachment_metadata' )->times( 1 );
 
 
 		$testee->import_post( $post_mock );

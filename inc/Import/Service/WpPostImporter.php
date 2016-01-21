@@ -296,11 +296,22 @@ class WpPostImporter implements PostImporterInterface {
 		// fetch the remote url and write it to the placeholder file
 		$response = $this->http->request( $attachemnt_url, $upload['file'] );
 
-		print_r( $response );
+		if ( $response['response']['code'] != 200 || is_wp_error( $response ) ) {
+
+			/**
+			 * Attach error handler/logger here
+			 *
+			 * @param WP_Error $response
+			 * @param array $upload
+			 */
+			do_action( 'w2m_import_request_attachment_error', $response, $attachemnt_url );
+			return;
+		}
+
 
 		// Generate the metadata for the attachment, and update the database record.
-		#$attachment_metadata = wp_generate_attachment_metadata( $attachment_id, $upload['file'] );
-		#wp_update_attachment_metadata( $attachment_id, $attach_data );
+		$attachment_metadata = wp_generate_attachment_metadata( $attachment_id, $upload['file'] );
+		wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
 
 
 	}
