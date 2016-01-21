@@ -10,7 +10,56 @@ use
 
 class WpCommentParserTest extends Helper\MonkeyTestCase {
 
-	public function test_parse_comment() {
+	/**
+	 * @dataProvider parse_comment_test_data
+	 *
+	 * @param SimpleXMLElement $document
+	 * @param array $expected
+	 */
+	public function test_parse_comment( SimpleXMLElement $document, Array $expected ) {
+
+		$wp_factory_mock = $this->mock_builder->common_wp_factory();
+		$wp_factory_mock->expects( $this->never() )
+			->method( 'wp_error' );
+
+		Brain\Monkey::actions()
+			->expectFired( 'w2m_import_parse_comment_error' )
+			->never();
+
+		$testee = new Service\WpCommentParser( $wp_factory_mock );
+		$result = $testee->parse_comment( $document );
+
+		$this->assertInstanceOf(
+			'W2M\Import\Type\ImportCommentInterface',
+			$result
+		);
+		foreach ( $expected[ 'comment_data' ] as $method => $value ) {
+			$this->assertSame(
+				$value,
+				$result->{$method}(),
+				"Test failed for method '{$method}'"
+			);
+		}
+
+		// check Date
+		$this->assertSame(
+			$expected[ 'date_str_gmt' ],
+			$result->date()
+				->format( 'Y-m-d H:i:s' )
+		);
+	}
+
+	/**
+	 * @see test_parse_comment
+	 * @return array
+	 */
+	public function parse_comment_test_data() {
+
+		$data = [];
+
+		/**
+		 * Valid XML, global namespace
+		 */
 
 		$comment_data = [
 			'origin_id'                => 171159,
@@ -54,38 +103,19 @@ class WpCommentParserTest extends Helper\MonkeyTestCase {
 </root>
 XML;
 
-		$document        = new SimpleXMLElement( $xml );
-		$wp_factory_mock = $this->mock_builder->common_wp_factory();
-		$wp_factory_mock->expects( $this->never() )
-			->method( 'wp_error' );
+		$data[ 'valid_xml_global_ns' ] = [
+			# 1. Parameter $document
+			new SimpleXMLElement( $xml ),
+			# 2. Parameter $expected
+			[
+				'comment_data' => $comment_data,
+				'date_str_gmt' => $date_str_gmt,
+				'date_str'     => $date_str
+			]
+		];
 
-		Brain\Monkey::actions()
-			->expectFired( 'w2m_import_parse_comment_error' )
-			->never();
-
-		$testee = new Service\WpCommentParser( $wp_factory_mock );
-		$result = $testee->parse_comment( $document );
-
-		$this->assertInstanceOf(
-			'W2M\Import\Type\ImportCommentInterface',
-			$result
-		);
-		foreach ( $comment_data as $method => $value ) {
-			$this->assertSame(
-				$value,
-				$result->{$method}(),
-				"Test failed for method '{$method}'"
-			);
-		}
-
-		// check Date
-		$this->assertSame(
-			$date_str_gmt,
-			$result->date()
-				->format( 'Y-m-d H:i:s' )
-		);
+		return $data;
 	}
-
 	public function test_parse_comment_missing_namespace_error() {
 
 		$xml = <<<XML
