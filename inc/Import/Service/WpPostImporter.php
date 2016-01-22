@@ -326,7 +326,6 @@ class WpPostImporter implements PostImporterInterface {
 		);
 
 
-
 		// Generate the metadata for the attachment, and update the database record.
 		$attachment_metadata = wp_generate_attachment_metadata( $attachment_id, $upload['file'] );
 		wp_update_attachment_metadata( $attachment_id, $attachment_metadata );

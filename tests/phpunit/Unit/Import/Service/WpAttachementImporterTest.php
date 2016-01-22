@@ -140,12 +140,13 @@ class WpAttachmentImporterTest extends Helper\MonkeyTestCase {
 
 		}
 
-		Brain\Monkey\Functions::expect( 'wp_insert_post' )
+		Brain\Monkey\Functions::expect( 'wp_insert_attachment' )
 		                      ->atLeast()
 		                      ->once()
 		                      ->with(
 			                      $post,
-			                      TRUE
+			                      $postdata[ 'origin_attachment_url' ],
+			                      $new_parent_id
 		                      )
 		                      ->andReturn( $post_id );
 
@@ -238,6 +239,8 @@ class WpAttachmentImporterTest extends Helper\MonkeyTestCase {
 		          ->willReturn( $request_testdata );
 
 
+		Brain\Monkey\Functions::expect( 'wp_update_post' )->times( 1 );
+
 		Brain\Monkey\Functions::expect( 'wp_generate_attachment_metadata' )
 		                      ->atLeast()
 		                      ->once()
@@ -247,8 +250,9 @@ class WpAttachmentImporterTest extends Helper\MonkeyTestCase {
 		                                   )
 		                      );
 
-		Brain\Monkey\Functions::expect( 'wp_update_attachment_metadata' )->times( 1 );
-
+		Brain\Monkey\Functions::expect( 'wp_update_attachment_metadata' )
+		                      ->atLeast()
+		                      ->once();
 
 		$testee->import_post( $post_mock );
 
