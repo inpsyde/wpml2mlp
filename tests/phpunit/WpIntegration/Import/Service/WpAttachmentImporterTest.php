@@ -6,7 +6,7 @@ use Brain;
 use W2M\Import\Service;
 use W2M\Test\Helper;
 
-class WpAttachmentImporterTest extends Helper\MonkeyTestCase {
+class WpAttachmentImporterTest extends Helper\WpIntegrationTestCase {
 
 	private $fs_helper;
 
