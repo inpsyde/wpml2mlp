@@ -74,7 +74,14 @@ class WpPostImporter implements PostImporterInterface {
 
 			if( $import_post->origin_attachment_url() ){
 
-				$local_id = wp_insert_post( $import_postdata, TRUE );
+				/**
+				 * @param array     $import_postdata         Arguments for inserting an attachment. @see wp_insert_post
+                 * @param string    origin_attachment_url()  Filename.
+                 * @param int       $local_parent_id         Parent post ID.
+				 *
+                 * @return int Attachment ID.
+                 **/
+                $local_id = wp_insert_attachment( $import_postdata, $import_post->origin_attachment_url(), $local_parent_id );
 
 			}else{
 
@@ -311,9 +318,16 @@ class WpPostImporter implements PostImporterInterface {
 
 		file_put_contents( $upload['file'], $response['body'] );
 
+		/** post_mime_type to the attachment */
+		$update_attachment = wp_update_post( array(
+							 	                'ID' => $attachment_id,
+							 	                'post_mime_type' => $filetype['type'] )
+							 );
+
 		// Generate the metadata for the attachment, and update the database record.
 		$attachment_metadata = wp_generate_attachment_metadata( $attachment_id, $upload['file'] );
 		wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
+
 
 
 	}

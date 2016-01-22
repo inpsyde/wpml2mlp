@@ -23,6 +23,30 @@ class WpAttachmentImporterTest extends Helper\MonkeyTestCase {
 
 	}
 
+
+	/**
+	 * cleanup test uploads folder
+	 */
+	public function teardown(){
+
+		$wp_upload = wp_upload_dir();
+		$wp_upload_subdir = array_reverse( array_filter( explode( '/', $wp_upload['subdir'] ) ) );
+
+		array_map('unlink', glob( $wp_upload['basedir'] . $wp_upload['subdir'] . '/*' ) );
+
+		foreach( $wp_upload_subdir as $i => $dir ){
+
+			$parent_folder = FALSE;
+
+			if( $i == 0 ){
+				$i++;
+				$parent_folder = $wp_upload_subdir[ $i ];
+			}
+			rmdir( $wp_upload['basedir'] . '/'. $parent_folder . '/' . $dir );
+		}
+
+	}
+
 	/**
 	 * @group import
 	 */
@@ -53,11 +77,13 @@ class WpAttachmentImporterTest extends Helper\MonkeyTestCase {
 		 * Now define the behaviour of the mock object. Each of the specified
 		 * methods ( @see ImportPostInterface ) should return a proper value!
 		 */
+		$origin_attachment_url = 'http://inpsyde.com/wp-content/themes/i/assets/img/logo.png';
+
 		$postdata = array(
-			'title'                 => 'Mocky test fight',
+			'title'                 => $origin_attachment_url,
 			'origin_author_id'      => 12,
 			'status'                => 'draft',
-			'guid'                  => 'mocky',
+			'guid'                  => $origin_attachment_url,
 			'date'                  => ( new \DateTime( 'NOW' ) )->format( 'Y-m-d H:i:s' ),
 			'comment_status'        => 'open',
 			'ping_status'           => 'open',
@@ -71,7 +97,7 @@ class WpAttachmentImporterTest extends Helper\MonkeyTestCase {
 			'origin_link'           => 'http://wpml2mlp.test/mocky',
 			'terms'                 => array( $term_mock ),
 			'meta'                  => array( $postmeta_mock_single, $postmeta_mock_array ),
-			'origin_attachment_url' => 'http://inpsyde.com/wp-content/themes/i/assets/img/logo.png'
+			'origin_attachment_url' => $origin_attachment_url
 		);
 
 		$new_parent_id = 15;
