@@ -319,15 +319,17 @@ class WpPostImporter implements PostImporterInterface {
 		file_put_contents( $upload['file'], $response['body'] );
 
 		/** post_mime_type to the attachment */
-		$update_attachment = wp_update_post( array(
-							 	                'ID' => $attachment_id,
-							 	                'post_mime_type' => $filetype['type'] )
-							 );
+		wp_update_post( array(
+							'ID' => $attachment_id,
+							'post_mime_type' => $filetype['type']
+		                )
+		);
+
+
 
 		// Generate the metadata for the attachment, and update the database record.
 		$attachment_metadata = wp_generate_attachment_metadata( $attachment_id, $upload['file'] );
 		wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
-
 
 
 	}

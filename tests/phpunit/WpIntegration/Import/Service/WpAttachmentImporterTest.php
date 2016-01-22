@@ -77,7 +77,7 @@ class WpAttachmentImporterTest extends Helper\MonkeyTestCase {
 		 * Now define the behaviour of the mock object. Each of the specified
 		 * methods ( @see ImportPostInterface ) should return a proper value!
 		 */
-		$origin_attachment_url = 'http://inpsyde.com/wp-content/themes/i/assets/img/logo.png';
+		$origin_attachment_url = 'http://inpsyde.com/wp-content/themes/i/assets/img/logo.pg';
 
 		$postdata = array(
 			'title'                 => $origin_attachment_url,
