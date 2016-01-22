@@ -40,7 +40,7 @@ class IteratorsParsersTest extends Helper\MonkeyTestCase {
 	 * @param SimpleXMLElement $document
 	 * @param array $expected
 	 */
-	public function test_iteration( SimpleXMLElement $document, Array $expected ) {
+	public function test_post_while_iteration( SimpleXMLElement $document, Array $expected ) {
 
 		$test_file = implode( '-', [ __CLASS__, __FUNCTION__, time() ] ) . '.xml';
 		$this->file_system->file_put_contents( $test_file, $document->asXML() );
@@ -73,7 +73,7 @@ class IteratorsParsersTest extends Helper\MonkeyTestCase {
 			);
 
 			$this->assertSame(
-				$expected[ 'posts' ][ 'origin_id' ][ $index ],
+				$expected[ 'posts' ][ 'origin_ids' ][ $index ],
 				$import_post->origin_id(),
 				"Test failed at index {$index}"
 			);
@@ -87,13 +87,415 @@ class IteratorsParsersTest extends Helper\MonkeyTestCase {
 	}
 
 	/**
-	 * @see test_iteration
+	 * @dataProvider default_test_data
+	 *
+	 * @param SimpleXMLElement $document
+	 * @param array $expected
+	 */
+	public function test_post_foreach_iteration( SimpleXMLElement $document, Array $expected ) {
+
+		$test_file = implode( '-', [ __CLASS__, __FUNCTION__, time() ] ) . '.xml';
+		$this->file_system->file_put_contents( $test_file, $document->asXML() );
+		$this->test_files[] = $test_file;
+
+		$wp_factory_mock = $this->mock_builder->common_wp_factory();
+		$wp_factory_mock->expects( $this->never() )
+			->method( 'wp_error' );
+
+		$iterator = new Iterator\PostIterator(
+			new Iterator\SimpleXmlItemWrapper(
+				new Iterator\XmlNodeIterator(
+					$this->file_system->abs_path( $test_file ),
+					'item'
+				),
+				'root',
+				[],
+				$wp_factory_mock
+			),
+			new Service\WpPostParser( $wp_factory_mock )
+		);
+
+		$index = 0;
+		foreach ( $iterator as $import_post ) {
+			$this->assertInstanceOf(
+				'W2M\Import\Type\ImportPostInterface',
+				$import_post,
+				"Test failed at index {$index}"
+			);
+
+			$this->assertSame(
+				$expected[ 'posts' ][ 'origin_ids' ][ $index ],
+				$import_post->origin_id(),
+				"Test failed at index {$index}"
+			);
+			$index ++;
+		}
+		$this->assertSame(
+			$expected[ 'posts'][ 'expected_posts' ],
+			$index
+		);
+	}
+
+	/**
+	 * @dataProvider default_test_data
+	 *
+	 * @param SimpleXMLElement $document
+	 * @param array $expected
+	 */
+	public function test_term_while_iteration( SimpleXMLElement $document, Array $expected ) {
+
+		$test_file = implode( '-', [ __CLASS__, __FUNCTION__, time() ] ) . '.xml';
+		$this->file_system->file_put_contents( $test_file, $document->asXML() );
+		$this->test_files[] = $test_file;
+
+		$wp_factory_mock = $this->mock_builder->common_wp_factory();
+		$wp_factory_mock->expects( $this->never() )
+			->method( 'wp_error' );
+
+		$iterator = new Iterator\TermIterator(
+			new Iterator\SimpleXmlItemWrapper(
+				new Iterator\XmlNodeIterator(
+					$this->file_system->abs_path( $test_file ),
+					'wp:category'
+				),
+				'root',
+				[],
+				$wp_factory_mock
+			),
+			new Service\WpTermParser( $wp_factory_mock )
+		);
+
+		$index = 0;
+		while ( $iterator->valid() ) {
+			$import_term = $iterator->current();
+			$this->assertInstanceOf(
+				'W2M\Import\Type\ImportTermInterface',
+				$import_term,
+				"Test failed at index {$index}"
+			);
+			$this->assertSame(
+				$expected[ 'terms' ][ 'origin_ids' ][ $index ],
+				$import_term->origin_id(),
+				"Test failed at index {$index}"
+			);
+			$this->assertSame(
+				$expected[ 'terms' ][ 'taxonomies' ][ $index ],
+				$import_term->taxonomy(),
+				"Test failed at index {$index}"
+			);
+
+			$iterator->next();
+			$index ++;
+		}
+
+		$this->assertSame(
+			$expected[ 'terms' ][ 'expected_terms' ],
+			$index
+		);
+	}
+
+
+	/**
+	 * @dataProvider default_test_data
+	 *
+	 * @param SimpleXMLElement $document
+	 * @param array $expected
+	 */
+	public function test_term_foreach_iteration( SimpleXMLElement $document, Array $expected ) {
+
+		$test_file = implode( '-', [ __CLASS__, __FUNCTION__, time() ] ) . '.xml';
+		$this->file_system->file_put_contents( $test_file, $document->asXML() );
+		$this->test_files[] = $test_file;
+
+		$wp_factory_mock = $this->mock_builder->common_wp_factory();
+		$wp_factory_mock->expects( $this->never() )
+			->method( 'wp_error' );
+
+		$iterator = new Iterator\TermIterator(
+			new Iterator\SimpleXmlItemWrapper(
+				new Iterator\XmlNodeIterator(
+					$this->file_system->abs_path( $test_file ),
+					'wp:category'
+				),
+				'root',
+				[],
+				$wp_factory_mock
+			),
+			new Service\WpTermParser( $wp_factory_mock )
+		);
+
+		$index = 0;
+		foreach ( $iterator as $import_term ) {
+			$this->assertInstanceOf(
+				'W2M\Import\Type\ImportTermInterface',
+				$import_term,
+				"Test failed at index {$index}"
+			);
+			$this->assertSame(
+				$expected[ 'terms' ][ 'origin_ids' ][ $index ],
+				$import_term->origin_id(),
+				"Test failed at index {$index}"
+			);
+			$this->assertSame(
+				$expected[ 'terms' ][ 'taxonomies' ][ $index ],
+				$import_term->taxonomy(),
+				"Test failed at index {$index}"
+			);
+
+			$index ++;
+		}
+
+		$this->assertSame(
+			$expected[ 'terms' ][ 'expected_terms' ],
+			$index
+		);
+	}
+
+	/**
+	 * @dataProvider default_test_data
+	 *
+	 * @param SimpleXMLElement $document
+	 * @param array $expected
+	 */
+	public function test_user_while_iteration( SimpleXMLElement $document, Array $expected ) {
+
+		$test_file = implode( '-', [ __CLASS__, __FUNCTION__, time() ] ) . '.xml';
+		$this->file_system->file_put_contents( $test_file, $document->asXML() );
+		$this->test_files[] = $test_file;
+
+		$wp_factory_mock = $this->mock_builder->common_wp_factory();
+		$wp_factory_mock->expects( $this->never() )
+			->method( 'wp_error' );
+
+		$iterator = new Iterator\UserIterator(
+			new Iterator\SimpleXmlItemWrapper(
+				new Iterator\XmlNodeIterator(
+					$this->file_system->abs_path( $test_file ),
+					'wp:author'
+				),
+				'root',
+				[],
+				$wp_factory_mock
+			),
+			new Service\WpUserParser( $wp_factory_mock )
+		);
+
+		$index = 0;
+		while ( $iterator->valid() ) {
+			$import_user = $iterator->current();
+			$this->assertInstanceOf(
+				'W2M\Import\Type\ImportUserInterface',
+				$import_user,
+				"Test failed at index {$index}"
+			);
+			$this->assertSame(
+				$expected[ 'users' ][ 'origin_ids' ][ $index ],
+				$import_user->origin_id()
+			);
+			$this->assertSame(
+				$expected[ 'users' ][ 'logins' ][ $index ],
+				$import_user->login()
+			);
+			$this->assertSame(
+				$expected[ 'users' ][ 'emails' ][ $index ],
+				$import_user->email()
+			);
+			$iterator->next();
+			$index ++;
+		}
+
+		$this->assertSame(
+			$expected[ 'users' ][ 'expected_users' ],
+			$index
+		);
+	}
+
+	/**
+	 * @dataProvider default_test_data
+	 *
+	 * @param SimpleXMLElement $document
+	 * @param array $expected
+	 */
+	public function test_user_foreach_iteration( SimpleXMLElement $document, Array $expected ) {
+
+		$test_file = implode( '-', [ __CLASS__, __FUNCTION__, time() ] ) . '.xml';
+		$this->file_system->file_put_contents( $test_file, $document->asXML() );
+		$this->test_files[] = $test_file;
+
+		$wp_factory_mock = $this->mock_builder->common_wp_factory();
+		$wp_factory_mock->expects( $this->never() )
+			->method( 'wp_error' );
+
+		$iterator = new Iterator\UserIterator(
+			new Iterator\SimpleXmlItemWrapper(
+				new Iterator\XmlNodeIterator(
+					$this->file_system->abs_path( $test_file ),
+					'wp:author'
+				),
+				'root',
+				[],
+				$wp_factory_mock
+			),
+			new Service\WpUserParser( $wp_factory_mock )
+		);
+
+		$index = 0;
+		foreach ( $iterator as $import_user ) {
+			$this->assertInstanceOf(
+				'W2M\Import\Type\ImportUserInterface',
+				$import_user,
+				"Test failed at index {$index}"
+			);
+			$this->assertSame(
+				$expected[ 'users' ][ 'origin_ids' ][ $index ],
+				$import_user->origin_id()
+			);
+			$this->assertSame(
+				$expected[ 'users' ][ 'logins' ][ $index ],
+				$import_user->login()
+			);
+			$this->assertSame(
+				$expected[ 'users' ][ 'emails' ][ $index ],
+				$import_user->email()
+			);
+			$index ++;
+		}
+
+		$this->assertSame(
+			$expected[ 'users' ][ 'expected_users' ],
+			$index
+		);
+	}
+
+	/**
+	 * @dataProvider default_test_data
+	 *
+	 * @param SimpleXMLElement $document
+	 * @param array $expected
+	 */
+	public function test_comment_while_iteration( SimpleXMLElement $document, Array $expected )  {
+
+		$test_file = implode( '-', [ __CLASS__, __FUNCTION__, time() ] ) . '.xml';
+		$this->file_system->file_put_contents( $test_file, $document->asXML() );
+		$this->test_files[] = $test_file;
+
+		$wp_factory_mock = $this->mock_builder->common_wp_factory();
+		$wp_factory_mock->expects( $this->never() )
+			->method( 'wp_error' );
+
+		$iterator = new Iterator\CommentIterator(
+			new Iterator\SimpleXmlItemWrapper(
+				new Iterator\XmlNodeIterator(
+					$this->file_system->abs_path( $test_file ),
+					'wp:comment'
+				),
+				'root',
+				[],
+				$wp_factory_mock
+			),
+			new Service\WpCommentParser( $wp_factory_mock )
+		);
+
+		$index = 0;
+		while ( $iterator->valid() ) {
+			$import_comment = $iterator->current();
+			$this->assertInstanceOf(
+				'W2M\Import\Type\ImportCommentInterface',
+				$import_comment,
+				"Test failed at index {$index}"
+			);
+			$this->assertSame(
+				$expected[ 'comments' ][ 'origin_ids' ][ $index ],
+				$import_comment->origin_id()
+			);
+			$this->assertSame(
+				$expected[ 'comments' ][ 'origin_post_ids' ][ $index ],
+				$import_comment->origin_post_id()
+			);
+
+			$index ++;
+		}
+
+		$this->assertSame(
+			$expected[ 'comments' ][ 'expected_comments' ],
+			$index
+		);
+
+	}
+
+	/**
+	 * @dataProvider default_test_data
+	 *
+	 * @param SimpleXMLElement $document
+	 * @param array $expected
+	 */
+	public function test_comment_foreach_iteration( SimpleXMLElement $document, Array $expected ) {
+
+		$test_file = implode( '-', [ __CLASS__, __FUNCTION__, time() ] ) . '.xml';
+		$this->file_system->file_put_contents( $test_file, $document->asXML() );
+		$this->test_files[] = $test_file;
+
+		$wp_factory_mock = $this->mock_builder->common_wp_factory();
+		$wp_factory_mock->expects( $this->never() )
+			->method( 'wp_error' );
+
+		$iterator = new Iterator\CommentIterator(
+			new Iterator\SimpleXmlItemWrapper(
+				new Iterator\XmlNodeIterator(
+					$this->file_system->abs_path( $test_file ),
+					'wp:comment'
+				),
+				'root',
+				[],
+				$wp_factory_mock
+			),
+			new Service\WpCommentParser( $wp_factory_mock )
+		);
+
+		$index = 0;
+		foreach ( $iterator as $import_user ) {
+			$this->assertInstanceOf(
+				'W2M\Import\Type\ImportCommentInterface',
+				$import_user,
+				"Test failed at index {$index}"
+			);
+			$this->assertSame(
+				$expected[ 'comments' ][ 'origin_ids' ][ $index ],
+				$import_user->origin_id()
+			);
+			$this->assertSame(
+				$expected[ 'comments' ][ 'origin_post_ids' ][ $index ],
+				$import_user->origin_post_id()
+			);
+
+			$index ++;
+		}
+
+		$this->assertSame(
+			$expected[ 'comments' ][ 'expected_comments' ],
+			$index
+		);
+
+	}
+
+	/**
+	 * @see test_post_while_iteration
+	 * @see test_post_foreach_iteration
+	 * @see test_term_while_iteration
+	 * @see test_term_foreach_iteration
+	 * @see test_user_while_iteration
+	 * @see test_user_foreach_iteration
+	 * @see test_comment_foreach_iteration
+	 * @see test_commnet_foreach_iteration
 	 * @return array
 	 */
 	public function default_test_data() {
 
 		$data = [];
 
+		/**
+		 * data_1
+		 */
 		$xml = <<<XML
 <?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0"
@@ -213,7 +615,6 @@ class IteratorsParsersTest extends Helper\MonkeyTestCase {
 				<wp:element_id>44512</wp:element_id>
 			</wp:translation>
 		</item>
-		<wp:category/>
 		<item>
 			<title>Some other post</title>
 			<link>https://wpml.to.mlp//?p=56790</link>
@@ -249,8 +650,24 @@ class IteratorsParsersTest extends Helper\MonkeyTestCase {
 				<wp:locale><![CDATA[en_US]]></wp:locale>
 				<wp:element_id>56790</wp:element_id>
 			</wp:translation>
+			<wp:comment>
+				<wp:comment_ID><![CDATA[12]]></wp:comment_ID>
+				<wp:comment_post_ID><![CDATA[56790]]></wp:comment_post_ID>
+				<wp:comment_author><![CDATA[Migration wpml2mlp Comment]]></wp:comment_author>
+				<wp:comment_author_email><![CDATA[info@inpsyde.com]]></wp:comment_author_email>
+				<wp:comment_author_url><![CDATA[http://www.inpsyde.com]]></wp:comment_author_url>
+				<wp:comment_author_IP><![CDATA[172.245.136.143]]></wp:comment_author_IP>
+				<wp:comment_date><![CDATA[2015-11-26 00:38:18]]></wp:comment_date>
+				<wp:comment_date_gmt><![CDATA[2015-11-25 23:38:18]]></wp:comment_date_gmt>
+				<wp:comment_content><![CDATA[Yes! Hello World.]]></wp:comment_content>
+				<wp:comment_karma><![CDATA[0]]></wp:comment_karma>
+				<wp:comment_approved><![CDATA[1]]></wp:comment_approved>
+				<wp:comment_agent><![CDATA[Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.116 Safari/537.36]]></wp:comment_agent>
+				<wp:comment_type><![CDATA[]]></wp:comment_type>
+				<wp:comment_parent>0</wp:comment_parent>
+				<wp:user_id><![CDATA[0]]></wp:user_id>
+			</wp:comment>
 		</item>
-		<wp:author/>
 	</channel>
 </rss>
 XML;
@@ -262,7 +679,23 @@ XML;
 			[
 				'posts' => [
 					'expected_posts' => 3,
-					'origin_id'      => [ 44330, 44512, 56790 ]
+					'origin_ids'     => [ 44330, 44512, 56790 ]
+				],
+				'terms' => [
+					'expected_terms' => 2,
+					'origin_ids'     => [ 61, 144 ],
+					'taxonomies'     => [ 'category', 'post_tag' ]
+				],
+				'users' => [
+					'expected_users' => 2,
+					'origin_ids'     => [ 2, 1 ],
+					'logins'         => [ 'john', 'jane' ],
+					'emails'         => [ 'john@doe.tld', 'jane@wpml.to.mlp' ]
+				],
+				'comments' => [
+					'expected_comments' => 1,
+					'origin_ids'        => [ 12 ],
+					'origin_post_ids'   => [ 56790 ]
 				]
 			]
 		];
