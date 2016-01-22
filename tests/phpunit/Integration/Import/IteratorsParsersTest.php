@@ -8,7 +8,7 @@ use
 	W2M\Test\Helper,
 	SimpleXMLElement;
 
-class PostIteratorPostParserTest extends Helper\MonkeyTestCase {
+class IteratorsParsersTest extends Helper\MonkeyTestCase {
 
 	/**
 	 * @var Helper\FileSystem
@@ -18,7 +18,7 @@ class PostIteratorPostParserTest extends Helper\MonkeyTestCase {
 	/**
 	 * @var array
 	 */
-	private $test_files = [];
+	private $test_files = [ ];
 
 	public function setUp() {
 
@@ -35,14 +35,13 @@ class PostIteratorPostParserTest extends Helper\MonkeyTestCase {
 	}
 
 	/**
-	 * @dataProvider post_test_data
+	 * @dataProvider default_test_data
 	 *
 	 * @param SimpleXMLElement $document
 	 * @param array $expected
 	 */
 	public function test_iteration( SimpleXMLElement $document, Array $expected ) {
 
-		#$this->markTestSkipped( 'Under construction' );
 		$test_file = implode( '-', [ __CLASS__, __FUNCTION__, time() ] ) . '.xml';
 		$this->file_system->file_put_contents( $test_file, $document->asXML() );
 		$this->test_files[] = $test_file;
@@ -74,15 +73,15 @@ class PostIteratorPostParserTest extends Helper\MonkeyTestCase {
 			);
 
 			$this->assertSame(
-				$expected[ 'origin_id' ][ $index ],
+				$expected[ 'posts' ][ 'origin_id' ][ $index ],
 				$import_post->origin_id(),
 				"Test failed at index {$index}"
 			);
 			$iterator->next();
-			$index++;
+			$index ++;
 		}
 		$this->assertSame(
-			$expected[ 'expected_posts' ],
+			$expected[ 'posts'][ 'expected_posts' ],
 			$index
 		);
 	}
@@ -91,7 +90,7 @@ class PostIteratorPostParserTest extends Helper\MonkeyTestCase {
 	 * @see test_iteration
 	 * @return array
 	 */
-	public function post_test_data() {
+	public function default_test_data() {
 
 		$data = [];
 
@@ -128,6 +127,22 @@ class PostIteratorPostParserTest extends Helper\MonkeyTestCase {
 			<wp:cat_name><![CDATA[Cat Pictures]]></wp:cat_name>
 			<wp:category_description><![CDATA[My funniest cat pictures.]]></wp:category_description>
 			<wp:taxonomy><![CDATA[category]]></wp:taxonomy>
+		</wp:category>
+		<wp:author>
+			<wp:author_id>1</wp:author_id>
+			<wp:author_login><![CDATA[jane]]></wp:author_login>
+			<wp:author_email><![CDATA[jane@wpml.to.mlp]]></wp:author_email>
+			<wp:author_display_name><![CDATA[Jane Doe]]></wp:author_display_name>
+			<wp:author_first_name><![CDATA[Jane]]></wp:author_first_name>
+			<wp:author_last_name><![CDATA[Doe]]></wp:author_last_name>
+		</wp:author>
+		<wp:category>
+			<wp:term_id>144</wp:term_id>
+			<wp:category_nicename><![CDATA[php]]></wp:category_nicename>
+			<wp:category_parent><![CDATA[0]]></wp:category_parent>
+			<wp:cat_name><![CDATA[PHP]]></wp:cat_name>
+			<wp:category_description><![CDATA[Posts around PHP.]]></wp:category_description>
+			<wp:taxonomy><![CDATA[post_tag]]></wp:taxonomy>
 		</wp:category>
 		<item>
 			<title>My First Test Post</title>
@@ -240,13 +255,15 @@ class PostIteratorPostParserTest extends Helper\MonkeyTestCase {
 </rss>
 XML;
 
-		$data[ 'valid_posts' ] = [
+		$data[ 'data_1' ] = [
 			# 1. Parameter $xml
 			new SimpleXMLElement( $xml ),
 			# 2. Parameter $expected
 			[
-				'expected_posts' => 3,
-				'origin_id' => [ 44330, 44512, 56790 ]
+				'posts' => [
+					'expected_posts' => 3,
+					'origin_id'      => [ 44330, 44512, 56790 ]
+				]
 			]
 		];
 
