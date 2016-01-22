@@ -68,7 +68,7 @@ class WpTermParserTest extends Helper\MonkeyTestCase {
 
 		$xml = <<<XML
 <root
-	xmlns:wp="what-ever"
+	xmlns:wp="urn:what-ever"
 >
 	<wp:category>
 		<wp:term_id>{$term_data[ 'origin_id' ]}</wp:term_id>
@@ -139,7 +139,7 @@ XML;
 
 		$xml = <<<XML
 <root
-	xmlns:notwp="whatever"
+	xmlns:notwp="urn:whatever"
 >
 	<notwp:category>
 		<notwp:term_id>123</notwp:term_id>
@@ -248,7 +248,7 @@ XML;
 		];
 		$xml = <<<XML
 <root
-	xmlns:wp="what-ever"
+	xmlns:wp="urn:what-ever"
 >
 	<wp:category>
 		<wp:term_id>{$term_data[ 'origin_id' ]}</wp:term_id>
@@ -284,7 +284,7 @@ XML;
 		];
 		$xml = <<<XML
 <root
-	xmlns:wp="what-ever"
+	xmlns:wp="urn:what-ever"
 >
 	<wp:category>
 		<!--
@@ -319,7 +319,7 @@ XML;
 		];
 		$xml = <<<XML
 <root
-	xmlns:wp="what-ever"
+	xmlns:wp="urn:what-ever"
 >
 	<wp:category>
 		<wp:term_id>{$term_data[ 'origin_id' ]}</wp:term_id>
@@ -396,7 +396,7 @@ XML;
 
 		$xml = <<<XML
 <root
-	xmlns:wp="what-ever"
+	xmlns:wp="urn:what-ever"
 >
 	<wp:category>
 		<wp:term_id>1</wp:term_id>
@@ -420,7 +420,7 @@ XML;
 
 		$xml = <<<XML
 <root
-	xmlns:wp="what-ever"
+	xmlns:wp="urn:what-ever"
 >
 	<wp:category>
 		<wp:term_id>1</wp:term_id>
@@ -453,7 +453,7 @@ XML;
 
 		$xml = <<<XML
 <root
-	xmlns:wp="whatever"
+	xmlns:wp="urn:whatever"
 >
 	<wp:post>
 		<wp:title>Some Title</wp:title>

@@ -53,7 +53,7 @@ XML;
 
 		$item_id = '1';
 		$item_title = 'Hello World';
-		$namespaces = [ 'wp' => 'whatever' ];
+		$namespaces = [ 'wp' => 'urn:whatever' ];
 		$xml = <<<XML
 <wp:item xmlns:wp="{$namespaces[ 'wp' ]}">
 	<wp:id>{$item_id}</wp:id>
