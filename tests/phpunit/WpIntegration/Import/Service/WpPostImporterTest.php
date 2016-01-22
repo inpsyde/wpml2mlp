@@ -2,9 +2,9 @@
 
 namespace W2M\Test\Unit\Import\Service;
 
-use Brain;
-use W2M\Import\Service;
-use W2M\Test\Helper;
+use
+	W2M\Import\Service,
+	W2M\Test\Helper;
 
 class WpPostImporterTest extends Helper\WpIntegrationTestCase {
 
