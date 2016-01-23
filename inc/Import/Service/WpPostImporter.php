@@ -42,7 +42,7 @@ class WpPostImporter implements PostImporterInterface {
 
 	/**
 	 * @param Type\ImportPostInterface $import_post
-	 * @return bool|\WP_Error
+	 * @return bool|WP_Error
 	 */
 	public function import_post( Type\ImportPostInterface $import_post ) {
 
