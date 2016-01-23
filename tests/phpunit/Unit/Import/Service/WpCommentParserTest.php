@@ -80,7 +80,7 @@ class WpCommentParserTest extends Helper\MonkeyTestCase {
 
 		$xml = <<<XML
 <root
-	xmlns:wp="wp"
+	xmlns:wp="urn:wp"
 	>
 	<wp:comment>
 		<wp:comment_ID><![CDATA[{$comment_data['origin_id']}]]></wp:comment_ID>
@@ -173,7 +173,7 @@ XML;
 
 		$xml = <<<XML
 <root
-	xmlns:notwp="not-wp"
+	xmlns:notwp="urn:not-wp"
 	>
 	<notwp:comment />
 </root>
@@ -219,7 +219,7 @@ XML;
 
 		$xml = <<<XML
 <root
-	xmlns:wp="wp"
+	xmlns:wp="urn:wp"
 	>
 	<wp:notComment />
 </root>
@@ -350,7 +350,7 @@ XML;
 		];
 		$xml          = <<<XML
 <root
-	xmlns:wp="wp"
+	xmlns:wp="urn:wp"
 	>
 	<wp:comment>
 		<wp:comment_ID><![CDATA[{$comment_data['origin_id']}]]></wp:comment_ID>

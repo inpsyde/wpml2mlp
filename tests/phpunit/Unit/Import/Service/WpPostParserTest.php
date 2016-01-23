@@ -149,10 +149,10 @@ class WpPostParserTest extends Helper\MonkeyTestCase {
 
 		$xml = <<<XML
 <root
-	xmlns:wp="wp"
-	xmlns:excerpt="excerpt"
-	xmlns:content="content"
-	xmlns:dc="dc"
+	xmlns:wp="urn:wp"
+	xmlns:excerpt="urn:excerpt"
+	xmlns:content="urn:content"
+	xmlns:dc="urn:dc"
 	>
 	<item>
 		<title>{$post[ 'title' ]}</title>
@@ -260,10 +260,10 @@ XML;
 
 		$xml = <<<XML
 <root
-	xmlns:wp="wp"
-	xmlns:excerpt="excerpt"
-	xmlns:content="content"
-	xmlns:dc="dc"
+	xmlns:wp="urn:wp"
+	xmlns:excerpt="urn:excerpt"
+	xmlns:content="urn:content"
+	xmlns:dc="urn:dc"
 	>
 	<item>
 			<title>{$post['title']}</title>
@@ -472,9 +472,9 @@ XML;
 
 		$xml = <<<XML
 <root
-	xmlns:excerpt="excerpt"
-	xmlns:content="content"
-	xmlns:dc="dc"
+	xmlns:excerpt="urn:excerpt"
+	xmlns:content="urn:content"
+	xmlns:dc="urn:dc"
 	>
 	<item>
 		<title>Title</title>

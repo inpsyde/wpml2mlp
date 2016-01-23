@@ -4,7 +4,8 @@ namespace W2M\Import\Iterator;
 
 use
 	XMLReader,
-	Iterator;
+	Iterator,
+	DOMDocument;
 
 /**
  * Class XmlNodeIterator
@@ -67,10 +68,12 @@ class XmlNodeIterator implements Iterator {
 	 */
 	public function current() {
 
-		$xml = $this->reader->readInnerXml();
-		return ! empty( $this->node_name )
-			? sprintf( '<%1$s>%2$s</%1$s>', $this->node_name, $xml )
-			: $xml;
+		$domDocument = new DOMDocument;
+		$domDocument->loadXML( '<?xml version="1.0"?><root/>' );
+		$domNode = $this->reader->expand( $domDocument->documentElement );
+		$xml     = $domDocument->saveXML( $domNode );
+
+		return $xml;
 	}
 
 	/**

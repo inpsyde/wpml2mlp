@@ -63,7 +63,7 @@ class WpUserParserTest extends Helper\MonkeyTestCase {
 		];
 		$xml = <<<XML
 <root
-	xmlns:wp="wp"
+	xmlns:wp="urn:wp"
 	>
 	<wp:author>
 		<wp:author_id>{$user_data[ 'origin_id' ]}</wp:author_id>

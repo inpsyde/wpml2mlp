@@ -54,10 +54,9 @@ class XmlNodeIteratorTest extends \PHPUnit_Framework_TestCase {
 		$index = 0;
 		while ( $testee->valid() ) {
 
-			$xml = trim( $testee->current() );
 			$this->assertXmlStringEqualsXmlString(
-				$xml,
-				$expected[ $index ]
+				$expected[ $index ],
+				$testee->current()
 			);
 			$index++;
 		}
@@ -67,6 +66,9 @@ class XmlNodeIteratorTest extends \PHPUnit_Framework_TestCase {
 
 		$data = array();
 
+		/**
+		 * single_level_nodes
+		 */
 		$xml = <<<XML
 <root>
 	<item>
@@ -92,6 +94,9 @@ XML;
 			)
 		);
 
+		/**
+		 * nested_div_elements
+		 */
 		$xml = <<<XML
 <root>
 	<div>
@@ -119,16 +124,11 @@ XML;
 		);
 
 		/**
-		 * Todo: XML including namespaces currently failing
-		 * here due to the parser in the comparison of PHPUnit's
-		 * assertXmlStringEqualsXmlString()
-		 *
-		 * Todo: Write own comparator
+		 * single_level_nodes_with_local_ns
 		 */
-		/*
 		$xml = <<<XML
 <root
-	xmlns:wp="test"
+	xmlns:wp="urn:wp"
 >
 	<node>
 		<wp:title>The first title</wp:title>
@@ -141,18 +141,53 @@ XML;
 </root>
 XML;
 
-		$data[ 'single_level_nodes_with_ns' ] = array(
+		$data[ 'single_level_nodes_with_local_ns' ] = array(
 			#1. parameter $xml
 			$xml,
 			#2. parameter $node_name
 			'node',
 			#3. parameter $expected output
 			array(
-				'<node><wp:title>The first title</wp:title><wp:excerpt>Some excerpt</wp:excerpt></node>',
-				'<node><wp:title>Another title</wp:title><wp:excerpt>another excerpt</wp:excerpt></node>'
+				'<node xmlns:wp="urn:wp"><wp:title>The first title</wp:title>'
+				. '<wp:excerpt>Some excerpt</wp:excerpt></node>',
+
+				'<node xmlns:wp="urn:wp"><wp:title>Another title</wp:title>'
+				. '<wp:excerpt>another excerpt</wp:excerpt></node>'
 			)
 		);
-		//*/
+
+		/**
+		 * two_level_nodes_with_ns
+		 */
+		$xml = <<<XML
+<root
+	xmlns:wp="urn:wp"
+>
+	<wp:node>
+		<wp:title>The first title</wp:title>
+		<wp:excerpt>Some excerpt</wp:excerpt>
+	</wp:node>
+	<wp:node>
+		<wp:title>Another title</wp:title>
+		<wp:excerpt>another excerpt</wp:excerpt>
+	</wp:node>
+</root>
+XML;
+
+		$data[ 'two_level_nodes_with_ns' ] = array(
+			#1. parameter $xml
+			$xml,
+			#2. parameter $node_name
+			'wp:node',
+			#3. parameter $expected output
+			array(
+				'<wp:node xmlns:wp="urn:wp"><wp:title>The first title</wp:title>'
+				. '<wp:excerpt>Some excerpt</wp:excerpt></wp:node>',
+
+				'<wp:node xmlns:wp="urn:wp"><wp:title>Another title</wp:title>'
+				. '<wp:excerpt>another excerpt</wp:excerpt></wp:node>'
+			)
+		);
 
 		return $data;
 	}

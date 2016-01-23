@@ -53,8 +53,9 @@ XML;
 
 		$item_id = '1';
 		$item_title = 'Hello World';
+		$namespaces = [ 'wp' => 'urn:whatever' ];
 		$xml = <<<XML
-<wp:item>
+<wp:item xmlns:wp="{$namespaces[ 'wp' ]}">
 	<wp:id>{$item_id}</wp:id>
 	<wp:title>{$item_title}</wp:title>
 </wp:item>
@@ -64,11 +65,7 @@ XML;
 			->method( 'current' )
 			->willReturn( $xml );
 
-		$namespaces = array( 'wp' => 'whatever' );
-		$testee = new Iterator\SimpleXmlItemWrapper(
-			$node_iterator_mock,
-			$namespaces
-		);
+		$testee = new Iterator\SimpleXmlItemWrapper( $node_iterator_mock );
 
 		/* @type SimpleXMLElement $document */
 		$document = $testee->current();
@@ -77,7 +74,7 @@ XML;
 			$document
 		);
 
-		$doc_namespaces = $document->getDocNamespaces();
+		$doc_namespaces = $document->getDocNamespaces( TRUE );
 		$this->assertSame(
 			$namespaces,
 			$doc_namespaces
@@ -139,7 +136,6 @@ XML;
 		libxml_use_internal_errors( FALSE );
 		$testee = new Iterator\SimpleXmlItemWrapper(
 			$iterator_mock,
-			[],
 			'root',
 			[],
 			$wp_factory_mock
