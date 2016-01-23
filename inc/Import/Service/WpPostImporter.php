@@ -75,9 +75,9 @@ class WpPostImporter implements PostImporterInterface {
 			if( $import_post->origin_attachment_url() ){
 
 				/**
-				 * @param array     $import_postdata         Arguments for inserting an attachment. @see wp_insert_post
-                 * @param string    origin_attachment_url()  Filename.
-                 * @param int       $local_parent_id         Parent post ID.
+				 * @param array     $import_postdata       Arguments for inserting an attachment. @see wp_insert_post
+                 * @param string    $origin_attachment_url Filename.
+                 * @param int       $local_parent_id       Parent post ID.
 				 *
                  * @return int Attachment ID.
                  **/
