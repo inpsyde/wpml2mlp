@@ -67,7 +67,7 @@ class WpPostImporter implements PostImporterInterface {
 		);
 
 		/**
-		 * Its a attachment, check if all there wat we need for a import.
+		 * It's an attachment, check if all is there what we need for an import.
 		 * (@see Type\ImportPostInterface $import_post)
 		 */
 		if( $import_post->type() == 'attachment' ) {
