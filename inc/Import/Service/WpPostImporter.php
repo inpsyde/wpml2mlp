@@ -248,10 +248,10 @@ class WpPostImporter implements PostImporterInterface {
 	 */
 	public function import_attachment( $attachment_id, Type\ImportPostInterface $import_post ){
 
-		$attachemnt_url = $import_post->origin_attachment_url();
+		$attachment_url = $import_post->origin_attachment_url();
 
 		// Check the type of file. We'll use this as the 'post_mime_type'.
-		$filetype = wp_check_filetype( basename( $attachemnt_url ), null );
+		$filetype = wp_check_filetype( basename( $attachment_url ), null );
 
 		// $filename should be the path to a file in the upload directory.
 		$wp_upload = wp_upload_dir();
@@ -278,7 +278,7 @@ class WpPostImporter implements PostImporterInterface {
 		}
 
 		// get placeholder file in the upload dir with a unique, sanitized filename
-		$upload = wp_upload_bits( basename( $attachemnt_url ), 0, '', $import_post->date() );
+		$upload = wp_upload_bits( basename( $attachment_url ), 0, '', $import_post->date() );
 
 		if ( $upload['error'] ) {
 
@@ -295,7 +295,7 @@ class WpPostImporter implements PostImporterInterface {
 		}
 
 		// fetch the remote url and write it to the placeholder file
-		$response = $this->http->request( $attachemnt_url, $upload['file'] );
+		$response = $this->http->request( $attachment_url, $upload['file'] );
 
 		if ( $response['response']['code'] != 200 || is_wp_error( $response ) ) {
 
@@ -305,7 +305,7 @@ class WpPostImporter implements PostImporterInterface {
 			 * @param WP_Error $response
 			 * @param array $upload
 			 */
-			do_action( 'w2m_import_request_attachment_error', $response, $attachemnt_url );
+			do_action( 'w2m_import_request_attachment_error', $response, $attachment_url );
 			return;
 		}
 
