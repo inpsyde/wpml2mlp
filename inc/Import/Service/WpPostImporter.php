@@ -269,7 +269,7 @@ class WpPostImporter implements PostImporterInterface {
 				 * @param WP_Error $error
 				 * @param string $wp_upload_dir
 				 */
-				do_action( 'w2m_import_attachment_mkidr_error', $error, $wp_upload_dir );
+				do_action( 'w2m_import_attachment_mkdir_error', $error, $wp_upload_dir );
 			}
 
 		}
@@ -287,7 +287,7 @@ class WpPostImporter implements PostImporterInterface {
 			 * @param WP_Error $error
 			 * @param array $upload
 			 */
-			do_action( 'w2m_import_attachment_mkidr_error', $error, $upload );
+			do_action( 'w2m_import_attachment_mkdir_error', $error, $upload );
 
 			return;
 		}
