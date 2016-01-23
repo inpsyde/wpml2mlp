@@ -164,47 +164,44 @@ class WpPostImporter implements PostImporterInterface {
 		update_post_meta( $local_id, '_w2m_origin_link', $import_post->origin_link() );
 
 		foreach( $import_post->meta() as $meta ) {
-
 			/* @var Type\ImportMetaInterface $meta */
-
 			if ( $meta->is_single() ) {
 				$update_post_meta_result = update_post_meta(
 					$local_id,
 					$meta->key(),
 					$meta->value()
 				);
+				if ( $update_post_meta_result )
+					continue;
 
-				#test if update_post_meta returned a error
-				$this->meta_result(
-					$update_post_meta_result,
+				$this->propagate_import_meta_error(
 					array(
+						'result'  => $update_post_meta_result,
 						'post_id' => $local_id,
-						'meta' => array( 'key' => $meta->key(), 'value' => $meta->value() )
+						'meta'    => array( 'key' => $meta->key(), 'value' => $meta->value() )
 					)
 				);
 
 			} else {
-
 				foreach ( $meta->value() as $v ) {
-					add_post_meta(
+					$add_post_meta_result = add_post_meta(
 						$local_id,
 						$meta->key(),
 						$v,
 						FALSE // not unique
 					);
+					if ( $add_post_meta_result )
+						continue;
 
-					#test if update_post_meta returned a error
-					$this->meta_result(
-						$update_post_meta_result,
+					$this->propagate_import_meta_error(
 						array(
+							'result'  => $update_post_meta_result,
 							'post_id' => $local_id,
-							'meta' => array( 'key' => $meta->key(), 'value' => $v )
+							'meta'    => array( 'key' => $meta->key(), 'value' => $v )
 						)
 					);
-
 				}
 			}
-
 		}
 
 
@@ -224,26 +221,22 @@ class WpPostImporter implements PostImporterInterface {
 
 	/**
 	 * If update_meta result throw error a action is calling for logging the error
-	 * @param $meta_result
-	 * @param $attribute
+	 *
+	 * @param Array $attribute
 	 */
-	private function meta_result( $meta_result, $attribute ){
+	private function propagate_import_meta_error( Array $attribute ){
 
+		$meta_result = new WP_Error( 'meta_update_failed', "Can't add or update postmeta." );
 
-		if ( $meta_result !== TRUE ) {
-
-			$meta_result = new WP_Error( 'meta_update_failed', "Cant add or update postmeta." );
-
-			/**
-			 * Attach error handler/logger here
-			 *
-			 * @param WP_Error $meta_result
-			 * @param int     $attribute['post_id']
-			 * @param string  $attribute['meta']['key']
-			 * @param string  $attribute['meta']['value']
-			 */
-			do_action( 'w2m_import_update_post_meta_error', $meta_result, $attribute['post_id'], $attribute['meta']['key'], $attribute['meta']['value'] );
-		}
+		/**
+		 * Attach error handler/logger here
+		 *
+		 * @param WP_Error $meta_result
+		 * @param int     $attribute['post_id']
+		 * @param string  $attribute['meta']['key']
+		 * @param string  $attribute['meta']['value']
+		 */
+		do_action( 'w2m_import_update_post_meta_error', $meta_result, $attribute['post_id'], $attribute['meta']['key'], $attribute['meta']['value'] );
 
 	}
 
