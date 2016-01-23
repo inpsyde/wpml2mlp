@@ -131,7 +131,7 @@ class WpPostImporter implements PostImporterInterface {
 		$taxonomies = array();
 
 		foreach( $import_post->terms() as $term ){
-
+			/* @type Type\TermReferenceInterface $term */
 			$taxonomies[ $term->taxonomy() ][] = $term->origin_id();
 
 		}
