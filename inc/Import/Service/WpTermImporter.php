@@ -13,34 +13,18 @@ use
 class WpTermImporter implements TermImporterInterface {
 
 	/**
-	 * @var Module\TranslationConnectorInterface
-	 */
-	private $translation_connector;
-
-	/**
 	 * @var Data\MultiTypeIdMapperInterface
 	 */
 	private $id_mapper;
 
 	/**
-	 * Todo: specify this
-	 */
-	private $ancestor_resolver;
-
-	/**
-	 * @param Module\TranslationConnectorInterface $translation_connector (Deprecated, Todo: remove it)
 	 * @param Data\MultiTypeIdMapperInterface $id_mapper
-	 * @param $ancestor_resolver (Not specified yet) (Deprecated, Todo: remove it)
 	 */
 	public function __construct(
-		Module\TranslationConnectorInterface $translation_connector,
-		Data\MultiTypeIdMapperInterface $id_mapper,
-		$ancestor_resolver = NULL
+		Data\MultiTypeIdMapperInterface $id_mapper
 	) {
 
-		$this->translation_connector = $translation_connector;
-		$this->id_mapper             = $id_mapper;
-		$this->ancestor_resolver     = $ancestor_resolver;
+		$this->id_mapper = $id_mapper;
 	}
 
 	/**
@@ -50,6 +34,7 @@ class WpTermImporter implements TermImporterInterface {
 	public function import_term( Type\ImportTermInterface $import_term ) {
 
 		$local_parent_id = $this->id_mapper->local_id( 'term', $import_term->origin_parent_term_id() );
+
 		$import_term_args = array(
 			'description' => $import_term->description(),
 			'parent'      => $local_parent_id,
@@ -61,6 +46,14 @@ class WpTermImporter implements TermImporterInterface {
 			$import_term->taxonomy(),
 			$import_term_args
 		);
+
+		if ( $import_term->origin_parent_term_id() && ! $local_parent_id ) {
+			/**
+			 * @param stdClass|WP_Term $wp_term
+			 * @param Type\ImportTermInterface $import_term
+			 */
+			do_action( 'w2m_import_missing_term_ancestor', $wp_term, $import_term );
+		}
 
 		if ( is_wp_error( $result ) ) {
 			/**
@@ -76,14 +69,6 @@ class WpTermImporter implements TermImporterInterface {
 		$import_term->id( $result[ 'term_id' ] );
 
 		$wp_term = get_term_by( 'id', $result[ 'term_id' ], $import_term->taxonomy() );
-
-		if ( $import_term->origin_parent_term_id() && ! $local_parent_id ) {
-			/**
-			 * @param stdClass|WP_Term $wp_term
-			 * @param Type\ImportTermInterface $import_term
-			 */
-			do_action( 'w2m_import_missing_term_ancestor', $wp_term, $import_term );
-		}
 
 		/**
 		 * @param stdClass|WP_Term

@@ -41,34 +41,18 @@ class WpTermImporterTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @group import
+	 * @group import_term
 	 */
 	public function test_import_term() {
 
-		/**
-		 * Create mocks for the dependency of the testee (WpObjectImporter)
-		 */
-		$translation_connector_mock = $this->getMockBuilder( 'W2M\Import\Module\TranslationConnectorInterface' )
-			->getMock();
 		$id_mapper_mock = $this->getMockBuilder( 'W2M\Import\Data\MultiTypeIdMapperInterface' )
 			->getMock();
 
-		$testee = new Service\WpTermImporter( $translation_connector_mock, $id_mapper_mock );
+		$testee = new Service\WpTermImporter( $id_mapper_mock );
 
 		$term_mock = $this->getMockBuilder( 'W2M\Import\Type\ImportTermInterface' )
 		                       ->getMock();
 
-		/**
-		 * Now define the behaviour of the mock object. Each of the specified
-		 * methods ( @see ImportTermInterface ) should return a proper value!
-		 *
-		 *  - taxonomy()
-		 *  - name()
-		 *  - slug()
-		 *  - description()
-		 *  - origin_parent_term_id()
-		 *  - locale_relations()
-		 */
 		$test_data = array(
 			'taxonomy'              => 'category',
 			'name'                  => 'My cat pics',
@@ -97,16 +81,6 @@ class WpTermImporterTest extends \PHPUnit_Framework_TestCase {
 		               ->with( 'term', $test_data['origin_parent_term_id'] )
 					   ->willReturn( $new_parent_id );
 
-		/**
-		 * Okay, now we have a real-world representation of our import data.
-		 *
-		 * Our test candidate (WpObjectImporter::import_term()) obviously calls
-		 * wp_insert_term(). As it is not available, remember, these are unit-tests
-		 * we have to mock it.
-		 *
-		 * @see wp_insert_term()
-		 * @link https://giuseppe-mazzapica.github.io/BrainMonkey/docs/functions-expect.html
-		 */
 		$wp_term_data = array(
 			'term_id' => 45,
 			'term_taxonomy_id' => 45
@@ -145,18 +119,6 @@ class WpTermImporterTest extends \PHPUnit_Framework_TestCase {
 			->method( 'id' )
 			->with( $wp_term_data[ 'term_id' ] )
 			->willReturn( $wp_term_data[ 'term_id' ] );
-
-		/**
-		 * Todo:
-		 * Currently the test and implementation assuming a simple pass-through
-		 * of the values coming from ImportTermInterface to wp_insert_term().
-		 *
-		 * both have to deal with the concept of MultiTypeIdMapperInterface::local_id().
-		 *
-		 * So the mock of MultiTypeIdMapperInterface::local_id should except the parent ID and should
-		 * return another »local« id of the term. The mock of wp_insert_term() has to be adapted
-		 * to expect not the parent ID but the local id.
-		 */
 
 		/**
 		 * Finally start the tests.
