@@ -45,6 +45,9 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 		$post_mock = $this->mock_builder->type_wp_import_post();
 
 		$wp_error_update_post_meta = $this->mock_builder->wp_error( array( 'add_data' ) );
+		// this mock method never gets called. Do you expect it to get called?
+		// in both cases: Specify it via ->expects( $this->never() ) or ->expects( $this->once() )
+		// to make this test more reliable
 		$wp_error_update_post_meta->method( 'add_data' )->with( '404' )->willReturn( "I've fallen and can't get up" );
 
 		$postmeta_mock_single = $this->mock_builder->type_wp_import_meta();
@@ -61,10 +64,6 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 		$term_mock->method( 'origin_id' )->willReturn( 113 );
 		$term_mock->method( 'taxonomy' )->willReturn( 'category' );
 
-		/**
-		 * Now define the behaviour of the mock object. Each of the specified
-		 * methods ( @see ImportPostInterface ) should return a proper value!
-		 */
 		$postdata = array(
 			'title'                 => 'Mocky test fight',
 			'origin_author_id'      => 12,
@@ -86,7 +85,6 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 			'meta'                  => array( $postmeta_mock_single, $postmeta_mock_array ),
 
 		);
-
 
 		$post_id = 3;
 		$new_parent_id = 15;
