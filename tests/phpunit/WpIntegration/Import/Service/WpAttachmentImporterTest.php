@@ -118,6 +118,29 @@ class WpAttachmentImporterTest extends Helper\WpIntegrationTestCase {
 
 		}
 
+		$test_case = $this;
+		add_action(
+			'w2m_attachment_imported',
+			function( $upload_data, $import_post ) use ( $test_case, $post_mock ) {
+				$this->assertInternalType(
+					'array',
+					$upload_data
+				);
+				$this->assertSame(
+					$post_mock,
+					$import_post
+				);
+				$this->assertFileExists(
+					$upload_data[ 'file' ]
+				);
+				$this->assertSame(
+					'image/png',
+					$upload_data[ 'type' ]
+				);
+			},
+			10,
+			2
+		);
 		$testee->import_post( $post_mock );
 
 	}
