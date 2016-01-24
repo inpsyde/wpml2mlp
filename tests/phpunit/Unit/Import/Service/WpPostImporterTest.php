@@ -42,8 +42,7 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 
 		$testee = new Service\WpPostImporter( $id_mapper_mock, $http );
 
-		$post_mock = $this->getMockBuilder( 'W2M\Import\Type\ImportPostInterface' )
-		                  ->getMock();
+		$post_mock = $this->mock_builder->type_wp_import_post();
 
 		$wp_error_update_post_meta = $this->mock_builder->wp_error( array( 'add_data' ) );
 		$wp_error_update_post_meta->method( 'add_data' )->with( '404' )->willReturn( "I've fallen and can't get up" );
