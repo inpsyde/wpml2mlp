@@ -4,7 +4,9 @@ namespace W2M\Test\Unit\Import\Service;
 
 use
 	W2M\Import\Service,
-	W2M\Test\Helper;
+	W2M\Import\Type,
+	W2M\Test\Helper,
+	WP_Post;
 
 class WpPostImporterTest extends Helper\WpIntegrationTestCase {
 
@@ -74,7 +76,6 @@ class WpPostImporterTest extends Helper\WpIntegrationTestCase {
 			'origin_link'           => 'http://wpml2mlp.test/mocky',
 			'terms'                 => array( $term_mock ),
 			'meta'                  => array( $postmeta_mock_single, $postmeta_mock_array ),
-
 		);
 
 		foreach ( $postdata as $method => $return_value ) {
@@ -94,6 +95,36 @@ class WpPostImporterTest extends Helper\WpIntegrationTestCase {
 			               array( 'post', $postdata[ 'origin_parent_post_id' ] ),
 			               array( 'user', $postdata[ 'origin_author_id' ] )
 		               )->will( $this->onConsecutiveCalls( $new_parent_id, $new_author_id ) );
+
+		$test_case = $this;
+
+		add_action(
+			'w2m_post_imported',
+			/**
+			 * @param WP_Post $wp_post
+			 * @param Type\ImportPostInterface $import_post
+			 */
+			function( $wp_post, $import_post ) use ( $test_case, $post_mock ) {
+				$test_case->assertInstanceOf(
+					'WP_Post',
+					$wp_post
+				);
+				$test_case->assertSame(
+					$post_mock,
+					$import_post
+				);
+				$test_case->assertSame(
+					$import_post->title(),
+					$wp_post->post_title
+				);
+				$test_case->assertSame(
+					$import_post->origin_link(),
+					$wp_post->_w2m_origin_link // gets post meta
+				);
+			},
+			10,
+			2
+		);
 
 		$testee->import_post( $post_mock );
 
