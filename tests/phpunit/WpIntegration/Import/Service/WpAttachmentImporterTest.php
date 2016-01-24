@@ -27,7 +27,7 @@ class WpAttachmentImporterTest extends Helper\WpIntegrationTestCase {
 	/**
 	 * cleanup test uploads folder
 	 */
-	public function teardown(){
+	public function tearDown(){
 
 		$wp_upload = wp_upload_dir();
 		$wp_upload_subdir = array_reverse( array_filter( explode( '/', $wp_upload['subdir'] ) ) );
