@@ -257,6 +257,7 @@ class WpPostImporter implements PostImporterInterface {
 
 		if ( !file_exists( $wp_upload_dir ) ) {
 
+			// Todo: use wp_mkdir_p()
 			$mkdir = mkdir( $wp_upload_dir, 0777, TRUE );
 
 			if ( !$mkdir ) {
