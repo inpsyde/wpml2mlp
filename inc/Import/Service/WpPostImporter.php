@@ -117,6 +117,9 @@ class WpPostImporter implements PostImporterInterface {
 			return;
 		}
 
+		// notify the import object about the new local post id
+		$import_post->id( $local_id );
+
 		$wp_post = get_post( $local_id );
 
 		if ( $import_post->origin_parent_post_id() && !$local_parent_id ) {

@@ -123,6 +123,12 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 			          ->willReturn( $return_value );
 
 		}
+		/**
+		 * The ImportPost object has to receive the newly created id
+		 */
+		$post_mock->expects( $this->exactly( 1 ) )
+			->method( 'id' )
+			->with( $post_id );
 
 		Brain\Monkey\Functions::expect( 'wp_insert_post' )
 		                      ->atLeast()
