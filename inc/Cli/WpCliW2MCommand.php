@@ -109,6 +109,9 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		$user_processor->process_elements();
 	}
 
+	/**
+	 * Todo: Will be used later
+	 */
 	private function die_on_missing_dependency() {
 
 		$msg = 'A $GLOBAL variable is not in a state it supposed to be.'; //surprise
@@ -137,6 +140,8 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 	}
 
 	/**
+	 * Todo: Will be used later
+	 *
 	 * @param WP_Error $error
 	 *
 	 * @return int
@@ -151,6 +156,8 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 	}
 
 	/**
+	 * Todo: Will be used later
+	 *
 	 * @param $msg
 	 *
 	 * @return int
