@@ -153,7 +153,7 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		/**
 		 * Comments
 		 */
-		WP_CLI::line( 'Importing posts ...' );
+		WP_CLI::line( 'Importing comments ...' );
 		$comment_iterator = new Import\Iterator\CommentIterator(
 			new Import\Iterator\SimpleXmlItemWrapper(
 				new Import\Iterator\XmlNodeIterator(
@@ -168,6 +168,8 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 			new Import\Service\WpCommentImporter( $import_id_mapper )
 		);
 		$comment_processor->process_elements();
+
+		WP_CLI::success( "We're done. Thanks for choosing MultilingualPress." );
 	}
 
 	/**
