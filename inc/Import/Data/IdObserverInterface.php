@@ -5,6 +5,14 @@ namespace W2M\Import\Data;
 use
 	W2M\Import\Type;
 
+/**
+ * Interface IdObserverInterface
+ *
+ * This interface describes an »observer« that listens to all imported
+ * entities. The main use case is an IdMapper
+ *
+ * @package W2M\Import\Data
+ */
 interface IdObserverInterface {
 
 	/**
