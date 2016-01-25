@@ -97,6 +97,13 @@ class WpPostImporterTest extends Helper\WpIntegrationTestCase {
 		               )->will( $this->onConsecutiveCalls( $new_parent_id, $new_author_id ) );
 
 		$test_case = $this;
+		$action_check = $this->getMockBuilder( 'ActionFiredTest' )
+			->disableOriginalConstructor()
+			->setMethods( [ 'action_fired' ] )
+			->getMock();
+		$action_check->expects( $this->exactly( 1 ) )
+			->method( 'action_fired' )
+			->with( 'w2m_post_imported' );
 
 		add_action(
 			'w2m_post_imported',
@@ -104,7 +111,8 @@ class WpPostImporterTest extends Helper\WpIntegrationTestCase {
 			 * @param WP_Post $wp_post
 			 * @param Type\ImportPostInterface $import_post
 			 */
-			function( $wp_post, $import_post ) use ( $test_case, $post_mock ) {
+			function( $wp_post, $import_post ) use ( $test_case, $post_mock, $action_check ) {
+				$action_check->action_fired( current_filter() );
 				$test_case->assertInstanceOf(
 					'WP_Post',
 					$wp_post
