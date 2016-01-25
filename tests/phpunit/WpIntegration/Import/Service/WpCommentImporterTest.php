@@ -29,7 +29,7 @@ class WpCommentImporterTest extends Helper\WpIntegrationTestCase {
 		 * methods ( @see ImportCommentInterface ) should return a proper value!
 		 */
 		$commentdata = array(
-			'origin_user_id'            => 66,
+			'origin_user_id'            => (int) 66,
 			'author_name'               => 'Apollo Creed',
 			'author_email'              => 'creed@apollo.com',
 			'author_url'                => 'http://www.apollo-creed.com',
@@ -100,13 +100,26 @@ class WpCommentImporterTest extends Helper\WpIntegrationTestCase {
 
 				foreach ( $comment as $key => $value ) {
 
-					var_dump( $value, $comment_data->$key );
-/**
-					$this->assertEquals(
+					if( $key == 'comment_date' ){
+						continue;
+					}
+
+					if( $key == 'comment_author'
+					    || $key == 'comment_post_ID'
+					    || $key == 'comment_parent'
+					    || $key == 'comment_karma'
+					    || $key == 'comment_approved')
+					{
+						$comment_data_val = (int) $comment_data->$key ;
+					}else{
+						$comment_data_val = (string) $comment_data->$key ;
+					}
+
+					$this->assertSame(
 						$value,
-						$comment_data->$key
+						$comment_data_val
 					);
-*/
+
 				}
 
 			}, 10, 2
