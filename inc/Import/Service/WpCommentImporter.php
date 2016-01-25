@@ -63,6 +63,8 @@ class WpCommentImporter implements CommentImporterInterface {
 			do_action( 'w2m_import_comment_error', $local_id, $import_comment );
 			return;
 		}
+		// notify the importComment object about the new id
+		$import_comment->id( $local_id );
 
 		/**
 		 * If metadata is provided, store it.

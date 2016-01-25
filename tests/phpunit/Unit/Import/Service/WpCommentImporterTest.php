@@ -108,6 +108,12 @@ class WpCommentImporterTest extends Helper\MonkeyTestCase {
 			          ->willReturn( $return_value );
 
 		}
+		/**
+		 * The ImportComment object has to receive the newly created id
+		 */
+		$comment_mock->expects( $this->once() )
+			->method( 'id' )
+			->with( $comment_id );
 
 		Brain\Monkey\Functions::expect( 'wp_insert_comment' )
 		                      ->atLeast()
