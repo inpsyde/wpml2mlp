@@ -96,17 +96,18 @@ class WpPostImporterTest extends Helper\WpIntegrationTestCase {
 			               array( 'user', $postdata[ 'origin_author_id' ] )
 		               )->will( $this->onConsecutiveCalls( $new_parent_id, $new_author_id ) );
 
-		$test_case = $this;
+		$test_case    = $this;
+		$text_action  = 'w2m_post_imported';
 		$action_check = $this->getMockBuilder( 'ActionFiredTest' )
 			->disableOriginalConstructor()
 			->setMethods( [ 'action_fired' ] )
 			->getMock();
 		$action_check->expects( $this->exactly( 1 ) )
 			->method( 'action_fired' )
-			->with( 'w2m_post_imported' );
+			->with( $text_action );
 
 		add_action(
-			'w2m_post_imported',
+			$text_action,
 			/**
 			 * @param WP_Post $wp_post
 			 * @param Type\ImportPostInterface $import_post
