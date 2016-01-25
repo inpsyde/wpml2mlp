@@ -121,33 +121,41 @@ class WpAttachmentImporterTest extends Helper\WpIntegrationTestCase {
 		}
 
 		$test_case = $this;
+		$test_action = 'w2m_comment_imported';
+
 		$action_check = $this->getMockBuilder( 'ActionFiredTest' )
 			->disableOriginalConstructor()
 			->setMethods( [ 'action_fired' ] )
 			->getMock();
+
 		$action_check->expects( $this->exactly( 1 ) )
 			->method( 'action_fired' )
-			->with( 'w2m_attachment_imported' );
+			->with( $test_action );
 
 		add_action(
 			'w2m_attachment_imported',
 			function( $upload_data, $import_post ) use ( $test_case, $post_mock, $action_check ) {
+
 				$action_check->action_fired( current_filter() );
 				$this->assertInternalType(
 					'array',
 					$upload_data
 				);
+
 				$this->assertSame(
 					$post_mock,
 					$import_post
 				);
+
 				$this->assertFileExists(
 					$upload_data[ 'file' ]
 				);
+
 				$this->assertSame(
 					'image/png',
 					$upload_data[ 'type' ]
 				);
+
 			},
 			10,
 			2
