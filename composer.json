@@ -19,7 +19,7 @@
     "docs": "https://github.com/inpsyde/wpml2mlp"
   },
   "require": {
-    "php": ">5.4.0",
+    "php": ">=5.4.0",
     "monolog/monolog": "~1.17",
     "level-2/dice": "dev-v2.0-PHP5.4-5.5"
   },
