@@ -2,9 +2,11 @@
 
 namespace W2M\Test\Unit\Import\Service;
 
-use Brain;
-use W2M\Import\Service;
-use W2M\Test\Helper;
+use
+	W2M\Import\Service,
+	W2M\Test\Helper,
+	Brain,
+	DateTime;
 
 class WpPostImporterTest extends Helper\MonkeyTestCase {
 
@@ -69,7 +71,7 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 			'origin_author_id'      => 12,
 			'status'                => 'draft',
 			'guid'                  => 'mocky',
-			'date'                  => ( new \DateTime( 'NOW' ) )->format( 'Y-m-d H:i:s' ),
+			'date'                  => new DateTime( 'NOW' ),
 			'comment_status'        => 'open',
 			'ping_status'           => 'open',
 			'type'                  => 'post',
@@ -102,7 +104,7 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 			'post_author'    => $new_author_id,
 			'post_status'    => $postdata[ 'status' ],
 			'guid'           => $postdata[ 'guid' ],
-			'post_date_gmt'  => $postdata[ 'date' ],
+			'post_date_gmt'  => $postdata[ 'date' ]->format( 'Y-m-d H:i:s' ),
 			'comment_status' => $postdata[ 'comment_status' ],
 			'ping_status'    => $postdata[ 'ping_status' ],
 			'post_type'      => $postdata[ 'type' ],
