@@ -6,7 +6,7 @@ use Brain;
 use W2M\Import\Service;
 use W2M\Test\Helper;
 
-class WpPostImporterTest extends Helper\MonkeyTestCase {
+class WpAttachmentImporterTest extends Helper\MonkeyTestCase {
 
 	private $fs_helper;
 
@@ -38,16 +38,17 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 
 		$id_mapper_mock = $this->mock_builder->data_multi_type_id_mapper();
 
-		$http = $this->getMockBuilder( 'WP_Http' )->disableOriginalConstructor()->getMock();
+		$http_mock = $this->getMockBuilder( 'WP_Http' )
+		                  ->disableOriginalConstructor()
+		                  ->setMethods( array( 'request' ) )
+		                  ->getMock();
 
-		$testee = new Service\WpPostImporter( $id_mapper_mock, $http );
+		$testee = new Service\WpPostImporter( $id_mapper_mock, $http_mock );
 
-		$post_mock = $this->mock_builder->type_wp_import_post();
+		$post_mock = $this->getMockBuilder( 'W2M\Import\Type\ImportPostInterface' )
+		                  ->getMock();
 
 		$wp_error_update_post_meta = $this->mock_builder->wp_error( array( 'add_data' ) );
-		// this mock method never gets called. Do you expect it to get called?
-		// in both cases: Specify it via ->expects( $this->never() ) or ->expects( $this->once() )
-		// to make this test more reliable
 		$wp_error_update_post_meta->method( 'add_data' )->with( '404' )->willReturn( "I've fallen and can't get up" );
 
 		$postmeta_mock_single = $this->mock_builder->type_wp_import_meta();
@@ -64,6 +65,10 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 		$term_mock->method( 'origin_id' )->willReturn( 113 );
 		$term_mock->method( 'taxonomy' )->willReturn( 'category' );
 
+		/**
+		 * Now define the behaviour of the mock object. Each of the specified
+		 * methods ( @see ImportPostInterface ) should return a proper value!
+		 */
 		$postdata = array(
 			'title'                 => 'Mocky test fight',
 			'origin_author_id'      => 12,
@@ -72,19 +77,32 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 			'date'                  => ( new \DateTime( 'NOW' ) )->format( 'Y-m-d H:i:s' ),
 			'comment_status'        => 'open',
 			'ping_status'           => 'open',
-			'type'                  => 'post',
+			'type'                  => 'attachment',
 			'excerpt'               => 'Mocky the fighter',
 			'content'               => 'Mock will go for a greate fight.',
 			'name'                  => 'mocky',
 			'origin_parent_post_id' => 42,
 			'menu_order'            => 1,
 			'password'              => 'mocky',
-			'is_sticky'             => TRUE,
 			'origin_link'           => 'http://wpml2mlp.test/mocky',
 			'terms'                 => array( $term_mock ),
 			'meta'                  => array( $postmeta_mock_single, $postmeta_mock_array ),
-
+			'origin_attachment_url' => 'https://images.unsplash.com/photo-1444858345149-8ff40887589b?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&s=1b5d1a032e0bc68e2bf514e1e348c138'
 		);
+
+		$wp_upload_dir_data = array(
+			'basedir' =>
+				str_replace(
+					'plugins/wpml2mlp/tests/phpunit/Unit/Import/Service',
+					'upload/wpml2mlp_test',
+					dirname( __FILE__ )
+				),
+			'baseurl' => 'http://mocky.test',
+			'subdir' => date( '/Y/m', time() )
+		);
+
+		$wp_upload_file = $wp_upload_dir_data['basedir'] . $wp_upload_dir_data['subdir'] . '/'. basename( $postdata[ 'origin_attachment_url' ] );
+
 
 		$post_id = 3;
 		$new_parent_id = 15;
@@ -122,12 +140,13 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 
 		}
 
-		Brain\Monkey\Functions::expect( 'wp_insert_post' )
+		Brain\Monkey\Functions::expect( 'wp_insert_attachment' )
 		                      ->atLeast()
 		                      ->once()
 		                      ->with(
 			                      $post,
-			                      TRUE
+			                      $postdata[ 'origin_attachment_url' ],
+			                      $new_parent_id
 		                      )
 		                      ->andReturn( $post_id );
 
@@ -159,11 +178,6 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 
 		Brain\Monkey\Functions::expect( 'wp_set_post_terms' )->once();
 
-		/**
-		 * stick_post test.
-		 * The posttestdata is a sticky post so we have to test the stick_post methode
-		 */
-		Brain\Monkey\Functions::expect( 'stick_post' )->once();
 
 		/**
 		 * update_post_meta needs expect 2 times.
@@ -177,6 +191,68 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 		 * @see $postmeta_mock_array
 		 */
 		Brain\Monkey\Functions::expect( 'add_post_meta' )->twice();
+
+
+		Brain\Monkey\Functions::expect( 'wp_check_filetype' )
+		                      ->atLeast()
+		                      ->once()
+		                      ->with( basename( $postdata[ 'origin_attachment_url' ] ), null )
+		                      ->andReturn( array(
+			                                   'ext' => 'jpg',
+			                                   'type' => 'image/jpeg'
+		                                   )
+		                      );
+
+		Brain\Monkey\Functions::expect( 'wp_upload_dir' )
+		                      ->atLeast()
+		                      ->once()
+		                      ->andReturn( $wp_upload_dir_data );
+
+		Brain\Monkey\Functions::expect( 'wp_upload_bits' )
+		                      ->atLeast()
+		                      ->once()
+		                      ->andReturn( array(
+			                                   'file'   => $wp_upload_file,
+			                                   'url'    => $wp_upload_dir_data['baseurl'] . '/wp-content/' . $wp_upload_dir_data['basedir'] . $wp_upload_dir_data['subdir'] . '/'. basename( $postdata[ 'origin_attachment_url' ] ),
+			                                   'type'   => 'image/jpeg',
+			                                   'error'  => false
+		                                   )
+		                      );
+
+		/**
+		 * Testdata for a valid request response
+		 */
+		$request_testdata = array(
+								'headers' => array( 'content-type' => 'image/jpeg' ),
+								'body' => 'imagesource',
+								'response' => array(
+													'code' => 200,
+													'message' => 'OK',
+                                                ),
+								'cookies' => array(),
+								'filename' => FALSE,
+							);
+
+		$http_mock->expects( $this->atLeast( 1 ) )
+		          ->method( 'request' )
+		          ->with( $postdata[ 'origin_attachment_url' ], $wp_upload_file )
+		          ->willReturn( $request_testdata );
+
+
+		Brain\Monkey\Functions::expect( 'wp_update_post' )->times( 1 );
+
+		Brain\Monkey\Functions::expect( 'wp_generate_attachment_metadata' )
+		                      ->atLeast()
+		                      ->once()
+		                      ->with( $post_id, $wp_upload_file )
+		                      ->andReturn( array(
+			                                   array( 'metadata' ), $post_id
+		                                   )
+		                      );
+
+		Brain\Monkey\Functions::expect( 'wp_update_attachment_metadata' )
+		                      ->atLeast()
+		                      ->once();
 
 		$testee->import_post( $post_mock );
 

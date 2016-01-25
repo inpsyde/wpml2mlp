@@ -55,7 +55,9 @@ Use the installer via back-end of your install or ...
 * `w2m_post_imported` in `W2M\Import\Service\WpPostImporter::import_post()`
 
 * `w2m_import_attachment_missing_origin_attachment_url` in `W2M\Import\Service\WpPostImporter::import_post()`
-* `w2m_import_attachment_mkidr_error` in `W2M\Import\Service\WpPostImporter::import_post()`
+* `w2m_import_attachment_mkdir_error` in `W2M\Import\Service\WpPostImporter::import_post()`
+* `w2m_import_request_attachment_error` in `W2M\Import\Service\WpPostImporter::import_post()`
+* `w2m_attachment_imported`in `W2M\Import\Service\WpPostImporter::import_post()`
 
 * `w2m_import_user_error` in `W2M\Import\Service\WpUserImporter::import_user()`
 * `w2m_user_imported` in `W2M\Import\Service\WpUserImporter::import_user()`
