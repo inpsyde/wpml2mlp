@@ -121,7 +121,7 @@ class WpAttachmentImporterTest extends Helper\WpIntegrationTestCase {
 		}
 
 		$test_case = $this;
-		$test_action = 'w2m_comment_imported';
+		$test_action = 'w2m_attachment_imported';
 
 		$action_check = $this->getMockBuilder( 'ActionFiredTest' )
 			->disableOriginalConstructor()
@@ -133,7 +133,7 @@ class WpAttachmentImporterTest extends Helper\WpIntegrationTestCase {
 			->with( $test_action );
 
 		add_action(
-			'w2m_attachment_imported',
+			$test_action,
 			function( $upload_data, $import_post ) use ( $test_case, $post_mock, $action_check ) {
 
 				$action_check->action_fired( current_filter() );
