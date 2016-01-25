@@ -72,10 +72,10 @@ Use the installer via back-end of your install or ...
 * `w2m_import_parse_user_error` in `W2M\Import\Service\WpUserParser::propagate_error()`
 * `w2m_import_parse_comment_error` in `W2M\Import\Service\WpCommentParser::propagate_error()`
 
-* `w2m_import_set_user_id` in `W2M\Import\Type\WpImportUser::id()`
-* `w2m_import_set_post_id` in `W2M\Import\Type\WpImportPost::id()`
-* `w2m_import_set_term_id` in `W2M\Import\Type\WpImportTerm::id()`
-* `w2m_import_set_comment_id` in `W2M\Import\Type\WpImportComment::id()`
+* (Deprecated) `w2m_import_set_user_id` in `W2M\Import\Type\WpImportUser::id()`
+* (Deprecated) `w2m_import_set_post_id` in `W2M\Import\Type\WpImportPost::id()`
+* (Deprecated) `w2m_import_set_term_id` in `W2M\Import\Type\WpImportTerm::id()`
+* (Deprecated) `w2m_import_set_comment_id` in `W2M\Import\Type\WpImportComment::id()`
 
 * `w2m_import_posts_done` in `W2M\Import\Service\PostProcessor::process_elements()`
 * `w2m_import_users_done` in `W2M\Import\Service\UserProcessor::process_elements()`

@@ -198,6 +198,9 @@ class WpImportComment implements ImportCommentInterface {
 		 * This action allows an automated mapping of old/new
 		 * element ids
 		 *
+		 * Todo: This hook is redundant to w2m_comment_imported and should be removed
+		 *
+		 * @deprecated
 		 * @param ImportPostInterface $this
 		 */
 		do_action( 'w2m_import_set_comment_id', $this );

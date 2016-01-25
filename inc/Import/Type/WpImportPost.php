@@ -253,6 +253,9 @@ class WpImportPost implements ImportPostInterface {
 		 * This action allows an automated mapping of old/new
 		 * element ids
 		 *
+		 * Todo: This hook is redundant to w2m_post_imported and should be removed
+		 *
+		 * @deprecated
 		 * @param ImportPostInterface $this
 		 */
 		do_action( 'w2m_import_set_post_id', $this );
