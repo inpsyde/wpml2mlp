@@ -6,6 +6,7 @@ use
 	W2M\Import\Service,
 	W2M\Test\Helper,
 	Brain,
+	Mockery,
 	DateTime;
 
 class WpAttachmentImporterTest extends Helper\MonkeyTestCase {
@@ -211,8 +212,13 @@ class WpAttachmentImporterTest extends Helper\MonkeyTestCase {
 		                      ->andReturn( $wp_upload_dir_data );
 
 		Brain\Monkey\Functions::expect( 'wp_upload_bits' )
-		                      ->atLeast()
 		                      ->once()
+		                      ->with(
+		                          basename( $postdata[ 'origin_attachment_url' ] ),
+		                          0,
+		                          '',
+		                          "{$postdata['date']->format('Y')}/{$postdata['date']->format('m')}"
+		                      )
 		                      ->andReturn( array(
 			                                   'file'   => $wp_upload_file,
 			                                   'url'    => $wp_upload_dir_data['baseurl'] . '/wp-content/' . $wp_upload_dir_data['basedir'] . $wp_upload_dir_data['subdir'] . '/'. basename( $postdata[ 'origin_attachment_url' ] ),

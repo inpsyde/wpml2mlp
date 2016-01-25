@@ -276,7 +276,12 @@ class WpPostImporter implements PostImporterInterface {
 		}
 
 		// get placeholder file in the upload dir with a unique, sanitized filename
-		$upload = wp_upload_bits( basename( $attachment_url ), 0, '', $import_post->date() );
+		$upload = wp_upload_bits(
+			basename( $attachment_url ),
+			0,
+			'',
+			$import_post->date()->format( 'Y/m' )
+		);
 
 		if ( $upload[ 'error' ] ) {
 

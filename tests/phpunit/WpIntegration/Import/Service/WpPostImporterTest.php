@@ -6,7 +6,8 @@ use
 	W2M\Import\Service,
 	W2M\Import\Type,
 	W2M\Test\Helper,
-	WP_Post;
+	WP_Post,
+	DateTime;
 
 class WpPostImporterTest extends Helper\WpIntegrationTestCase {
 
@@ -62,7 +63,7 @@ class WpPostImporterTest extends Helper\WpIntegrationTestCase {
 			'origin_author_id'      => 12,
 			'status'                => 'draft',
 			'guid'                  => 'mocky',
-			'date'                  => ( new \DateTime( 'NOW' ) )->format( 'Y-m-d H:i:s' ),
+			'date'                  =>  new DateTime( 'NOW' ),
 			'comment_status'        => 'open',
 			'ping_status'           => 'open',
 			'type'                  => 'post',
