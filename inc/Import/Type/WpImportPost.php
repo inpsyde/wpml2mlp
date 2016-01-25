@@ -44,6 +44,11 @@ class WpImportPost implements ImportPostInterface {
 	private $ping_status = '';
 
 	/**
+	 * @var int
+	 */
+	private $origin_author_id = 0;
+
+	/**
 	 * @var string
 	 */
 	private $type = '';
