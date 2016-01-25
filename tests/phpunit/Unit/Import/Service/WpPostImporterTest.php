@@ -126,7 +126,7 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 		/**
 		 * The ImportPost object has to receive the newly created id
 		 */
-		$post_mock->expects( $this->exactly( 1 ) )
+		$post_mock->expects( $this->once() )
 			->method( 'id' )
 			->with( $post_id );
 
