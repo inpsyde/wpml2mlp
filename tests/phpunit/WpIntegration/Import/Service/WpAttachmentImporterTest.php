@@ -2,9 +2,11 @@
 
 namespace W2M\Test\Unit\Import\Service;
 
-use Brain;
-use W2M\Import\Service;
-use W2M\Test\Helper;
+use
+	W2M\Import\Service,
+	W2M\Test\Helper,
+	WP_Http,
+	Brain;
 
 class WpAttachmentImporterTest extends Helper\WpIntegrationTestCase {
 
@@ -54,7 +56,7 @@ class WpAttachmentImporterTest extends Helper\WpIntegrationTestCase {
 
 		$id_mapper_mock = $this->mock_builder->data_multi_type_id_mapper();
 
-		$testee = new Service\WpPostImporter( $id_mapper_mock, $http_mock );
+		$testee = new Service\WpPostImporter( $id_mapper_mock, new \WP_Http() );
 
 		$post_mock = $this->getMockBuilder( 'W2M\Import\Type\ImportPostInterface' )
 		                  ->getMock();
