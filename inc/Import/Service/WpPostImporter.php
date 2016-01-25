@@ -55,7 +55,7 @@ class WpPostImporter implements PostImporterInterface {
 			'post_author'    => $local_user_id,
 			'post_status'    => $import_post->status(),
 			'guid'           => $import_post->guid(),
-			'post_date_gmt'  => $import_post->date(),
+			'post_date_gmt'  => $import_post->date()->format( 'Y-m-d H:i:s' ),
 			'comment_status' => $import_post->comment_status(),
 			'ping_status'    => $import_post->ping_status(),
 			'post_type'      => $import_post->type(),

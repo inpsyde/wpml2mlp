@@ -134,6 +134,9 @@ class WpImportTerm implements ImportTermInterface {
 		 * This action allows an automated mapping of old/new
 		 * element ids
 		 *
+		 * Todo: This hook is redundant to w2m_term_imported and should be removed
+		 *
+		 * @deprecated
 		 * @param ImportTermInterface $this
 		 */
 		do_action( 'w2m_import_set_term_id', $this );

@@ -5,7 +5,7 @@ namespace W2M\Import\Data;
 /**
  * Interface MultiTypeIdListInterface
  *
- * This list can return the complete stored data by type
+ * This list can return the complete stored data (id map) by type
  *
  * @package W2M\Import\Data
  */

@@ -11,8 +11,11 @@ use
 
 /**
  * Class ImportListeningMTAncestorList
+ *
  * Listens to specific hooks to record
  * unresolvable ancestor-descendant relations with their **origin ids**!
+ *
+ * Todo: consider a better name for this. Maybe `UnresolvedAncestorRelations`
  *
  * @package W2M\Import\Data
  */

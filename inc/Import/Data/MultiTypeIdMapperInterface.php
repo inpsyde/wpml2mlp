@@ -2,6 +2,13 @@
 
 namespace W2M\Import\Data;
 
+/**
+ * Interface MultiTypeIdMapperInterface
+ *
+ * Describes a single-item mapper
+ *
+ * @package W2M\Import\Data
+ */
 interface MultiTypeIdMapperInterface {
 
 	/**

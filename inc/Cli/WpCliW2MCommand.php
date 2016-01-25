@@ -93,6 +93,10 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		);
 		$mapper_controller->register_id_observer();
 
+		/**
+		 * Users
+		 */
+		WP_CLI::line( 'Importing users ...' );
 		$user_iterator = new Import\Iterator\UserIterator(
 			new Import\Iterator\SimpleXmlItemWrapper(
 				new Import\Iterator\XmlNodeIterator(
@@ -107,8 +111,68 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 			new Import\Service\WpUserImporter( $import_id_mapper )
 		);
 		$user_processor->process_elements();
+
+		/**
+		 * Terms
+		 */
+		WP_CLI::line( 'Importing terms ...' );
+		$term_iterator = new Import\Iterator\TermIterator(
+			new Import\Iterator\SimpleXmlItemWrapper(
+				new Import\Iterator\XmlNodeIterator(
+					$import_file,
+					'wp:category'
+				)
+			),
+			new Import\Service\WpTermParser
+		);
+		$term_processor = new Import\Service\TermProcessor(
+			$term_iterator,
+			new Import\Service\WpTermImporter( $import_id_mapper )
+		);
+		$term_processor->process_elements();
+
+		/**
+		 * Posts
+		 */
+		WP_CLI::line( 'Importing posts ...' );
+		$post_iterator = new Import\Iterator\PostIterator(
+			new Import\Iterator\SimpleXmlItemWrapper(
+				new Import\Iterator\XmlNodeIterator(
+					$import_file,
+					'item'
+				)
+			),
+			new Import\Service\WpPostParser
+		);
+		$post_processor = new Import\Service\PostProcessor(
+			$post_iterator,
+			new Import\Service\WpPostImporter( $import_id_mapper )
+		);
+		$post_processor->process_elements();
+
+		/**
+		 * Comments
+		 */
+		WP_CLI::line( 'Importing posts ...' );
+		$comment_iterator = new Import\Iterator\CommentIterator(
+			new Import\Iterator\SimpleXmlItemWrapper(
+				new Import\Iterator\XmlNodeIterator(
+					$import_file,
+					'wp:comment'
+				)
+			),
+			new Import\Service\WpCommentParser
+		);
+		$comment_processor = new Import\Service\CommentProcessor(
+			$comment_iterator,
+			new Import\Service\WpCommentImporter( $import_id_mapper )
+		);
+		$comment_processor->process_elements();
 	}
 
+	/**
+	 * Todo: Will be used later
+	 */
 	private function die_on_missing_dependency() {
 
 		$msg = 'A $GLOBAL variable is not in a state it supposed to be.'; //surprise
@@ -137,6 +201,8 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 	}
 
 	/**
+	 * Todo: Will be used later
+	 *
 	 * @param WP_Error $error
 	 *
 	 * @return int
@@ -151,6 +217,8 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 	}
 
 	/**
+	 * Todo: Will be used later
+	 *
 	 * @param $msg
 	 *
 	 * @return int
