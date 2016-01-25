@@ -57,7 +57,7 @@ class WpCommentImporterTest extends Helper\WpIntegrationTestCase {
 		               )->will( $this->onConsecutiveCalls( $new_parent_id, $new_author_id ) );
 
 		$comment = array(
-			'comment_author'        => $new_author_id,
+			'comment_author'        => (int) $new_author_id,
 			'comment_author_email'  => $commentdata['author_name'],
 			'comment_author_url'    => $commentdata['author_email'],
 			'comment_author_IP'     => $commentdata['author_url'],
@@ -79,6 +79,38 @@ class WpCommentImporterTest extends Helper\WpIntegrationTestCase {
 			             ->willReturn( $return_value );
 
 		}
+
+		$test_case      = $this;
+		$test_action    = 'w2m_comment_imported';
+
+		$action_check = $this->getMockBuilder( 'ActionFiredTest' )
+		                     ->disableOriginalConstructor()
+		                     ->setMethods( [ 'action_fired' ] )
+		                     ->getMock();
+
+		$action_check->expects( $this->exactly( 1 ) )
+		             ->method( 'action_fired' )
+		             ->with( $test_action );
+
+		add_action(
+			$test_action,
+			function( $comment_data, $import_comment ) use ( $test_case, $commentdata, $comment, $action_check ) {
+
+				$action_check->action_fired( current_filter() );
+
+				foreach ( $comment as $key => $value ) {
+
+					var_dump( $value, $comment_data->$key );
+/**
+					$this->assertEquals(
+						$value,
+						$comment_data->$key
+					);
+*/
+				}
+
+			}, 10, 2
+		);
 
 		$testee->import_comment( $comment_mock );
 
