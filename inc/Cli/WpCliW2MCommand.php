@@ -150,6 +150,24 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		);
 		$post_processor->process_elements();
 
+		/**
+		 * Comments
+		 */
+		WP_CLI::line( 'Importing posts ...' );
+		$comment_iterator = new Import\Iterator\CommentIterator(
+			new Import\Iterator\SimpleXmlItemWrapper(
+				new Import\Iterator\XmlNodeIterator(
+					$import_file,
+					'wp:comment'
+				)
+			),
+			new Import\Service\WpCommentParser
+		);
+		$comment_processor = new Import\Service\CommentProcessor(
+			$comment_iterator,
+			new Import\Service\WpCommentImporter( $import_id_mapper )
+		);
+		$comment_processor->process_elements();
 	}
 
 	/**
