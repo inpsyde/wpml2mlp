@@ -86,11 +86,10 @@ class WpCommentImporterTest extends Helper\MonkeyTestCase {
 		               )->will( $this->onConsecutiveCalls( $new_parent_id, $new_author_id ) );
 
 		$comment = array(
-			'comment_author'        => $new_author_id,
-			'comment_author_email'  => $commentdata['author_name'],
-			'comment_author_url'    => $commentdata['author_email'],
-			'comment_author_IP'     => $commentdata['author_url'],
-			'comment_date'          => $commentdata['author_ip'],
+			'comment_author'        => $commentdata['author_name'],
+			'comment_author_email'  => $commentdata['author_email'],
+			'comment_author_url'    => $commentdata['author_url'],
+			'comment_author_IP'     => $commentdata['author_ip'],
 			'comment_date_gmt'      => $commentdata['date'],
 			'comment_content'       => $commentdata['content'],
 			'comment_karma'         => $commentdata['karma'],

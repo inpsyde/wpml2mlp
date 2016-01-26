@@ -35,7 +35,7 @@ class WpCommentImporterTest extends Helper\WpIntegrationTestCase {
 			'author_email'              => 'creed@apollo.com',
 			'author_url'                => 'http://www.apollo-creed.com',
 			'author_ip'                 => '777.999.0.1',
-			'date'                      => ( new \DateTime( 'NOW' ) )->format( 'Y-m-d H:i:s' ),
+			'date'                      => 0,
 			'content'                   => 'Mocky you made it!',
 			'karma'                     => 0,
 			'approved'                  => 1,

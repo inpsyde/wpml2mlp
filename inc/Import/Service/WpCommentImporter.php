@@ -36,11 +36,10 @@ class WpCommentImporter implements CommentImporterInterface {
 		$local_user_id = $this->id_mapper->local_id( 'user', $import_comment->origin_user_id() );
 
 		$comment_data = array(
-			'comment_author'        => $local_user_id,
-			'comment_author_email'  => $import_comment->author_name(),
-			'comment_author_url'    => $import_comment->author_email(),
-			'comment_author_IP'     => $import_comment->author_url(),
-			'comment_date'          => $import_comment->author_ip(),
+			'comment_author'        => $import_comment->author_name(),
+			'comment_author_email'  => $import_comment->author_email(),
+			'comment_author_url'    => $import_comment->author_url(),
+			'comment_author_IP'     => $import_comment->author_ip(),
 			'comment_date_gmt'      => $import_comment->date(),
 			'comment_content'       => $import_comment->content(),
 			'comment_karma'         => $import_comment->karma(),
