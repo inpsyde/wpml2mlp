@@ -63,7 +63,7 @@ class WpCommentImporterTest extends Helper\MonkeyTestCase {
 			'author_email'              => 'creed@apollo.com',
 			'author_url'                => 'http://www.apollo-creed.com',
 			'author_ip'                 => '777.999.0.1',
-			'date'                      => ( new \DateTime( 'NOW' ) )->format( 'Y-m-d H:i:s' ),
+			'date'                      => new \DateTime( 'NOW' ),
 			'content'                   => 'Mocky you made it!',
 			'karma'                     => 0,
 			'approved'                  => 1,
@@ -99,6 +99,9 @@ class WpCommentImporterTest extends Helper\MonkeyTestCase {
 			'comment_post_ID'       => $commentdata['origin_post_id'],
 			'comment_parent'        => $new_parent_id,
 		);
+
+		print_r($comment);
+		die();
 
 		foreach ( $commentdata as $method => $return_value ) {
 
