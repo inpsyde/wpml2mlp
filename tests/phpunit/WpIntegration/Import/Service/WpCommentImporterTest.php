@@ -35,7 +35,7 @@ class WpCommentImporterTest extends Helper\WpIntegrationTestCase {
 			'author_email'              => 'creed@apollo.com',
 			'author_url'                => 'http://www.apollo-creed.com',
 			'author_ip'                 => '777.999.0.1',
-			'date'                      => ( new \DateTime( 'NOW' ) )->format( 'Y-m-d H:i:s' ),
+			'date'                      => new \DateTime( 'NOW' ),
 			'content'                   => 'Mocky you made it!',
 			'karma'                     => 0,
 			'approved'                  => 1,
@@ -58,11 +58,10 @@ class WpCommentImporterTest extends Helper\WpIntegrationTestCase {
 		               )->will( $this->onConsecutiveCalls( $new_parent_id, $new_author_id ) );
 
 		$comment = array(
-			'comment_author'        => (int) $new_author_id,
-			'comment_author_email'  => $commentdata['author_name'],
-			'comment_author_url'    => $commentdata['author_email'],
-			'comment_author_IP'     => $commentdata['author_url'],
-			'comment_date'          => $commentdata['author_ip'],
+			'comment_author'        => $commentdata['author_name'],
+			'comment_author_email'  => $commentdata['author_email'],
+			'comment_author_url'    => $commentdata['author_url'],
+			'comment_author_IP'     => $commentdata['author_ip'],
 			'comment_date_gmt'      => $commentdata['date'],
 			'comment_content'       => $commentdata['content'],
 			'comment_karma'         => $commentdata['karma'],
@@ -72,6 +71,7 @@ class WpCommentImporterTest extends Helper\WpIntegrationTestCase {
 			'comment_post_ID'       => $commentdata['origin_post_id'],
 			'comment_parent'        => $new_parent_id,
 		);
+
 
 		foreach ( $commentdata as $method => $return_value ) {
 
@@ -101,12 +101,11 @@ class WpCommentImporterTest extends Helper\WpIntegrationTestCase {
 
 				foreach ( $comment as $key => $value ) {
 
-					if( $key == 'comment_date' ){
+					if( $key == 'comment_date_gmt' ){
 						continue;
 					}
 
-					if( $key == 'comment_author'
-					    || $key == 'comment_post_ID'
+					if( $key == 'comment_post_ID'
 					    || $key == 'comment_parent'
 					    || $key == 'comment_karma'
 					    || $key == 'comment_approved')
