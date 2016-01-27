@@ -81,8 +81,6 @@ class ImportListeningTypeIdMapper implements MultiTypeIdMapperInterface, IdObser
 	/**
 	 * Returns a list of origin->local ID pairs
 	 *
-	 * Todo: Write test for
-	 *
 	 * @param $type
 	 *
 	 * @return array {
