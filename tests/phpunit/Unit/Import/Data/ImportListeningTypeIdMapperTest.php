@@ -135,4 +135,40 @@ class ImportListeningTypeIdMapperTest extends Helper\MonkeyTestCase {
 			$testee->local_id( 'user', $origin_id )
 		);
 	}
+
+
+	public function test_record_comment() {
+
+		$origin_id = 294;
+		$local_id  = 233;
+
+		$import_comment_mock = $this->mock_builder->type_wp_import_comment();
+		$import_comment_mock->method( 'origin_id' )
+			->willReturn( $origin_id );
+		$import_comment_mock->method( 'id' )
+			->willReturn( $local_id );
+
+		$testee = new Data\ImportListeningTypeIdMapper;
+		$type   = 'comment';
+
+		$this->assertSame(
+			0,
+			$testee->origin_id( $type, $local_id )
+		);
+		$this->assertSame(
+			0,
+			$testee->local_id( $type, $origin_id )
+		);
+
+		$testee->record_comment( $import_comment_mock );
+
+		$this->assertSame(
+			$origin_id,
+			$testee->origin_id( $type, $local_id )
+		);
+		$this->assertSame(
+			$local_id,
+			$testee->local_id( $type, $origin_id )
+		);
+	}
 }
