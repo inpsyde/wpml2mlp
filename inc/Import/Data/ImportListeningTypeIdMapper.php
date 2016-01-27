@@ -81,8 +81,6 @@ class ImportListeningTypeIdMapper implements MultiTypeIdMapperInterface, IdObser
 	/**
 	 * Returns a list of origin->local ID pairs
 	 *
-	 * Todo: Write test for
-	 *
 	 * @param $type
 	 *
 	 * @return array {
@@ -134,7 +132,8 @@ class ImportListeningTypeIdMapper implements MultiTypeIdMapperInterface, IdObser
 	 * @return void
 	 */
 	public function record_comment( Type\ImportCommentInterface $import_comment ) {
-		// TODO: Implement record_comment() method.
+
+		$this->map[ 'comment' ][ $import_comment->origin_id() ] = $import_comment->id();
 	}
 
 }

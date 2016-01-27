@@ -317,6 +317,16 @@ class MockBuilder {
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
+	public function wp_comment( Array $methods = array() ) {
+
+		return $this->mock_without_constructor( 'WP_Comment', $methods );
+	}
+
+	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
 	public function wp_error( Array $methods = array() ) {
 
 		return $this->mock_without_constructor( 'WP_Error', $methods );
