@@ -52,8 +52,6 @@ class ImportListeningMTAncestorList implements MultiTypeAncestorRelationListInte
 	}
 
 	/**
-	 * Todo: Write test for
-	 *
 	 * @wp-hook w2m_import_missing_comment_ancestor
 	 *
 	 * @param stdClass|WP_Comment $comment
