@@ -2,9 +2,11 @@
 
 namespace W2M\Test\Unit\Import\Service;
 
-use Brain;
-use W2M\Import\Service;
-use W2M\Test\Helper;
+use
+	W2M\Import\Service,
+	W2M\Test\Helper,
+	Brain,
+	DateTime;
 
 class WpCommentImporterTest extends Helper\MonkeyTestCase {
 
@@ -63,7 +65,7 @@ class WpCommentImporterTest extends Helper\MonkeyTestCase {
 			'author_email'              => 'creed@apollo.com',
 			'author_url'                => 'http://www.apollo-creed.com',
 			'author_ip'                 => '777.999.0.1',
-			'date'                      => new \DateTime( 'NOW' ),
+			'date'                      => new DateTime( 'NOW' ),
 			'content'                   => 'Mocky you made it!',
 			'karma'                     => 0,
 			'approved'                  => 1,
@@ -90,7 +92,7 @@ class WpCommentImporterTest extends Helper\MonkeyTestCase {
 			'comment_author_email'  => $commentdata['author_email'],
 			'comment_author_url'    => $commentdata['author_url'],
 			'comment_author_IP'     => $commentdata['author_ip'],
-			'comment_date_gmt'      => $commentdata['date'],
+			'comment_date_gmt'      => $commentdata['date']->format( 'Y-m-d H:i:s' ),
 			'comment_content'       => $commentdata['content'],
 			'comment_karma'         => $commentdata['karma'],
 			'comment_approved'      => $commentdata['approved'],
@@ -98,10 +100,9 @@ class WpCommentImporterTest extends Helper\MonkeyTestCase {
 			'comment_type'          => $commentdata['type'],
 			'comment_post_ID'       => $commentdata['origin_post_id'],
 			'comment_parent'        => $new_parent_id,
+			'user_id'               => $new_author_id
 		);
 
-		print_r($comment);
-		die();
 
 		foreach ( $commentdata as $method => $return_value ) {
 

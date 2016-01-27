@@ -7,7 +7,8 @@ use
 	W2M\Import\Type,
 	W2M\Import\Module,
 	WP_Comment,
-	WP_Error;
+	WP_Error,
+	stdClass;
 
 
 class WpCommentImporter implements CommentImporterInterface {
@@ -35,14 +36,12 @@ class WpCommentImporter implements CommentImporterInterface {
 		$local_parent_comment_id = $this->id_mapper->local_id( 'comment', $import_comment->origin_parent_comment_id() );
 		$local_user_id = $this->id_mapper->local_id( 'user', $import_comment->origin_user_id() );
 
-		$comment_date = $import_comment->date();
-
 		$comment_data = array(
 			'comment_author'        => $import_comment->author_name(),
 			'comment_author_email'  => $import_comment->author_email(),
 			'comment_author_url'    => $import_comment->author_url(),
 			'comment_author_IP'     => $import_comment->author_ip(),
-			'comment_date_gmt'      => $comment_date->data,
+			'comment_date_gmt'      => $import_comment->date()->format( 'Y-m-d H:i:s' ),
 			'comment_content'       => $import_comment->content(),
 			'comment_karma'         => $import_comment->karma(),
 			'comment_approved'      => $import_comment->approved(),
@@ -50,6 +49,7 @@ class WpCommentImporter implements CommentImporterInterface {
 			'comment_type'          => $import_comment->type(),
 			'comment_post_ID'       => $import_comment->origin_post_id(),
 			'comment_parent'        => $local_parent_comment_id,
+			'user_id'               => $local_user_id
 		);
 
 		$local_id = wp_insert_comment( $comment_data );

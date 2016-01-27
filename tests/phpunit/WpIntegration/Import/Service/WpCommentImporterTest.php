@@ -4,7 +4,10 @@ namespace W2M\Test\WpIntegration\Import\Service;
 
 use
 	W2M\Import\Service,
-	W2M\Test\Helper;
+	W2M\Import\Type,
+	W2M\Test\Helper,
+	WP_Comment,
+	DateTime;
 
 class WpCommentImporterTest extends Helper\WpIntegrationTestCase {
 
@@ -35,7 +38,7 @@ class WpCommentImporterTest extends Helper\WpIntegrationTestCase {
 			'author_email'              => 'creed@apollo.com',
 			'author_url'                => 'http://www.apollo-creed.com',
 			'author_ip'                 => '777.999.0.1',
-			'date'                      => new \DateTime( 'NOW' ),
+			'date'                      => new DateTime( 'NOW' ),
 			'content'                   => 'Mocky you made it!',
 			'karma'                     => 0,
 			'approved'                  => 1,
@@ -53,9 +56,10 @@ class WpCommentImporterTest extends Helper\WpIntegrationTestCase {
 		$id_mapper_mock->expects( $this->atLeast( 2 ) )
 		               ->method( 'local_id' )
 		               ->withConsecutive(
-			               array( 'comment', $commentdata[ 'origin_parent_comment_id' ] ),
-			               array( 'user', $commentdata[ 'origin_user_id' ] )
-		               )->will( $this->onConsecutiveCalls( $new_parent_id, $new_author_id ) );
+		                   array( 'comment', $commentdata[ 'origin_parent_comment_id' ] ),
+		                   array( 'user', $commentdata[ 'origin_user_id' ] )
+		               )
+		               ->will( $this->onConsecutiveCalls( $new_parent_id, $new_author_id ) );
 
 		$comment = array(
 			'comment_author'        => $commentdata['author_name'],
@@ -81,45 +85,56 @@ class WpCommentImporterTest extends Helper\WpIntegrationTestCase {
 
 		}
 
-		$test_case      = $this;
-		$test_action    = 'w2m_comment_imported';
-
+		$test_case    = $this;
+		$test_action  = 'w2m_comment_imported';
 		$action_check = $this->getMockBuilder( 'ActionFiredTest' )
 		                     ->disableOriginalConstructor()
 		                     ->setMethods( [ 'action_fired' ] )
 		                     ->getMock();
-
 		$action_check->expects( $this->exactly( 1 ) )
 		             ->method( 'action_fired' )
 		             ->with( $test_action );
 
 		add_action(
 			$test_action,
-			function( $comment_data, $import_comment ) use ( $test_case, $commentdata, $comment, $action_check ) {
+			/**
+			 * @param WP_Comment $comment_data
+			 * @param Type\ImportCommentInterface $import_comment
+			 */
+			function( $wp_comment, $import_comment )
+				use ( $test_case, $comment, $action_check )
+			{
 
 				$action_check->action_fired( current_filter() );
+				$this->assertInstanceOf(
+					'WP_Comment',
+					$wp_comment
+				);
 
 				foreach ( $comment as $key => $value ) {
 
-					if( $key == 'comment_date_gmt' ){
+					if( 'comment_date_gmt' === $key ) {
+						$this->assertSame(
+							$import_comment->date()->format( 'Y-m-d H:i:s' ),
+							$wp_comment->comment_date_gmt
+						);
 						continue;
 					}
 
-					if( $key == 'comment_post_ID'
-					    || $key == 'comment_parent'
-					    || $key == 'comment_karma'
-					    || $key == 'comment_approved')
-					{
-						$comment_data_val = (int) $comment_data->$key ;
-					}else{
-						$comment_data_val = (string) $comment_data->$key ;
+					if ( in_array( $key, [ 'comment_post_ID', 'comment_parent', 'comment_karma', 'comment_approved' ] ) ) {
+						$this->assertSame(
+						    $value,
+						    (int) $wp_comment->{$key},
+						    "Test failed for {$key}"
+					    );
+						continue;
 					}
 
 					$this->assertSame(
 						$value,
-						$comment_data_val
+						$wp_comment->{$key},
+						"Test failed for {$key}"
 					);
-
 				}
 
 			}, 10, 2
