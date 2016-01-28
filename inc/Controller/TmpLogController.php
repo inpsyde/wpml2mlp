@@ -4,6 +4,8 @@ namespace W2M\Controller;
 
 use
 	W2M\Log\Recorder,
+	W2M\Import\Type,
+	WP_Error,
 	Monolog;
 
 /**
@@ -55,5 +57,98 @@ class TmpLogController {
 		add_action( 'w2m_term_imported', [ new Recorder\TermImportedRecorder( $this->logger ), 'record' ], 10, 2 );
 		add_action( 'w2m_post_imported', [ new Recorder\PostImportedRecorder( $this->logger ), 'record' ], 10, 2 );
 		add_action( 'w2m_comment_imported', [ new Recorder\CommentImportedRecorder( $this->logger ), 'record' ], 10, 2 );
+
+		$logger = $this->logger;
+		add_action(
+			'w2m_import_set_post_terms_error',
+			/**
+			 * @param WP_Error $set_post_terms_result
+			 * @param int $local_post_id
+			 * @param array $term_ids
+			 * @param string $taxonomy
+			 */
+			function( WP_Error $error, $local_post_id, $term_ids, $taxonomy ) use ( $logger ) {
+
+				$code = $error->get_error_code();
+				$msg  = $error->get_error_message( $code );
+
+				$logger->warning(
+					$msg,
+					[
+						'local_post_id'  => $local_post_id,
+						'taxonomy'       => $taxonomy,
+						'local_term_ids' => $term_ids
+					]
+				);
+			},
+			10,
+			4
+		);
+		add_action(
+			'w2m_import_update_post_meta_error',
+			/**
+			 * @param WP_Error $meta_result
+			 * @param int $local_post_id
+			 * @param string $meta_key
+			 * @param string $meta_value
+			 */
+			function( WP_Error $error, $local_post_id, $meta_key, $meta_value ) use ( $logger ) {
+
+				$code = $error->get_error_code();
+				$msg  = $error->get_error_message( $code );
+
+				$logger->warning( $msg, [ 'local_post_id' => $local_post_id, 'meta_key' => $meta_key ] );
+			},
+			10,
+			4
+		);
+
+		add_action(
+			'w2m_import_attachment_mkdir_error',
+			/**
+			 * @param WP_Error $error
+			 * @param array $data
+			 */
+			function( WP_Error $error, $data ) use ( $logger ) {
+
+				$code = $error->get_error_code();
+				$msg  = $error->get_error_message( $code );
+
+				$logger->warning( $msg, $data );
+			},
+			10,
+			2
+		);
+
+		add_action(
+			'w2m_import_request_attachment_error',
+			/**
+			 * @param WP_Error $error
+			 * @param array $data
+			 */
+			function(WP_Error $error, $data ) use ( $logger ) {
+
+				$code = $error->get_error_code();
+				$msg  = $error->get_error_message( $code );
+
+				$logger->warning( $msg, $data );
+
+			},
+			10,
+			2
+		);
+
+		add_action(
+			'w2m_attachment_imported',
+			/**
+			 * @param array $uploaded
+			 * @param Type\ImportPostInterface $import_post
+			 */
+			function( $upload, $import_post ) use ( $logger ) {
+				$logger->info( "Attachment file downloaded (id: {$import_post->id()}", $upload );
+			},
+			10,
+			2
+		);
 	}
 }

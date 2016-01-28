@@ -271,9 +271,9 @@ class WpPostImporter implements PostImporterInterface {
 				 * Attach error handler/logger here
 				 *
 				 * @param WP_Error $error
-				 * @param string $wp_upload_dir
+				 * @param array $data
 				 */
-				do_action( 'w2m_import_attachment_mkdir_error', $error, $wp_upload_dir );
+				do_action( 'w2m_import_attachment_mkdir_error', $error, [ 'wp_upload_dir' => $wp_upload_dir ] );
 			}
 
 		}
@@ -306,6 +306,8 @@ class WpPostImporter implements PostImporterInterface {
 
 		if ( $response[ 'response' ][ 'code' ] != 200 || is_wp_error( $response ) ) {
 
+			if ( ! is_wp_error( $response ) )
+				$response = new WP_Error( 'http_request', $response );
 			/**
 			 * Attach error handler/logger here
 			 *
