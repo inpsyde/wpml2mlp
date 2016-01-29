@@ -155,7 +155,7 @@ class TmpLogController {
 		add_action(
 			'w2m_import_set_comment_id',
 			/**
-			 * @type Type\ImportCommentInterface $import_comment
+			 * @param Type\ImportCommentInterface $import_comment
 			 */
 			function( Type\ImportCommentInterface $import_comment ) use ( $logger ) {
 
@@ -171,7 +171,7 @@ class TmpLogController {
 		add_action(
 			'w2m_import_set_post_id',
 			/**
-			 * @type Type\ImportPostInterface $import_post
+			 * @param Type\ImportPostInterface $import_post
 			 */
 			function( Type\ImportPostInterface $import_post ) use ( $logger ) {
 
@@ -187,7 +187,7 @@ class TmpLogController {
 		add_action(
 			'w2m_import_set_term_id',
 			/**
-			 * @type Type\ImportUserInterface $import_term
+			 * @param Type\ImportUserInterface $import_term
 			 */
 			function( Type\ImportTermInterface $import_term ) use ( $logger ) {
 
@@ -203,7 +203,7 @@ class TmpLogController {
 		add_action(
 			'w2m_import_set_user_id',
 			/**
-			 * @type Type\ImportUserInterface $import_user
+			 * @param Type\ImportUserInterface $import_user
 			 */
 			function( Type\ImportUserInterface $import_user ) use ( $logger ) {
 
@@ -215,6 +215,29 @@ class TmpLogController {
 					]
 				);
 			}
+		);
+
+		add_action(
+			'w2m_import_missing_post_local_user_id',
+			/**
+			 * @param WP_Error
+			 * @param Type\ImportPostInterface
+			 */
+			function( WP_Error $error, Type\ImportPostInterface $import_post ) use ( $logger )  {
+
+				$code = $error->get_error_code();
+				$msg  = $error->get_error_message( $code );
+
+				$logger->warning(
+					$msg,
+					[
+						'origin_post_id' => $import_post->origin_id(),
+						'type' => $import_post->type()
+					]
+				);
+			},
+			10,
+			2
 		);
 	}
 }
