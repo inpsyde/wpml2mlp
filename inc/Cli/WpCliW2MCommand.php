@@ -74,16 +74,14 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 			wp_mkdir_p( $log_dir );
 		}
 
+		//Todo: use DI-Container ASAP
+
 		$logger         = new Monolog\Logger( 'w2m-import' );
 		$log_setup      = new System\LoggerSetup( $logger, $log_dir, 'w2m-import.log' );
 		$log_controller = new Controller\TmpLogController( $logger );
 
 		$log_setup->setup_handler();
 		$log_controller->register_log_recorder();
-
-		WP_CLI::line( 'Start import ...' );
-
-		//Todo: use DI-Container ASAP
 
 		$import_id_mapper  = new Import\Data\ImportListeningTypeIdMapper;
 		$ancestor_mapper   = new Import\Data\ImportListeningMTAncestorList;
@@ -96,7 +94,6 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		/**
 		 * Users
 		 */
-		WP_CLI::line( 'Importing users ...' );
 		$user_iterator = new Import\Iterator\UserIterator(
 			new Import\Iterator\SimpleXmlItemWrapper(
 				new Import\Iterator\XmlNodeIterator(
@@ -110,12 +107,10 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 			$user_iterator,
 			new Import\Service\WpUserImporter( $import_id_mapper )
 		);
-		$user_processor->process_elements();
 
 		/**
 		 * Terms
 		 */
-		WP_CLI::line( 'Importing terms ...' );
 		$term_iterator = new Import\Iterator\TermIterator(
 			new Import\Iterator\SimpleXmlItemWrapper(
 				new Import\Iterator\XmlNodeIterator(
@@ -129,12 +124,10 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 			$term_iterator,
 			new Import\Service\WpTermImporter( $import_id_mapper )
 		);
-		$term_processor->process_elements();
 
 		/**
 		 * Posts
 		 */
-		WP_CLI::line( 'Importing posts ...' );
 		$post_iterator = new Import\Iterator\PostIterator(
 			new Import\Iterator\SimpleXmlItemWrapper(
 				new Import\Iterator\XmlNodeIterator(
@@ -148,12 +141,10 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 			$post_iterator,
 			new Import\Service\WpPostImporter( $import_id_mapper )
 		);
-		$post_processor->process_elements();
 
 		/**
 		 * Comments
 		 */
-		WP_CLI::line( 'Importing comments ...' );
 		$comment_iterator = new Import\Iterator\CommentIterator(
 			new Import\Iterator\SimpleXmlItemWrapper(
 				new Import\Iterator\XmlNodeIterator(
@@ -167,6 +158,18 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 			$comment_iterator,
 			new Import\Service\WpCommentImporter( $import_id_mapper )
 		);
+
+		/**
+		 * Let's go
+		 */
+		WP_CLI::line( 'Start import …' );
+		WP_CLI::line( 'Importing users …' );
+		$user_processor->process_elements();
+		WP_CLI::line( 'Importing terms …' );
+		$term_processor->process_elements();
+		WP_CLI::line( 'Importing posts …' );
+		$post_processor->process_elements();
+		WP_CLI::line( 'Importing comments …' );
 		$comment_processor->process_elements();
 
 		WP_CLI::success( "We're done. Thanks for choosing MultilingualPress." );
