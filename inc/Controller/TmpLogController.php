@@ -150,5 +150,71 @@ class TmpLogController {
 			10,
 			2
 		);
+
+		// for debugging
+		add_action(
+			'w2m_import_set_comment_id',
+			/**
+			 * @type Type\ImportCommentInterface $import_comment
+			 */
+			function( Type\ImportCommentInterface $import_comment ) use ( $logger ) {
+
+				$logger->debug(
+					"Imported post id recorded",
+					[
+						'origin_id' => $import_comment->origin_id(),
+						'local_id'  => $import_comment->id()
+					]
+				);
+			}
+		);
+		add_action(
+			'w2m_import_set_post_id',
+			/**
+			 * @type Type\ImportPostInterface $import_post
+			 */
+			function( Type\ImportPostInterface $import_post ) use ( $logger ) {
+
+				$logger->debug(
+					"Imported post id recorded",
+					[
+						'origin_id' => $import_post->origin_id(),
+						'local_id'  => $import_post->id()
+					]
+				);
+			}
+		);
+		add_action(
+			'w2m_import_set_term_id',
+			/**
+			 * @type Type\ImportUserInterface $import_term
+			 */
+			function( Type\ImportTermInterface $import_term ) use ( $logger ) {
+
+				$logger->debug(
+					"Imported term id recorded",
+					[
+						'origin_id' => $import_term->origin_id(),
+						'local_id'  => $import_term->id()
+					]
+				);
+			}
+		);
+		add_action(
+			'w2m_import_set_user_id',
+			/**
+			 * @type Type\ImportUserInterface $import_user
+			 */
+			function( Type\ImportUserInterface $import_user ) use ( $logger ) {
+
+				$logger->debug(
+					"Imported user id recorded",
+					[
+						'origin_id' => $import_user->origin_id(),
+						'local_id'  => $import_user->id()
+					]
+				);
+			}
+		);
 	}
 }
