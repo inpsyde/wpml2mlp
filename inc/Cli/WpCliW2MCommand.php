@@ -49,7 +49,7 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		}
 
 		$env = new System\ImportEnvironment;
-		if ( ! is_multisite() ) {
+		if ( ! $env->is_multisite() ) {
 			$this->handle_error( new WP_Error( 'environment', 'This is not a multisite setup' ) );
 			exit;
 		}

@@ -7,6 +7,14 @@ class ImportEnvironment {
 	/**
 	 * @return bool
 	 */
+	public function is_multisite() {
+
+		return is_multisite();
+	}
+
+	/**
+	 * @return bool
+	 */
 	public function mlp_is_active() {
 
 		$mlp_language_api = apply_filters( 'mlp_language_api', NULL );
