@@ -124,14 +124,19 @@ class TmpLogController {
 			'w2m_import_request_attachment_error',
 			/**
 			 * @param WP_Error $error
-			 * @param array $data
+			 * @param string $url
 			 */
-			function(WP_Error $error, $data ) use ( $logger ) {
+			function( WP_Error $error, $url ) use ( $logger ) {
 
 				$code = $error->get_error_code();
 				$msg  = $error->get_error_message( $code );
 
-				$logger->warning( $msg, $data );
+				$logger->warning(
+					$msg,
+					[
+						'remote_url' => $url
+					]
+				);
 
 			},
 			10,

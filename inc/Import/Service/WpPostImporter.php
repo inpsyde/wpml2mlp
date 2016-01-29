@@ -316,7 +316,7 @@ class WpPostImporter implements PostImporterInterface {
 		// fetch the remote url and write it to the placeholder file
 		$response = $this->http->request( $attachment_url, $upload[ 'file' ] );
 
-		if ( $response[ 'response' ][ 'code' ] != 200 || is_wp_error( $response ) ) {
+		if ( is_wp_error( $response ) || 200 !== (int) $response[ 'response' ][ 'code' ] ) {
 
 			if ( ! is_wp_error( $response ) )
 				$response = new WP_Error( 'http_request', $response );
