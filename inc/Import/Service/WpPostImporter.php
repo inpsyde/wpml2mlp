@@ -50,6 +50,20 @@ class WpPostImporter implements PostImporterInterface {
 		$local_parent_id = $this->id_mapper->local_id( 'post', $import_post->origin_parent_post_id() );
 		$local_user_id   = $this->id_mapper->local_id( 'user', $import_post->origin_author_id() );
 
+		/**
+		 * trigger action if local user id not solved
+		 */
+		if ( ! $local_user_id ) {
+
+			$error = new WP_Error( 'local_user_id_missing', "Local user is empty or 0." );
+
+			/**
+			 * @param WP_Post $wp_post
+			 * @param Type\ImportPostInterface $import_post
+			 */
+			do_action( 'w2m_import_missing_post_local_user_id', $error, $import_post );
+		}
+
 		$import_postdata = array(
 			'post_title'     => $import_post->title(),
 			'post_author'    => $local_user_id,
@@ -128,24 +142,6 @@ class WpPostImporter implements PostImporterInterface {
 			 * @param Type\ImportPostInterface $import_post
 			 */
 			do_action( 'w2m_import_missing_post_ancestor', $wp_post, $import_post );
-
-			return;
-		}
-
-		/**
-		 * trigger action if local user id not solved
-		 */
-		if ( empty( $local_user_id ) || $local_user_id == 0 ) {
-
-			$error = new WP_Error( 'local_user_id_missing', "Local user is empty or 0." );
-
-			/**
-			 * @param stdClass|WP_Post $wp_post
-			 * @param Type\ImportPostInterface $import_post
-			 */
-			do_action( 'w2m_import_missing_post_local_user_id', $error, $wp_post, $import_post );
-
-			return;
 		}
 
 		$taxonomies = array();
