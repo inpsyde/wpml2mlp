@@ -31,10 +31,6 @@ class WpPostParserTest extends Helper\MonkeyTestCase {
 	 */
 	public function test_parse_post_valid_item( SimpleXMLElement $item, Array $expected ) {
 
-		if ( ! empty( $expected[ 'post' ][ 'origin_attachment_url' ] ) ) {
-			$this->markTestSkipped( "Implement Type\\ImportPostInterface::origin_attachment_url first. See #41" );
-		}
-
 		Brain\Monkey::actions()
 			->expectFired( 'w2m_import_parse_post_error' )
 			->never();
@@ -132,6 +128,7 @@ class WpPostParserTest extends Helper\MonkeyTestCase {
 			'title'                 => 'This is the post title',
 			'guid'                  => 'http://wpml.to.mlp/?p=4736',
 			'date'                  => '2014-04-23 09:45:30',
+			'origin_author_id'      => 4,
 			'comment_status'        => 'open',
 			'ping_status'           => 'open',
 			'type'                  => 'post',
@@ -165,6 +162,7 @@ class WpPostParserTest extends Helper\MonkeyTestCase {
 		<wp:post_id>{$post[ 'origin_id' ]}</wp:post_id>
 		<wp:post_date><![CDATA[{$post[ 'date' ]}]]></wp:post_date>
 		<wp:post_date_gmt><![CDATA[{$post[ 'date' ]}]]></wp:post_date_gmt>
+		<wp:post_author><![CDATA[{$post[ 'origin_author_id' ]}]]></wp:post_author>
 		<wp:comment_status><![CDATA[{$post[ 'comment_status' ]}]]></wp:comment_status>
 		<wp:ping_status><![CDATA[{$post[ 'ping_status' ]}]]></wp:ping_status>
 		<wp:post_name><![CDATA[{$post[ 'name' ]}]]></wp:post_name>
@@ -243,6 +241,7 @@ XML;
 			'title'                 => 'hello-world-2.jpeg',
 			'guid'                  => 'http://wpml.to.mlp/wp-content/uploads/2013/10/hello-world-2.jpeg',
 			'date'                  => '2013-10-27 20:13:05',
+			'origin_author_id'      => 1,
 			'comment_status'        => 'open',
 			'ping_status'           => 'open',
 			'type'                  => 'attachment',
@@ -276,6 +275,7 @@ XML;
 			<wp:post_id>{$post['origin_id']}</wp:post_id>
 			<wp:post_date><![CDATA[]]></wp:post_date>
 			<wp:post_date_gmt><![CDATA[{$post['date']}]]></wp:post_date_gmt>
+			<wp:post_author><![CDATA[{$post[ 'origin_author_id' ]}]]></wp:post_author>
 			<wp:comment_status><![CDATA[{$post['comment_status']}]]></wp:comment_status>
 			<wp:ping_status><![CDATA[{$post['ping_status']}]]></wp:ping_status>
 			<wp:post_name><![CDATA[{$post['name']}]]></wp:post_name>
@@ -335,6 +335,7 @@ XML;
 			'title'                 => 'This is the post title',
 			'guid'                  => 'http://wpml.to.mlp/?p=4736',
 			'date'                  => '2014-04-23 09:45:30',
+			'origin_author_id'      => 655,
 			'comment_status'        => 'open',
 			'ping_status'           => 'open',
 			'type'                  => 'post',
@@ -363,6 +364,7 @@ XML;
 		<wp:post_id xmlns:wp="http://wordpress.org/export/1.2/">{$post[ 'origin_id' ]}</wp:post_id>
 		<wp:post_date xmlns:wp="http://wordpress.org/export/1.2/"><![CDATA[{$post[ 'date' ]}]]></wp:post_date>
 		<wp:post_date_gmt xmlns:wp="http://wordpress.org/export/1.2/"><![CDATA[{$post[ 'date' ]}]]></wp:post_date_gmt>
+		<wp:post_author xmlns:wp="http://wordpress.org/export/1.2/"><![CDATA[{$post[ 'origin_author_id' ]}]]></wp:post_author>
 		<wp:comment_status xmlns:wp="http://wordpress.org/export/1.2/"><![CDATA[{$post[ 'comment_status' ]}]]></wp:comment_status>
 		<wp:ping_status xmlns:wp="http://wordpress.org/export/1.2/"><![CDATA[{$post[ 'ping_status' ]}]]></wp:ping_status>
 		<wp:post_name xmlns:wp="http://wordpress.org/export/1.2/"><![CDATA[{$post[ 'name' ]}]]></wp:post_name>

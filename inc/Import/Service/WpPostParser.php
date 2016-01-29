@@ -120,6 +120,10 @@ class WpPostParser implements PostParserInterface {
 				// ImportPostInterface attribute name
 				'attribute' => 'origin_id',
 			),
+			'post_author' => array(
+				'cast' => $int_cast,
+				'attribute' => 'origin_author_id'
+			),
 			'comment_status' => array(
 				'cast' => $string_cast,
 				'attribute' => 'comment_status',
@@ -155,8 +159,13 @@ class WpPostParser implements PostParserInterface {
 			'is_sticky' => array(
 				'cast' => $bool_cast,
 				'attribute' => 'is_sticky',
+			),
+			'attachment_url' => array(
+				'cast' => $string_cast,
+				'attribute' => 'origin_attachment_url'
 			)
 		);
+		$missing_attributes = array();
 		foreach ( $wp_attributes as $node_name => $parameter ) {
 			$object_param_name = $parameter[ 'attribute' ];
 			$type_cast_cb = $parameter[ 'cast' ];
@@ -165,8 +174,15 @@ class WpPostParser implements PostParserInterface {
 				$post_data[ $object_param_name ] = $type_cast_cb( $wp->{$node_name} );
 			} else {
 				$post_data[ $object_param_name ] = $type_cast_cb( '' );
-				$this->missing_attribute_error( $document, "wp:{$node_name}" );
+				$missing_attributes[ $node_name ] = $node_name;
 			}
+		}
+		if ( 'attachment' !== $post_data[ 'type' ] && isset( $missing_attributes[ 'attachment_url' ] ) ) {
+			unset( $missing_attributes[ 'attachment_url' ] );
+		}
+
+		foreach ( $missing_attributes as $node_name ) {
+			$this->missing_attribute_error( $document, "wp:{$node_name}" );
 		}
 
 		if ( isset( $wp->post_date_gmt ) ) {
