@@ -148,7 +148,9 @@ class WpPostImporter implements PostImporterInterface {
 
 		foreach ( $import_post->terms() as $term ) {
 			/* @type Type\TermReferenceInterface $term */
-			$taxonomies[ $term->taxonomy() ][] = $term->origin_id();
+			$taxonomies[ $term->taxonomy() ][] = $this->id_mapper
+				->local_id( 'term',  $term->origin_id() );
+			// Todo: Trigger error when ID could not resolved
 		}
 
 		foreach ( $taxonomies as $taxonomy => $term_ids ) {
