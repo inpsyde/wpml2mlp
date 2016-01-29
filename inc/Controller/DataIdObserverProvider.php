@@ -42,7 +42,7 @@ class DataIdObserverProvider {
 	 */
 	public function register_id_observer() {
 
-		add_action( 'w2m_import_set_comment_id_id', [ $this->id_mapper, 'record_comment' ] );
+		add_action( 'w2m_import_set_comment_id', [ $this->id_mapper, 'record_comment' ] );
 		add_action( 'w2m_import_set_post_id', [ $this->id_mapper, 'record_post' ] );
 		add_action( 'w2m_import_set_term_id', [ $this->id_mapper, 'record_term' ] );
 		add_action( 'w2m_import_set_user_id', [ $this->id_mapper, 'record_user' ] );
