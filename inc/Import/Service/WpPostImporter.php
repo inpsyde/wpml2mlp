@@ -132,6 +132,22 @@ class WpPostImporter implements PostImporterInterface {
 			return;
 		}
 
+		/**
+		 * trigger action if local user id not solved
+		 */
+		if ( empty( $local_user_id ) || $local_user_id == 0 ) {
+
+			$error = new WP_Error( 'local_user_id_missing', "Local user is empty or 0." );
+
+			/**
+			 * @param stdClass|WP_Post $wp_post
+			 * @param Type\ImportPostInterface $import_post
+			 */
+			do_action( 'w2m_import_missing_post_local_user_id', $error, $wp_post, $import_post );
+
+			return;
+		}
+
 		$taxonomies = array();
 
 		foreach ( $import_post->terms() as $term ) {
