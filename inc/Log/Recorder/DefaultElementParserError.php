@@ -36,6 +36,6 @@ class DefaultElementParserError implements WpErrorRecorderInterface {
 		$code = $error->get_error_code();
 		$msg  = $error->get_error_message( $code );
 
-		$this->log->warning( $msg );
+		$this->log->warning( $msg, [ 'action' => current_filter() ] );
 	}
 }

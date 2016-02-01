@@ -78,7 +78,8 @@ class TmpLogController {
 					[
 						'local_post_id'  => $local_post_id,
 						'taxonomy'       => $taxonomy,
-						'local_term_ids' => $term_ids
+						'local_term_ids' => $term_ids,
+						'action'         => current_filter()
 					]
 				);
 			},
@@ -98,7 +99,14 @@ class TmpLogController {
 				$code = $error->get_error_code();
 				$msg  = $error->get_error_message( $code );
 
-				$logger->warning( $msg, [ 'local_post_id' => $local_post_id, 'meta_key' => $meta_key ] );
+				$logger->warning(
+					$msg,
+					[
+						'local_post_id' => $local_post_id,
+						'meta_key'      => $meta_key,
+						'action'        => current_filter()
+					]
+				);
 			},
 			10,
 			4
@@ -114,6 +122,7 @@ class TmpLogController {
 
 				$code = $error->get_error_code();
 				$msg  = $error->get_error_message( $code );
+				$data[ 'action' ] = current_filter();
 
 				$logger->warning( $msg, $data );
 			},
@@ -135,7 +144,8 @@ class TmpLogController {
 				$logger->warning(
 					$msg,
 					[
-						'remote_url' => $url
+						'remote_url' => $url,
+						'action'     => 'current_filter'
 					]
 				);
 
