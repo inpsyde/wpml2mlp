@@ -30,7 +30,7 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 	 * <FILE>
 	 * : Path to the WXR file
 	 *
-	 * @synopsis <FILE> --url=<url> [--no_confirm]
+	 * @synopsis <FILE> --url=<url> [--no_confirm] [--verbose]
 	 *
 	 * @param array $args
 	 * @param array $assoc_args
@@ -82,6 +82,9 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 
 		$log_setup->setup_handler();
 		$log_controller->register_log_recorder();
+		if ( isset( $assoc_args[ 'verbose' ] ) ) {
+			$log_controller->register_wp_cli_handler();
+		}
 
 		$import_id_mapper  = new Import\Data\ImportListeningTypeIdMapper;
 		$ancestor_mapper   = new Import\Data\ImportListeningMTAncestorList;
@@ -171,6 +174,8 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		$post_processor->process_elements();
 		WP_CLI::line( 'Importing comments …' );
 		$comment_processor->process_elements();
+
+		do_action( 'w2m_import_process_done' );
 
 		WP_CLI::success( "We're done. Thanks for choosing MultilingualPress." );
 	}

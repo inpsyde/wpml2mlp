@@ -3,6 +3,7 @@
 namespace W2M\Controller;
 
 use
+	W2M\Log\Handler,
 	W2M\Log\Recorder,
 	W2M\Import\Type,
 	WP_Error,
@@ -155,5 +156,14 @@ class TmpLogController {
 			10,
 			2
 		);
+	}
+
+	/**
+	 * setup handler to listen to
+	 */
+	public function register_wp_cli_handler() {
+
+		$handler = new Handler\WpCliHandler;
+		$this->logger->pushHandler( $handler );
 	}
 }
