@@ -84,11 +84,16 @@ class WpPostParserTest extends Helper\MonkeyTestCase {
 		}
 
 		// meta
+		$actual_meta = $result->meta();
 		$this->assertInternalType(
 			'array',
-			$result->meta()
+			$actual_meta
 		);
-		foreach ( $result->meta() as $meta ) {
+		$this->assertCount(
+			count( $expected[ 'meta' ] ),
+			$actual_meta
+		);
+		foreach ( $actual_meta as $meta ) {
 			$this->assertInstanceOf(
 				'W2M\Import\Type\ImportMetaInterface',
 				$meta
@@ -611,6 +616,10 @@ XML;
 
 		$this->assertInternalType(
 			'array',
+			$result
+		);
+		$this->assertCount(
+			count( $expected[ 'meta' ] ),
 			$result
 		);
 
