@@ -145,7 +145,7 @@ class TmpLogController {
 					$msg,
 					[
 						'remote_url' => $url,
-						'action'     => 'current_filter'
+						'action'     => current_filter()
 					]
 				);
 
