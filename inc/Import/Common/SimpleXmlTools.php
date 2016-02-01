@@ -15,7 +15,7 @@ class SimpleXmlTools {
 	 */
 	public function get_doc_namespace( SimpleXMLElement $document, $namespace ) {
 
-		$doc_ns = $document->getDocNamespaces();
+		$doc_ns = $document->getDocNamespaces( TRUE );
 
 		return isset( $doc_ns[ $namespace ] )
 			? $doc_ns[ $namespace ]
