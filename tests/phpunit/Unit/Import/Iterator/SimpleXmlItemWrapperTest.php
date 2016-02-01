@@ -54,10 +54,28 @@ XML;
 		$item_id = '1';
 		$item_title = 'Hello World';
 		$namespaces = [ 'wp' => 'urn:whatever' ];
+		$meta = [
+			[
+				'key' => '_edit_lock',
+				'value' => '1453111692:688'
+			],
+			[
+				'key' => '_edit_last',
+				'value' => '9'
+			]
+		];
 		$xml = <<<XML
 <wp:item xmlns:wp="{$namespaces[ 'wp' ]}">
 	<wp:id>{$item_id}</wp:id>
 	<wp:title>{$item_title}</wp:title>
+	<wp:postmeta>
+		<wp:meta_key><![CDATA[{$meta[ 0 ][ 'key' ]}]]></wp:meta_key>
+		<wp:meta_value><![CDATA[{$meta[ 0 ][ 'value' ]}]]></wp:meta_value>
+	</wp:postmeta>
+	<wp:postmeta>
+		<wp:meta_key><![CDATA[{$meta[ 1 ][ 'key' ]}]]></wp:meta_key>
+		<wp:meta_value><![CDATA[{$meta[ 1 ][ 'value' ]}]]></wp:meta_value>
+	</wp:postmeta>
 </wp:item>
 XML;
 		$node_iterator_mock = $this->getMock( 'Iterator' );
@@ -89,6 +107,17 @@ XML;
 			$item_title,
 			(string) $wp_items->item->title
 		);
+
+		foreach ( $meta as $index => $values ) {
+			$this->assertSame(
+				$values[ 'key' ],
+				(string) $wp_items->item->postmeta[ $index ]->meta_key
+			);
+			$this->assertSame(
+				$values[ 'value' ],
+				(string) $wp_items->item->postmeta[ $index ]->meta_value
+			);
+		}
 	}
 
 	public function test_current_with_invalid_xml() {
