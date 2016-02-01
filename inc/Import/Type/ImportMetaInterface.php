@@ -13,7 +13,7 @@ interface ImportMetaInterface {
 	 * If is_single() is FALSE, the method will always return an array
 	 * and it should considered as list of single post-meta values.
 	 *
-	 * @return mixed
+	 * @return array|scalar
 	 */
 	public function value();
 
