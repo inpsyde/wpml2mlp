@@ -49,17 +49,19 @@ class WpCommentImporterTest extends Helper\WpIntegrationTestCase {
 			'meta'                      => array( $commentmeta_mock )
 		);
 
-		$comment_id = 3;
+		$comment_id    = 3;
 		$new_parent_id = 15;
 		$new_author_id = 3;
+		$new_post_id   = 31;
 
 		$id_mapper_mock->expects( $this->atLeast( 2 ) )
 		               ->method( 'local_id' )
 		               ->withConsecutive(
 		                   array( 'comment', $commentdata[ 'origin_parent_comment_id' ] ),
-		                   array( 'user', $commentdata[ 'origin_user_id' ] )
+		                   array( 'user', $commentdata[ 'origin_user_id' ] ),
+		                   array( 'post', $commentdata[ 'origin_post_id' ] )
 		               )
-		               ->will( $this->onConsecutiveCalls( $new_parent_id, $new_author_id ) );
+		               ->will( $this->onConsecutiveCalls( $new_parent_id, $new_author_id, $new_post_id ) );
 
 		$comment = array(
 			'comment_author'        => $commentdata['author_name'],
@@ -72,7 +74,7 @@ class WpCommentImporterTest extends Helper\WpIntegrationTestCase {
 			'comment_approved'      => $commentdata['approved'],
 			'comment_agent'         => $commentdata['agent'],
 			'comment_type'          => $commentdata['type'],
-			'comment_post_ID'       => $commentdata['origin_post_id'],
+			'comment_post_ID'       => $new_post_id,
 			'comment_parent'        => $new_parent_id,
 		);
 

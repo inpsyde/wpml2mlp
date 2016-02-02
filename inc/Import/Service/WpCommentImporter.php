@@ -35,6 +35,7 @@ class WpCommentImporter implements CommentImporterInterface {
 
 		$local_parent_comment_id = $this->id_mapper->local_id( 'comment', $import_comment->origin_parent_comment_id() );
 		$local_user_id = $this->id_mapper->local_id( 'user', $import_comment->origin_user_id() );
+		$local_post_id = $this->id_mapper->local_id( 'post', $import_comment->origin_post_id() );
 
 		$comment_data = array(
 			'comment_author'        => $import_comment->author_name(),
@@ -47,7 +48,7 @@ class WpCommentImporter implements CommentImporterInterface {
 			'comment_approved'      => $import_comment->approved(),
 			'comment_agent'         => $import_comment->agent(),
 			'comment_type'          => $import_comment->type(),
-			'comment_post_ID'       => $import_comment->origin_post_id(),
+			'comment_post_ID'       => $local_post_id,
 			'comment_parent'        => $local_parent_comment_id,
 			'user_id'               => $local_user_id
 		);
