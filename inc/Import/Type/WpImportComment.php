@@ -311,7 +311,7 @@ class WpImportComment implements ImportCommentInterface {
 	}
 
 	/**
-	 * @return array
+	 * @return ImportMetaInterface[]
 	 */
 	public function meta() {
 

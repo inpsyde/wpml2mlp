@@ -35,7 +35,7 @@ interface ImportTermInterface extends ImportElementInterface {
 	public function origin_parent_term_id();
 
 	/**
-	 * @return array
+	 * @return LocaleRelationInterface[]
 	 */
 	public function locale_relations();
 }

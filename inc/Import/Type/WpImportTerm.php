@@ -183,7 +183,7 @@ class WpImportTerm implements ImportTermInterface {
 	}
 
 	/**
-	 * @return array
+	 * @return LocaleRelationInterface[]
 	 */
 	public function locale_relations() {
 

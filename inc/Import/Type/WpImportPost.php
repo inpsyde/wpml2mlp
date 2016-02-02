@@ -395,7 +395,7 @@ class WpImportPost implements ImportPostInterface {
 	}
 
 	/**
-	 * @return array (List of W2M\Import\Type\TermReferenceInterface)
+	 * @return TermReferenceInterface[]
 	 */
 	public function terms() {
 
@@ -403,7 +403,7 @@ class WpImportPost implements ImportPostInterface {
 	}
 
 	/**
-	 * @return array (List of W2M\Import\Type\ImportMetaInterface)
+	 * @return ImportMetaInterface[]
 	 */
 	public function meta() {
 
@@ -411,7 +411,7 @@ class WpImportPost implements ImportPostInterface {
 	}
 
 	/**
-	 * @return array
+	 * @return LocaleRelationInterface[]
 	 */
 	public function locale_relations() {
 

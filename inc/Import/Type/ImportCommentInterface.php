@@ -73,7 +73,7 @@ interface ImportCommentInterface extends ImportElementInterface {
 	public function origin_parent_comment_id();
 
 	/**
-	 * @return array
+	 * @return ImportMetaInterface[]
 	 */
 	public function meta();
 }

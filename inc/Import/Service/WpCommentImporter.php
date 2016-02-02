@@ -68,10 +68,8 @@ class WpCommentImporter implements CommentImporterInterface {
 		// notify the importComment object about the new id
 		$import_comment->id( $local_id );
 
-		/**
-		 * If metadata is provided, store it.
-		 * @var Type\ImportMetaInterface $meta
-		 **/
+
+		// If metadata is provided, store it.
 		foreach ( $import_comment->meta() as $meta ) {
 			add_comment_meta( $local_id, $meta->key(), $meta->value(), true );
 		}

@@ -147,7 +147,6 @@ class WpPostImporter implements PostImporterInterface {
 		$taxonomies = array();
 
 		foreach ( $import_post->terms() as $term ) {
-			/* @type Type\TermReferenceInterface $term */
 			$taxonomies[ $term->taxonomy() ][] = $this->id_mapper
 				->local_id( 'term',  $term->origin_id() );
 			// Todo: Trigger error when ID could not resolved
@@ -176,7 +175,6 @@ class WpPostImporter implements PostImporterInterface {
 		update_post_meta( $local_id, '_w2m_origin_link', $import_post->origin_link() );
 
 		foreach ( $import_post->meta() as $meta ) {
-			/* @var Type\ImportMetaInterface $meta */
 			if ( $meta->is_single() ) {
 				$update_post_meta_result = update_post_meta(
 					$local_id,

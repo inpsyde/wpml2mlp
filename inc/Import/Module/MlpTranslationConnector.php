@@ -75,7 +75,6 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 
 		$this->set_origin_post_id_meta( $import_post );
 
-		/* @var Type\LocaleRelationInterface $relation */
 		foreach ( $import_post->locale_relations() as $relation ) {
 			$blog_id = $this->get_blog_id_by_locale( $relation->locale() );
 			if ( ! $blog_id ) {
