@@ -5,6 +5,13 @@ namespace W2M\Test\Helper;
 use
 	W2M\Test;
 
+/**
+ * Class FileSystem
+ *
+ * Handles files relatively to the temporary directory
+ *
+ * @package W2M\Test\Helper
+ */
 class FileSystem {
 
 	/**
@@ -18,7 +25,7 @@ class FileSystem {
 	private $tmp_dir;
 
 	/**
-	 * @param string $test_dir Main test directory
+	 * @param string $test_dir (Deprecated)
 	 */
 	public function __construct( $test_dir = '' ) {
 
@@ -67,9 +74,25 @@ class FileSystem {
 	public function file_put_contents( $rel_file, $data, $flags = NULL, $context = NULL ) {
 
 		$rel_file = $this->sanitize_rel_path( $rel_file );
-		$file = $this->tmp_dir . "/$rel_file";
+		$file = $this->abs_path( $rel_file );
 
 		return file_put_contents( $file, $data, $flags, $context );
+	}
+
+	/**
+	 * @param $rel_file
+	 * @param null $flags
+	 * @param null $context
+	 * @param null $offset
+	 *
+	 * @return string
+	 */
+	public function file_get_contents( $rel_file, $flags = NULL, $context = NULL, $offset = NULL ) {
+
+		$rel_file = $this->sanitize_rel_path( $rel_file );
+		$file = $this->abs_path( $rel_file );
+
+		return file_get_contents( $file, $file, $context, $offset );
 	}
 
 	/**
