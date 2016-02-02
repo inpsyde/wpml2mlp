@@ -26,6 +26,19 @@ class MockBuilder {
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
+	public function common_file( Array $methods = array() ) {
+
+		return $this->mock_without_constructor(
+			'W2M\Import\Common\File',
+			$methods
+		);
+	}
+
+	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
 	public function common_wp_factory( Array $methods = array() ) {
 
 		return $this->mock_without_constructor(
@@ -43,6 +56,32 @@ class MockBuilder {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Data\MultiTypeIdMapperInterface',
+			$methods
+		);
+	}
+
+	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
+	public function data_multi_type_id_list( Array $methods = array() ) {
+
+		return $this->mock_without_constructor(
+			'W2M\Import\Data\MultiTypeIdListInterface',
+			$methods
+		);
+	}
+
+	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
+	public function data_xml_import_interface( Array $methods = array() ) {
+
+		return $this->mock_without_constructor(
+			'W2M\Import\Data\XmlImportInterface',
 			$methods
 		);
 	}
