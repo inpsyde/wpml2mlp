@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a6eedc683f308b624f0aee3fa57bee4d",
-    "content-hash": "5820f734ea878948803328d088ad49c1",
+    "hash": "14b83ca52e8a0e281c737f0ef38c4887",
+    "content-hash": "39b47259dbc1c19f89ed5b59fd2d8134",
     "packages": [
         {
             "name": "level-2/dice",
@@ -314,16 +314,16 @@
         },
         {
             "name": "inpsyde/wordpress-dev",
-            "version": "4.4.x-dev",
+            "version": "4.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/inpsyde/wordpress-dev.git",
-                "reference": "40d7b8e06f41ff11ec0dd0621c0fbd600363f941"
+                "reference": "16a88ed4104ea7c39bd718102c45ebf9350f1925"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/inpsyde/wordpress-dev/zipball/e43cf1dda675d7ca4daba3ef026ead911582578f",
-                "reference": "40d7b8e06f41ff11ec0dd0621c0fbd600363f941",
+                "url": "https://api.github.com/repos/inpsyde/wordpress-dev/zipball/16a88ed4104ea7c39bd718102c45ebf9350f1925",
+                "reference": "16a88ed4104ea7c39bd718102c45ebf9350f1925",
                 "shasum": ""
             },
             "require": {
@@ -347,7 +347,7 @@
                 "cms",
                 "wordpress"
             ],
-            "time": "2015-12-22 11:01:27"
+            "time": "2016-01-25 23:49:26"
         },
         {
             "name": "inpsyde/wp-tests-starter",
@@ -466,8 +466,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "level-2/dice": 20,
-        "inpsyde/wordpress-dev": 20
+        "level-2/dice": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
