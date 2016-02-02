@@ -37,6 +37,8 @@ class TermProcessor implements ElementProcessorInterface {
 	 */
 	public function process_elements() {
 
+		do_action( 'w2m_import_terms_start' );
+
 		while ( $this->iterator->valid() ) {
 			$import_term = $this->iterator->current();
 			if ( $import_term ) {

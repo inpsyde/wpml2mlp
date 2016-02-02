@@ -36,10 +36,13 @@ class PostProcessor implements ElementProcessorInterface {
 	 */
 	public function process_elements() {
 
+		do_action( 'w2m_import_posts_start' );
+
 		while ( $this->iterator->valid() ) {
 			$import_post = $this->iterator->current();
 			if ( $import_post ) {
-				$this->importer->import_post( $import_post );
+				if ( 'attachment' !== $import_post->type() )
+					$this->importer->import_post( $import_post );
 			}
 			$this->iterator->next();
 		}

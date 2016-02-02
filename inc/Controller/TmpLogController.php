@@ -7,6 +7,7 @@ use
 	W2M\Log\Recorder,
 	W2M\Import\Type,
 	WP_Error,
+	WP_CLI,
 	Monolog;
 
 /**
@@ -175,5 +176,26 @@ class TmpLogController {
 
 		$handler = new Handler\WpCliHandler;
 		$this->logger->pushHandler( $handler );
+	}
+
+	public function register_wp_cli_recorder() {
+
+		$type_start_recorder = function() {
+			$type = str_replace( 'w2m_import_', '', current_filter() );
+			$type = str_replace( '_start', '', $type );
+			$msg  = "Start importing {$type} …";
+			WP_CLI::line( $msg );
+		};
+		$types = [ 'users', 'terms', 'posts', 'comments' ];
+		foreach ( $types as $type ) {
+			add_action( "w2m_import_{$type}_start", $type_start_recorder );
+		}
+
+		add_action(
+			"w2m_import_process_done",
+			function() {
+				WP_CLI::success( "We're done. Thanks for choosing MultilingualPress." );
+			}
+		);
 	}
 }

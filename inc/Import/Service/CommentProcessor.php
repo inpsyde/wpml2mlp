@@ -37,6 +37,8 @@ class CommentProcessor implements ElementProcessorInterface {
 	 */
 	public function process_elements() {
 
+		do_action( 'w2m_import_comments_start' );
+
 		while ( $this->iterator->valid() ) {
 			$import_comment = $this->iterator->current();
 			if ( $import_comment ) {

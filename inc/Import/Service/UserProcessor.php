@@ -37,6 +37,8 @@ class UserProcessor implements ElementProcessorInterface {
 	 */
 	public function process_elements() {
 
+		do_action( 'w2m_import_users_start' );
+
 		while ( $this->iterator->valid() ) {
 			$import_user = $this->iterator->current();
 			if ( $import_user ) {

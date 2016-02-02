@@ -3,9 +3,9 @@
 namespace W2M\Cli;
 
 use
-	W2M\System,
 	W2M\Controller,
 	W2M\Import,
+	W2M\System,
 	WP_CLI,
 	WP_CLI_Command,
 	WP_Error,
@@ -82,6 +82,7 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 
 		$log_setup->setup_handler();
 		$log_controller->register_log_recorder();
+		$log_controller->register_wp_cli_recorder();
 		if ( isset( $assoc_args[ 'verbose' ] ) ) {
 			$log_controller->register_wp_cli_handler();
 		}
@@ -162,22 +163,16 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 			new Import\Service\WpCommentImporter( $import_id_mapper )
 		);
 
-		/**
-		 * Let's go
-		 */
-		WP_CLI::line( 'Start import …' );
-		WP_CLI::line( 'Importing users …' );
-		$user_processor->process_elements();
-		WP_CLI::line( 'Importing terms …' );
-		$term_processor->process_elements();
-		WP_CLI::line( 'Importing posts …' );
-		$post_processor->process_elements();
-		WP_CLI::line( 'Importing comments …' );
-		$comment_processor->process_elements();
+		$importer = new Import\Module\ElementImporter(
+			[
+				$user_processor,
+				$term_processor,
+				$post_processor,
+				$comment_processor
+			]
+		);
+		$importer->process_elements();
 
-		do_action( 'w2m_import_process_done' );
-
-		WP_CLI::success( "We're done. Thanks for choosing MultilingualPress." );
 	}
 
 	/**
