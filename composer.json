@@ -34,8 +34,8 @@
     }
   },
   "require-dev": {
-    "inpsyde/wp-tests-starter": "^1.0",
     "inpsyde/wordpress-dev": "4.4.x-dev",
-    "brain/monkey": "~1.2"
+    "brain/monkey": "~1.2",
+    "inpsyde/wp-tests-starter": "~1.0"
   }
 }

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "09ab5699a303cb4569a5168d7efddbee",
-    "content-hash": "b7f383471d8b6689293d2dc88ea244c5",
+    "hash": "a6eedc683f308b624f0aee3fa57bee4d",
+    "content-hash": "5820f734ea878948803328d088ad49c1",
     "packages": [
         {
             "name": "level-2/dice",
@@ -322,7 +322,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/inpsyde/wordpress-dev/zipball/0c7f0fe0fc11d0ca2a01206033bebd3d7284f739",
+                "url": "https://api.github.com/repos/inpsyde/wordpress-dev/zipball/e43cf1dda675d7ca4daba3ef026ead911582578f",
                 "reference": "40d7b8e06f41ff11ec0dd0621c0fbd600363f941",
                 "shasum": ""
             },
@@ -351,16 +351,16 @@
         },
         {
             "name": "inpsyde/wp-tests-starter",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/inpsyde/WP-Tests-Starter.git",
-                "reference": "c57efe23eea8095ae6704b2f7a6366fc23e12427"
+                "reference": "c585234a96109dbb7708bd34abfd64542bb07f01"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/inpsyde/WP-Tests-Starter/zipball/c57efe23eea8095ae6704b2f7a6366fc23e12427",
-                "reference": "c57efe23eea8095ae6704b2f7a6366fc23e12427",
+                "url": "https://api.github.com/repos/inpsyde/WP-Tests-Starter/zipball/c585234a96109dbb7708bd34abfd64542bb07f01",
+                "reference": "c585234a96109dbb7708bd34abfd64542bb07f01",
                 "shasum": ""
             },
             "require": {
@@ -389,13 +389,13 @@
                     "role": "Developer"
                 }
             ],
-            "description": "A package that helps you setting up WordPress integration test environment quickly.",
+            "description": "A package that helps you setting up WordPress integration test environments quickly.",
             "keywords": [
                 "integration tests",
                 "tests",
                 "wordpress"
             ],
-            "time": "2015-11-17 15:49:50"
+            "time": "2016-01-27 23:05:52"
         },
         {
             "name": "mockery/mockery",
@@ -472,7 +472,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">5.4.0"
+        "php": ">=5.4.0"
     },
     "platform-dev": []
 }
