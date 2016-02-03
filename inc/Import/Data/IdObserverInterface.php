@@ -38,7 +38,7 @@ interface IdObserverInterface {
 	 *
 	 * @param Type\ImportTermInterface $import_term
 	 *
-	 * @return
+	 * @return void
 	 */
 	public function record_term( Type\ImportTermInterface $import_term );
 
