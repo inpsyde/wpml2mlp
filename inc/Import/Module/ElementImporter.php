@@ -48,8 +48,6 @@ class ElementImporter implements Service\ElementProcessorInterface {
 		foreach ( $this->processors as $processor ) {
 			$processor->process_elements();
 		}
-
-		do_action( 'w2m_import_process_done' );
 	}
 
 }

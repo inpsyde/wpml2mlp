@@ -9,7 +9,8 @@ use
 	WP_CLI,
 	WP_CLI_Command,
 	WP_Error,
-	Monolog;
+	Monolog,
+	DateTime;
 
 /**
  * Manages migration from WPML to MultilingualPress
@@ -30,7 +31,7 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 	 * <FILE>
 	 * : Path to the WXR file
 	 *
-	 * @synopsis <FILE> --url=<url> [--no_confirm] [--verbose]
+	 * @synopsis <FILE> --url=<url> [--no_confirm] [--verbose] [--map_file=<FILE>]
 	 *
 	 * @param array $args
 	 * @param array $assoc_args
@@ -76,6 +77,9 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 
 		//Todo: use DI-Container ASAP
 
+		/**
+		 * Logging
+		 */
 		$logger         = new Monolog\Logger( 'w2m-import' );
 		$log_setup      = new System\LoggerSetup( $logger, $log_dir, 'w2m-import.log' );
 		$log_controller = new Controller\TmpLogController( $logger );
@@ -87,6 +91,9 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 			$log_controller->register_wp_cli_handler();
 		}
 
+		/**
+		 * ID mapping
+		 */
 		$import_id_mapper  = new Import\Data\ImportListeningTypeIdMapper;
 		$ancestor_mapper   = new Import\Data\ImportListeningMTAncestorList;
 		$mapper_controller = new Controller\DataIdObserverProvider(
@@ -94,6 +101,14 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 			$ancestor_mapper
 		);
 		$mapper_controller->register_id_observer();
+
+		/**
+		 * Import reporting
+		 */
+		$import_info = new Import\Data\XmlImportInfo( $import_file, $blog_id, new DateTime );
+		$report_file = new Import\Common\File( $log_dir . '/w2m-import-report-' . time() . '.json' );
+		$reporter    = new Import\Module\JsonXmlImportReport( $import_id_mapper, $report_file );
+		add_action( 'w2m_import_process_done', [ $reporter, 'create_report' ] );
 
 		/**
 		 * Users
@@ -172,6 +187,11 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 			]
 		);
 		$importer->process_elements();
+
+		/**
+		 * @param Import\Data\XmlImportInterface $import_info
+		 */
+		do_action( 'w2m_import_process_done', $import_info );
 
 	}
 
