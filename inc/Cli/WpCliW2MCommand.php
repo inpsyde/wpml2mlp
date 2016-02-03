@@ -124,6 +124,26 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		$mapper_controller->register_id_observer();
 
 		/**
+		 * Translation linking
+		 */
+		// Todo: Find a better way to catch this API instance
+		$mlp_content_relations_api  = new \Mlp_Content_Relations(
+			$GLOBALS[ 'wpdb' ],
+			new \Mlp_Site_Relations( $GLOBALS[ 'wpdb' ], 'mlp_site_relations' ),
+			new \Mlp_Db_Table_Name(
+				$GLOBALS[ 'wpdb' ]->base_prefix . 'multilingual_linked',
+				new \Mlp_Db_Table_List( $GLOBALS[ 'wpdb' ] )
+			)
+		);
+		$mlp_translation_connector = new Import\Module\MlpTranslationConnector(
+			$mlp_content_relations_api,
+			$import_id_mapper
+		);
+		$connector_provider = new Controller\TranslationConnectorProvider( $mlp_translation_connector );
+		$connector_provider->register_connector();
+
+
+		/**
 		 * Import reporting
 		 */
 		$import_info = new Import\Data\XmlImportInfo( $import_file, $blog_id, new DateTime );
