@@ -37,11 +37,12 @@ class JsonXmlImportReport implements XmlImportReporterInterface {
 	 */
 	public function create_report( Data\XmlImportInterface $import ) {
 
-		$runtime = $import->start_date()->diff( new DateTime );
+		$runtime = time() - $import->start_date()->getTimestamp();
+
 		$report  = (object) [
 			'name'        => 'WPML to MLP XML import report',
 			'date'        => $import->start_date()->format( DateTime::W3C ),
-			'runtime'     => $runtime->format( 's \s'),
+			'runtime'     => "{$runtime}s",
 			'import_file' => $import->import_file(),
 			'map_file'    => $import->map_file(),
 			'maps'        => (object) [

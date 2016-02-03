@@ -73,6 +73,10 @@ class JsonXmlImportReportTest extends Helper\MonkeyTestCase {
 			$data[ 'start_date' ]->format( DateTime::W3C ),
 			$result->date
 		);
+		$this->assertRegExp(
+			'~\d+s~',
+			$result->runtime
+		);
 
 		$this->assertSame(
 			$data[ 'maps' ][ 'comments' ],
