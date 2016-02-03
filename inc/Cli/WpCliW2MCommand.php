@@ -52,12 +52,15 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		}
 
 		$map_file = '';
+		$report   = NULL;
 		if ( isset( $assoc_args[ 'map_file' ] ) ) {
 			$map_file = realpath( $assoc_args[ 'map_file' ] );
 			if ( ! is_file( $map_file ) || ! is_readable( $map_file ) ) {
 				$this->handle_error( new WP_Error( 'parameter', 'Map file does not exist or is not readable.' ) );
 				exit;
 			}
+			// Todo: Implement proper Type object and parser
+			$report = json_decode( file_get_contents( $map_file ) );
 		}
 
 		$env = new System\ImportEnvironment;
@@ -105,7 +108,14 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		/**
 		 * ID mapping
 		 */
-		$import_id_mapper  = new Import\Data\ImportListeningTypeIdMapper;
+		$import_id_mapper = new Import\Data\ImportListeningTypeIdMapper;
+		if ( $report ) {
+			$user_map = get_object_vars( $report->maps->users );
+			$import_id_mapper = new Import\Data\PresetUserTypeIdMapper(
+				$import_id_mapper,
+				$user_map
+			);
+		}
 		$ancestor_mapper   = new Import\Data\ImportListeningMTAncestorList;
 		$mapper_controller = new Controller\DataIdObserverProvider(
 			$import_id_mapper,
@@ -189,14 +199,17 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 			new Import\Service\WpCommentImporter( $import_id_mapper )
 		);
 
-		$importer = new Import\Module\ElementImporter(
-			[
-				$user_processor,
-				$term_processor,
-				$post_processor,
-				$comment_processor
-			]
-		);
+		$processors = [
+			$user_processor,
+			$term_processor,
+			$post_processor,
+			$comment_processor
+		];
+		if ( $report ) {
+			// if we have a map of user_ids, skip the user import
+			array_shift( $processors );
+		}
+		$importer = new Import\Module\ElementImporter( $processors );
 		$importer->process_elements();
 
 		/**
