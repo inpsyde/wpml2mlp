@@ -26,6 +26,8 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 	 * Example: If you exported all spanish content (es_ES) to ~/my-site-es_ES.xml and want to import it
 	 * to my-site.es use `wp w2m import ~/my-site-es_ES.xml --url=my-site.es
 	 *
+	 * When a map file (--map_file=<FILE>) is provided, user-import will be skipped
+	 *
 	 * ## Options
 	 *
 	 * <FILE>
@@ -47,6 +49,15 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		if ( ! is_file( $import_file ) || ! is_readable( $import_file ) ) {
 			$this->handle_error( new WP_Error( 'parameter', 'Import file does not exist or is not readable.' ) );
 			exit;
+		}
+
+		$map_file = '';
+		if ( isset( $assoc_args[ 'map_file' ] ) ) {
+			$map_file = realpath( $assoc_args[ 'map_file' ] );
+			if ( ! is_file( $map_file ) || ! is_readable( $map_file ) ) {
+				$this->handle_error( new WP_Error( 'parameter', 'Map file does not exist or is not readable.' ) );
+				exit;
+			}
 		}
 
 		$env = new System\ImportEnvironment;
