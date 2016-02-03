@@ -41,8 +41,7 @@ class PostProcessor implements ElementProcessorInterface {
 		while ( $this->iterator->valid() ) {
 			$import_post = $this->iterator->current();
 			if ( $import_post ) {
-				if ( 'attachment' !== $import_post->type() )
-					$this->importer->import_post( $import_post );
+				$this->importer->import_post( $import_post );
 			}
 			$this->iterator->next();
 		}
