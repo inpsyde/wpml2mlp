@@ -25,11 +25,11 @@ class DataIdObserverProvider {
 	private $unresolved_ancestor_mapper;
 
 	/**
-	 * @param Data\ImportListeningTypeIdMapper $id_mapper
+	 * @param Data\IdObserverInterface $id_mapper
 	 * @param Data\ImportListeningMTAncestorList $unresolved_ancestor_list
 	 */
 	public function __construct(
-		Data\ImportListeningTypeIdMapper $id_mapper,
+		Data\IdObserverInterface $id_mapper,
 		Data\ImportListeningMTAncestorList $unresolved_ancestor_list
 	) {
 
