@@ -17,6 +17,8 @@ use
  *
  * Todo: consider a better name for this. Maybe `UnresolvedAncestorRelations`
  *
+ * Todo: Specify an interface for the record methods
+ *
  * @package W2M\Import\Data
  */
 class ImportListeningMTAncestorList implements MultiTypeAncestorRelationListInterface {
