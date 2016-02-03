@@ -73,14 +73,23 @@ class JsonXmlImportReportTest extends Helper\MonkeyTestCase {
 			$data[ 'start_date' ]->format( DateTime::W3C ),
 			$result->date
 		);
-		$this->markTestIncomplete( 'Under Construction' );
 
-		/**
-		 * This fails for some reasons. Obviously the type transition is not consistent
-		 */
 		$this->assertSame(
 			$data[ 'maps' ][ 'comments' ],
-			(array) $result->maps->comments
+			// It's important to use get_object_vars() here, an (array)-cast will produce string type array keys
+			get_object_vars( $result->maps->comments)
+		);
+		$this->assertSame(
+			$data[ 'maps' ][ 'posts' ],
+			get_object_vars( $result->maps->posts )
+		);
+		$this->assertSame(
+			$data[ 'maps' ][ 'terms' ],
+			get_object_vars( $result->maps->terms )
+		);
+		$this->assertSame(
+			$data[ 'maps' ][ 'users' ],
+			get_object_vars( $result->maps->users )
 		);
 	}
 
