@@ -60,6 +60,9 @@ class TmpLogController {
 		add_action( 'w2m_post_imported', [ new Recorder\PostImportedRecorder( $this->logger ), 'record' ], 10, 2 );
 		add_action( 'w2m_comment_imported', [ new Recorder\CommentImportedRecorder( $this->logger ), 'record' ], 10, 2 );
 
+		$mlp_connector_recorder = new Recorder\MlpLinkErrorRecorder( $this->logger );
+		add_action( 'w2m_import_mlp_link_error', [ $mlp_connector_recorder, 'record' ] );
+
 		$logger = $this->logger;
 		add_action(
 			'w2m_import_set_post_terms_error',
