@@ -74,23 +74,55 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 	public function link_post( WP_Post $wp_post, Type\ImportPostInterface $import_post ) {
 
 		$this->set_origin_post_id_meta( $import_post );
+		$current_blog_id = get_current_blog_id();
 
 		foreach ( $import_post->locale_relations() as $relation ) {
-			$blog_id = $this->get_blog_id_by_locale( $relation->locale() );
-			if ( ! $blog_id ) {
+			$remote_blog_id = $this->get_blog_id_by_locale( $relation->locale() );
+
+			if ( ! $remote_blog_id ) {
 				$this->trigger_missing_blog_error( $import_post, $relation );
 				continue;
 			}
-			$remote_post_id = $this->get_remote_post_id( $blog_id, $relation );
-			if ( ! $remote_post_id ) {
-				$this->trigger_missing_remote_post( $import_post, $relation );
+			if ( $current_blog_id === $remote_blog_id ) {
 				continue;
 			}
-			$this->mlp_content_relations->set_relation(
-				get_current_blog_id(),
-				$blog_id,
+
+			$remote_post_id = $this->get_remote_post_id( $remote_blog_id, $relation );
+			if ( ! $remote_post_id ) {
+				$this->trigger_missing_remote_post_error( $import_post, $relation );
+				continue;
+			}
+
+			$success = $this->mlp_content_relations->set_relation(
+				$current_blog_id,
+				$remote_blog_id,
 				$import_post->id(),
-				$remote_post_id
+				$remote_post_id,
+				'post'
+			);
+			/**
+			 * Note: Work in progress, signature is abotu to change
+			 *
+			 * @param array {
+			 *      Type\ImportElementInterface $import_element
+			 *      Type\LocaleRelationInterface $relation
+			 *      int $blog_id
+			 *      int $remote_post_id
+			 *      int $current_blog_id
+			 *      bool $success
+			 *      string $type
+			 */
+			do_action(
+				'w2m_import_mlp_linked',
+				[
+					'import_element'    => $import_post,
+					'relation'          => $relation,
+					'remote_blog_id'    => $remote_blog_id,
+					'remote_element_id' => $remote_post_id,
+					'blog_id'           => $current_blog_id,
+					'success'           => $success,
+					'type'              => 'post'
+				]
 			);
 		}
 	}
@@ -194,7 +226,7 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 	 * @param Type\ImportElementInterface $import_element
 	 * @param Type\LocaleRelationInterface $locale_relation
 	 */
-	private function trigger_missing_remote_post(
+	private function trigger_missing_remote_post_error(
 		Type\ImportElementInterface $import_element,
 		Type\LocaleRelationInterface $locale_relation
 	) {

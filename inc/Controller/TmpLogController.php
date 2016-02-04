@@ -170,6 +170,23 @@ class TmpLogController {
 			10,
 			2
 		);
+
+		add_action(
+			'w2m_import_mlp_linked',
+			function( $info ) use ( $logger ) {
+				$this->logger->debug(
+					"Linked {$info[ 'type' ]} translation",
+					[
+						'element_id'        => $info[ 'import_element' ]->id(),
+						'blog_id'           => $info[ 'blog_id' ],
+						'remote_locale'     => $info[ 'relation' ]->locale(),
+						'remote_element_id' => $info[ 'remote_element_id' ],
+						'remote_blog_id'    => $info[ 'remote_blog_id' ],
+						'success'           => $info[ 'success' ]
+					]
+				);
+			}
+		);
 	}
 
 	/**
