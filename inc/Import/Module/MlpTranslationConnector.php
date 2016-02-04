@@ -164,11 +164,11 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 	/**
 	 * Propagate an error that there was no blog for a given locale
 	 *
-	 * @param Type\ImportPostInterface $import_post
+	 * @param Type\ImportElementInterface $import_element
 	 * @param Type\LocaleRelationInterface $locale_relation
 	 */
 	private function trigger_missing_blog_error(
-		Type\ImportPostInterface $import_post,
+		Type\ImportElementInterface $import_element,
 		Type\LocaleRelationInterface $locale_relation
 	) {
 
@@ -180,7 +180,7 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 			array (
 				'data' => array(
 					'locale_relation' => $locale_relation,
-					'import_post' => $import_post
+					'import_element'  => $import_element
 				)
 			),
 			'locale'
@@ -191,11 +191,11 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 	/**
 	 * Propagate an error that there was no blog for a given locale
 	 *
-	 * @param Type\ImportPostInterface $import_post
+	 * @param Type\ImportElementInterface $import_element
 	 * @param Type\LocaleRelationInterface $locale_relation
 	 */
 	private function trigger_missing_remote_post(
-		Type\ImportPostInterface $import_post,
+		Type\ImportElementInterface $import_element,
 		Type\LocaleRelationInterface $locale_relation
 	) {
 
@@ -207,7 +207,7 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 			array (
 				'data' => array(
 					'locale_relation' => $locale_relation,
-					'import_post' => $import_post
+					'import_element'  => $import_element
 				)
 			),
 			'post'
