@@ -187,6 +187,18 @@ class TmpLogController {
 				);
 			}
 		);
+
+		$mlp_logger = new Monolog\Logger(
+			'mlp_debug',
+			$this->logger->getHandlers(),
+			$this->logger->getProcessors()
+		);
+		add_action(
+			'mlp_debug',
+			function( $msg ) use ( $mlp_logger ) {
+				$mlp_logger->debug( $msg );
+			}
+		);
 	}
 
 	/**
