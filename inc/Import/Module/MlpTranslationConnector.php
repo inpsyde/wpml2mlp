@@ -101,7 +101,7 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 				'post'
 			);
 			/**
-			 * Note: Work in progress, signature is abotu to change
+			 * Note: Work in progress, signature is about to change
 			 *
 			 * @param array {
 			 *      Type\ImportElementInterface $import_element
