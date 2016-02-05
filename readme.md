@@ -93,6 +93,11 @@ Use the installer via back-end of your install or ...
 
 * `w2m_import_post_ancestor_resolver_error` in `W2M\Import\Service\PostAncestorResolver::propagate_error()`
 * `w2m_import_post_ancestor_resolved` in `W2M\Import\Service\PostAncestorResolver::resolve_relation()`
+* `w2m_import_term_ancestor_resolver_error` in `W2M\Import\Service\TermAncestorResolver::propagate_error()`
+* `w2m_import_term_ancestor_resolved` in `W2M\Import\Service\TermAncestorResolver::resolve_relation()`
+* `w2m_import_post_ancestor_resolving_start` in `W2M\Import\Module\ResolvingPendingRelations::resolving_posts()`
+* `w2m_import_term_ancestor_resolving_start` in `W2M\Import\Module\ResolvingPendingRelations::resolving_terms()`
+
 
 ## Other Notes
 
