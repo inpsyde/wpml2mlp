@@ -51,7 +51,6 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 			exit;
 		}
 
-		$map_file = '';
 		$report   = NULL;
 		if ( isset( $assoc_args[ 'map_file' ] ) ) {
 			$map_file = realpath( $assoc_args[ 'map_file' ] );
@@ -142,6 +141,16 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		$connector_provider = new Controller\TranslationConnectorProvider( $mlp_translation_connector );
 		$connector_provider->register_connector();
 
+		/**
+		 * pending relations resolving
+		 */
+		$resolver = new Import\Module\ResolvingPendingRelations(
+			$ancestor_mapper,
+			new Import\Service\PostAncestorResolver( $import_id_mapper ),
+			new Import\Service\TermAncestorResolver( $import_id_mapper )
+		);
+		$resolver_provider = new Controller\PendingRelationResolverProvider( $resolver );
+		$resolver_provider->register_resolver();
 
 		/**
 		 * Import reporting
