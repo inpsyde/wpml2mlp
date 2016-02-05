@@ -230,6 +230,12 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 			array_shift( $processors );
 		}
 		$importer = new Import\Module\ElementImporter( $processors );
+
+		/**
+		 * @param Import\Data\XmlImportInterface $import_info
+		 */
+		do_action( 'w2m_import_xml_start_process', $import_info );
+
 		$importer->process_elements();
 
 		/**

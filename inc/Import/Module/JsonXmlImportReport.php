@@ -55,6 +55,11 @@ class JsonXmlImportReport implements XmlImportReporterInterface {
 
 		$report = json_encode( $report, JSON_PRETTY_PRINT );
 		$this->file->set_content( $report );
+
+		/**
+		 * @param Common\FileInterface $this->file
+		 */
+		do_action( 'w2m_import_json_report_created', $this->file );
 	}
 
 }

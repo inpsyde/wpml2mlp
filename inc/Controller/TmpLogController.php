@@ -3,9 +3,11 @@
 namespace W2M\Controller;
 
 use
+	W2M\Import\Common,
+	W2M\Import\Data,
+	W2M\Import\Type,
 	W2M\Log\Handler,
 	W2M\Log\Recorder,
-	W2M\Import\Type,
 	WP_Error,
 	WP_CLI,
 	Monolog;
@@ -197,6 +199,34 @@ class TmpLogController {
 			'mlp_debug',
 			function( $msg ) use ( $mlp_logger ) {
 				$mlp_logger->debug( $msg );
+			}
+		);
+
+		add_action(
+			'w2m_import_json_report_created',
+			/**
+			 * @param Common\FileInterface $file
+			 */
+			function( $file ) use ( $logger ) {
+
+				$filename = basename( $file->name() );
+				$this->logger->info( "Created report file {$filename}" );
+			}
+		);
+
+		add_action(
+			'w2m_import_xml_start_process',
+			/**
+			 * @param Data\XmlImportInterface $import
+			 */
+			function( $import ) use ( $logger ) {
+				$this->logger->info(
+					"Start import",
+					[
+						'import_file' => basename( $import->import_file() ),
+						//Todo: add blog_id via $import
+					]
+				);
 			}
 		);
 	}
