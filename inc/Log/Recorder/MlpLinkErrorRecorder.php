@@ -30,7 +30,7 @@ class MlpLinkErrorRecorder implements WpErrorRecorderInterface {
 		$code = $error->get_error_code();
 		$data = $error->get_error_data( $code );
 
-		$this->logger->warning(
+		$this->logger->notice(
 			$error->get_error_message( $code ),
 			[
 				'origin_id' => $data[ 'data' ][ 'locale_relation' ]->origin_id(),
