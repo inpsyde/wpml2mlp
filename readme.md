@@ -91,6 +91,9 @@ Use the installer via back-end of your install or ...
 
 * `w2m_import_process_done` in `W2M\Import\Module\ElementImporter::process_elements()`
 
+* `w2m_import_post_ancestor_resolver_error` in `W2M\Import\Service\PostAncestorResolver::propagate_error()`
+* `w2m_import_post_ancestor_resolved` in `W2M\Import\Service\PostAncestorResolver::resolve_relation()`
+
 ## Other Notes
 
 ### Made by [Inpsyde](http://inpsyde.com) &middot; We love WordPress
