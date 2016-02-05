@@ -57,6 +57,10 @@ class TmpLogController {
 		add_action( 'w2m_import_missing_post_ancestor', [ $missing_ancestor_recorder, 'record' ], 10, 2 );
 		add_action( 'w2m_import_missing_comment_ancestor', [ $missing_ancestor_recorder, 'record' ], 10, 2 );
 
+		$resolver_error_recorder = new Recorder\ResolverErrorRecorder( $this->logger );
+		add_action( 'w2m_import_post_ancestor_resolver_error', [ $resolver_error_recorder, 'record' ] );
+		add_action( 'w2m_import_term_ancestor_resolver_error', [ $resolver_error_recorder, 'record' ] );
+
 		add_action( 'w2m_user_imported', [ new Recorder\UserImportedRecorder( $this->logger ), 'record' ], 10, 2 );
 		add_action( 'w2m_term_imported', [ new Recorder\TermImportedRecorder( $this->logger ), 'record' ], 10, 2 );
 		add_action( 'w2m_post_imported', [ new Recorder\PostImportedRecorder( $this->logger ), 'record' ], 10, 2 );
@@ -227,6 +231,20 @@ class TmpLogController {
 						//Todo: add blog_id via $import
 					]
 				);
+			}
+		);
+
+		add_action(
+			'w2m_import_post_ancestor_resolving_start',
+			function() use ( $logger ) {
+				$logger->info( 'Resolving pending post ancestor relations' );
+			}
+		);
+
+		add_action(
+			'w2m_import_term_ancestor_resolving_start',
+			function() use ( $logger ) {
+				$logger->info( 'Resolving pending term ancestor relations' );
 			}
 		);
 	}
