@@ -44,7 +44,7 @@ class ImportListeningMTAncestorList implements MultiTypeAncestorRelationListInte
 	/**
 	 * @param string $type ('post'|'term')
 	 *
-	 * @return array (List of Type\AncestorRelationInterface with **origin_ids**!)
+	 * @return Type\AncestorRelationInterface[] (Referring to origin_ids!)
 	 */
 	public function relations( $type ) {
 
@@ -109,9 +109,10 @@ class ImportListeningMTAncestorList implements MultiTypeAncestorRelationListInte
 
 		$relation = new Type\AncestorRelation(
 			$import_term->origin_parent_term_id(),
-			$import_term->origin_id()
+			$import_term->origin_id(),
+			$wp_term->taxonomy
 		);
-		$key      = "{$import_term->origin_parent_term_id()}:{$import_term->origin_id()}";
+		$key      = "{$import_term->origin_parent_term_id()}:{$import_term->origin_id()}:{$wp_term->taxonomy}";
 
 		$this->relations[ 'term' ][ $key ] = $relation;
 	}
