@@ -20,6 +20,14 @@ class File implements FileInterface {
 	/**
 	 * @return string
 	 */
+	public function name() {
+
+		return $this->file;
+	}
+
+	/**
+	 * @return string
+	 */
 	public function get_content() {
 
 		return file_get_contents( $this->file );

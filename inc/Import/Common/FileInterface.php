@@ -7,6 +7,11 @@ interface FileInterface {
 	/**
 	 * @return string
 	 */
+	public function name();
+
+	/**
+	 * @return string
+	 */
 	public function get_content();
 
 	/**
