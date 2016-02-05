@@ -29,15 +29,17 @@ class PostAncestorResolver implements RelationResolverInterface {
 
 	/**
 	 * @param Data\MultiTypeIdMapperInterface $id_mapper
-	 * @param Common\WpFactoryInterface $factory
+	 * @param Common\WpFactoryInterface $factory (Optional)
 	 */
 	function __construct(
 		Data\MultiTypeIdMapperInterface $id_mapper,
-		Common\WpFactoryInterface $factory
+		Common\WpFactoryInterface $factory = NULL
 	) {
 
-		$this->factory   = $factory;
 		$this->id_mapper = $id_mapper;
+		$this->factory   = $factory
+			? $factory
+			: new Common\WpFactory;
 	}
 
 	/**
