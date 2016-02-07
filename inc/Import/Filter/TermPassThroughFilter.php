@@ -16,7 +16,7 @@ class TermPassThroughFilter implements TermImportFilterInterface {
 	 */
 	public function term_to_import( Type\ImportTermInterface $import_term ) {
 
-		TRUE;
+		return TRUE;
 	}
 
 }
