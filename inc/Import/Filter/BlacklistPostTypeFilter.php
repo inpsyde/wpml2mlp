@@ -44,7 +44,7 @@ class BlacklistPostTypeFilter implements PostImportFilterInterface {
 	 */
 	public function post_to_import( Type\ImportPostInterface $import_post ) {
 
-		if ( ! in_array( $import_post->type(), $this->blacklist ) )
+		if ( in_array( $import_post->type(), $this->blacklist ) )
 			return FALSE;
 
 		return $this->filter->post_to_import( $import_post );
