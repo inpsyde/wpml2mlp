@@ -12,6 +12,9 @@ use
  * entities. The main use case is an IdMapper
  *
  * @package W2M\Import\Data
+ * @deprecated
+ *
+ * Todo: #54 Resolve this interface, see https://github.com/inpsyde/wpml2mlp/issues/54
  */
 interface IdObserverInterface {
 

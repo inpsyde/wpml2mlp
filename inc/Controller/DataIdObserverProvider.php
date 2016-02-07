@@ -11,6 +11,8 @@ use
  * This controller provides the IdMapper to »observe« the imported elements.
  *
  * @package W2M\Controller
+ *
+ * Todo: #54 Refactor IdObservableInterface dependency, see https://github.com/inpsyde/wpml2mlp/issues/54
  */
 class DataIdObserverProvider {
 

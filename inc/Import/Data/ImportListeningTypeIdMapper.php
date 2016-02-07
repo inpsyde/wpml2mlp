@@ -20,6 +20,8 @@ use
  * to track IDs of the types 'post', 'user' and 'term'
  *
  * @package W2M\Import\Data
+ *
+ * Todo: #54 Refactor IdObservableInterface implementation, see https://github.com/inpsyde/wpml2mlp/issues/54
  */
 class ImportListeningTypeIdMapper implements MultiTypeIdMapperInterface, IdObserverInterface, MultiTypeIdListInterface {
 

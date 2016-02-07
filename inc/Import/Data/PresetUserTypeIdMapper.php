@@ -12,6 +12,8 @@ use
  * Wrapper for ImportListeningTypeIdMapper with pre-defined user mapping from a json-report file
  *
  * @package W2M\Import\Data
+ *
+ * Todo: #54 Refactor IdObservableInterface implementation, see https://github.com/inpsyde/wpml2mlp/issues/54
  */
 class PresetUserTypeIdMapper implements MultiTypeIdMapperInterface, IdObserverInterface, MultiTypeIdListInterface  {
 
