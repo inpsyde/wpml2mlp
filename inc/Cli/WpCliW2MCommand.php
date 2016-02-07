@@ -207,14 +207,19 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 			),
 			new Import\Service\WpPostParser
 		);
-		$post_filter    = new Import\Filter\DuplicatePostFilter;
+		$post_filter = new Import\Filter\DuplicatePostFilter;
+		// Todo: make this assignment in a controller (provider)
+		add_action( 'w2m_post_imported', [ $post_filter, 'record_post' ], 10, 2 );
+		// Local development todo: Remove
+		if ( 'http://wpml-to-mlp.dev' === site_url() ) {
+			$post_filter = new Import\Filter\BlacklistPostTypeFilter( [ 'attachment' ], $post_filter );
+			WP_CLI::warning( 'Skipping attachments' );
+		}
 		$post_processor = new Import\Service\PostProcessor(
 			$post_iterator,
 			new Import\Service\WpPostImporter( $import_id_mapper ),
 			$post_filter
 		);
-		// Todo: make this assignment in a controller (provider)
-		add_action( 'w2m_post_imported', [ $post_filter, 'record_post' ], 10, 2 );
 
 		/**
 		 * Comments
