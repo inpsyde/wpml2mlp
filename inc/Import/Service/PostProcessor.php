@@ -3,6 +3,7 @@
 namespace W2M\Import\Service;
 
 use
+	W2M\Import\Filter,
 	W2M\Import\Iterator;
 
 class PostProcessor implements ElementProcessorInterface {
@@ -18,15 +19,25 @@ class PostProcessor implements ElementProcessorInterface {
 	private $importer;
 
 	/**
+	 * @var Filter\PostImportFilterInterface
+	 */
+	private $filter;
+
+	/**
 	 * @param Iterator\PostIterator $iterator
 	 * @param PostImporterInterface $importer
+	 * @param Filter\PostImportFilterInterface $filter (Optional)
 	 */
 	public function __construct(
 		Iterator\PostIterator $iterator,
-		PostImporterInterface $importer
+		PostImporterInterface $importer,
+		Filter\PostImportFilterInterface $filter = NULL
 	) {
 		$this->iterator = $iterator;
 		$this->importer = $importer;
+		$this->filter   = $filter
+			? $filter
+			: new Filter\PostPassThroughFilter;
 	}
 
 	/**
@@ -40,7 +51,7 @@ class PostProcessor implements ElementProcessorInterface {
 
 		while ( $this->iterator->valid() ) {
 			$import_post = $this->iterator->current();
-			if ( $import_post ) {
+			if ( $import_post && $this->filter->post_to_import( $import_post ) ) {
 				$this->importer->import_post( $import_post );
 			}
 			$this->iterator->next();

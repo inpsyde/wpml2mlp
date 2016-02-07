@@ -3,6 +3,7 @@
 namespace W2M\Import\Service;
 
 use
+	W2M\Import\Filter,
 	W2M\Import\Iterator;
 
 class TermProcessor implements ElementProcessorInterface {
@@ -18,16 +19,26 @@ class TermProcessor implements ElementProcessorInterface {
 	private $importer;
 
 	/**
+	 * @var Filter\TermImportFilterInterface
+	 */
+	private $filter;
+
+	/**
 	 * @param Iterator\TermIterator $iterator
 	 * @param TermImporterInterface $importer
+	 * @param Filter\TermImportFilterInterface $filter (Optional)
 	 */
 	public function __construct(
 		Iterator\TermIterator $iterator,
-		TermImporterInterface $importer
+		TermImporterInterface $importer,
+		Filter\TermImportFilterInterface $filter = NULL
 	) {
 
 		$this->iterator = $iterator;
 		$this->importer = $importer;
+		$this->filter   = $filter
+			? $filter
+			: new Filter\TermPassThroughFilter;
 	}
 
 	/**
@@ -41,7 +52,7 @@ class TermProcessor implements ElementProcessorInterface {
 
 		while ( $this->iterator->valid() ) {
 			$import_term = $this->iterator->current();
-			if ( $import_term ) {
+			if ( $import_term && $this->filter->term_to_import( $import_term ) ) {
 				$this->importer->import_term( $import_term );
 			}
 			$this->iterator->next();

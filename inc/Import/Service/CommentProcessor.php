@@ -3,6 +3,7 @@
 namespace W2M\Import\Service;
 
 use
+	W2M\Import\Filter,
 	W2M\Import\Iterator;
 
 class CommentProcessor implements ElementProcessorInterface {
@@ -18,16 +19,26 @@ class CommentProcessor implements ElementProcessorInterface {
 	private $importer;
 
 	/**
+	 * @var Filter\CommentImportFilterInterface
+	 */
+	private $filter;
+
+	/**
 	 * @param Iterator\CommentIterator $iterator
 	 * @param CommentImporterInterface $importer
+	 * @param Filter\CommentImportFilterInterface $filter (Optional)
 	 */
 	public function __construct(
 		Iterator\CommentIterator $iterator,
-		CommentImporterInterface $importer
+		CommentImporterInterface $importer,
+		Filter\CommentImportFilterInterface $filter = NULL
 	) {
 
 		$this->iterator = $iterator;
 		$this->importer = $importer;
+		$this->filter   = $filter
+			? $filter
+			: new Filter\CommentPassThroughFilter;
 	}
 
 	/**
@@ -41,7 +52,7 @@ class CommentProcessor implements ElementProcessorInterface {
 
 		while ( $this->iterator->valid() ) {
 			$import_comment = $this->iterator->current();
-			if ( $import_comment ) {
+			if ( $import_comment && $this->filter->comment_to_import( $import_comment ) ) {
 				$this->importer->import_comment( $import_comment );
 			}
 			$this->iterator->next();

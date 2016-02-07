@@ -3,6 +3,7 @@
 namespace W2M\Import\Service;
 
 use
+	W2M\Import\Filter,
 	W2M\Import\Iterator;
 
 class UserProcessor implements ElementProcessorInterface {
@@ -18,16 +19,26 @@ class UserProcessor implements ElementProcessorInterface {
 	private $importer;
 
 	/**
+	 * @var Filter\UserImportFilterInterface
+	 */
+	private $filter;
+
+	/**
 	 * @param Iterator\UserIterator $iterator
 	 * @param UserImporterInterface $importer
+	 * @param Filter\UserImportFilterInterface $filter (Optional)
 	 */
 	public function __construct(
 		Iterator\UserIterator $iterator,
-		UserImporterInterface $importer
+		UserImporterInterface $importer,
+		Filter\UserImportFilterInterface $filter = NULL
 	) {
 
 		$this->iterator = $iterator;
 		$this->importer = $importer;
+		$this->filter   = $filter
+			? $filter
+			: new Filter\UserPassThroughFilter;
 	}
 
 	/**
@@ -41,7 +52,7 @@ class UserProcessor implements ElementProcessorInterface {
 
 		while ( $this->iterator->valid() ) {
 			$import_user = $this->iterator->current();
-			if ( $import_user ) {
+			if ( $import_user && $this->filter->user_to_import( $import_user ) ) {
 				$this->importer->import_user( $import_user );
 			}
 			$this->iterator->next();
