@@ -48,11 +48,13 @@ class ImportListeningMTAncestorListTest extends Helper\MonkeyTestCase {
 
 	public function test_record_term_ancestor() {
 
-		$origin_id = 948;
+		$origin_id        = 948;
 		$origin_parent_id = 903;
-
-		$wp_term_mock = $this->mock_builder->wp_term();
+		$taxonomy         = 'category';
+		$wp_term_mock     = $this->mock_builder->wp_term();
 		$import_term_mock = $this->mock_builder->type_wp_import_term();
+
+		$wp_term_mock->taxonomy = $taxonomy;
 		$import_term_mock->method( 'origin_id' )
 			->willReturn( $origin_id );
 		$import_term_mock->method( 'origin_parent_term_id' )
@@ -205,8 +207,10 @@ class ImportListeningMTAncestorListTest extends Helper\MonkeyTestCase {
 				'origin_parent_id' => 567
 			)
 		);
+		$taxonomy = 'category';
 
 		$wp_term_mock = $this->mock_builder->wp_term();
+		$wp_term_mock->taxonomy = $taxonomy;
 		$testee = new Data\ImportListeningMTAncestorList;
 
 		foreach ( $terms as $term ) {
@@ -323,11 +327,13 @@ class ImportListeningMTAncestorListTest extends Helper\MonkeyTestCase {
 
 	public function test_no_side_effect_with_term() {
 
-		$origin_id = 12;
+		$origin_id        = 12;
 		$origin_parent_id = 34;
-
-		$wp_term_mock = $this->mock_builder->wp_term();
+		$taxonomy         = 'post_tag';
+		$wp_term_mock     = $this->mock_builder->wp_term();
 		$import_term_mock = $this->mock_builder->type_wp_import_term();
+
+		$wp_term_mock->taxonomy = $taxonomy;
 		$import_term_mock->method( 'origin_id' )
 			->willReturn( $origin_id );
 		$import_term_mock->method( 'origin_parent_term_id' )
