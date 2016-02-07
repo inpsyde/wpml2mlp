@@ -191,7 +191,8 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		);
 		$term_processor = new Import\Service\TermProcessor(
 			$term_iterator,
-			new Import\Service\WpTermImporter( $import_id_mapper )
+			new Import\Service\WpTermImporter( $import_id_mapper ),
+			new Import\Filter\DuplicateTermFilter
 		);
 
 		/**
@@ -206,10 +207,14 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 			),
 			new Import\Service\WpPostParser
 		);
+		$post_filter    = new Import\Filter\DuplicatePostFilter;
 		$post_processor = new Import\Service\PostProcessor(
 			$post_iterator,
-			new Import\Service\WpPostImporter( $import_id_mapper )
+			new Import\Service\WpPostImporter( $import_id_mapper ),
+			$post_filter
 		);
+		// Todo: make this assignment in a controller (provider)
+		add_action( 'w2m_post_imported', [ $post_filter, 'record_post' ], 10, 2 );
 
 		/**
 		 * Comments
