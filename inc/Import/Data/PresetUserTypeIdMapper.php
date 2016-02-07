@@ -8,11 +8,10 @@ use
 
 /**
  * Class PresetUserTypeIdMapper
-
- * Wrapper for ImportListeningTypeIdMapper with pre-defined user mapping from a json-report file
-
  *
-*@package W2M\Import\Data
+ * Wrapper for ImportListeningTypeIdMapper with pre-defined user mapping from a json-report file
+ *
+ * @package W2M\Import\Data
  */
 class PresetUserTypeIdMapper implements MultiTypeIdMapperInterface, IdObserverInterface, MultiTypeIdListInterface  {
 
