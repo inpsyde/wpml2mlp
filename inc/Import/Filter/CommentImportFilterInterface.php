@@ -6,11 +6,11 @@ use
 	W2M\Import\Type;
 
 /**
- * Interface CommentImportFilter
+ * Interface CommentImportFilterInterface
  *
  * @package W2M\Import\Filter
  */
-interface CommentImportFilter {
+interface CommentImportFilterInterface {
 
 	/**
 	 * Checks if a comment should be imported or not

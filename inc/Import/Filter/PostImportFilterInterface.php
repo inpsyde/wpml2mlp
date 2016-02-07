@@ -6,11 +6,11 @@ use
 	W2M\Import\Type;
 
 /**
- * Interface PostFilterInterface
+ * Interface PostImportFilterInterface
  *
  * @package W2M\Import\Filter
  */
-interface PostFilterInterface {
+interface PostImportFilterInterface {
 
 	/**
 	 * Checks if a post should be imported or not

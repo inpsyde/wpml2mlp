@@ -9,7 +9,7 @@ use
 	WP_Comment;
 use WP_Term;
 
-class DuplicateTermFilter implements TermFilterInterface {
+class DuplicateTermFilter implements TermImportFilterInterface {
 
 	/**
 	 * Checks if a term should be imported or not

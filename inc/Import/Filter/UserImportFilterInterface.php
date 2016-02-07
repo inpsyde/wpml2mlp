@@ -6,11 +6,11 @@ use
 	W2M\Import\Type;
 
 /**
- * Interface UserImportFilter
+ * Interface UserImportFilterInterface
  *
  * @package W2M\Import\Filter
  */
-interface UserImportFilter {
+interface UserImportFilterInterface {
 
 	/**
 	 * Checks if a user should be imported or not

@@ -6,11 +6,11 @@ use
 	W2M\Import\Type;
 
 /**
- * Interface TermFilterInterface
+ * Interface TermImportFilterInterface
  *
  * @package W2M\Import\Filter
  */
-interface TermFilterInterface {
+interface TermImportFilterInterface {
 
 	/**
 	 * Checks if a term should be imported or not

@@ -15,7 +15,7 @@ use
  *
  * @package W2M\Import\Filter
  */
-class DuplicatePostFilter implements PostFilterInterface, Data\PostImportListenerInterface {
+class DuplicatePostFilter implements PostImportFilterInterface, Data\PostImportListenerInterface {
 
 	/**
 	 * @var string
