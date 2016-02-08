@@ -314,12 +314,13 @@ class WpPostImporter implements PostImporterInterface {
 		}
 
 		// fetch the remote url and write it to the placeholder file
-		$response = $this->http->request( $attachment_url, $upload[ 'file' ] );
+		$response = $this->http->request( $attachment_url );
 
 		if ( is_wp_error( $response ) || 200 !== (int) $response[ 'response' ][ 'code' ] ) {
 
-			if ( ! is_wp_error( $response ) )
-				$response = new WP_Error( 'http_request', $response );
+			if ( ! is_wp_error( $response ) ) {
+				$response = new WP_Error( 'http_request', 'HTTP request failed', $response );
+			}
 			/**
 			 * Attach error handler/logger here
 			 *

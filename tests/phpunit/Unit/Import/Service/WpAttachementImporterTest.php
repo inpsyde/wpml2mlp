@@ -243,7 +243,7 @@ class WpAttachmentImporterTest extends Helper\MonkeyTestCase {
 
 		$http_mock->expects( $this->atLeast( 1 ) )
 		          ->method( 'request' )
-		          ->with( $postdata[ 'origin_attachment_url' ], $wp_upload_file )
+		          ->with( $postdata[ 'origin_attachment_url' ] )
 		          ->willReturn( $request_testdata );
 
 
