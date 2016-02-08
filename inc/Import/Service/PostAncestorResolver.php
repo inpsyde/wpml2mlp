@@ -103,7 +103,7 @@ class PostAncestorResolver implements RelationResolverInterface {
 			'Resolver missing post parent',
 			[
 				'post_id'          => $this->id_mapper->local_id( 'post', $relation->id() ),
-				'parent_id'        => $this->id_mapper->local_id( 'post', $relation->id() ),
+				'parent_id'        => $this->id_mapper->local_id( 'post', $relation->parent_id() ),
 				'remote_id'        => $relation->id(),
 				'remote_parent_id' => $relation->parent_id()
 			]
@@ -124,7 +124,7 @@ class PostAncestorResolver implements RelationResolverInterface {
 			'Resolver missing post',
 			[
 				'post_id'          => $this->id_mapper->local_id( 'post', $relation->id() ),
-				'parent_id'        => $this->id_mapper->local_id( 'post', $relation->id() ),
+				'parent_id'        => $this->id_mapper->local_id( 'post', $relation->parent_id() ),
 				'remote_id'        => $relation->id(),
 				'remote_parent_id' => $relation->parent_id()
 			]
