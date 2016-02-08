@@ -150,14 +150,13 @@ class TmpLogController {
 
 				$code = $error->get_error_code();
 				$msg  = $error->get_error_message( $code );
+				$data = $error->get_error_data( $code );
+				//don't log the body
+				unset( $data[ 'body' ] );
+				$data[ 'remote_url' ] = $url;
+				$data[ 'action' ] = current_filter();
 
-				$logger->warning(
-					$msg,
-					[
-						'remote_url' => $url,
-						'action'     => current_filter()
-					]
-				);
+				$logger->warning( $msg, $data );
 
 			},
 			10,
