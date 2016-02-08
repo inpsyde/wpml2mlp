@@ -94,10 +94,10 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 			}
 
 			$success = $this->mlp_content_relations->set_relation(
-				$current_blog_id,
 				$remote_blog_id,
-				$import_post->id(),
+				$current_blog_id,
 				$remote_post_id,
+				$import_post->id(),
 				'post'
 			);
 			/**

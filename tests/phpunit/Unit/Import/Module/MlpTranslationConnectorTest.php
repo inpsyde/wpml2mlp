@@ -199,24 +199,24 @@ class MlpTranslationConnectorTest extends Helper\MonkeyTestCase {
 			->method( 'set_relation' )
 			->withConsecutive(
 				[
-					$current_blog_id,
 					array_search( 'it_IT', $blog_locales ),
-					$post_id,
+					$current_blog_id,
 					$remote_post_ids[ 0 ],
+					$post_id,
 					'post'
 				],
 				[
-					$current_blog_id,
 					array_search( 'en_US', $blog_locales ),
-					$post_id,
+					$current_blog_id,
 					$remote_post_ids[ 1 ],
+					$post_id,
 					'post'
 				],
 				[
-					$current_blog_id,
 					array_search( 'fr_FR', $blog_locales ),
-					$post_id,
+					$current_blog_id,
 					$remote_post_ids[ 2 ],
+					$post_id,
 					'post'
 				]
 			);
@@ -332,10 +332,10 @@ class MlpTranslationConnectorTest extends Helper\MonkeyTestCase {
 		$mlp_content_relation_mock->expects( $this->once() )
 			->method( 'set_relation' )
 			->with(
-				$data[ 'current_site_id' ],
 				$data[ 'translation_site_id' ],
-				$data[ 'local_post_id' ],
+				$data[ 'current_site_id' ],
 				$data[ 'local_translation_post_id' ],
+				$data[ 'local_post_id' ],
 				'post'
 			)
 			->willReturn( $result );
