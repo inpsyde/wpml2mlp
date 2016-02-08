@@ -300,13 +300,17 @@ class WpPostImporter implements PostImporterInterface {
 
 		if ( $upload[ 'error' ] ) {
 
-			$error = new WP_Error( 'upload_bits_error', $upload[ 'error' ] );
+			$upload[ 'file' ] = basename( $attachment_url );
+			$error = new WP_Error( 'upload_bits_error', $upload[ 'error' ], $upload );
 
 			/**
 			 * Attach error handler/logger here
 			 *
 			 * @param WP_Error $error
-			 * @param array $upload
+			 * @param array $upload {
+			 *     string $error
+			 *     string $file
+			 * }
 			 */
 			do_action( 'w2m_import_attachment_mkdir_error', $error, $upload );
 
