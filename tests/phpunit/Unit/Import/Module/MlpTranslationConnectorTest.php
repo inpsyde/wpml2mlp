@@ -143,14 +143,15 @@ class MlpTranslationConnectorTest extends Helper\MonkeyTestCase {
 		$import_post_mock->method( 'id' )
 			->willReturn( $post_id );
 
-		$remote_post_mocks = [
-			$this->mock_builder->wp_post(),
-			$this->mock_builder->wp_post(),
-			$this->mock_builder->wp_post()
+		$post_query_mocks = [
+			$this->mock_builder->wp_query(),
+			$this->mock_builder->wp_query(),
+			$this->mock_builder->wp_query()
 		];
-		$remote_post_mocks[ 0 ]->posts = [ 20 ];
-		$remote_post_mocks[ 1 ]->posts = [ 30 ];
-		$remote_post_mocks[ 2 ]->posts = [ 40 ];
+		$remote_post_ids = [ 20, 30, 40 ];
+		$post_query_mocks[ 0 ]->posts = [ $remote_post_ids[ 0 ] ];
+		$post_query_mocks[ 1 ]->posts = [ $remote_post_ids[ 1 ] ];
+		$post_query_mocks[ 2 ]->posts = [ $remote_post_ids[ 2 ] ];
 
 		$wp_factory_mock->expects( $this->exactly( 3 ) )
 			->method( 'wp_query' )
@@ -188,18 +189,33 @@ class MlpTranslationConnectorTest extends Helper\MonkeyTestCase {
 			)
 			->will(
 				$this->onConsecutiveCalls(
-					$remote_post_mocks[ 0 ],
-					$remote_post_mocks[ 1 ],
-					$remote_post_mocks[ 2 ]
+					$post_query_mocks[ 0 ],
+					$post_query_mocks[ 1 ],
+					$post_query_mocks[ 2 ]
 				)
 			);
 
 		$mlp_content_relation_mock->expects( $this->exactly( 3 ) )
 			->method( 'set_relation' )
 			->withConsecutive(
-				[ $current_blog_id, 4, $post_id, 20 ],
-				[ $current_blog_id, 3, $post_id, 30 ],
-				[ $current_blog_id, 2, $post_id, 40 ]
+				[
+					$current_blog_id,
+					array_search( 'it_IT', $blog_locales ),
+					$post_id,
+					$remote_post_ids[ 0 ]
+				],
+				[
+					$current_blog_id,
+					array_search( 'en_US', $blog_locales ),
+					$post_id,
+					$remote_post_ids[ 1 ]
+				],
+				[
+					$current_blog_id,
+					array_search( 'fr_FR', $blog_locales ),
+					$post_id,
+					$remote_post_ids[ 2 ]
+				]
 			);
 
 		Brain\Monkey::actions()
