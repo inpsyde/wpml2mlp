@@ -202,19 +202,22 @@ class MlpTranslationConnectorTest extends Helper\MonkeyTestCase {
 					$current_blog_id,
 					array_search( 'it_IT', $blog_locales ),
 					$post_id,
-					$remote_post_ids[ 0 ]
+					$remote_post_ids[ 0 ],
+					'post'
 				],
 				[
 					$current_blog_id,
 					array_search( 'en_US', $blog_locales ),
 					$post_id,
-					$remote_post_ids[ 1 ]
+					$remote_post_ids[ 1 ],
+					'post'
 				],
 				[
 					$current_blog_id,
 					array_search( 'fr_FR', $blog_locales ),
 					$post_id,
-					$remote_post_ids[ 2 ]
+					$remote_post_ids[ 2 ],
+					'post'
 				]
 			);
 
@@ -332,7 +335,8 @@ class MlpTranslationConnectorTest extends Helper\MonkeyTestCase {
 				$data[ 'current_site_id' ],
 				$data[ 'translation_site_id' ],
 				$data[ 'local_post_id' ],
-				$data[ 'local_translation_post_id' ]
+				$data[ 'local_translation_post_id' ],
+				'post'
 			)
 			->willReturn( $result );
 
