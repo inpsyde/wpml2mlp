@@ -313,12 +313,27 @@ class WpPostImporter implements PostImporterInterface {
 			return;
 		}
 
-		// fetch the remote url and write it to the placeholder file
+		/**
+		 * Todo: fetch the remote url and write it directly to the placeholder file
+		 * using parameter 'stream' => TRUE and 'filename' => $upload[ 'file' ]
+		 */
 		$response = $this->http->request( $attachment_url );
 
 		if ( is_wp_error( $response ) || 200 !== (int) $response[ 'response' ][ 'code' ] ) {
 
 			if ( ! is_wp_error( $response ) ) {
+				/**
+				 * @var array $response {
+				 *      array $headers,
+				 *      string $body,
+				 *      array $response {
+				 *          int $code,
+				 *          string $message
+				 *      }
+				 *      array $cookies
+				 *      string|NULL $filename
+				 * }
+				 */
 				$response = new WP_Error( 'http_request', 'HTTP request failed', $response );
 			}
 			/**
@@ -332,6 +347,7 @@ class WpPostImporter implements PostImporterInterface {
 			return;
 		}
 
+		// Todo: Can be removed when $this->http->request() call is refactored. See above.
 		file_put_contents( $upload[ 'file' ], $response[ 'body' ] );
 
 		/** post_mime_type to the attachment */
