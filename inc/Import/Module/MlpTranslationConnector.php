@@ -8,7 +8,6 @@ use
 	W2M\Import\Common,
 	Mlp_Content_Relations_Interface,
 	WP_Error,
-	WP_Query,
 	WP_Post;
 
 class MlpTranslationConnector implements TranslationConnectorInterface {
