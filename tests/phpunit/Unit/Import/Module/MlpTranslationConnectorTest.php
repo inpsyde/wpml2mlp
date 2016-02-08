@@ -115,7 +115,7 @@ class MlpTranslationConnectorTest extends Helper\MonkeyTestCase {
 		$post_id         = 2;
 		$blog_locales = [
 			// blog_id => locale
-			1 => 'de_DE',
+			1 => 'de_DE', // current blog
 			2 => 'fr_FR',
 			3 => 'en_US',
 			4 => 'it_IT'
@@ -202,6 +202,10 @@ class MlpTranslationConnectorTest extends Helper\MonkeyTestCase {
 				[ $current_blog_id, 2, $post_id, 40 ]
 			);
 
+		Brain\Monkey::actions()
+			->expectFired( 'w2m_import_mlp_linked' )
+			->times( 3 );
+
 		Brain\Monkey::functions()
 			->expect( 'update_post_meta' )
 			->once();
@@ -223,6 +227,122 @@ class MlpTranslationConnectorTest extends Helper\MonkeyTestCase {
 		);
 
 		$testee->link_post( $this->mock_builder->wp_post(), $import_post_mock );
+	}
+
+	public function test_link_post_success_action() {
+
+		$wp_post_mock              = $this->mock_builder->wp_post();
+		$relation_mock             = $this->mock_builder->type_locale_relation();
+		$import_post_mock          = $this->mock_builder->type_wp_import_post();
+		$mlp_content_relation_mock = $this->mock_builder->mlp_content_relations_interface( [ 'set_relation' ] );
+		$wp_factory_mock           = $this->mock_builder->common_wp_factory();
+		$wp_query_mock             = $this->mock_builder->wp_query();
+
+		$data = [
+			'origin_post_id'             => 4,
+			'local_post_id'              => 25,
+			'origin_translation_post_id' => 14,
+			'local_translation_post_id'  => 65,
+			'translation_locale'         => 'en_US',
+			'current_locale'             => 'es_ES',
+			'current_site_id'            => 5,
+			'translation_site_id'        => 1,
+			'type'                       => 'post'
+		];
+		$result   = TRUE;
+		$meta_key = '_w2m_origin_post_id';
+
+		$wp_post_mock->ID = $data[ 'local_post_id' ];
+
+		$relation_mock->method( 'locale' )
+			->willReturn( $data[ 'translation_locale' ] );
+		$relation_mock->method( 'origin_id' )
+			->willReturn( $data[ 'origin_translation_post_id' ] );
+
+		$import_post_mock->method( 'locale_relations' )
+			->willReturn( [ $relation_mock ] );
+		$import_post_mock->method( 'id' )
+			->willReturn( $data[ 'local_post_id' ] );
+		$import_post_mock->method( 'origin_id' )
+			->willReturn( $data[ 'origin_post_id' ] );
+
+		Brain\Monkey::functions()
+			->expect( 'mlp_get_available_languages' )
+			->once()
+			->with( TRUE )
+			->andReturn(
+				[
+					$data[ 'translation_site_id' ] => $data[ 'translation_locale' ]
+				]
+			);
+
+		Brain\Monkey::functions()
+			->expect( 'update_post_meta' )
+			->with(
+				$data[ 'local_post_id' ],
+				$meta_key,
+				$data[ 'origin_post_id' ]
+			);
+		Brain\Monkey::functions()
+			->expect( 'get_current_blog_id' )
+			->andReturn( $data[ 'current_site_id' ] );
+		Brain\Monkey::functions()
+			->expect( 'switch_to_blog' )
+			->once()
+			->with( $data[ 'translation_site_id' ] );
+		Brain\Monkey::functions()
+			->expect( 'restore_current_blog' )
+			->once();
+
+		$wp_query_mock->posts = [ $data[ 'local_translation_post_id' ] ];
+		$wp_factory_mock->method( 'wp_query' )
+			->with(
+				[
+					'posts_per_page'         => 1,
+					'post_status'            => 'any',
+					'post_type'              => 'any',
+					'meta_key'               => $meta_key,
+					'meta_value'             => $data[ 'origin_translation_post_id' ],
+					'fields'                 => 'ids',
+					'update_post_meta_cache' => FALSE,
+					'update_post_term_cache' => FALSE
+				]
+			)
+			->willReturn( $wp_query_mock );
+
+		$mlp_content_relation_mock->expects( $this->once() )
+			->method( 'set_relation' )
+			->with(
+				$data[ 'current_site_id' ],
+				$data[ 'translation_site_id' ],
+				$data[ 'local_post_id' ],
+				$data[ 'local_translation_post_id' ]
+			)
+			->willReturn( $result );
+
+		Brain\Monkey::actions()
+			->expectFired( 'w2m_import_mlp_linked' )
+			->once()
+			->with(
+				[
+					'import_element'    => $import_post_mock,
+					'relation'          => $relation_mock,
+					'remote_blog_id'    => $data[ 'translation_site_id' ],
+					'remote_element_id' => $data[ 'local_translation_post_id' ],
+					'blog_id'           => $data[ 'current_site_id' ],
+					'success'           => $result,
+					'type'              => $data[ 'type' ]
+				]
+			);
+
+
+		$testee = new Module\MlpTranslationConnector(
+			$mlp_content_relation_mock,
+			$this->mock_builder->data_multi_type_id_mapper(),
+			$wp_factory_mock
+		);
+
+		$testee->link_post( $wp_post_mock, $import_post_mock );
 	}
 
 	public function test_link_terms() {
