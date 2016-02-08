@@ -24,6 +24,7 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 	private $mlp_content_relations;
 
 	/**
+	 * @deprecated
 	 * @var Data\MultiTypeIdMapperInterface
 	 */
 	private $id_mapper;
@@ -35,7 +36,7 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 
 	/**
 	 * @param Mlp_Content_Relations_Interface $mpl_content_relations
-	 * @param Data\MultiTypeIdMapperInterface $id_mapper
+	 * @param Data\MultiTypeIdMapperInterface $id_mapper (Deprecated)
 	 * @param Common\WpFactoryInterface $wp_factory (Optional)
 	 */
 	public function __construct(
@@ -132,7 +133,7 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 	 *
 	 * @param $locale
 	 *
-	 * @return int|mixed|string
+	 * @return int
 	 */
 	public function get_blog_id_by_locale( $locale ) {
 
@@ -141,7 +142,7 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 		if ( $blog_id )
 			return $blog_id;
 
-		// try to match two-letter language code like en,de,fr
+		// try to match two-letter language code like en, de, fr
 		foreach ( $locales as $blog_id => $l ) {
 			if ( 0 === strpos( $l, $locale ) )
 				return $blog_id;
