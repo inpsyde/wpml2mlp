@@ -17,11 +17,12 @@ Search item
 
 Synopsis
 
-	php search_item.php <FILE> <ID> [<TYPE>] [-h|--help]
+	php search_item.php <FILE> <ID> [<TYPE>] [-h|--help] [--xml]
 
 Options
 
 	-h,--help  Print this help message
+	--xml      Print the found item as xml
 
 STR;
 
@@ -47,6 +48,18 @@ Found {$num} {$type} with ID {$id} at line {$line_str}
 STR;
 
 	print $str;
+}
+
+/**
+ * Prints xml of the parent element
+ *
+ * @param SimpleXMLElement $element
+ */
+function print_item_xml( SimpleXMLElement $element ) {
+
+	$parent = $element->xpath( '..' )[ 0 ];
+
+	print $parent->asXML() . "\n";
 }
 
 /**
@@ -101,5 +114,9 @@ $queries = [
 $doc = new SimpleXMLElement( $file, 0, TRUE );
 $result = $doc->xpath( sprintf ( $queries[ $type ], $id ) );
 
-print_result( $result, $type, $id );
+if ( in_array( '--xml', $argv ) && count( $result ) ) {
+	print_item_xml( current( $result ) );
+} else {
+	print_result( $result, $type, $id );
+}
 return 0;
