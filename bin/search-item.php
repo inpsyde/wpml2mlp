@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php # -*- coding: utf-8 -*-
 
 /**
