@@ -22,412 +22,522 @@ class MockBuilder {
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function common_file( Array $methods = array() ) {
+	public function common_file( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Common\File',
-			$methods
+			$methods,
+			$data
 		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function common_wp_factory( Array $methods = array() ) {
+	public function common_wp_factory( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Common\WpFactory',
-			$methods
+			$methods,
+			$data
 		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function data_multi_type_id_mapper( Array $methods = array() ) {
+	public function data_multi_type_id_mapper( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Data\MultiTypeIdMapperInterface',
-			$methods
+			$methods,
+			$data
 		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function data_multi_type_id_list( Array $methods = array() ) {
+	public function data_multi_type_id_list( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Data\MultiTypeIdListInterface',
-			$methods
+			$methods,
+			$data
 		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function data_xml_import_interface( Array $methods = array() ) {
+	public function data_xml_import_interface( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Data\XmlImportInterface',
-			$methods
+			$methods,
+			$data
 		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function iterator_simple_xml_item_wrapper( Array $methods = [ ] ) {
+	public function iterator_simple_xml_item_wrapper( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Iterator\SimpleXmlItemWrapper',
-			$methods
+			$methods,
+			$data
 		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function iterator_comment_iterator( Array $methods = [ ] ) {
+	public function iterator_comment_iterator( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Iterator\CommentIterator',
-			$methods
+			$methods,
+			$data
 		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function iterator_post_iterator( Array $methods = [ ] ) {
+	public function iterator_post_iterator( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Iterator\PostIterator',
-			$methods
+			$methods,
+			$data
 		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function iterator_term_iterator( Array $methods = [ ] ) {
+	public function iterator_term_iterator( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Iterator\TermIterator',
-			$methods
+			$methods,
+			$data
 		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function iterator_user_iterator( Array $methods = [ ] ) {
+	public function iterator_user_iterator( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Iterator\UserIterator',
-			$methods
+			$methods,
+			$data
 		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function module_translation_connector( Array $methods = array() ) {
+	public function module_translation_connector( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Module\TranslationConnectorInterface',
-			$methods
+			$methods,
+			$data
 		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function service_comment_importer_interface( Array $methods = array() ) {
+	public function service_comment_importer_interface( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Service\CommentImporterInterface',
-			$methods
+			$methods,
+			$data
 		);
 	}
 
-		/**
-	 * @param array $methods
+	/**
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function service_post_importer_interface( Array $methods = array() ) {
+	public function service_post_importer_interface( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Service\PostImporterInterface',
-			$methods
+			$methods,
+			$data
 		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function service_term_importer_interface( Array $methods = array() ) {
+	public function service_term_importer_interface( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Service\TermImporterInterface',
-			$methods
+			$methods,
+			$data
 		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function service_user_importer_interface( Array $methods = array() ) {
+	public function service_user_importer_interface( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Service\UserImporterInterface',
-			$methods
+			$methods,
+			$data
 		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function service_comment_parser_interface( Array $methods = array() ) {
+	public function service_comment_parser_interface( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Service\CommentParserInterface',
-			$methods
+			$methods,
+			$data
 		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function service_post_parser_interface( Array $methods = array() ) {
+	public function service_post_parser_interface( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Service\PostParserInterface',
-			$methods
+			$methods,
+			$data
 		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function service_term_parser_interface( Array $methods = array() ) {
+	public function service_term_parser_interface( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Service\TermParserInterface',
-			$methods
+			$methods,
+			$data
 		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function service_user_parser_interface( Array $methods = array() ) {
+	public function service_user_parser_interface( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Service\UserParserInterface',
-			$methods
+			$methods,
+			$data
 		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function type_locale_relation( Array $methods = array() ) {
+	public function type_locale_relation( Array $methods = [], Array $data = [] ) {
 
-		return $this->mock_without_constructor( 'W2M\Import\Type\LocaleRelation', $methods );
+		return $this->mock_without_constructor(
+			'W2M\Import\Type\LocaleRelation',
+			$methods,
+			$data
+		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function type_wp_import_comment( Array $methods = array() ) {
+	public function type_wp_import_comment( Array $methods = [], Array $data = [] ) {
 
-		return $this->mock_without_constructor( 'W2M\Import\Type\WpImportComment', $methods );
+		return $this->mock_without_constructor(
+			'W2M\Import\Type\WpImportComment',
+			$methods,
+			$data
+		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function type_wp_import_meta( Array $methods = array() ) {
+	public function type_wp_import_meta( Array $methods = [], Array $data = [] ) {
 
-		return $this->mock_without_constructor( 'W2M\Import\Type\WpImportMeta', $methods );
+		return $this->mock_without_constructor(
+			'W2M\Import\Type\WpImportMeta',
+			$methods,
+			$data
+		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function type_wp_import_post( Array $methods = array() ) {
+	public function type_wp_import_post( Array $methods = [], Array $data = [] ) {
 
-		return $this->mock_without_constructor( 'W2M\Import\Type\WpImportPost', $methods );
+		return $this->mock_without_constructor(
+			'W2M\Import\Type\WpImportPost',
+			$methods,
+			$data
+		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function type_wp_term_reference( Array $methods = array() ) {
+	public function type_wp_term_reference( Array $methods = [], Array $data = [] ) {
 
-		return $this->mock_without_constructor( 'W2M\Import\Type\WpTermReference', $methods );
+		return $this->mock_without_constructor(
+			'W2M\Import\Type\WpTermReference',
+			$methods,
+			$data
+		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function type_wp_import_term( Array $methods = array() ) {
+	public function type_wp_import_term( Array $methods = [], Array $data = [] ) {
 
-		return $this->mock_without_constructor( 'W2M\Import\Type\WpImportTerm', $methods );
+		return $this->mock_without_constructor(
+			'W2M\Import\Type\WpImportTerm',
+			$methods,
+			$data
+		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function type_wp_import_user( Array $methods = array() ) {
+	public function type_wp_import_user( Array $methods = [], Array $data = [] ) {
 
-		return $this->mock_without_constructor( 'W2M\Import\Type\WpImportUser', $methods );
+		return $this->mock_without_constructor(
+			'W2M\Import\Type\WpImportUser',
+			$methods,
+			$data
+		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function mlp_content_relations_interface( Array $methods = array() ) {
+	public function mlp_content_relations_interface( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
 			'Mlp_Content_Relations_Interface',
+			$methods,
+			$data
+		);
+	}
+
+	/**
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
+	public function wp_comment( Array $methods = [], Array $data = [] ) {
+
+		return $this->mock_without_constructor(
+			'WP_Comment',
 			$methods
 		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function wp_comment( Array $methods = array() ) {
+	public function wp_error( Array $methods = [], Array $data = [] ) {
 
-		return $this->mock_without_constructor( 'WP_Comment', $methods );
+		return $this->mock_without_constructor(
+			'WP_Error',
+			$methods,
+			$data
+		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function wp_error( Array $methods = array() ) {
+	public function wp_http( Array $methods = [], Array $data = [] ) {
 
-		return $this->mock_without_constructor( 'WP_Error', $methods );
+		return $this->mock_without_constructor(
+			'WP_Http',
+			$methods,
+			$data
+		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function wp_http( Array $methods = array() ) {
+	public function wp_query( Array $methods = [], Array $data = [] ) {
 
-		return $this->mock_without_constructor( 'WP_Http', $methods );
+		return $this->mock_without_constructor(
+			'WP_Query',
+			$methods,
+			$data
+		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function wp_query( Array $methods = array() ) {
+	public function wp_post( Array $methods = [], Array $data = [] ) {
 
-		return $this->mock_without_constructor( 'WP_Query', $methods );
+		return $this->mock_without_constructor(
+			'WP_Post',
+			$methods,
+			$data
+		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function wp_post( Array $methods = array() ) {
+	public function wp_term( Array $methods = [], Array $data = []) {
 
-		return $this->mock_without_constructor( 'WP_Post', $methods );
+		return $this->mock_without_constructor(
+			'WP_Term',
+			$methods,
+			$data
+		);
 	}
 
 	/**
-	 * @param array $methods
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function wp_term( Array $methods = array() ) {
+	public function wp_user( Array $methods = [], Array $data = [] ) {
 
-		return $this->mock_without_constructor( 'WP_Term', $methods );
-	}
-
-	/**
-	 * @param array $methods
-	 *
-	 * @return PHPUnit_Framework_MockObject_MockObject
-	 */
-	public function wp_user( Array $methods = array() ) {
-
-		return $this->mock_without_constructor( 'WP_User', $methods );
+		return $this->mock_without_constructor(
+			'WP_User',
+			$methods,
+			$data
+		);
 	}
 
 	/**
 	 * @param $class
-	 * @param array $methods
+	 * @param array $methods (optional)
+	 * @param array $data (optional)
 	 *
 	 * @return \PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function mock_without_constructor( $class, Array $methods = array() ) {
+	public function mock_without_constructor( $class, Array $methods = array(), $data = array() ) {
 
 		$mockBuilder = $this->test_case->getMockBuilder( $class )
 			->disableOriginalConstructor();
@@ -435,6 +545,14 @@ class MockBuilder {
 			$mockBuilder->setMethods( $methods );
 		}
 
-		return $mockBuilder->getMock();
+		$mock = $mockBuilder->getMock();
+		if ( ! $data )
+			return $mock;
+
+		foreach ( $data as $method => $value ) {
+			$mock->method( $method )->willReturn( $value );
+		}
+
+		return $mock;
 	}
 }
