@@ -11,34 +11,22 @@ use
 
 class WpPostImporterTest extends Helper\WpIntegrationTestCase {
 
-	private $fs_helper;
-
-	/**
-	 * runs before each test
-	 */
-	public function setUp() {
-
-		if ( ! $this->fs_helper ) {
-			$this->fs_helper = new Helper\FileSystem;
-		}
-
-		parent::setUp();
-
-	}
-
 	/**
 	 * @group import
+	 * @dataProvider import_post_test_data
+	 *
+	 * @param array $post_data
+	 * @param array $post_meta
+	 * @param array $post_terms
 	 */
-	public function test_import_post() {
+	public function test_import_post( Array $post_data, Array $post_meta, Array $post_terms ) {
 
 		$id_mapper_mock = $this->mock_builder->data_multi_type_id_mapper();
+		$http_mock      = $this->mock_builder->wp_http();
+		$http_mock->expects( $this->never() )
+			->method( 'request' );
 
-		$http = $this->getMockBuilder( 'WP_Http' )->disableOriginalConstructor()->getMock();
-
-		$testee = new Service\WpPostImporter( $id_mapper_mock, $http );
-
-		$post_mock = $this->getMockBuilder( 'W2M\Import\Type\ImportPostInterface' )
-		                  ->getMock();
+		$import_post_mock = $this->mock_builder->type_wp_import_post();
 
 		$postmeta_mock_single = $this->mock_builder->type_wp_import_meta();
 		$postmeta_mock_single->method( 'key' )->willReturn( 'mocky' );
@@ -80,22 +68,23 @@ class WpPostImporterTest extends Helper\WpIntegrationTestCase {
 		);
 
 		foreach ( $postdata as $method => $return_value ) {
-
-			$post_mock->expects( $this->atLeast( 1 ) )
-			          ->method( $method )
-			          ->willReturn( $return_value );
-
+			$import_post_mock
+				->expects( $this->atLeast( 1 ) )
+				->method( $method )
+				->willReturn( $return_value );
 		}
 
 		$new_parent_id = 15;
 		$new_author_id = 1;
 
-		$id_mapper_mock->expects( $this->atLeast( 2 ) )
-		               ->method( 'local_id' )
-		               ->withConsecutive(
-			               array( 'post', $postdata[ 'origin_parent_post_id' ] ),
-			               array( 'user', $postdata[ 'origin_author_id' ] )
-		               )->will( $this->onConsecutiveCalls( $new_parent_id, $new_author_id ) );
+		$id_mapper_mock
+			->expects( $this->atLeast( 2 ) )
+			->method( 'local_id' )
+			->withConsecutive(
+				array( 'post', $postdata[ 'origin_parent_post_id' ] ),
+				array( 'user', $postdata[ 'origin_author_id' ] )
+			)
+			->will( $this->onConsecutiveCalls( $new_parent_id, $new_author_id ) );
 
 		$test_case    = $this;
 		$text_action  = 'w2m_post_imported';
@@ -113,14 +102,14 @@ class WpPostImporterTest extends Helper\WpIntegrationTestCase {
 			 * @param WP_Post $wp_post
 			 * @param Type\ImportPostInterface $import_post
 			 */
-			function( $wp_post, $import_post ) use ( $test_case, $post_mock, $action_check ) {
+			function( $wp_post, $import_post ) use ( $test_case, $import_post_mock, $action_check ) {
 				$action_check->action_fired( current_filter() );
 				$test_case->assertInstanceOf(
 					'WP_Post',
 					$wp_post
 				);
 				$test_case->assertSame(
-					$post_mock,
+					$import_post_mock,
 					$import_post
 				);
 				$test_case->assertSame(
@@ -136,8 +125,34 @@ class WpPostImporterTest extends Helper\WpIntegrationTestCase {
 			2
 		);
 
-		$testee->import_post( $post_mock );
-
+		$testee = new Service\WpPostImporter( $id_mapper_mock, $http_mock );
+		$testee->import_post( $import_post_mock );
 	}
 
+	/**
+	 * @see test_import_post
+	 *
+	 * @return array
+	 */
+	public function import_post_test_data() {
+
+		$data = [];
+
+		$data[ 'test_1' ] = [
+			# 1. Parameter $post_data
+			[
+
+			],
+			# 2. Parameter $meta_data
+			[
+
+			],
+			# 3. Parameter $term_data
+			[
+
+			]
+		];
+
+		return $data;
+	}
 }
