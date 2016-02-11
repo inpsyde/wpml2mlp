@@ -376,6 +376,16 @@ class MockBuilder {
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
+	public function wp_http( Array $methods = array() ) {
+
+		return $this->mock_without_constructor( 'WP_Http', $methods );
+	}
+
+	/**
+	 * @param array $methods
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
 	public function wp_query( Array $methods = array() ) {
 
 		return $this->mock_without_constructor( 'WP_Query', $methods );
