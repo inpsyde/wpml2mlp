@@ -9,6 +9,21 @@ use
 	WP_Post,
 	DateTime;
 
+/**
+ * Class WpPostImporterTest
+ *
+ * System test for the complete post import module. Verifies that every part
+ * (post importing, meta importing, term importing) works as expected.
+ *
+ * This does not replace unit tests for each of the single modules.
+ *
+ * However it's created in preparation of the refactoring of the God-Object WpPostImporter
+ * to gain more SOC. Todo: #57
+ * During the refactoring we just need do configure the new modules (meta importer, term linker),
+ * and all the tests should still pass as the majority are black box tests.
+ *
+ * @package W2M\Test\WpIntegration\Import\Service
+ */
 class WpPostImporterTest extends Helper\WpIntegrationTestCase {
 
 	/**
@@ -17,15 +32,18 @@ class WpPostImporterTest extends Helper\WpIntegrationTestCase {
 	 *
 	 * @param array $post_data
 	 * @param array $meta_data
+	 * @param array $id_map
 	 */
 	public function test_import_post( Array $post_data, Array $meta_data, Array $id_map ) {
 
-		$id_mapper_mock = $this->build_id_map_mock( $post_data, $id_map );
-		$http_mock      = $this->mock_builder->wp_http();
-		$http_mock->expects( $this->never() )
+		$http_mock = $this->mock_builder->wp_http();
+		$http_mock
+			->expects( $this->never() )
 			->method( 'request' );
 
-		$import_post_mock = $this->build_import_post_mock( $post_data, $meta_data, [] );
+		$term_data        = $this->create_terms();
+		$import_post_mock = $this->build_import_post_mock( $post_data, $meta_data, $term_data );
+		$id_mapper_mock   = $this->build_id_map_mock( $post_data, $id_map, $term_data );
 
 		/**
 		 * Testing that the action actually gets triggered:
@@ -48,7 +66,7 @@ class WpPostImporterTest extends Helper\WpIntegrationTestCase {
 			 * @param Type\ImportPostInterface $import_post
 			 */
 			function( $wp_post, $import_post )
-				use ( $action_check, $import_post_mock, $meta_data, $id_map )
+				use ( $action_check, $import_post_mock, $meta_data, $id_map, $term_data )
 			{
 				$action_check->action_fired( current_filter() );
 				$this->assertInstanceOf(
@@ -61,6 +79,8 @@ class WpPostImporterTest extends Helper\WpIntegrationTestCase {
 				);
 				$this->make_post_assertions( $wp_post, $import_post, $id_map );
 				$this->make_meta_assertions( $wp_post, $meta_data );
+				$this->make_term_assertions( $wp_post, $import_post, $term_data );
+				$this->make_post_stick_assertion( $wp_post, $import_post );
 			},
 			10,
 			2
@@ -124,11 +144,11 @@ class WpPostImporterTest extends Helper\WpIntegrationTestCase {
 		);
 
 		$this->assertSame(
-			$id_map[ 'post_parent_id' ],
+			$id_map[ 'parent_post_id' ],
 			(int) $wp_post->post_parent
 		);
 		$this->assertSame(
-			$id_map[ 'post_author_id' ],
+			$id_map[ 'author_id' ],
 			(int) $wp_post->post_author
 		);
 	}
@@ -151,14 +171,69 @@ class WpPostImporterTest extends Helper\WpIntegrationTestCase {
 	}
 
 	/**
+	 * Test if the post is actual sticky if it should be
+	 *
+	 * @param WP_Post $post
+	 * @param Type\ImportPostInterface $import_post
+	 */
+	public function make_post_stick_assertion( WP_Post $post, Type\ImportPostInterface $import_post ) {
+
+		$sticky_posts = get_option( 'sticky_posts', [] );
+		if ( $import_post->is_sticky() ) {
+			$this->assertContains(
+				$post->ID,
+				$sticky_posts
+			);
+		} else {
+			$this->assertNotContains(
+				$post->ID,
+				$sticky_posts
+			);
+		}
+	}
+
+	/**
 	 * compare post terms with import data
 	 *
 	 * @param WP_Post $post
+	 * @param Type\ImportPostInterface $import_post
 	 * @param array $term_data
 	 */
-	public function make_term_assertions( WP_Post $post, Array $term_data ) {
+	public function make_term_assertions(
+		WP_Post $post,
+		Type\ImportPostInterface $import_post,
+		Array $term_data
+	) {
 
-		//Todo: Make tests to verify data consistency
+		/**
+		 * @param array $list
+		 * @param $key
+		 *
+		 * @return array
+		 */
+		$list_pluck = function( Array $list, $key ) {
+			$sub_list = [];
+			foreach ( $list as $v ) {
+				$sub_list[] = $v[ $key ];
+			}
+
+			return $sub_list;
+		};
+		$taxonomies        = $list_pluck( $term_data, 'taxonomy' );
+		$expected_term_ids = $list_pluck( $term_data, 'term_id' );
+		$post_term_ids     = wp_get_post_terms( $post->ID, $taxonomies, [ 'fields' => 'ids' ] );
+
+		$this->assertSame(
+			$expected_term_ids,
+			$post_term_ids
+		);
+
+		$expected_term_names = $list_pluck( $term_data, 'name' );
+		$post_term_names     = wp_get_post_terms( $post->ID, $taxonomies, [ 'fields' => 'names' ] );
+		$this->assertSame(
+			$expected_term_names,
+			$post_term_names
+		);
 	}
 
 	/**
@@ -175,32 +250,118 @@ class WpPostImporterTest extends Helper\WpIntegrationTestCase {
 		foreach ( $meta_data as $meta_record ) {
 			$post_data[ 'meta' ][] = $this->mock_builder->type_wp_import_meta( [], $meta_record );
 		}
+		foreach ( $term_data as $term ) {
+			$post_data[ 'terms' ][] = $this->mock_builder->type_wp_term_reference(
+				[],
+				[
+					'origin_id' => $term[ 'origin_id' ],
+					'taxonomy'  => $term[ 'taxonomy' ]
+				]
+			);
+		}
 
 		return $this->mock_builder->type_wp_import_post( [], $post_data );
 	}
 
 	/**
+	 * Create and insert test terms and return a $data array about this terms
+	 *
+	 * @return array
+	 */
+	public function create_terms() {
+
+		$category_data = [
+			'name'      => 'First category',
+			'taxonomy'  => 'category',
+			'origin_id' => 42
+		];
+		$tag_data = [
+			'name'      => 'Second post tag',
+			'taxonomy'  => 'post_tag',
+			'origin_id' => 24
+		];
+
+		$category = wp_insert_term(
+			$category_data[ 'name' ],
+			$category_data[ 'taxonomy' ]
+		);
+		$post_tag = wp_insert_term(
+			$tag_data[ 'name' ],
+			$tag_data[ 'taxonomy' ]
+		);
+
+		$terms = [
+			array_merge( $category_data, $category ),
+			array_merge( $tag_data, $post_tag )
+		];
+
+		return $terms;
+	}
+
+	/**
 	 * @param array $post_data
 	 * @param array $id_map
+	 * @param array $terms
 	 *
 	 * @return \PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function build_id_map_mock( Array $post_data, Array $id_map ) {
+	public function build_id_map_mock( Array $post_data, Array $id_map, Array $terms ) {
 
 		$id_mapper_mock = $this->mock_builder->data_multi_type_id_mapper();
 		$id_mapper_mock
-			->expects( $this->atLeast( 2 ) )
+			->expects( $this->atLeast( 1 ) )
 			->method( 'local_id' )
+			->willReturnCallback(
+				function( $type, $origin_id ) use ( $post_data, $id_map, $terms ) {
+
+					$post_map = [
+						$post_data[ 'origin_parent_post_id' ] => $id_map[ 'parent_post_id' ]
+					];
+					$user_map = [
+						$post_data[ 'origin_author_id' ] => $id_map[ 'author_id' ]
+					];
+					$term_map = [];
+					foreach ( $terms as $term ) {
+						$term_map[ $term[ 'origin_id' ] ] = $term[ 'term_id' ];
+					}
+
+					$local_id = NULL;
+					switch ( $type ) {
+						case 'term' :
+							if ( isset( $term_map[ $origin_id ] ) ) {
+								$local_id = $term_map[ $origin_id ];
+							}
+							break;
+
+						case 'post' :
+							if ( isset( $post_map[ $origin_id ] ) ) {
+								$local_id = $post_map[ $origin_id ];
+							}
+							break;
+
+						case 'user' :
+							if ( isset( $user_map[ $origin_id ] ) ) {
+								$local_id = $user_map[ $origin_id ];
+							}
+							break;
+					}
+
+					return $local_id;
+				}
+			);
+
+			/*
 			->withConsecutive(
 				array( 'post', $post_data[ 'origin_parent_post_id' ] ),
 				array( 'user', $post_data[ 'origin_author_id' ] )
 			)
 			->will(
 				$this->onConsecutiveCalls(
-					$id_map[ 'post_parent_id'],
-					$id_map[ 'post_author_id' ]
+					$id_map[ 'parent_post_id'],
+					$id_map[ 'author_id' ]
 				)
 			);
+			*/
 
 		return $id_mapper_mock;
 	}
@@ -255,8 +416,8 @@ class WpPostImporterTest extends Helper\WpIntegrationTestCase {
 			],
 			# 3. parameter $id_map
 			[
-				'post_parent_id' => 3,
-				'post_author_id' => 4
+				'parent_post_id' => 3,
+				'author_id' => 4
 			]
 		];
 
