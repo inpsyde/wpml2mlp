@@ -1,6 +1,6 @@
 <?php # -*- coding: utf-8 -*-
 
-namespace W2M\Test\Unit\Import\Service;
+namespace W2M\Test\Unit\Import\Service\Parser;
 
 use
 	W2M\Import\Service,
@@ -9,6 +9,7 @@ use
 	Brain,
 	SimpleXMLElement,
 	DateTimeZone;
+use W2M\Test\Helper\MonkeyTestCase;
 
 class WpPostParserTest extends Helper\MonkeyTestCase {
 

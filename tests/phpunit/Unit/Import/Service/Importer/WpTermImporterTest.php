@@ -1,26 +1,28 @@
 <?php # -*- coding: utf-8 -*-
 
-namespace W2M\Test\Unit\Import\Service;
+namespace W2M\Test\Unit\Import\Service\Importer;
 
-use Brain;
-use W2M\Import\Service;
-use W2M\Test\Helper;
+use
+	W2M\Import\Service,
+	W2M\Test\Helper,
+	Brain;
 
-class WpTermImporterTest extends \PHPUnit_Framework_TestCase {
+class WpTermImporterTest extends Helper\MonkeyTestCase {
 
+	/**
+	 * @var Helper\FileSystem
+	 */
 	private $fs_helper;
 
 	/**
 	 * runs before each test
 	 */
-	protected function setUp() {
+	public function setUp() {
 
+		parent::setUp();
 		if ( !$this->fs_helper ) {
 			$this->fs_helper = new Helper\FileSystem;
 		}
-
-		Brain\Monkey::setUp();
-		Brain\Monkey::setUpWP();
 
 		/**
 		 * Just create some mocks of these types to avoid
@@ -29,15 +31,6 @@ class WpTermImporterTest extends \PHPUnit_Framework_TestCase {
 		 * when mocking objects that type hint WP core components
 		 */
 		$this->getMock( 'WP_Post' );
-	}
-
-	/**
-	 * runs after each test
-	 */
-	protected function tearDown() {
-
-		Brain\Monkey::tearDown();
-		Brain\Monkey::tearDownWP();
 	}
 
 	/**

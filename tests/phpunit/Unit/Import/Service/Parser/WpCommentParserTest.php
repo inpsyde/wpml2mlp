@@ -1,6 +1,6 @@
 <?php # -*- coding: utf-8 -*-
 
-namespace W2M\Test\Unit\Import\Service;
+namespace W2M\Test\Unit\Import\Service\Parser;
 
 use
 	W2M\Import\Service,
