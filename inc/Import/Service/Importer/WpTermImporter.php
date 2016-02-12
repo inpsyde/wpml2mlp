@@ -50,15 +50,6 @@ class WpTermImporter implements TermImporterInterface {
 			$import_term->taxonomy(),
 			$import_term_args
 		);
-
-		if ( $import_term->origin_parent_term_id() && ! $local_parent_id ) {
-			/**
-			 * @param stdClass|WP_Term $wp_term
-			 * @param Type\ImportTermInterface $import_term
-			 */
-			do_action( 'w2m_import_missing_term_ancestor', $wp_term, $import_term );
-		}
-
 		if ( is_wp_error( $result ) ) {
 			/**
 			 * Attach error handler/logger here
@@ -67,12 +58,20 @@ class WpTermImporter implements TermImporterInterface {
 			 * @param Type\ImportElementInterface $import_term
 			 */
 			do_action( 'w2m_import_term_error', $result, $import_term );
+
 			return;
 		}
 
 		$import_term->id( $result[ 'term_id' ] );
-
 		$wp_term = get_term_by( 'id', $result[ 'term_id' ], $import_term->taxonomy() );
+
+		if ( $import_term->origin_parent_term_id() && ! $local_parent_id ) {
+			/**
+			 * @param stdClass|WP_Term $wp_term
+			 * @param Type\ImportTermInterface $import_term
+			 */
+			do_action( 'w2m_import_missing_term_ancestor', $wp_term, $import_term );
+		}
 
 		/**
 		 * @param stdClass|WP_Term
