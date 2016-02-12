@@ -35,7 +35,7 @@ class WpUserImporterTest extends Helper\MonkeyTestCase {
 
 		$wp_user_mock = $this->getMock( 'WP_User' );
 
-		$testee = new Service\WpUserImporter( $id_mapper_mock );
+		$testee = new Service\Importer\WpUserImporter( $id_mapper_mock );
 
 		/**
 		 * Now define the behaviour of the mock object. Each of the specified

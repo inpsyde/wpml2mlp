@@ -42,7 +42,7 @@ class WpPostImporterTest extends Helper\MonkeyTestCase {
 
 		$http = $this->getMockBuilder( 'WP_Http' )->disableOriginalConstructor()->getMock();
 
-		$testee = new Service\WpPostImporter( $id_mapper_mock, $http );
+		$testee = new Service\Importer\WpPostImporter( $id_mapper_mock, $http );
 
 		$post_mock = $this->mock_builder->type_wp_import_post();
 

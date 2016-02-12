@@ -1,6 +1,6 @@
 <?php # -*- coding: utf-8 -*-
 
-namespace W2M\Import\Service;
+namespace W2M\Import\Service\Importer;
 
 use
 	W2M\Import\Data,
@@ -9,7 +9,11 @@ use
 	WP_User,
 	WP_Error;
 
-
+/**
+ * Class WpUserImporter
+ *
+ * @package W2M\Import\Service\Importer
+ */
 class WpUserImporter implements UserImporterInterface {
 
 	/**
@@ -23,7 +27,6 @@ class WpUserImporter implements UserImporterInterface {
 	){
 
 		$this->id_mapper = $id_mapper;
-
 	}
 
 	/**

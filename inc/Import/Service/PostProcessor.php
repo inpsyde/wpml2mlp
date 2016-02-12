@@ -6,6 +6,11 @@ use
 	W2M\Import\Filter,
 	W2M\Import\Iterator;
 
+/**
+ * Class PostProcessor
+ *
+ * @package W2M\Import\Service
+ */
 class PostProcessor implements ElementProcessorInterface {
 
 	/**
@@ -14,7 +19,7 @@ class PostProcessor implements ElementProcessorInterface {
 	private $iterator;
 
 	/**
-	 * @var WpPostImporter
+	 * @var Importer\WpPostImporter
 	 */
 	private $importer;
 
@@ -25,12 +30,12 @@ class PostProcessor implements ElementProcessorInterface {
 
 	/**
 	 * @param Iterator\PostIterator $iterator
-	 * @param PostImporterInterface $importer
+	 * @param Importer\PostImporterInterface $importer
 	 * @param Filter\PostImportFilterInterface $filter (Optional)
 	 */
 	public function __construct(
 		Iterator\PostIterator $iterator,
-		PostImporterInterface $importer,
+		Importer\PostImporterInterface $importer,
 		Filter\PostImportFilterInterface $filter = NULL
 	) {
 		$this->iterator = $iterator;

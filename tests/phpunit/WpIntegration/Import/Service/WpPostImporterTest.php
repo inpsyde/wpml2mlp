@@ -95,7 +95,7 @@ class WpPostImporterTest extends Helper\WpIntegrationTestCase {
 			2
 		);
 
-		$testee = new Service\WpPostImporter( $id_mapper_mock, $http_mock );
+		$testee = new Service\Importer\WpPostImporter( $id_mapper_mock, $http_mock );
 		$testee->import_post( $import_post_mock );
 	}
 

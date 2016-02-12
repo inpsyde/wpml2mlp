@@ -14,7 +14,7 @@ class CommentProcessor implements ElementProcessorInterface {
 	private $iterator;
 
 	/**
-	 * @var CommentImporterInterface
+	 * @var Importer\CommentImporterInterface
 	 */
 	private $importer;
 
@@ -25,12 +25,12 @@ class CommentProcessor implements ElementProcessorInterface {
 
 	/**
 	 * @param Iterator\CommentIterator $iterator
-	 * @param CommentImporterInterface $importer
+	 * @param Importer\CommentImporterInterface $importer
 	 * @param Filter\CommentImportFilterInterface $filter (Optional)
 	 */
 	public function __construct(
 		Iterator\CommentIterator $iterator,
-		CommentImporterInterface $importer,
+		Importer\CommentImporterInterface $importer,
 		Filter\CommentImportFilterInterface $filter = NULL
 	) {
 

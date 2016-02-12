@@ -174,7 +174,7 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		);
 		$user_processor = new Import\Service\UserProcessor(
 			$user_iterator,
-			new Import\Service\WpUserImporter( $import_id_mapper )
+			new Import\Service\Importer\WpUserImporter( $import_id_mapper )
 		);
 
 		/**
@@ -191,7 +191,7 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		);
 		$term_processor = new Import\Service\TermProcessor(
 			$term_iterator,
-			new Import\Service\WpTermImporter( $import_id_mapper ),
+			new Import\Service\Importer\WpTermImporter( $import_id_mapper ),
 			new Import\Filter\DuplicateTermFilter
 		);
 
@@ -217,7 +217,7 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		}
 		$post_processor = new Import\Service\PostProcessor(
 			$post_iterator,
-			new Import\Service\WpPostImporter( $import_id_mapper ),
+			new Import\Service\Importer\WpPostImporter( $import_id_mapper ),
 			$post_filter
 		);
 
@@ -235,7 +235,7 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		);
 		$comment_processor = new Import\Service\CommentProcessor(
 			$comment_iterator,
-			new Import\Service\WpCommentImporter( $import_id_mapper )
+			new Import\Service\Importer\WpCommentImporter( $import_id_mapper )
 		);
 
 		$processors = [

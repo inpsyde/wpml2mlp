@@ -44,29 +44,29 @@ Use the installer via back-end of your install or ...
 
 ## Action & Filter Reference
 ### Actions
-* `w2m_import_term_error` in `W2M\Import\Service\WpTermImporter::import_term()`
-* `w2m_import_missing_term_ancestor` in `W2M\Import\Service\WpTermImporter::import_term()`
-* `w2m_term_imported` in `W2M\Import\Service\WpTermImporter::import_term()`
+* `w2m_import_term_error` in `W2M\Import\Service\Importer\WpTermImporter::import_term()`
+* `w2m_import_missing_term_ancestor` in `W2M\Import\Service\Importer\WpTermImporter::import_term()`
+* `w2m_term_imported` in `W2M\Import\Service\Importer\WpTermImporter::import_term()`
 
-* `w2m_import_post_error` in `W2M\Import\Service\WpPostImporter::import_post()`
-* `w2m_import_missing_post_ancestor` in `W2M\Import\Service\WpPostImporter::import_post()`
-* `w2m_import_missing_post_local_user_id` in `W2M\Import\Service\WpPostImporter::import_post()`
-* `w2m_import_set_post_terms_error` in `W2M\Import\Service\WpPostImporter::import_post()`
-* `w2m_import_update_post_meta_error` in `W2M\Import\Service\WpPostImporter::import_post()`
-* `w2m_post_imported` in `W2M\Import\Service\WpPostImporter::import_post()`
+* `w2m_import_post_error` in `W2M\Import\Service\Importer\WpPostImporter::import_post()`
+* `w2m_import_missing_post_ancestor` in `W2M\Import\Service\Importer\WpPostImporter::import_post()`
+* `w2m_import_missing_post_local_user_id` in `W2M\Import\Service\Importer\WpPostImporter::import_post()`
+* `w2m_import_set_post_terms_error` in `W2M\Import\Service\Importer\WpPostImporter::import_post()`
+* `w2m_import_update_post_meta_error` in `W2M\Import\Service\Importer\WpPostImporter::import_post()`
+* `w2m_post_imported` in `W2M\Import\Service\Importer\WpPostImporter::import_post()`
 
-* `w2m_import_attachment_missing_origin_attachment_url` in `W2M\Import\Service\WpPostImporter::import_post()`
-* `w2m_import_attachment_mkdir_error` in `W2M\Import\Service\WpPostImporter::import_post()`
-* `w2m_import_request_attachment_error` in `W2M\Import\Service\WpPostImporter::import_post()`
-* `w2m_attachment_imported`in `W2M\Import\Service\WpPostImporter::import_post()`
+* `w2m_import_attachment_missing_origin_attachment_url` in `W2M\Import\Service\Importer\WpPostImporter::import_post()`
+* `w2m_import_attachment_mkdir_error` in `W2M\Import\Service\Importer\WpPostImporter::import_post()`
+* `w2m_import_request_attachment_error` in `W2M\Import\Service\Importer\WpPostImporter::import_post()`
+* `w2m_attachment_imported`in `W2M\Import\Service\Importer\WpPostImporter::import_post()`
 
-* `w2m_import_user_error` in `W2M\Import\Service\WpUserImporter::import_user()`
-* `w2m_user_imported` in `W2M\Import\Service\WpUserImporter::import_user()`
+* `w2m_import_user_error` in `W2M\Import\Service\Importer\WpUserImporter::import_user()`
+* `w2m_user_imported` in `W2M\Import\Service\Importer\WpUserImporter::import_user()`
 
-* `w2m_import_comment_error` in `W2M\Import\Service\WpCommentImporter::import_comment()`
-* `w2m_import_missing_comment_ancestor` in `W2M\Import\Service\WpCommentImporter::import_comment()`
-* `w2m_import_update_comment_meta_error` in `W2M\Import\Service\WpCommentImporter::import_comment()`
-* `w2m_comment_imported` in `W2M\Import\Service\WpCommentImporter::import_comment()`
+* `w2m_import_comment_error` in `W2M\Import\Service\Importer\WpCommentImporter::import_comment()`
+* `w2m_import_missing_comment_ancestor` in `W2M\Import\Service\Importer\WpCommentImporter::import_comment()`
+* `w2m_import_update_comment_meta_error` in `W2M\Import\Service\Importer\WpCommentImporter::import_comment()`
+* `w2m_comment_imported` in `W2M\Import\Service\Importer\WpCommentImporter::import_comment()`
 
 * `w2m_import_parse_term_error` in `W2M\Import\Service\Parser\WpTermParser::propagate_error()`
 * `w2m_import_parse_post_error` in `W2M\Import\Service\Parser\WpPostParser::propagate_error()`

@@ -6,6 +6,11 @@ use
 	W2M\Import\Filter,
 	W2M\Import\Iterator;
 
+/**
+ * Class UserProcessor
+ *
+ * @package W2M\Import\Service
+ */
 class UserProcessor implements ElementProcessorInterface {
 
 	/**
@@ -14,7 +19,7 @@ class UserProcessor implements ElementProcessorInterface {
 	private $iterator;
 
 	/**
-	 * @var UserImporterInterface
+	 * @var Importer\UserImporterInterface
 	 */
 	private $importer;
 
@@ -25,12 +30,12 @@ class UserProcessor implements ElementProcessorInterface {
 
 	/**
 	 * @param Iterator\UserIterator $iterator
-	 * @param UserImporterInterface $importer
+	 * @param Importer\UserImporterInterface $importer
 	 * @param Filter\UserImportFilterInterface $filter (Optional)
 	 */
 	public function __construct(
 		Iterator\UserIterator $iterator,
-		UserImporterInterface $importer,
+		Importer\UserImporterInterface $importer,
 		Filter\UserImportFilterInterface $filter = NULL
 	) {
 

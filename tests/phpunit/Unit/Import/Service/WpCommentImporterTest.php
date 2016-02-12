@@ -40,7 +40,7 @@ class WpCommentImporterTest extends Helper\MonkeyTestCase {
 
 		$id_mapper_mock = $this->mock_builder->data_multi_type_id_mapper();
 
-		$testee = new Service\WpCommentImporter( $id_mapper_mock );
+		$testee = new Service\Importer\WpCommentImporter( $id_mapper_mock );
 
 		$comment_mock = $this->getMockBuilder( 'W2M\Import\Type\ImportCommentInterface' )
 		                     ->getMock();

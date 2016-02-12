@@ -195,7 +195,7 @@ class MockBuilder {
 	public function service_comment_importer_interface( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
-			'W2M\Import\Service\CommentImporterInterface',
+			'W2M\Import\Service\Importer\CommentImporterInterface',
 			$methods,
 			$data
 		);
@@ -210,7 +210,7 @@ class MockBuilder {
 	public function service_post_importer_interface( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
-			'W2M\Import\Service\PostImporterInterface',
+			'W2M\Import\Service\Importer\PostImporterInterface',
 			$methods,
 			$data
 		);
@@ -225,7 +225,7 @@ class MockBuilder {
 	public function service_term_importer_interface( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
-			'W2M\Import\Service\TermImporterInterface',
+			'W2M\Import\Service\Importer\TermImporterInterface',
 			$methods,
 			$data
 		);
@@ -240,7 +240,7 @@ class MockBuilder {
 	public function service_user_importer_interface( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
-			'W2M\Import\Service\UserImporterInterface',
+			'W2M\Import\Service\Importer\UserImporterInterface',
 			$methods,
 			$data
 		);

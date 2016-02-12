@@ -14,7 +14,7 @@ class TermProcessor implements ElementProcessorInterface {
 	private $iterator;
 
 	/**
-	 * @var TermImporterInterface
+	 * @var Importer\TermImporterInterface
 	 */
 	private $importer;
 
@@ -25,12 +25,12 @@ class TermProcessor implements ElementProcessorInterface {
 
 	/**
 	 * @param Iterator\TermIterator $iterator
-	 * @param TermImporterInterface $importer
+	 * @param Importer\TermImporterInterface $importer
 	 * @param Filter\TermImportFilterInterface $filter (Optional)
 	 */
 	public function __construct(
 		Iterator\TermIterator $iterator,
-		TermImporterInterface $importer,
+		Importer\TermImporterInterface $importer,
 		Filter\TermImportFilterInterface $filter = NULL
 	) {
 

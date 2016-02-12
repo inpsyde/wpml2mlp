@@ -57,7 +57,7 @@ class WpAttachmentImporterTest extends Helper\WpIntegrationTestCase {
 
 		$id_mapper_mock = $this->mock_builder->data_multi_type_id_mapper();
 
-		$testee = new Service\WpPostImporter( $id_mapper_mock, new WP_Http() );
+		$testee = new Service\Importer\WpPostImporter( $id_mapper_mock, new WP_Http() );
 
 		$post_mock = $this->getMockBuilder( 'W2M\Import\Type\ImportPostInterface' )
 		                  ->getMock();

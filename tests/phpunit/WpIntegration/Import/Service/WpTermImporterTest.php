@@ -16,7 +16,7 @@ class WpTermImporterTest extends Helper\WpIntegrationTestCase {
 		$id_mapper_mock = $this->getMockBuilder( 'W2M\Import\Data\MultiTypeIdMapperInterface' )
 		                       ->getMock();
 
-		$testee = new Service\WpTermImporter( $id_mapper_mock );
+		$testee = new Service\Importer\WpTermImporter( $id_mapper_mock );
 
 		$term_mock = $this->getMockBuilder( 'W2M\Import\Type\ImportTermInterface' )
 		                  ->getMock();

@@ -1,6 +1,6 @@
 <?php # -*- coding: utf-8 -*-
 
-namespace W2M\Import\Service;
+namespace W2M\Import\Service\Importer;
 
 use
 	W2M\Import\Data,
@@ -9,7 +9,11 @@ use
 	WP_Term,
 	stdClass;
 
-
+/**
+ * Class WpTermImporter
+ *
+ * @package W2M\Import\Service\Importer
+ */
 class WpTermImporter implements TermImporterInterface {
 
 	/**
@@ -59,7 +63,7 @@ class WpTermImporter implements TermImporterInterface {
 			/**
 			 * Attach error handler/logger here
 			 *
-			 * @param WP_Error $result
+			 * @param \WP_Error $result
 			 * @param Type\ImportElementInterface $import_term
 			 */
 			do_action( 'w2m_import_term_error', $result, $import_term );
