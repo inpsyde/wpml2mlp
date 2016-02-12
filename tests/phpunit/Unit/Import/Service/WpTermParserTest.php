@@ -23,7 +23,7 @@ class WpTermParserTest extends Helper\MonkeyTestCase {
 		$wp_factory_mock = $this->mock_builder->common_wp_factory();
 		$wp_factory_mock->expects( $this->never() )->method( 'wp_error' );
 
-		$testee = new Service\WpTermParser( $wp_factory_mock );
+		$testee = new Service\Parser\WpTermParser( $wp_factory_mock );
 
 		// we don't expect an error here
 		Brain\Monkey::actions()
@@ -175,7 +175,7 @@ XML;
 			->once()
 			->with( $wp_error_mock );
 
-		$testee = new Service\WpTermParser( $wp_factory_mock );
+		$testee = new Service\Parser\WpTermParser( $wp_factory_mock );
 
 		$result = $testee->parse_term( $item );
 		$this->assertNull( $result );
@@ -214,7 +214,7 @@ XML;
 			->once()
 			->with( $wp_error_mock );
 
-		$testee = new Service\WpTermParser( $wp_factory_mock );
+		$testee = new Service\Parser\WpTermParser( $wp_factory_mock );
 
 		$result = $testee->parse_term( $item );
 		$this->assertInstanceOf(
@@ -375,7 +375,7 @@ XML;
 		$wp_factory_mock->expects( $this->atLeast( 1 ) )
 			->method( 'wp_error' )
 			->willReturn( $wp_error_mock );
-		$testee = new Service\WpTermParser( $wp_factory_mock );
+		$testee = new Service\Parser\WpTermParser( $wp_factory_mock );
 
 		Brain\Monkey::actions()->expectFired( 'w2m_import_parse_term_error' )
 			->once()
@@ -485,7 +485,7 @@ XML;
 			->once()
 			->with( $wp_error_mock );
 
-		$testee = new Service\WpTermParser( $wp_factory_mock );
+		$testee = new Service\Parser\WpTermParser( $wp_factory_mock );
 		$result = $testee->parse_term( $item );
 
 		$this->assertNull(

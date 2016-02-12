@@ -26,7 +26,7 @@ class WpCommentParserTest extends Helper\MonkeyTestCase {
 			->expectFired( 'w2m_import_parse_comment_error' )
 			->never();
 
-		$testee = new Service\WpCommentParser( $wp_factory_mock );
+		$testee = new Service\Parser\WpCommentParser( $wp_factory_mock );
 		$result = $testee->parse_comment( $document );
 
 		$this->assertInstanceOf(
@@ -209,7 +209,7 @@ XML;
 			->once()
 			->with( $wp_error_mock );
 
-		$testee = new Service\WpCommentParser( $wp_factory_mock );
+		$testee = new Service\Parser\WpCommentParser( $wp_factory_mock );
 		$this->assertNull(
 			$testee->parse_comment( $document )
 		);
@@ -255,7 +255,7 @@ XML;
 			->once()
 			->with( $wp_error_mock );
 
-		$testee = new Service\WpCommentParser( $wp_factory_mock );
+		$testee = new Service\Parser\WpCommentParser( $wp_factory_mock );
 		$this->assertNull(
 			$testee->parse_comment( $document )
 		);
@@ -289,7 +289,7 @@ XML;
 			->method( 'wp_error' )
 			->willReturn( $wp_error_mock );
 
-		$testee = new Service\WpCommentParser( $wp_factory_mock );
+		$testee = new Service\Parser\WpCommentParser( $wp_factory_mock );
 		$result = $testee->parse_comment( $document );
 
 		$this->assertInstanceOf(

@@ -15,17 +15,17 @@ class PostIterator implements Iterator {
 	private $iterator;
 
 	/**
-	 * @var Service\PostParserInterface
+	 * @var Service\Parser\PostParserInterface
 	 */
 	private $parser;
 
 	/**
 	 * @param SimpleXmlItemWrapper $iterator
-	 * @param Service\PostParserInterface $parser
+	 * @param Service\Parser\PostParserInterface $parser
 	 */
 	public function __construct(
 		SimpleXmlItemWrapper $iterator,
-		Service\PostParserInterface $parser
+		Service\Parser\PostParserInterface $parser
 	) {
 
 		$this->iterator = $iterator;

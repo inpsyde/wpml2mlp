@@ -39,7 +39,7 @@ class WpPostParserTest extends Helper\MonkeyTestCase {
 		$factory_mock->expects( $this->never() )
 			->method( 'wp_error' );
 
-		$testee = new Service\WpPostParser(
+		$testee = new Service\Parser\WpPostParser(
 			$factory_mock
 		);
 
@@ -463,7 +463,7 @@ XML;
 			->once()
 			->with( $wp_error_mock );
 
-		$testee = new Service\WpPostParser( $wp_factory_mock );
+		$testee = new Service\Parser\WpPostParser( $wp_factory_mock );
 
 		$result = $testee->parse_post( $document );
 		$this->assertNull(
@@ -511,7 +511,7 @@ XML;
 			->once()
 			->with( $wp_error_mock );
 
-		$testee = new Service\WpPostParser( $wp_factory_mock );
+		$testee = new Service\Parser\WpPostParser( $wp_factory_mock );
 		$result = $testee->parse_post( $document );
 		$this->assertNull(
 			$result
@@ -549,7 +549,7 @@ XML;
 			->once()
 			->with( $wp_error_mock );
 
-		$testee = new Service\WpPostParser( $wp_factory_mock );
+		$testee = new Service\Parser\WpPostParser( $wp_factory_mock );
 		$result = $testee->parse_post( $document );
 
 		$this->assertInstanceOf(
@@ -572,7 +572,7 @@ XML;
 			->expectFired( 'w2m_import_parse_post_error' )
 			->never();
 
-		$testee = new Service\WpPostParser;
+		$testee = new Service\Parser\WpPostParser;
 		$result = $testee->parse_post_terms( $document );
 
 		$this->assertInternalType(
@@ -611,7 +611,7 @@ XML;
 			->expectFired( 'w2m_import_parse_post_error' )
 			->never();
 
-		$testee = new Service\WpPostParser;
+		$testee = new Service\Parser\WpPostParser;
 		$result = $testee->parse_post_meta( $document );
 
 		$this->assertInternalType(
@@ -656,7 +656,7 @@ XML;
 			->expectFired( 'w2m_import_parse_post_error' )
 			->never();
 
-		$testee = new Service\WpPostParser;
+		$testee = new Service\Parser\WpPostParser;
 		$result = $testee->parse_locale_relations( $document );
 
 		$this->assertInternalType(

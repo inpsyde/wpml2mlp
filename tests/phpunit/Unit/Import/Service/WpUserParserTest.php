@@ -26,7 +26,7 @@ class WpUserParserTest extends Helper\MonkeyTestCase {
 		$factory_mock->expects( $this->never() )
 			->method( 'wp_error' );
 
-		$testee = new Service\WpUserParser( $factory_mock );
+		$testee = new Service\Parser\WpUserParser( $factory_mock );
 		$result = $testee->parse_user( $document );
 
 		$this->assertInstanceOf(

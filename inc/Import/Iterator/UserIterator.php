@@ -15,13 +15,17 @@ class UserIterator implements Iterator {
 	private $iterator;
 
 	/**
-	 * @var Service\UserParserInterface
+	 * @var Service\Parser\UserParserInterface
 	 */
 	private $parser;
 
+	/**
+	 * @param SimpleXmlItemWrapper $iterator
+	 * @param Service\Parser\UserParserInterface $parser
+	 */
 	public function __construct(
 		SimpleXmlItemWrapper $iterator,
-		Service\UserParserInterface $parser
+		Service\Parser\UserParserInterface $parser
 	) {
 
 		$this->iterator = $iterator;

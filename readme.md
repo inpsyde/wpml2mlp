@@ -68,10 +68,10 @@ Use the installer via back-end of your install or ...
 * `w2m_import_update_comment_meta_error` in `W2M\Import\Service\WpCommentImporter::import_comment()`
 * `w2m_comment_imported` in `W2M\Import\Service\WpCommentImporter::import_comment()`
 
-* `w2m_import_parse_term_error` in `W2M\Import\Service\WpTermParser::propagate_error()`
-* `w2m_import_parse_post_error` in `W2M\Import\Service\WpPostParser::propagate_error()`
-* `w2m_import_parse_user_error` in `W2M\Import\Service\WpUserParser::propagate_error()`
-* `w2m_import_parse_comment_error` in `W2M\Import\Service\WpCommentParser::propagate_error()`
+* `w2m_import_parse_term_error` in `W2M\Import\Service\Parser\WpTermParser::propagate_error()`
+* `w2m_import_parse_post_error` in `W2M\Import\Service\Parser\WpPostParser::propagate_error()`
+* `w2m_import_parse_user_error` in `W2M\Import\Service\Parser\WpUserParser::propagate_error()`
+* `w2m_import_parse_comment_error` in `W2M\Import\Service\Parser\WpCommentParser::propagate_error()`
 
 * (Deprecated) `w2m_import_set_user_id` in `W2M\Import\Type\WpImportUser::id()`
 * (Deprecated) `w2m_import_set_post_id` in `W2M\Import\Type\WpImportPost::id()`

@@ -14,15 +14,18 @@ class CommentIterator implements Iterator {
 	 */
 	private $iterator;
 
+	/**
+	 * @var Service\Parser\CommentParserInterface
+	 */
 	private $parser;
 
 	/**
 	 * @param SimpleXmlItemWrapper $iterator
-	 * @param Service\CommentParserInterface $parser
+	 * @param Service\Parser\CommentParserInterface $parser
 	 */
 	public function __construct(
 		SimpleXmlItemWrapper $iterator,
-		Service\CommentParserInterface $parser
+		Service\Parser\CommentParserInterface $parser
 	) {
 
 		$this->iterator = $iterator;

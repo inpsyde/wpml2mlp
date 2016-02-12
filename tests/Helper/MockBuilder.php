@@ -255,7 +255,7 @@ class MockBuilder {
 	public function service_comment_parser_interface( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
-			'W2M\Import\Service\CommentParserInterface',
+			'W2M\Import\Service\Parser\CommentParserInterface',
 			$methods,
 			$data
 		);
@@ -270,7 +270,7 @@ class MockBuilder {
 	public function service_post_parser_interface( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
-			'W2M\Import\Service\PostParserInterface',
+			'W2M\Import\Service\Parser\PostParserInterface',
 			$methods,
 			$data
 		);
@@ -285,7 +285,7 @@ class MockBuilder {
 	public function service_term_parser_interface( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
-			'W2M\Import\Service\TermParserInterface',
+			'W2M\Import\Service\Parser\TermParserInterface',
 			$methods,
 			$data
 		);
@@ -300,7 +300,7 @@ class MockBuilder {
 	public function service_user_parser_interface( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
-			'W2M\Import\Service\UserParserInterface',
+			'W2M\Import\Service\Parser\UserParserInterface',
 			$methods,
 			$data
 		);

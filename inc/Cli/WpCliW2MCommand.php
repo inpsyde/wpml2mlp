@@ -170,7 +170,7 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 					'wp:author'
 				)
 			),
-			new Import\Service\WpUserParser
+			new Import\Service\Parser\WpUserParser
 		);
 		$user_processor = new Import\Service\UserProcessor(
 			$user_iterator,
@@ -187,7 +187,7 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 					'wp:category'
 				)
 			),
-			new Import\Service\WpTermParser
+			new Import\Service\Parser\WpTermParser
 		);
 		$term_processor = new Import\Service\TermProcessor(
 			$term_iterator,
@@ -205,7 +205,7 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 					'item'
 				)
 			),
-			new Import\Service\WpPostParser
+			new Import\Service\Parser\WpPostParser
 		);
 		$post_filter = new Import\Filter\DuplicatePostFilter;
 		// Todo: make this assignment in a controller (provider)
@@ -231,7 +231,7 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 					'wp:comment'
 				)
 			),
-			new Import\Service\WpCommentParser
+			new Import\Service\Parser\WpCommentParser
 		);
 		$comment_processor = new Import\Service\CommentProcessor(
 			$comment_iterator,
