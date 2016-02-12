@@ -9,21 +9,6 @@ use
 
 class WpUserImporterTest extends Helper\MonkeyTestCase {
 
-	private $fs_helper;
-
-	/**
-	 * runs before each test
-	 */
-	public function setUp() {
-
-		if ( ! $this->fs_helper ) {
-			$this->fs_helper = new Helper\FileSystem;
-		}
-
-		parent::setUp();
-
-	}
-
 	/**
 	 * @group import
 	 */

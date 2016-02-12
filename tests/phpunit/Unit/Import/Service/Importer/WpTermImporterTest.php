@@ -10,30 +10,6 @@ use
 class WpTermImporterTest extends Helper\MonkeyTestCase {
 
 	/**
-	 * @var Helper\FileSystem
-	 */
-	private $fs_helper;
-
-	/**
-	 * runs before each test
-	 */
-	public function setUp() {
-
-		parent::setUp();
-		if ( !$this->fs_helper ) {
-			$this->fs_helper = new Helper\FileSystem;
-		}
-
-		/**
-		 * Just create some mocks of these types to avoid
-		 * error messages like this
-		 * https://github.com/sebastianbergmann/phpunit-mock-objects/issues/273
-		 * when mocking objects that type hint WP core components
-		 */
-		$this->getMock( 'WP_Post' );
-	}
-
-	/**
 	 * @group import_term
 	 */
 	public function test_import_term() {
