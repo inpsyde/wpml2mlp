@@ -59,6 +59,11 @@ class WpPostImporterTest extends Helper\WpIntegrationTestCase {
 			->method( 'action_fired' )
 			->with( $text_action );
 
+		/**
+		 * Todo: #57
+		 * Instantiate the new actors here, and bind them to the action.
+		 * The tests should still pass then.
+		 */
 		add_action(
 			$text_action,
 			/**
@@ -76,6 +81,10 @@ class WpPostImporterTest extends Helper\WpIntegrationTestCase {
 				$this->assertSame(
 					$import_post_mock,
 					$import_post
+				);
+				$this->assertSame(
+					$wp_post->ID,
+					$import_post->id()
 				);
 				$this->make_post_assertions( $wp_post, $import_post, $id_map );
 				$this->make_meta_assertions( $wp_post, $meta_data );
@@ -260,7 +269,30 @@ class WpPostImporterTest extends Helper\WpIntegrationTestCase {
 			);
 		}
 
-		return $this->mock_builder->type_wp_import_post( [], $post_data );
+		$post_mock = $this->mock_builder->type_wp_import_post( [], $post_data );
+
+		/**
+		 * WpPostImporter MUST pass the new wp-post id to the import post object.
+		 * Its used as a one-time setter. Each ensuing call will return this new post id.
+		 * This is asserted in test_import_post()
+		 */
+		$post_mock->expects( $this->atLeast( 1 ) )
+			->method( 'id' )
+			->willReturnCallback(
+				function( $id = NULL ) {
+					static $local_id;
+					if ( ! $local_id ) {
+						$local_id = 0;
+					}
+					if ( ! $id || $local_id )
+						return $local_id;
+
+					$local_id = (int) $id;
+					return $local_id;
+				}
+			);
+
+		return $post_mock;
 	}
 
 	/**
