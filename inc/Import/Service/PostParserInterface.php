@@ -9,7 +9,7 @@ use
 /**
  * Interface PostParserInterface
  *
- * Prases a SimpleXMLElement and creates a ImportPostInterface instance
+ * Parses a SimpleXMLElement and creates a ImportPostInterface instance
  *
  * @package W2M\Import\Service
  */
