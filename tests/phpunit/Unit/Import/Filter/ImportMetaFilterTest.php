@@ -13,4 +13,10 @@ class ImportMetaFilterTest extends Helper\MonkeyTestCase {
 		// Todo: Write tests for
 		$this->markTestIncomplete( 'Under construction' );
 	}
+
+	public function test_apply_filters() {
+
+		// Todo: Write tests for
+		$this->markTestIncomplete( 'Under construction' );
+	}
 }

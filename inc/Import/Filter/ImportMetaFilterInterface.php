@@ -18,7 +18,7 @@ interface ImportMetaFilterInterface {
 	 * @param Type\ImportMetaInterface $meta
 	 * @param int $object_id
 	 *
-	 * @return mixed (The filtered value)
+	 * @return mixed (The filtered value. This MUST be an array if $meta->is_single() is false!)
 	 */
 	public function filter_value( Type\ImportMetaInterface $meta, $object_id );
 }
