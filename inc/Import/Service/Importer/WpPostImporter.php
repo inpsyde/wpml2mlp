@@ -4,6 +4,7 @@ namespace W2M\Import\Service\Importer;
 
 use
 	W2M\Import\Data,
+	W2M\Import\Filter,
 	W2M\Import\Type,
 	W2M\Import\Module,
 	WP_Post,
@@ -28,16 +29,29 @@ class WpPostImporter implements PostImporterInterface {
 	private $http;
 
 	/**
+	 * @var Filter\ImportMetaFilterInterface $meta_filter
+	 */
+	private $meta_filter;
+
+	/**
 	 * @param Data\MultiTypeIdMapperInterface $id_mapper
 	 * @param WP_Http $http (Optional)
+	 * @param Filter\ImportMetaFilterInterface $meta_filter (Optional)
 	 */
 	public function __construct(
 		Data\MultiTypeIdMapperInterface $id_mapper,
-		WP_Http $http = NULL
+		WP_Http $http = NULL,
+		Filter\ImportMetaFilterInterface $meta_filter = NULL
 	) {
 
 		$this->id_mapper = $id_mapper;
-		$this->http      = $http ? $http : new WP_Http;
+		$this->http      = $http
+			? $http
+			: new WP_Http;
+
+		$this->meta_filter = $meta_filter
+			? $meta_filter
+			: new Filter\PassThroughImportMetaFilter;
 	}
 
 	/**
@@ -179,7 +193,7 @@ class WpPostImporter implements PostImporterInterface {
 				$update_post_meta_result = update_post_meta(
 					$local_id,
 					$meta->key(),
-					$meta->value()
+					$this->meta_filter->filter_value( $meta, $local_id )
 				);
 				if ( $update_post_meta_result ) {
 					continue;
@@ -193,7 +207,8 @@ class WpPostImporter implements PostImporterInterface {
 					)
 				);
 			} else {
-				foreach ( $meta->value() as $v ) {
+				$meta_records = $this->meta_filter->filter_value( $meta, $local_id );
+				foreach ( $meta_records as $v ) {
 					$add_post_meta_result = add_post_meta(
 						$local_id,
 						$meta->key(),
