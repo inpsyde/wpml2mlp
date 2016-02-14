@@ -98,6 +98,8 @@ Use the installer via back-end of your install or ...
 * `w2m_import_post_ancestor_resolving_start` in `W2M\Import\Module\ResolvingPendingRelations::resolving_posts()`
 * `w2m_import_term_ancestor_resolving_start` in `W2M\Import\Module\ResolvingPendingRelations::resolving_terms()`
 
+* `w2m_import_meta_not_filterable` in `W2M\Import\Filter\ImportMetaFilter::filter_value()`
+
 
 ## Other Notes
 
