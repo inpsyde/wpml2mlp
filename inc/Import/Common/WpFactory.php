@@ -6,6 +6,13 @@ use
 	WP_Error,
 	WP_Query;
 
+/**
+ * Class WpFactory
+ *
+ * Simple factory for WP objects
+ *
+ * @package W2M\Import\Common
+ */
 class WpFactory implements WpFactoryInterface {
 
 	/**

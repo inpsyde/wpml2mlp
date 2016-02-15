@@ -2,6 +2,14 @@
 
 namespace W2M\Import\Data;
 
+/**
+ * Interface XmlImportInterface
+ *
+ * Describes an import information object with additional
+ * data for the XML import type.
+ *
+ * @package W2M\Import\Data
+ */
 interface XmlImportInterface extends ImportInterface {
 
 	/**

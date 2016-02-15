@@ -2,6 +2,13 @@
 
 namespace W2M\Import\Common;
 
+/**
+ * Class File
+ *
+ * Simple representation to a concrete file on the local file system
+ *
+ * @package W2M\Import\Common
+ */
 class File implements FileInterface {
 
 	/**

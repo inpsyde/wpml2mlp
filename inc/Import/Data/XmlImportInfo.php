@@ -5,6 +5,13 @@ namespace W2M\Import\Data;
 use
 	DateTime;
 
+/**
+ * Class XmlImportInfo
+ *
+ * Information about an XML import
+ *
+ * @package W2M\Import\Data
+ */
 class XmlImportInfo implements XmlImportInterface {
 
 	/**

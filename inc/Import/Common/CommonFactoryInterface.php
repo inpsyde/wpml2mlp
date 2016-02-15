@@ -2,6 +2,13 @@
 
 namespace W2M\Import\Common;
 
+/**
+ * Interface CommonFactoryInterface
+ *
+ * Creates objects by given class name and constructor parameter
+ *
+ * @package W2M\Import\Common
+ */
 interface CommonFactoryInterface {
 
 	/**

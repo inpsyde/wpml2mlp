@@ -6,6 +6,13 @@ use
 	W2M\Import\Type,
 	WP_Post;
 
+/**
+ * Interface PostImportListenerInterface
+ *
+ * Describes a listener to w2m_post_imported
+ *
+ * @package W2M\Import\Data
+ */
 interface PostImportListenerInterface {
 
 	/**

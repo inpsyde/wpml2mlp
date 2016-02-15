@@ -6,6 +6,13 @@ use
 	W2M\Import\Type,
 	WP_Comment;
 
+/**
+ * Interface CommentImportListenerInterface
+ *
+ * Describes a listener to w2m_comment_imported
+ *
+ * @package W2M\Import\Data
+ */
 interface CommentImportListenerInterface {
 
 	/**

@@ -6,6 +6,13 @@ use
 	W2M\Import\Type,
 	WP_User;
 
+/**
+ * Interface UserImportListenerInterface
+ *
+ * Describes a listener to w2m_user_imported
+ *
+ * @package W2M\Import\Data
+ */
 interface UserImportListenerInterface {
 
 	/**
