@@ -9,6 +9,7 @@ use
 	WP_CLI,
 	WP_CLI_Command,
 	WP_Error,
+	WP_Http,
 	Monolog,
 	DateTime;
 
@@ -161,6 +162,22 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		add_action( 'w2m_import_process_done', [ $reporter, 'create_report' ] );
 
 		/**
+		 * Meta Filter
+		 */
+		$meta_filter_list           = new Import\Data\MetaFilterList;
+		$meta_filter_controller     = new Controller\MetaFilterApi( $meta_filter_list );
+		$post_meta_filter_composite = new Import\Filter\ImportMetaFilter(
+			$meta_filter_list,
+			'post'
+		);
+		$meta_filter_list->push_filter(
+			'post',
+			'_thumbnail_id',
+			new Import\Filter\SingleIdMetaValueFilter( 'post', $import_id_mapper )
+		);
+		$meta_filter_controller->register_filter();
+
+		/**
 		 * Users
 		 */
 		$user_iterator = new Import\Iterator\UserIterator(
@@ -217,7 +234,11 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		}
 		$post_processor = new Import\Service\PostProcessor(
 			$post_iterator,
-			new Import\Service\Importer\WpPostImporter( $import_id_mapper ),
+			new Import\Service\Importer\WpPostImporter(
+				$import_id_mapper,
+				new WP_Http,
+				$post_meta_filter_composite
+			),
 			$post_filter
 		);
 
