@@ -9,6 +9,11 @@ use
 	WP_Error,
 	DateTime;
 
+/**
+ * Class WpCommentParser
+ *
+ * @package W2M\Import\Service\Parser
+ */
 class WpCommentParser implements CommentParserInterface {
 
 	/**

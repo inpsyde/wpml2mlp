@@ -5,6 +5,11 @@ namespace W2M\Import\Type;
 use
 	W2M\Import\Common;
 
+/**
+ * Class WpImportTerm
+ *
+ * @package W2M\Import\Type
+ */
 class WpImportTerm implements ImportTermInterface {
 
 	/**

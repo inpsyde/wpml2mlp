@@ -6,6 +6,11 @@ use
 	W2M\Import\Type,
 	SimpleXMLElement;
 
+/**
+ * Interface UserParserInterface
+ *
+ * @package W2M\Import\Service\Parser
+ */
 interface UserParserInterface {
 
 	/**

@@ -2,6 +2,11 @@
 
 namespace W2M\Import\Type;
 
+/**
+ * Class WpImportMeta
+ *
+ * @package W2M\Import\Type
+ */
 class WpImportMeta implements ImportMetaInterface {
 
 	/**

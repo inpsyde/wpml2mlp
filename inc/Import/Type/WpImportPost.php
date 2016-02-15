@@ -6,6 +6,11 @@ use
 	W2M\Import\Common,
 	DateTime;
 
+/**
+ * Class WpImportPost
+ *
+ * @package W2M\Import\Type
+ */
 class WpImportPost implements ImportPostInterface {
 
 	/**

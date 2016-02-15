@@ -6,6 +6,11 @@ use
 	W2M\Import\Filter,
 	W2M\Import\Iterator;
 
+/**
+ * Class TermProcessor
+ *
+ * @package W2M\Import\Service
+ */
 class TermProcessor implements ElementProcessorInterface {
 
 	/**

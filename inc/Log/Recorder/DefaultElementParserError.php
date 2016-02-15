@@ -6,6 +6,11 @@ use
 	Monolog,
 	WP_Error;
 
+/**
+ * Class DefaultElementParserError
+ *
+ * @package W2M\Log\Recorder
+ */
 class DefaultElementParserError implements WpErrorRecorderInterface {
 
 	/**

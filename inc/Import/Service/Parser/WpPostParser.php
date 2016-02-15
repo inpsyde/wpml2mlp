@@ -10,6 +10,11 @@ use
 	DateTimeZone,
 	WP_Error;
 
+/**
+ * Class WpPostParser
+ *
+ * @package W2M\Import\Service\Parser
+ */
 class WpPostParser implements PostParserInterface {
 
 	/**

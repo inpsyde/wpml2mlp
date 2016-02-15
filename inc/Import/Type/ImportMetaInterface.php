@@ -2,6 +2,11 @@
 
 namespace W2M\Import\Type;
 
+/**
+ * Interface ImportMetaInterface
+ *
+ * @package W2M\Import\Type
+ */
 interface ImportMetaInterface {
 
 	/**

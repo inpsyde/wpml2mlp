@@ -7,6 +7,11 @@ use
 	WP_User,
 	Monolog;
 
+/**
+ * Class UserImportedRecorder
+ *
+ * @package W2M\Log\Recorder
+ */
 class UserImportedRecorder {
 
 	/**

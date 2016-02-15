@@ -2,6 +2,11 @@
 
 namespace W2M\Import\Type;
 
+/**
+ * Interface ImportUserInterface
+ *
+ * @package W2M\Import\Type
+ */
 interface ImportUserInterface extends ImportElementInterface {
 
 	/**

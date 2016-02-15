@@ -7,6 +7,13 @@ use
 	W2M\Import\Data,
 	DateTime;
 
+/**
+ * Class JsonXmlImportReport
+ *
+ * Writes xml import report in JSON format
+ *
+ * @package W2M\Import\Module
+ */
 class JsonXmlImportReport implements XmlImportReporterInterface {
 
 	/**

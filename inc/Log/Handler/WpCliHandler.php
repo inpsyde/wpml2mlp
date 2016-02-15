@@ -8,6 +8,11 @@ use
 	Monolog\Handler,
 	Monolog\Formatter;
 
+/**
+ * Class WpCliHandler
+ *
+ * @package W2M\Log\Handler
+ */
 class WpCliHandler extends Handler\AbstractProcessingHandler implements Handler\HandlerInterface {
 
 	/**

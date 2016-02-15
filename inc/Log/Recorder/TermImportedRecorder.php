@@ -8,6 +8,11 @@ use
 	Monolog,
 	stdClass;
 
+/**
+ * Class TermImportedRecorder
+ *
+ * @package W2M\Log\Recorder
+ */
 class TermImportedRecorder {
 
 	/**

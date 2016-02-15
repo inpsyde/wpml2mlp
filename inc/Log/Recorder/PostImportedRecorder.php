@@ -7,6 +7,11 @@ use
 	WP_Post,
 	Monolog;
 
+/**
+ * Class PostImportedRecorder
+ *
+ * @package W2M\Log\Recorder
+ */
 class PostImportedRecorder {
 
 	/**

@@ -5,6 +5,11 @@ namespace W2M\Import\Filter;
 use
 	W2M\Import\Type;
 
+/**
+ * Class CommentPassThroughFilter
+ *
+ * @package W2M\Import\Filter
+ */
 class CommentPassThroughFilter implements CommentImportFilterInterface {
 
 	/**

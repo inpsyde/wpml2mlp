@@ -7,6 +7,11 @@ use
 	W2m\Import\Service,
 	Iterator;
 
+/**
+ * Class TermIterator
+ *
+ * @package W2M\Import\Iterator
+ */
 class TermIterator implements Iterator {
 
 	/**
