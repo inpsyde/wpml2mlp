@@ -2,6 +2,11 @@
 
 namespace W2M\Import\Common;
 
+/**
+ * Class TypeCastParameterSanitizer
+ *
+ * @package W2M\Import\Common
+ */
 class TypeCastParameterSanitizer implements ParameterSanitizerInterface {
 
 	/**

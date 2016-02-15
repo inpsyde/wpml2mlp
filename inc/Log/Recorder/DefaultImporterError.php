@@ -7,6 +7,11 @@ use
 	Monolog,
 	WP_Error;
 
+/**
+ * Class DefaultImporterError
+ *
+ * @package W2M\Log\Recorder
+ */
 class DefaultImporterError implements ImporterErrorInterface {
 
 	/**

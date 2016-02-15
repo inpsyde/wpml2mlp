@@ -7,6 +7,11 @@ use
 	W2M\Import\Service,
 	Iterator;
 
+/**
+ * Class UserIterator
+ *
+ * @package W2M\Import\Iterator
+ */
 class UserIterator implements Iterator {
 
 	/**

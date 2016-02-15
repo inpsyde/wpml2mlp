@@ -6,6 +6,11 @@ use
 	W2M\Import\Type,
 	WP_Error;
 
+/**
+ * Interface ImporterErrorInterface
+ *
+ * @package W2M\Log\Recorder
+ */
 interface ImporterErrorInterface {
 
 	/**

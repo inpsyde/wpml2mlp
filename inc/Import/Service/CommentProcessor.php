@@ -6,6 +6,11 @@ use
 	W2M\Import\Filter,
 	W2M\Import\Iterator;
 
+/**
+ * Class CommentProcessor
+ *
+ * @package W2M\Import\Service
+ */
 class CommentProcessor implements ElementProcessorInterface {
 
 	/**

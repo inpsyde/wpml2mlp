@@ -2,13 +2,15 @@
 
 namespace W2M\Import\Filter;
 
-use stdClass;
 use
 	W2M\Import\Data,
-	W2M\Import\Type,
-	WP_Comment;
-use WP_Term;
+	W2M\Import\Type;
 
+/**
+ * Class DuplicateTermFilter
+ *
+ * @package W2M\Import\Filter
+ */
 class DuplicateTermFilter implements TermImportFilterInterface {
 
 	/**

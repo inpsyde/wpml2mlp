@@ -10,6 +10,11 @@ use
 	Monolog,
 	stdClass;
 
+/**
+ * Class MissingAncestorRecorder
+ *
+ * @package W2M\Log\Recorder
+ */
 class MissingAncestorRecorder implements MissingAncestorRecorderInterface {
 
 	private $logger;

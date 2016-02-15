@@ -2,6 +2,11 @@
 
 namespace W2M\System;
 
+/**
+ * Class ImportEnvironment
+ *
+ * @package W2M\System
+ */
 class ImportEnvironment {
 
 	/**

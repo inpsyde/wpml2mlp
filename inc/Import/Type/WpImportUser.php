@@ -5,6 +5,11 @@ namespace W2M\Import\Type;
 use
 	W2M\Import\Common;
 
+/**
+ * Class WpImportUser
+ *
+ * @package W2M\Import\Type
+ */
 class WpImportUser implements ImportUserInterface {
 
 	private $id = NULL;

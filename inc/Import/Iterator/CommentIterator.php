@@ -7,6 +7,11 @@ use
 	W2M\Import\Type,
 	Iterator;
 
+/**
+ * Class CommentIterator
+ *
+ * @package W2M\Import\Iterator
+ */
 class CommentIterator implements Iterator {
 
 	/**

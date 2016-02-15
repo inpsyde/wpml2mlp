@@ -8,6 +8,11 @@ use
 	SimpleXMLElement,
 	WP_Error;
 
+/**
+ * Class WpTermParser
+ *
+ * @package W2M\Import\Service\Parser
+ */
 class WpTermParser implements TermParserInterface {
 
 	/**

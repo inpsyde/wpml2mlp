@@ -9,6 +9,11 @@ use
 	WP_Term,
 	stdClass;
 
+/**
+ * Interface MissingAncestorRecorderInterface
+ *
+ * @package W2M\Log\Recorder
+ */
 interface MissingAncestorRecorderInterface {
 
 	/**

@@ -5,6 +5,13 @@ namespace W2M\Import\Data;
 use
 	DateTime;
 
+/**
+ * Interface ImportInterface
+ *
+ * Describes an object with general information about an import
+ *
+ * @package W2M\Import\Data
+ */
 interface ImportInterface {
 
 	/**

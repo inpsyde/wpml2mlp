@@ -7,6 +7,13 @@ use
 	WP_Term,
 	stdClass;
 
+/**
+ * Interface TermImportListenerInterface
+ *
+ * Describes a listener to w2m_term_imported
+ *
+ * @package W2M\Import\Data
+ */
 interface TermImportListenerInterface {
 
 	/**

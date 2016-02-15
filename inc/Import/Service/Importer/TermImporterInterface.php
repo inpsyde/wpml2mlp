@@ -5,6 +5,11 @@ namespace W2M\Import\Service\Importer;
 use
 	W2M\Import\Type;
 
+/**
+ * Interface TermImporterInterface
+ *
+ * @package W2M\Import\Service\Importer
+ */
 interface TermImporterInterface {
 
 	/**

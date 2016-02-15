@@ -2,10 +2,15 @@
 
 namespace W2M\Import\Type;
 
-use DateTime;
 use
-	W2M\Import\Common;
+	W2M\Import\Common,
+	DateTime;
 
+/**
+ * Class WpImportComment
+ *
+ * @package W2M\Import\Type
+ */
 class WpImportComment implements ImportCommentInterface {
 
 	/**

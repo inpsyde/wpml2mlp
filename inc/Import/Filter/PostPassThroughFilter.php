@@ -5,6 +5,11 @@ namespace W2M\Import\Filter;
 use
 	W2M\Import\Type;
 
+/**
+ * Class PostPassThroughFilter
+ *
+ * @package W2M\Import\Filter
+ */
 class PostPassThroughFilter implements PostImportFilterInterface {
 
 	/**

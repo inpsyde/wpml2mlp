@@ -6,6 +6,13 @@ use
 	WP_Query,
 	WP_Error;
 
+/**
+ * Interface WpFactoryInterface
+ *
+ * Simple factory for WP objects. Increases testability and polymorphic structures.
+ *
+ * @package W2M\Import\Common
+ */
 interface WpFactoryInterface {
 
 	/**

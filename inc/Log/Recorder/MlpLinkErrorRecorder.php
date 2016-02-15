@@ -6,6 +6,11 @@ use
 	WP_Error,
 	Monolog;
 
+/**
+ * Class MlpLinkErrorRecorder
+ *
+ * @package W2M\Log\Recorder
+ */
 class MlpLinkErrorRecorder implements WpErrorRecorderInterface {
 
 	/**

@@ -10,6 +10,11 @@ use
 	WP_Error,
 	WP_Post;
 
+/**
+ * Class MlpTranslationConnector
+ *
+ * @package W2M\Import\Module
+ */
 class MlpTranslationConnector implements TranslationConnectorInterface {
 
 	/**

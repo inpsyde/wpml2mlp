@@ -2,6 +2,11 @@
 
 namespace W2M\Import\Type;
 
+/**
+ * Interface ImportPostInterface
+ *
+ * @package W2M\Import\Type
+ */
 interface ImportPostInterface extends ImportElementInterface {
 
 	/**

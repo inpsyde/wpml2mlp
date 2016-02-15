@@ -5,6 +5,13 @@ namespace W2M\Import\Common;
 use
 	SimpleXMLElement;
 
+/**
+ * Class SimpleXmlTools
+ *
+ * Collection of helper functions for SimpleXMLElement handling
+ *
+ * @package W2M\Import\Common
+ */
 class SimpleXmlTools {
 
 	/**
