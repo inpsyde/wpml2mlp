@@ -17,7 +17,7 @@ use
  *
  * Todo: consider a better name for this. Maybe `UnresolvedAncestorRelations`
  *
- * Todo: Specify an interface for the record methods
+ * Todo: Specify an interface for the recording methods
  *
  * @package W2M\Import\Data
  */
