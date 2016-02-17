@@ -49,8 +49,8 @@ class ImportMetaFilter implements ImportMetaFilterInterface {
 			return $this->apply_filters( $meta, $meta->value(), $object_id );
 
 		$value = [];
-		foreach ( $meta->value() as $v ) {
-			$value[] = $this->apply_filters( $meta, $v, $object_id );
+		foreach ( $meta->value() as $index => $v ) {
+			$value[] = $this->apply_filters( $meta, $v, $object_id, $index );
 		}
 
 		return $value;
@@ -60,25 +60,24 @@ class ImportMetaFilter implements ImportMetaFilterInterface {
 	 * @param Type\ImportMetaInterface $meta
 	 * @param string $value
 	 * @param int $object_id
+	 * @param int $index (Index of the meta record for multiple meta data)
 	 *
 	 * @return mixed
 	 */
-	public function apply_filters( Type\ImportMetaInterface $meta, $value, $object_id ) {
+	public function apply_filters( Type\ImportMetaInterface $meta, $value, $object_id, $index = 0 ) {
 
 		$filters = $this->filter_list->get_filters( $this->type, $meta->key() );
 		foreach ( $filters as $filter ) {
 			if ( ! $filter->is_filterable( $meta->value(), $object_id ) ) {
+				$meta_index = new Type\WpMetaRecordIndex( $meta->key(), $object_id, $index, $this->type );
 				/**
 				 * Fires when a filter is invalid (due to missing data)
 				 *
-				 * Todo: Check if these parameter are sufficient for multiple meta records!
-				 *
-				 * @param string $type ('post', 'comment', 'user' or 'term')
-				 * @param int $object_id
-				 * @param Type\ImportMetaInterface $meta
 				 * @param Filter\ValueFilterableInterface $filter
+				 * @param Type\MetaRecordIndexInterface $meta_index
+				 * @param Type\ImportMetaInterface $meta
 				 */
-				do_action( 'w2m_import_meta_not_filterable', $this->type, $object_id, $meta, $filter );
+				do_action( 'w2m_import_meta_not_filterable', $filter, $meta_index, $meta );
 				continue;
 			}
 			$value = $filter->filter( $value, $object_id );
