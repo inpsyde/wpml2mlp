@@ -102,6 +102,21 @@ class MockBuilder {
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
+	public function filter_value_filterable_interface( Array $methods = [], Array $data = [] ) {
+
+		return $this->mock_without_constructor(
+			'W2M\Import\Filter\ValueFilterableInterface',
+			$methods,
+			$data
+		);
+	}
+
+	/**
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
 	public function iterator_simple_xml_item_wrapper( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
@@ -316,6 +331,21 @@ class MockBuilder {
 
 		return $this->mock_without_constructor(
 			'W2M\Import\Type\LocaleRelation',
+			$methods,
+			$data
+		);
+	}
+
+	/**
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
+	public function type_meta_record_index_interface( Array $methods = [], Array $data = [] ) {
+
+		return $this->mock_without_constructor(
+			'W2M\Import\Type\MetaRecordIndexInterface',
 			$methods,
 			$data
 		);
