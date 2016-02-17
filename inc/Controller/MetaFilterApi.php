@@ -20,15 +20,18 @@ class MetaFilterApi {
 	 */
 	private $filter_list;
 
+	/**
+	 * @var Data\ImportListeningMetaFilterList
+	 */
 	private $postponed_filter_list;
 
 	/**
 	 * @param Data\MetaFilterListInterface $filter_list
-	 * @param $postponed_filter_list (Todo: specify implement this)
+	 * @param Data\ImportListeningMetaFilterList $postponed_filter_list
 	 */
 	public function __construct(
 		Data\MetaFilterListInterface $filter_list,
-		$postponed_filter_list = NULL
+		Data\ImportListeningMetaFilterList $postponed_filter_list
 	) {
 
 		$this->filter_list           = $filter_list;
@@ -50,5 +53,7 @@ class MetaFilterApi {
 		 * @param Data\MetaFilterListInterface
 		 */
 		do_action( 'w2m_import_meta_filter', $this->filter_list );
+
+		add_action( 'w2m_import_meta_not_filterable', [ $this->postponed_filter_list, 'record_meta_filter' ], 10, 3 );
 	}
 }
