@@ -2,6 +2,14 @@
 
 namespace W2M\Import\Type;
 
+/**
+ * Class WpMetaRecordIndex
+ *
+ * Index of a concrete ImportMeta record. Used by the meta filter API
+ * to track postponed ImportMeta and attached filters.
+ *
+ * @package W2M\Import\Type
+ */
 class WpMetaRecordIndex implements MetaRecordIndexInterface {
 
 	/**
