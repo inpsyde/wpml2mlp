@@ -5,6 +5,7 @@ namespace W2M\Controller;
 use
 	W2M\Import\Common,
 	W2M\Import\Data,
+	W2M\Import\Filter,
 	W2M\Import\Type,
 	W2M\Log\Handler,
 	W2M\Log\Recorder,
@@ -245,6 +246,35 @@ class TmpLogController {
 			function() use ( $logger ) {
 				$logger->info( 'Resolving pending term ancestor relations' );
 			}
+		);
+
+		/**
+		 * unfilterable meta data
+		 */
+		add_action(
+			'w2m_import_meta_not_filterable',
+			/**
+			 * @param Filter\ValueFilterableInterface $filter
+			 * @param Type\MetaRecordIndexInterface $meta_index
+			 * @param Type\ImportMetaInterface $meta
+			 */
+			function(
+				Filter\ValueFilterableInterface $filter,
+				Type\MetaRecordIndexInterface $meta_index,
+				Type\ImportMetaInterface $meta
+			) use( $logger ) {
+
+				$msg  = "Meta data not filterable";
+				$data = [
+					'type'      => $meta_index->type(),
+					'key'       => $meta_index->key(),
+					'object_id' => $meta_index->object_id(),
+					'filter'    => get_class( $filter )
+				];
+				$logger->info( $msg, $data );
+			},
+			10,
+			3
 		);
 	}
 
