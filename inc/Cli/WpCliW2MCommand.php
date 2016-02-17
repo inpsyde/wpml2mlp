@@ -164,10 +164,17 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		/**
 		 * Meta Filter
 		 */
-		$meta_filter_list           = new Import\Data\MetaFilterList;
-		$postponed_meta_filter_list = new Import\Data\ImportListeningMetaFilterList;
-		$meta_filter_controller     = new Controller\MetaFilterApi( $meta_filter_list, $postponed_meta_filter_list );
-		$post_meta_filter_composite = new Import\Filter\ImportMetaFilter(
+		$meta_filter_list               = new Import\Data\MetaFilterList;
+		$postponed_meta_filter_list     = new Import\Data\ImportListeningMetaFilterList;
+		$postponed_meta_filter_resolver = new Import\Module\PostponedMetaFilterResolver(
+			$postponed_meta_filter_list
+		);
+		$meta_filter_controller         = new Controller\MetaFilterApi(
+			$meta_filter_list,
+			$postponed_meta_filter_list,
+			$postponed_meta_filter_resolver
+		);
+		$post_meta_filter_composite     = new Import\Filter\ImportMetaFilter(
 			$meta_filter_list,
 			'post'
 		);
