@@ -1,6 +1,6 @@
 <?php # -*- coding: utf-8 -*-
 
-namespace W2M\Import\Filter;
+namespace W2M\Import\Service;
 
 use
 	W2M\Import\Data,
@@ -10,7 +10,7 @@ use
 /**
  * Class ImportMetaFilter
  *
- * Single instance to apply filters from a list to any meta value
+ * Single instance (composite) that applies filters from a list to any meta value
  * of a specific object type.
  *
  * @package W2M\Import\Filter

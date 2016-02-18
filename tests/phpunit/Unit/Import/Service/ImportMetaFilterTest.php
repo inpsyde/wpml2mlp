@@ -1,9 +1,9 @@
 <?php # -*- coding: utf-8 -*-
 
-namespace W2M\Test\Unit\Import\Filter;
+namespace W2M\Test\Unit\Import\Service;
 
 use
-	W2M\Import\Filter,
+	W2M\Import\Service,
 	W2M\Test\Helper;
 
 class ImportMetaFilterTest extends Helper\MonkeyTestCase {

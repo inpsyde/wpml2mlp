@@ -5,11 +5,13 @@ namespace W2M\Import\Service\Importer;
 use
 	W2M\Import\Data,
 	W2M\Import\Filter,
-	W2M\Import\Type,
 	W2M\Import\Module,
+	W2M\Import\Service,
+	W2M\Import\Type,
 	WP_Post,
 	WP_Error,
-	WP_Http;
+	WP_Http,
+	stdClass;
 
 /**
  * Class WpPostImporter
@@ -29,19 +31,19 @@ class WpPostImporter implements PostImporterInterface {
 	private $http;
 
 	/**
-	 * @var Filter\ImportMetaFilterInterface $meta_filter
+	 * @var Service\ImportMetaFilterInterface $meta_filter
 	 */
 	private $meta_filter;
 
 	/**
 	 * @param Data\MultiTypeIdMapperInterface $id_mapper
 	 * @param WP_Http $http (Optional)
-	 * @param Filter\ImportMetaFilterInterface $meta_filter (Optional)
+	 * @param Service\ImportMetaFilterInterface $meta_filter (Optional)
 	 */
 	public function __construct(
 		Data\MultiTypeIdMapperInterface $id_mapper,
 		WP_Http $http = NULL,
-		Filter\ImportMetaFilterInterface $meta_filter = NULL
+		Service\ImportMetaFilterInterface $meta_filter = NULL
 	) {
 
 		$this->id_mapper = $id_mapper;
@@ -51,7 +53,7 @@ class WpPostImporter implements PostImporterInterface {
 
 		$this->meta_filter = $meta_filter
 			? $meta_filter
-			: new Filter\PassThroughImportMetaFilter;
+			: new Service\PassThroughImportMetaFilter;
 	}
 
 	/**

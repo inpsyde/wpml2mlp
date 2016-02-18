@@ -174,7 +174,7 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 			$postponed_meta_filter_list,
 			$postponed_meta_filter_resolver
 		);
-		$post_meta_filter_composite     = new Import\Filter\ImportMetaFilter(
+		$post_meta_filter_composite     = new Import\Service\ImportMetaFilter(
 			$meta_filter_list,
 			'post'
 		);

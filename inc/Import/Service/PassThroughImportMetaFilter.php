@@ -1,6 +1,6 @@
 <?php # -*- coding: utf-8 -*-
 
-namespace W2M\Import\Filter;
+namespace W2M\Import\Service;
 
 use
 	W2M\Import\Type;
@@ -9,6 +9,7 @@ use
  * Class PassThroughImportMetaFilter
  *
  * Just a dummy filter which passes the given value through.
+ * Used to unify object creation and object setup with optional dependencies.
  *
  * @package W2M\Import\Filter
  */
