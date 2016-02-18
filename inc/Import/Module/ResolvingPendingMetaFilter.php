@@ -6,14 +6,14 @@ use
 	W2M\Import\Data;
 
 /**
- * Class PostponedMetaFilterResolver
+ * Class ResolvingPendingMetaFilter
  *
  * Reads postponed meta filter from the list and
  * tries to re-apply them at the end of the import-process.
  *
  * @package W2M\Import\Module
  */
-class PostponedMetaFilterResolver {
+class ResolvingPendingMetaFilter {
 
 	/**
 	 * @var Data\ImportListeningMetaFilterList

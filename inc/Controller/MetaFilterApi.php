@@ -27,19 +27,19 @@ class MetaFilterApi {
 	private $postponed_filter_list;
 
 	/**
-	 * @var Module\PostponedMetaFilterResolver
+	 * @var Module\ResolvingPendingMetaFilter
 	 */
 	private $resolver;
 
 	/**
 	 * @param Data\MetaFilterListInterface $filter_list
 	 * @param Data\ImportListeningMetaFilterList $postponed_filter_list
-	 * @param Module\PostponedMetaFilterResolver $resolver
+	 * @param Module\ResolvingPendingMetaFilter $resolver
 	 */
 	public function __construct(
 		Data\MetaFilterListInterface $filter_list,
 		Data\ImportListeningMetaFilterList $postponed_filter_list,
-		Module\PostponedMetaFilterResolver $resolver
+		Module\ResolvingPendingMetaFilter $resolver
 	) {
 
 		$this->filter_list           = $filter_list;
