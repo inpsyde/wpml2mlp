@@ -44,10 +44,11 @@ class ResolvingPendingMetaFilter {
 
 		$post_filter_storage = $this->meta_list->get_filters( 'post' );
 		/**
-		 * @var  array $filter_list
+		 * @var array $filter_list
 		 * @var Type\MetaRecordIndexInterface $meta_index
 		 */
-		foreach ( $post_filter_storage as $filter_list => $meta_index ) {
+		foreach ( $post_filter_storage as $meta_index ) {
+			$filter_list = $post_filter_storage->offsetGet( $meta_index );
 			/* @var array $data */
 			foreach ( $filter_list as $data )
 				$this->apply_post_filter( $meta_index, $data[ 'filter' ], $data[ 'meta' ] );
