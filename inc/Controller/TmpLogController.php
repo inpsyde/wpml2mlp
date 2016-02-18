@@ -276,6 +276,45 @@ class TmpLogController {
 			10,
 			3
 		);
+
+		add_action(
+			'w2m_import_meta_filter_resolving_start',
+			/**
+			 * @param Data\ImportListeningMetaFilterList $meta_list
+			 */
+			function( Data\ImportListeningMetaFilterList $meta_list ) use( $logger ) {
+
+				$post_filter_count = count( $meta_list->get_filters( 'post' ) );
+				$data = [ 'post_filter' => $post_filter_count ];
+				$logger->info( 'Start resolving postponed meta filter', $data );
+			}
+		);
+
+		add_action(
+			'w2m_import_meta_filter_not_resolvable',
+			/**
+			 * @param Filter\ValueFilterableInterface $filter
+			 * @param Type\MetaRecordIndexInterface $meta_index
+			 * @param Type\ImportMetaInterface $meta
+			 */
+			function(
+				Filter\ValueFilterableInterface $filter,
+				Type\MetaRecordIndexInterface $meta_index,
+				Type\ImportMetaInterface $meta
+			) use( $logger ) {
+
+				$msg  = "Meta data not resolvable";
+				$data = [
+					'type'      => $meta_index->type(),
+					'key'       => $meta_index->key(),
+					'object_id' => $meta_index->object_id(),
+					'filter'    => get_class( $filter )
+				];
+				$logger->warning( $msg, $data );
+			},
+			10,
+			3
+		);
 	}
 
 	/**
