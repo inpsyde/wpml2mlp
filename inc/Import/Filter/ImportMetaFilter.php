@@ -10,6 +10,9 @@ use
 /**
  * Class ImportMetaFilter
  *
+ * Single instance to apply filters from a list to any meta value
+ * of a specific object type.
+ *
  * @package W2M\Import\Filter
  */
 class ImportMetaFilter implements ImportMetaFilterInterface {
