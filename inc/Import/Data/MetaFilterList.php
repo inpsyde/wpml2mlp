@@ -10,6 +10,9 @@ use
  *
  * Manages a list of Filter\ValueFilterableInterface for each type:meta-key pair
  *
+ * @Todo #56: Refactor this to use only one filter per type/key pair. Build a composite
+ * if more than one filter is added to a single pair.
+ *
  * @package W2M\Import\Data
  */
 class MetaFilterList implements MetaFilterListInterface {

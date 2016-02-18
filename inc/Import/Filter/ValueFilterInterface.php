@@ -12,6 +12,9 @@ namespace W2M\Import\Filter;
 interface ValueFilterInterface {
 
 	/**
+	 * The implementor MUST return the unfiltered value
+	 * if it is not able to filter the value.
+	 *
 	 * @param mixed $value
 	 * @param int $object_id
 	 *

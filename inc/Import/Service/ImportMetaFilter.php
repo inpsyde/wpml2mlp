@@ -70,6 +70,10 @@ class ImportMetaFilter implements ImportMetaFilterInterface {
 	public function apply_filters( Type\ImportMetaInterface $meta, $value, $object_id, $index = 0 ) {
 
 		$filters = $this->filter_list->get_filters( $this->type, $meta->key() );
+		/**
+		 * @todo #56: Return unfiltered value if one filter is not filterable. But still iterate over every
+		 * available filter.
+		 */
 		foreach ( $filters as $filter ) {
 			if ( ! $filter->is_filterable( $meta->value(), $object_id ) ) {
 				$meta_index = new Type\WpMetaRecordIndex( $meta->key(), $object_id, $index, $this->type );
