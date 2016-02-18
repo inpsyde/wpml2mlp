@@ -100,7 +100,7 @@ Use the installer via back-end of your install or ...
 
 * `w2m_import_meta_not_filterable` in `W2M\Import\Service\ImportMetaFilter::filter_value()`
 * `w2m_import_meta_filter` in `W2M\Controller\MetaFilterApi::register_filter()`
-
+* `w2m_import_meta_filter_not_resolvable` in `W2M\Import\Module\ResolvingPendingMetaFilter::w2m_import_meta_filter_not_resolvable`
 
 ## Other Notes
 
