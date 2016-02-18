@@ -159,7 +159,7 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		$import_info = new Import\Data\XmlImportInfo( $import_file, $blog_id, new DateTime );
 		$report_file = new Import\Common\File( $log_dir . '/w2m-import-report-' . time() . '.json' );
 		$reporter    = new Import\Module\JsonXmlImportReport( $import_id_mapper, $report_file );
-		add_action( 'w2m_import_process_done', [ $reporter, 'create_report' ] );
+		add_action( 'w2m_import_process_done', [ $reporter, 'create_report' ], 11 );
 
 		/**
 		 * Meta Filter
