@@ -2,6 +2,11 @@
 
 namespace W2M\Import\Type;
 
+/**
+ * Class WpImportMeta
+ *
+ * @package W2M\Import\Type
+ */
 class WpImportMeta implements ImportMetaInterface {
 
 	/**
@@ -43,7 +48,7 @@ class WpImportMeta implements ImportMetaInterface {
 	 * If is_single() is FALSE, the method will always return an array
 	 * and it should considered as list of single post-meta values.
 	 *
-	 * @return mixed
+	 * @return array|scalar
 	 */
 	public function value() {
 

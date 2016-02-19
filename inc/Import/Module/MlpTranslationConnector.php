@@ -8,9 +8,13 @@ use
 	W2M\Import\Common,
 	Mlp_Content_Relations_Interface,
 	WP_Error,
-	WP_Query,
 	WP_Post;
 
+/**
+ * Class MlpTranslationConnector
+ *
+ * @package W2M\Import\Module
+ */
 class MlpTranslationConnector implements TranslationConnectorInterface {
 
 	/**
@@ -24,6 +28,7 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 	private $mlp_content_relations;
 
 	/**
+	 * @deprecated
 	 * @var Data\MultiTypeIdMapperInterface
 	 */
 	private $id_mapper;
@@ -35,7 +40,7 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 
 	/**
 	 * @param Mlp_Content_Relations_Interface $mpl_content_relations
-	 * @param Data\MultiTypeIdMapperInterface $id_mapper
+	 * @param Data\MultiTypeIdMapperInterface $id_mapper (Deprecated)
 	 * @param Common\WpFactoryInterface $wp_factory (Optional)
 	 */
 	public function __construct(
@@ -74,24 +79,55 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 	public function link_post( WP_Post $wp_post, Type\ImportPostInterface $import_post ) {
 
 		$this->set_origin_post_id_meta( $import_post );
+		$current_blog_id = get_current_blog_id();
 
-		/* @var Type\LocaleRelationInterface $relation */
 		foreach ( $import_post->locale_relations() as $relation ) {
-			$blog_id = $this->get_blog_id_by_locale( $relation->locale() );
-			if ( ! $blog_id ) {
+			$remote_blog_id = $this->get_blog_id_by_locale( $relation->locale() );
+
+			if ( ! $remote_blog_id ) {
 				$this->trigger_missing_blog_error( $import_post, $relation );
 				continue;
 			}
-			$remote_post_id = $this->get_remote_post_id( $blog_id, $relation );
-			if ( ! $remote_post_id ) {
-				$this->trigger_missing_remote_post( $import_post, $relation );
+			if ( $current_blog_id === $remote_blog_id ) {
 				continue;
 			}
-			$this->mlp_content_relations->set_relation(
-				get_current_blog_id(),
-				$blog_id,
+
+			$remote_post_id = $this->get_remote_post_id( $remote_blog_id, $relation );
+			if ( ! $remote_post_id ) {
+				$this->trigger_missing_remote_post_error( $import_post, $relation );
+				continue;
+			}
+
+			$success = $this->mlp_content_relations->set_relation(
+				$remote_blog_id,
+				$current_blog_id,
+				$remote_post_id,
 				$import_post->id(),
-				$remote_post_id
+				'post'
+			);
+			/**
+			 * Note: Work in progress, signature is about to change
+			 *
+			 * @param array {
+			 *      Type\ImportElementInterface $import_element
+			 *      Type\LocaleRelationInterface $relation
+			 *      int $blog_id
+			 *      int $remote_post_id
+			 *      int $current_blog_id
+			 *      bool $success
+			 *      string $type
+			 */
+			do_action(
+				'w2m_import_mlp_linked',
+				[
+					'import_element'    => $import_post,
+					'relation'          => $relation,
+					'remote_blog_id'    => $remote_blog_id,
+					'remote_element_id' => $remote_post_id,
+					'blog_id'           => $current_blog_id,
+					'success'           => $success,
+					'type'              => 'post'
+				]
 			);
 		}
 	}
@@ -101,7 +137,7 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 	 *
 	 * @param $locale
 	 *
-	 * @return int|mixed|string
+	 * @return int
 	 */
 	public function get_blog_id_by_locale( $locale ) {
 
@@ -110,7 +146,7 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 		if ( $blog_id )
 			return $blog_id;
 
-		// try to match two-letter language code like en,de,fr
+		// try to match two-letter language code like en, de, fr
 		foreach ( $locales as $blog_id => $l ) {
 			if ( 0 === strpos( $l, $locale ) )
 				return $blog_id;
@@ -165,11 +201,11 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 	/**
 	 * Propagate an error that there was no blog for a given locale
 	 *
-	 * @param Type\ImportPostInterface $import_post
+	 * @param Type\ImportElementInterface $import_element
 	 * @param Type\LocaleRelationInterface $locale_relation
 	 */
 	private function trigger_missing_blog_error(
-		Type\ImportPostInterface $import_post,
+		Type\ImportElementInterface $import_element,
 		Type\LocaleRelationInterface $locale_relation
 	) {
 
@@ -181,7 +217,7 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 			array (
 				'data' => array(
 					'locale_relation' => $locale_relation,
-					'import_post' => $import_post
+					'import_element'  => $import_element
 				)
 			),
 			'locale'
@@ -192,11 +228,11 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 	/**
 	 * Propagate an error that there was no blog for a given locale
 	 *
-	 * @param Type\ImportPostInterface $import_post
+	 * @param Type\ImportElementInterface $import_element
 	 * @param Type\LocaleRelationInterface $locale_relation
 	 */
-	private function trigger_missing_remote_post(
-		Type\ImportPostInterface $import_post,
+	private function trigger_missing_remote_post_error(
+		Type\ImportElementInterface $import_element,
 		Type\LocaleRelationInterface $locale_relation
 	) {
 
@@ -208,7 +244,7 @@ class MlpTranslationConnector implements TranslationConnectorInterface {
 			array (
 				'data' => array(
 					'locale_relation' => $locale_relation,
-					'import_post' => $import_post
+					'import_element'  => $import_element
 				)
 			),
 			'post'

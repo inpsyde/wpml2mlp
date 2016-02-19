@@ -1,12 +1,13 @@
 <?php # -*- coding: utf-8 -*-
 
-namespace W2M\Test\Unit\Import\Service;
+namespace W2M\Test\WpIntegration\Import\Service;
 
 use
 	W2M\Import\Service,
 	W2M\Test\Helper,
 	WP_Http,
-	Brain;
+	Brain,
+	DateTime;
 
 class WpAttachmentImporterTest extends Helper\WpIntegrationTestCase {
 
@@ -56,7 +57,7 @@ class WpAttachmentImporterTest extends Helper\WpIntegrationTestCase {
 
 		$id_mapper_mock = $this->mock_builder->data_multi_type_id_mapper();
 
-		$testee = new Service\WpPostImporter( $id_mapper_mock, new \WP_Http() );
+		$testee = new Service\Importer\WpPostImporter( $id_mapper_mock, new WP_Http() );
 
 		$post_mock = $this->getMockBuilder( 'W2M\Import\Type\ImportPostInterface' )
 		                  ->getMock();
@@ -86,7 +87,7 @@ class WpAttachmentImporterTest extends Helper\WpIntegrationTestCase {
 			'origin_author_id'      => 12,
 			'status'                => 'draft',
 			'guid'                  => $origin_attachment_url,
-			'date'                  => ( new \DateTime( 'NOW' ) )->format( 'Y-m-d H:i:s' ),
+			'date'                  => new DateTime( 'NOW' ),
 			'comment_status'        => 'open',
 			'ping_status'           => 'open',
 			'type'                  => 'attachment',
@@ -121,7 +122,7 @@ class WpAttachmentImporterTest extends Helper\WpIntegrationTestCase {
 		}
 
 		$test_case = $this;
-		$test_action = 'w2m_comment_imported';
+		$test_action = 'w2m_attachment_imported';
 
 		$action_check = $this->getMockBuilder( 'ActionFiredTest' )
 			->disableOriginalConstructor()
@@ -133,7 +134,7 @@ class WpAttachmentImporterTest extends Helper\WpIntegrationTestCase {
 			->with( $test_action );
 
 		add_action(
-			'w2m_attachment_imported',
+			$test_action,
 			function( $upload_data, $import_post ) use ( $test_case, $post_mock, $action_check ) {
 
 				$action_check->action_fired( current_filter() );

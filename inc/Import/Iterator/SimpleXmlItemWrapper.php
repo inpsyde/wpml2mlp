@@ -8,6 +8,11 @@ use
 	WP_Error,
 	Iterator;
 
+/**
+ * Class SimpleXmlItemWrapper
+ *
+ * @package W2M\Import\Iterator
+ */
 class SimpleXmlItemWrapper implements Iterator {
 
 	/**

@@ -60,7 +60,7 @@ class IteratorsParsersTest extends Helper\MonkeyTestCase {
 				[],
 				$wp_factory_mock
 			),
-			new Service\WpPostParser( $wp_factory_mock )
+			new Service\Parser\WpPostParser( $wp_factory_mock )
 		);
 
 		$index = 0;
@@ -112,7 +112,7 @@ class IteratorsParsersTest extends Helper\MonkeyTestCase {
 				[],
 				$wp_factory_mock
 			),
-			new Service\WpPostParser( $wp_factory_mock )
+			new Service\Parser\WpPostParser( $wp_factory_mock )
 		);
 
 		$index = 0;
@@ -162,7 +162,7 @@ class IteratorsParsersTest extends Helper\MonkeyTestCase {
 				[],
 				$wp_factory_mock
 			),
-			new Service\WpTermParser( $wp_factory_mock )
+			new Service\Parser\WpTermParser( $wp_factory_mock )
 		);
 
 		$index = 0;
@@ -221,7 +221,7 @@ class IteratorsParsersTest extends Helper\MonkeyTestCase {
 				[],
 				$wp_factory_mock
 			),
-			new Service\WpTermParser( $wp_factory_mock )
+			new Service\Parser\WpTermParser( $wp_factory_mock )
 		);
 
 		$index = 0;
@@ -277,7 +277,7 @@ class IteratorsParsersTest extends Helper\MonkeyTestCase {
 				[],
 				$wp_factory_mock
 			),
-			new Service\WpUserParser( $wp_factory_mock )
+			new Service\Parser\WpUserParser( $wp_factory_mock )
 		);
 
 		$index = 0;
@@ -336,7 +336,7 @@ class IteratorsParsersTest extends Helper\MonkeyTestCase {
 				[],
 				$wp_factory_mock
 			),
-			new Service\WpUserParser( $wp_factory_mock )
+			new Service\Parser\WpUserParser( $wp_factory_mock )
 		);
 
 		$index = 0;
@@ -393,7 +393,7 @@ class IteratorsParsersTest extends Helper\MonkeyTestCase {
 				[],
 				$wp_factory_mock
 			),
-			new Service\WpCommentParser( $wp_factory_mock )
+			new Service\Parser\WpCommentParser( $wp_factory_mock )
 		);
 
 		$index = 0;
@@ -449,7 +449,7 @@ class IteratorsParsersTest extends Helper\MonkeyTestCase {
 				[],
 				$wp_factory_mock
 			),
-			new Service\WpCommentParser( $wp_factory_mock )
+			new Service\Parser\WpCommentParser( $wp_factory_mock )
 		);
 
 		$index = 0;

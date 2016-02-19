@@ -5,6 +5,13 @@ namespace W2M\Import\Common;
 use
 	ReflectionClass;
 
+/**
+ * Class CommonFactory
+ *
+ * Creates objects by given class name and constructor parameter
+ *
+ * @package W2M\Import\Common
+ */
 class CommonFactory implements CommonFactoryInterface {
 
 	/**

@@ -4,9 +4,13 @@ namespace W2M\Import\Module;
 
 use
 	W2M\Import\Type,
-	WP_Error,
 	WP_Post;
 
+/**
+ * Interface TranslationConnectorInterface
+ *
+ * @package W2M\Import\Module
+ */
 interface TranslationConnectorInterface {
 
 	/**

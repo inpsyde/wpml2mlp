@@ -17,7 +17,7 @@ interface MultiTypeAncestorRelationListInterface {
 	/**
 	 * @param string $type
 	 *
-	 * @return array (List of Type\AncestorRelationInterface)
+	 * @return Type\AncestorRelationInterface[] (Referring to origin_ids!)
 	 */
 	public function relations( $type );
 }

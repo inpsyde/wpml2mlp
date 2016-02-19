@@ -2,6 +2,11 @@
 
 namespace W2M\Import\Type;
 
+/**
+ * Interface ImportMetaInterface
+ *
+ * @package W2M\Import\Type
+ */
 interface ImportMetaInterface {
 
 	/**
@@ -13,7 +18,7 @@ interface ImportMetaInterface {
 	 * If is_single() is FALSE, the method will always return an array
 	 * and it should considered as list of single post-meta values.
 	 *
-	 * @return mixed
+	 * @return array|scalar
 	 */
 	public function value();
 

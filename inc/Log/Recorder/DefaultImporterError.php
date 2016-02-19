@@ -7,6 +7,11 @@ use
 	Monolog,
 	WP_Error;
 
+/**
+ * Class DefaultImporterError
+ *
+ * @package W2M\Log\Recorder
+ */
 class DefaultImporterError implements ImporterErrorInterface {
 
 	/**
@@ -38,7 +43,14 @@ class DefaultImporterError implements ImporterErrorInterface {
 		$code = $error->get_error_code();
 		$msg  = $error->get_error_message( $code );
 
-		$this->log->warning( $msg, array( 'code' => $code, 'origin_id' => $import_element->origin_id() ) );
+		$this->log->warning(
+			$msg,
+			[
+				'code'      => $code,
+				'origin_id' => $import_element->origin_id(),
+				'action'    => current_filter()
+			]
+		);
 	}
 
 }

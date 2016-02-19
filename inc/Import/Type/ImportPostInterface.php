@@ -2,6 +2,11 @@
 
 namespace W2M\Import\Type;
 
+/**
+ * Interface ImportPostInterface
+ *
+ * @package W2M\Import\Type
+ */
 interface ImportPostInterface extends ImportElementInterface {
 
 	/**
@@ -85,17 +90,17 @@ interface ImportPostInterface extends ImportElementInterface {
 	public function password();
 
 	/**
-	 * @return array (List of W2M\Import\Type\TermReferenceInterface)
+	 * @return TermReferenceInterface[]
 	 */
 	public function terms();
 
 	/**
-	 * @return array (List of W2M\Import\Type\ImportMetaInterface)
+	 * @return ImportMetaInterface[]
 	 */
 	public function meta();
 
 	/**
-	 * @return array
+	 * @return LocaleRelationInterface[]
 	 */
 	public function locale_relations();
 

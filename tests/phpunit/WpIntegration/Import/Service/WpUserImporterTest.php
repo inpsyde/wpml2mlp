@@ -1,4 +1,5 @@
 <?php # -*- coding: utf-8 -*-
+
 namespace W2M\Test\WpIntegration\Import\Service;
 
 use
@@ -18,7 +19,7 @@ class WpUserImporterTest extends Helper\WpIntegrationTestCase {
 
 		$id_mapper_mock = $this->mock_builder->data_multi_type_id_mapper();
 
-		$testee = new Service\WpUserImporter( $id_mapper_mock );
+		$testee = new Service\Importer\WpUserImporter( $id_mapper_mock );
 
 		/**
 		 * Now define the behaviour of the mock object. Each of the specified

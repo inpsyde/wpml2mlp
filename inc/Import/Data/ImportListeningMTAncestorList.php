@@ -17,6 +17,8 @@ use
  *
  * Todo: consider a better name for this. Maybe `UnresolvedAncestorRelations`
  *
+ * Todo: Specify an interface for the recording methods
+ *
  * @package W2M\Import\Data
  */
 class ImportListeningMTAncestorList implements MultiTypeAncestorRelationListInterface {
@@ -42,7 +44,7 @@ class ImportListeningMTAncestorList implements MultiTypeAncestorRelationListInte
 	/**
 	 * @param string $type ('post'|'term')
 	 *
-	 * @return array (List of Type\AncestorRelationInterface with **origin_ids**!)
+	 * @return Type\AncestorRelationInterface[] (Referring to origin_ids!)
 	 */
 	public function relations( $type ) {
 
@@ -52,8 +54,6 @@ class ImportListeningMTAncestorList implements MultiTypeAncestorRelationListInte
 	}
 
 	/**
-	 * Todo: Write test for
-	 *
 	 * @wp-hook w2m_import_missing_comment_ancestor
 	 *
 	 * @param stdClass|WP_Comment $comment
@@ -109,9 +109,10 @@ class ImportListeningMTAncestorList implements MultiTypeAncestorRelationListInte
 
 		$relation = new Type\AncestorRelation(
 			$import_term->origin_parent_term_id(),
-			$import_term->origin_id()
+			$import_term->origin_id(),
+			$wp_term->taxonomy
 		);
-		$key      = "{$import_term->origin_parent_term_id()}:{$import_term->origin_id()}";
+		$key      = "{$import_term->origin_parent_term_id()}:{$import_term->origin_id()}:{$wp_term->taxonomy}";
 
 		$this->relations[ 'term' ][ $key ] = $relation;
 	}

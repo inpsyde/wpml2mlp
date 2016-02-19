@@ -11,6 +11,8 @@ use
  * This controller provides the IdMapper to »observe« the imported elements.
  *
  * @package W2M\Controller
+ *
+ * Todo: #54 Refactor IdObservableInterface dependency, see https://github.com/inpsyde/wpml2mlp/issues/54
  */
 class DataIdObserverProvider {
 
@@ -25,11 +27,11 @@ class DataIdObserverProvider {
 	private $unresolved_ancestor_mapper;
 
 	/**
-	 * @param Data\ImportListeningTypeIdMapper $id_mapper
+	 * @param Data\IdObserverInterface $id_mapper
 	 * @param Data\ImportListeningMTAncestorList $unresolved_ancestor_list
 	 */
 	public function __construct(
-		Data\ImportListeningTypeIdMapper $id_mapper,
+		Data\IdObserverInterface $id_mapper,
 		Data\ImportListeningMTAncestorList $unresolved_ancestor_list
 	) {
 
@@ -42,10 +44,10 @@ class DataIdObserverProvider {
 	 */
 	public function register_id_observer() {
 
-		add_action( 'w2m_import_set_comment_id_id', [ $this->id_mapper, 'record_comment' ] );
-		add_action( 'w2m_import_set_post_id', [ $this->id_mapper, 'record_post' ] );
-		add_action( 'w2m_import_set_term_id', [ $this->id_mapper, 'record_term' ] );
-		add_action( 'w2m_import_set_user_id', [ $this->id_mapper, 'record_user' ] );
+		add_action( 'w2m_import_set_comment_id', [ $this->id_mapper, 'record_comment' ] );
+		add_action( 'w2m_import_set_post_id',    [ $this->id_mapper, 'record_post' ] );
+		add_action( 'w2m_import_set_term_id',    [ $this->id_mapper, 'record_term' ] );
+		add_action( 'w2m_import_set_user_id',    [ $this->id_mapper, 'record_user' ] );
 
 		add_action(
 			'w2m_import_missing_comment_ancestor',

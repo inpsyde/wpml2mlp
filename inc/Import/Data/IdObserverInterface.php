@@ -12,6 +12,9 @@ use
  * entities. The main use case is an IdMapper
  *
  * @package W2M\Import\Data
+ * @deprecated
+ *
+ * Todo: #54 Resolve this interface, see https://github.com/inpsyde/wpml2mlp/issues/54
  */
 interface IdObserverInterface {
 
@@ -38,7 +41,7 @@ interface IdObserverInterface {
 	 *
 	 * @param Type\ImportTermInterface $import_term
 	 *
-	 * @return
+	 * @return void
 	 */
 	public function record_term( Type\ImportTermInterface $import_term );
 

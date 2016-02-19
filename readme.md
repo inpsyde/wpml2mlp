@@ -44,45 +44,60 @@ Use the installer via back-end of your install or ...
 
 ## Action & Filter Reference
 ### Actions
-* `w2m_import_term_error` in `W2M\Import\Service\WpTermImporter::import_term()`
-* `w2m_import_missing_term_ancestor` in `W2M\Import\Service\WpTermImporter::import_term()`
-* `w2m_term_imported` in `W2M\Import\Service\WpTermImporter::import_term()`
+* `w2m_import_term_error` in `W2M\Import\Service\Importer\WpTermImporter::import_term()`
+* `w2m_import_missing_term_ancestor` in `W2M\Import\Service\Importer\WpTermImporter::import_term()`
+* `w2m_term_imported` in `W2M\Import\Service\Importer\WpTermImporter::import_term()`
 
-* `w2m_import_post_error` in `W2M\Import\Service\WpPostImporter::import_post()`
-* `w2m_import_missing_post_ancestor` in `W2M\Import\Service\WpPostImporter::import_post()`
-* `w2m_import_set_post_terms_error` in `W2M\Import\Service\WpPostImporter::import_post()`
-* `w2m_import_update_post_meta_error` in `W2M\Import\Service\WpPostImporter::import_post()`
-* `w2m_post_imported` in `W2M\Import\Service\WpPostImporter::import_post()`
+* `w2m_import_post_error` in `W2M\Import\Service\Importer\WpPostImporter::import_post()`
+* `w2m_import_missing_post_ancestor` in `W2M\Import\Service\Importer\WpPostImporter::import_post()`
+* `w2m_import_missing_post_local_user_id` in `W2M\Import\Service\Importer\WpPostImporter::import_post()`
+* `w2m_import_set_post_terms_error` in `W2M\Import\Service\Importer\WpPostImporter::import_post()`
+* `w2m_import_update_post_meta_error` in `W2M\Import\Service\Importer\WpPostImporter::import_post()`
+* `w2m_post_imported` in `W2M\Import\Service\Importer\WpPostImporter::import_post()`
 
-* `w2m_import_attachment_missing_origin_attachment_url` in `W2M\Import\Service\WpPostImporter::import_post()`
-* `w2m_import_attachment_mkdir_error` in `W2M\Import\Service\WpPostImporter::import_post()`
-* `w2m_import_request_attachment_error` in `W2M\Import\Service\WpPostImporter::import_post()`
-* `w2m_attachment_imported`in `W2M\Import\Service\WpPostImporter::import_post()`
+* `w2m_import_attachment_missing_origin_attachment_url` in `W2M\Import\Service\Importer\WpPostImporter::import_post()`
+* `w2m_import_attachment_mkdir_error` in `W2M\Import\Service\Importer\WpPostImporter::import_post()`
+* `w2m_import_request_attachment_error` in `W2M\Import\Service\Importer\WpPostImporter::import_post()`
+* `w2m_attachment_imported`in `W2M\Import\Service\Importer\WpPostImporter::import_post()`
 
-* `w2m_import_user_error` in `W2M\Import\Service\WpUserImporter::import_user()`
-* `w2m_user_imported` in `W2M\Import\Service\WpUserImporter::import_user()`
+* `w2m_import_user_error` in `W2M\Import\Service\Importer\WpUserImporter::import_user()`
+* `w2m_user_imported` in `W2M\Import\Service\Importer\WpUserImporter::import_user()`
 
-* `w2m_import_comment_error` in `W2M\Import\Service\WpCommentImporter::import_comment()`
-* `w2m_import_missing_comment_ancestor` in `W2M\Import\Service\WpCommentImporter::import_comment()`
-* `w2m_import_update_comment_meta_error` in `W2M\Import\Service\WpCommentImporter::import_comment()`
-* `w2m_comment_imported` in `W2M\Import\Service\WpCommentImporter::import_comment()`
+* `w2m_import_comment_error` in `W2M\Import\Service\Importer\WpCommentImporter::import_comment()`
+* `w2m_import_missing_comment_ancestor` in `W2M\Import\Service\Importer\WpCommentImporter::import_comment()`
+* `w2m_import_update_comment_meta_error` in `W2M\Import\Service\Importer\WpCommentImporter::import_comment()`
+* `w2m_comment_imported` in `W2M\Import\Service\Importer\WpCommentImporter::import_comment()`
 
-* `w2m_import_parse_term_error` in `W2M\Import\Service\WpTermParser::propagate_error()`
-* `w2m_import_parse_post_error` in `W2M\Import\Service\WpPostParser::propagate_error()`
-* `w2m_import_parse_user_error` in `W2M\Import\Service\WpUserParser::propagate_error()`
-* `w2m_import_parse_comment_error` in `W2M\Import\Service\WpCommentParser::propagate_error()`
+* `w2m_import_parse_term_error` in `W2M\Import\Service\Parser\WpTermParser::propagate_error()`
+* `w2m_import_parse_post_error` in `W2M\Import\Service\Parser\WpPostParser::propagate_error()`
+* `w2m_import_parse_user_error` in `W2M\Import\Service\Parser\WpUserParser::propagate_error()`
+* `w2m_import_parse_comment_error` in `W2M\Import\Service\Parser\WpCommentParser::propagate_error()`
 
 * (Deprecated) `w2m_import_set_user_id` in `W2M\Import\Type\WpImportUser::id()`
 * (Deprecated) `w2m_import_set_post_id` in `W2M\Import\Type\WpImportPost::id()`
 * (Deprecated) `w2m_import_set_term_id` in `W2M\Import\Type\WpImportTerm::id()`
 * (Deprecated) `w2m_import_set_comment_id` in `W2M\Import\Type\WpImportComment::id()`
 
+* `w2m_import_posts_start` in `W2M\Import\Service\PostProcessor::process_elements()`
 * `w2m_import_posts_done` in `W2M\Import\Service\PostProcessor::process_elements()`
+* `w2m_import_users_start` in `W2M\Import\Service\UserProcessor::process_elements()`
 * `w2m_import_users_done` in `W2M\Import\Service\UserProcessor::process_elements()`
+* `w2m_import_terms_start` in `W2M\Import\Service\TermProcessor::process_elements()`
 * `w2m_import_terms_done` in `W2M\Import\Service\TermProcessor::process_elements()`
+* `w2m_import_comments_start` in `W2M\Import\Service\CommentProcessor::process_elements()`
 * `w2m_import_comments_done` in `W2M\Import\Service\CommentProcessor::process_elements()`
 
 * `w2m_import_xml_parser_error` in `W2M\Import\Iterator\SimpleXmlItemWrapper::propagate_error()`
+
+* `w2m_import_process_done` in `W2M\Import\Module\ElementImporter::process_elements()`
+
+* `w2m_import_post_ancestor_resolver_error` in `W2M\Import\Service\PostAncestorResolver::propagate_error()`
+* `w2m_import_post_ancestor_resolved` in `W2M\Import\Service\PostAncestorResolver::resolve_relation()`
+* `w2m_import_term_ancestor_resolver_error` in `W2M\Import\Service\TermAncestorResolver::propagate_error()`
+* `w2m_import_term_ancestor_resolved` in `W2M\Import\Service\TermAncestorResolver::resolve_relation()`
+* `w2m_import_post_ancestor_resolving_start` in `W2M\Import\Module\ResolvingPendingRelations::resolving_posts()`
+* `w2m_import_term_ancestor_resolving_start` in `W2M\Import\Module\ResolvingPendingRelations::resolving_terms()`
+
 
 ## Other Notes
 

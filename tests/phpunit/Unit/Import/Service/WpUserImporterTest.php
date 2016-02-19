@@ -2,26 +2,12 @@
 
 namespace W2M\Test\Unit\Import\Service;
 
-use Brain;
-use W2M\Import\Service;
-use W2M\Test\Helper;
+use
+	W2M\Import\Service,
+	W2M\Test\Helper,
+	Brain;
 
 class WpUserImporterTest extends Helper\MonkeyTestCase {
-
-	private $fs_helper;
-
-	/**
-	 * runs before each test
-	 */
-	public function setUp() {
-
-		if ( ! $this->fs_helper ) {
-			$this->fs_helper = new Helper\FileSystem;
-		}
-
-		parent::setUp();
-
-	}
 
 	/**
 	 * @group import
@@ -35,7 +21,7 @@ class WpUserImporterTest extends Helper\MonkeyTestCase {
 
 		$wp_user_mock = $this->getMock( 'WP_User' );
 
-		$testee = new Service\WpUserImporter( $id_mapper_mock );
+		$testee = new Service\Importer\WpUserImporter( $id_mapper_mock );
 
 		/**
 		 * Now define the behaviour of the mock object. Each of the specified

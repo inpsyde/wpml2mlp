@@ -5,6 +5,11 @@ namespace W2M\Import\Type;
 use
 	DateTime;
 
+/**
+ * Interface ImportCommentInterface
+ *
+ * @package W2M\Import\Type
+ */
 interface ImportCommentInterface extends ImportElementInterface {
 
 	/**
@@ -73,7 +78,7 @@ interface ImportCommentInterface extends ImportElementInterface {
 	public function origin_parent_comment_id();
 
 	/**
-	 * @return array
+	 * @return ImportMetaInterface[]
 	 */
 	public function meta();
 }

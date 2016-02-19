@@ -14,22 +14,28 @@ use
  */
 class ElementImporter implements Service\ElementProcessorInterface {
 
+	/**
+	 * @var Service\ElementProcessorInterface[] $processors
+	 */
 	private $processors = [];
 
-	public function __construct(
-		Service\UserProcessor $user,
-		Service\TermProcessor $term,
-		Service\PostProcessor $post,
-		Service\CommentProcessor $comment
-	) {
+	/**
+	 * @param Service\ElementProcessorInterface[] $processors
+	 */
+	public function __construct( Array $processors ) {
 
 		// the order is important for the performance of the import
-		$this->processors = [
-			$user,
-			$term,
-			$post,
-			$comment
-		];
+		foreach ( $processors as $processor )
+			$this->push_processor( $processor );
+	}
+
+	/**
+	 * @param Service\ElementProcessorInterface $processor
+	 */
+	private function push_processor( Service\ElementProcessorInterface $processor ) {
+
+		if ( ! in_array( $processor, $this->processors, TRUE ) )
+			$this->processors[] = $processor;
 	}
 
 	/**
@@ -40,7 +46,6 @@ class ElementImporter implements Service\ElementProcessorInterface {
 	public function process_elements() {
 
 		foreach ( $this->processors as $processor ) {
-			/* @var Service\ElementProcessorInterface $processor */
 			$processor->process_elements();
 		}
 	}

@@ -2,6 +2,11 @@
 
 namespace W2M\Import\Type;
 
+/**
+ * Class LocaleRelation
+ *
+ * @package W2M\Import\Type
+ */
 class LocaleRelation implements LocaleRelationInterface {
 
 	/**

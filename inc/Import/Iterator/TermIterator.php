@@ -7,6 +7,11 @@ use
 	W2m\Import\Service,
 	Iterator;
 
+/**
+ * Class TermIterator
+ *
+ * @package W2M\Import\Iterator
+ */
 class TermIterator implements Iterator {
 
 	/**
@@ -15,17 +20,17 @@ class TermIterator implements Iterator {
 	private $iterator;
 
 	/**
-	 * @var Service\TermParserInterface
+	 * @var Service\Parser\TermParserInterface
 	 */
 	private $parser;
 
 	/**
 	 * @param SimpleXmlItemWrapper $iterator
-	 * @param Service\TermParserInterface $parser
+	 * @param Service\Parser\TermParserInterface $parser
 	 */
 	public function __construct(
 		SimpleXmlItemWrapper $iterator,
-		Service\TermParserInterface $parser
+		Service\Parser\TermParserInterface $parser
 	) {
 
 		$this->iterator = $iterator;

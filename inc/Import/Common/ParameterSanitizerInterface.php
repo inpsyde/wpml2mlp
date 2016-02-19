@@ -2,6 +2,17 @@
 
 namespace W2M\Import\Common;
 
+/**
+ * Interface ParameterSanitizerInterface
+ *
+ * Description of a sanitizer
+ *
+ * Todo: The interface is way to unspecific. The behavior is meant to be
+ * influenced by the $context_data parameter which breaks encapsulation and
+ * leads to less polymorphic structure.
+ *
+ * @package W2M\Import\Common
+ */
 interface ParameterSanitizerInterface {
 
 	/**

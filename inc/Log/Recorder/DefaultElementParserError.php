@@ -6,6 +6,11 @@ use
 	Monolog,
 	WP_Error;
 
+/**
+ * Class DefaultElementParserError
+ *
+ * @package W2M\Log\Recorder
+ */
 class DefaultElementParserError implements WpErrorRecorderInterface {
 
 	/**
@@ -36,6 +41,6 @@ class DefaultElementParserError implements WpErrorRecorderInterface {
 		$code = $error->get_error_code();
 		$msg  = $error->get_error_message( $code );
 
-		$this->log->warning( $msg );
+		$this->log->warning( $msg, [ 'action' => current_filter() ] );
 	}
 }

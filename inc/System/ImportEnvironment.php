@@ -2,7 +2,20 @@
 
 namespace W2M\System;
 
+/**
+ * Class ImportEnvironment
+ *
+ * @package W2M\System
+ */
 class ImportEnvironment {
+
+	/**
+	 * @return bool
+	 */
+	public function is_multisite() {
+
+		return is_multisite();
+	}
 
 	/**
 	 * @return bool
