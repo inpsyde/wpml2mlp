@@ -8,6 +8,10 @@
  * Version:     0.0.1.2
  */
 
+#print_r( get_post_meta( 4285 ) );
+#die();
+
+
 defined( 'ABSPATH' ) or die( 'No direct access!' );
 
 /**
@@ -41,7 +45,7 @@ add_action( 'wp_loaded', function() {
 } );
 
 # Load plugin
-#add_action( 'admin_init', 'wpml2mlp_prerequisites' );
+add_action( 'admin_init', 'wpml2mlp_prerequisites' );
 
 /**
  * Reqiure needed files and heck the prerequisites to chose the way of use
@@ -111,6 +115,43 @@ function wpml2mlp_prerequisites() {
 add_filter( 'wpml2mlp_supported_posttypes', 'add_woo' );
 
 function add_woo( $posttypes ){
+
 	$posttypes['product'] = 'product';
+
 	return $posttypes;
+}
+
+
+add_filter( 'wpml2mlp_xml_postmeta', 'add_wooorder_ids', 9, 2);
+
+function add_wooorder_ids( $wxr_postmeta, $post ){
+
+	global $wpdb;
+
+	if ( $post->post_type == 'product' ) {
+
+		$sql = "SELECT order_id FROM " . $wpdb->prefix . "woocommerce_order_items WHERE order_item_id in ( SELECT order_item_id FROM " . $wpdb->prefix . "woocommerce_order_itemmeta WHERE meta_key='_product_id' and meta_value= $post->ID )";
+
+
+
+		$woo_orders = $wpdb->get_results( $sql );
+
+		if( ! empty( $woo_orders ) ) {
+
+			foreach( $woo_orders as $item ){
+
+				$wxr_postmeta .= "\n\t\t\t<wp:postmeta>\n";
+				$wxr_postmeta .= "\t\t\t\t<wp:meta_key><![CDATA[_w2m_woocommerce_order_item_id]]></wp:meta_key>\n";
+				$wxr_postmeta .= "\t\t\t\t<wp:meta_value>' . $item->order_id . '</wp:meta_value>\n";
+				$wxr_postmeta .= "\t\t\t</wp:postmeta>\n";
+
+			}
+
+		}
+
+
+	}
+
+	return $wxr_postmeta;
+
 }

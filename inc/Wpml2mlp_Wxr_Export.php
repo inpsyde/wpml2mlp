@@ -233,6 +233,9 @@ class Wpml_Wxr_Export {
 
 	private function wxr_get_post_items() {
 
+
+		global $wpdb;
+
 		$wxr_items = FALSE;
 
 		foreach ( $this->posts as $i => $post ) {
@@ -265,12 +268,12 @@ class Wpml_Wxr_Export {
 			}
 
 			$wxr_items .= $this->wxr_post_categories( $post->ID );
-			$wxr_items .= $this->wxr_get_postmeta( $post->ID );
+			$wxr_items .= $this->wxr_get_postmeta( $post );
 			$wxr_items .= $this->wxr_get_translations( $post->translations );
 			$wxr_items .= $this->wxr_comments( $post->ID );
 
 			$wxr_items .= "\n\t\t</item>\n";
-<<<<<<< HEAD
+
 /*
 			#buddy take a break, its hard work i now ;)
 			if ( $i >= 50 ) {
@@ -281,8 +284,7 @@ class Wpml_Wxr_Export {
 
 				$i = 0;
 			}*/
-=======
->>>>>>> fix_44
+
 
 		}
 
@@ -302,11 +304,11 @@ class Wpml_Wxr_Export {
 	 * @param string $meta_key Current meta key.
 	 * @param object $meta     Current meta object.
 	 */
-	private function wxr_get_postmeta( $post_ID ) {
+	private function wxr_get_postmeta( $post ) {
 
 		global $wpdb;
 
-		$postmeta = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->postmeta WHERE post_id = %d", $post_ID ) );
+		$postmeta = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->postmeta WHERE post_id = %d", $post->ID ) );
 
 		$wxr_postmeta = FALSE;
 
@@ -319,7 +321,7 @@ class Wpml_Wxr_Export {
 
 		}
 
-		return $wxr_postmeta;
+		return apply_filters( 'wpml2mlp_xml_postmeta', $wxr_postmeta, $post );
 
 	}
 
