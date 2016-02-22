@@ -13,12 +13,21 @@ class Wpml2mlp_Helper {
 	public static function get_all_posts() {
 		global $sitepress;
 
+		$attachment_query_params = array(
+			'posts_per_page'   => -1,
+			'post_type'        => array( 'attachment' => 'attachment' ),
+			'post_status'      => array( 'publish', 'pending', 'draft', 'future', 'private', 'inherit' ),
+			'suppress_filters' => true
+		);
+
+		$attachment_query = new WP_Query( $attachment_query_params );
+
 		$termtypes = array( 'category', 'post_tag' );
 
 		$posttypes = array(
 			'post'       => 'post',
 			'page'       => 'page',
-			'attachment' => 'attachment'
+			#'attachment' => 'attachment'
 		);
 
 		$query_params = array(
@@ -34,9 +43,9 @@ class Wpml2mlp_Helper {
 		$languages = wpml_get_active_languages_filter();
 
 		unset(
-			#$languages['en'],
-			#$languages['nl'],
-			#$languages['fr']
+			$languages['en'],
+			$languages['nl'],
+			$languages['fr'],
 			$languages['it'],
 			$languages['de'],
 			$languages['es']
@@ -50,6 +59,25 @@ class Wpml2mlp_Helper {
 
 
 			if ( $query->found_posts > 0 ) {
+
+				foreach( $query->posts as $i => $post ){
+
+					if ( $attachment_query->found_posts > 0 ) {
+
+						foreach ( $attachment_query->posts as $a => $attachment ) {
+
+							if( $attachment->post_parent == $post->ID ){
+
+								$query->posts[] = $attachment;
+								unset( $attachment_query->posts[$a] );
+
+							}
+						}
+
+					}
+
+				}
+
 
 				$all_posts[ $lang_data['default_locale'] ]['posts'] = $query->posts;
 
@@ -68,6 +96,7 @@ class Wpml2mlp_Helper {
 
 		}
 
+		$all_posts['not_mapped_attachemnts']['posts'] = $attachment_query->posts;
 
 		if ( ! empty( $all_posts ) ) {
 

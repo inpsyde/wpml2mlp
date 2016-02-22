@@ -45,7 +45,7 @@ add_action( 'wp_loaded', function() {
 } );
 
 # Load plugin
-add_action( 'admin_init', 'wpml2mlp_prerequisites' );
+#add_action( 'admin_init', 'wpml2mlp_prerequisites' );
 
 /**
  * Reqiure needed files and heck the prerequisites to chose the way of use
