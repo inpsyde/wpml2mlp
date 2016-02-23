@@ -8,7 +8,7 @@ use
 	Brain,
 	DateTime;
 
-class XmlImportInfoTest extends Helper\MonkeyTestCase {
+class FileImportInfoTest extends Helper\MonkeyTestCase {
 
 	public function setUp() {
 
@@ -22,7 +22,7 @@ class XmlImportInfoTest extends Helper\MonkeyTestCase {
 	public function test_start_date() {
 
 		$date   = new DateTime;
-		$testee = new Data\XmlImportInfo( '', 1, $date );
+		$testee = new Data\FileImportInfo( '', 1, $date );
 		$this->assertSame(
 			$date,
 			$testee->start_date()
@@ -31,7 +31,7 @@ class XmlImportInfoTest extends Helper\MonkeyTestCase {
 
 	public function test_implicit_start_date() {
 
-		$testee = new Data\XmlImportInfo( '' );
+		$testee = new Data\FileImportInfo( '' );
 		$this->assertInstanceOf(
 			'DateTime',
 			$testee->start_date()
@@ -41,7 +41,7 @@ class XmlImportInfoTest extends Helper\MonkeyTestCase {
 	public function test_import_blog_id() {
 
 		$blog_id = 5;
-		$testee  = new Data\XmlImportInfo( '', $blog_id );
+		$testee  = new Data\FileImportInfo( '', $blog_id );
 		$this->assertSame(
 			$blog_id,
 			$testee->import_blog_id()
@@ -54,7 +54,7 @@ class XmlImportInfoTest extends Helper\MonkeyTestCase {
 		Brain\Monkey::functions()
 			->when( 'get_current_blog_id' )
 			->justReturn( $blog_id );
-		$testee = new Data\XmlImportInfo( '' );
+		$testee = new Data\FileImportInfo( '' );
 		$this->assertSame(
 			$blog_id,
 			$testee->import_blog_id()
@@ -64,7 +64,7 @@ class XmlImportInfoTest extends Helper\MonkeyTestCase {
 	public function test_import_file() {
 
 		$file   = '/path/to/what.ever';
-		$testee = new Data\XmlImportInfo( $file );
+		$testee = new Data\FileImportInfo( $file );
 		$this->assertSame(
 			$file,
 			$testee->import_file()
@@ -74,7 +74,7 @@ class XmlImportInfoTest extends Helper\MonkeyTestCase {
 	public function test_map_file() {
 
 		$map_file = '/path/to/what.ever';
-		$testee   = new Data\XmlImportInfo( '', 1, new DateTime, $map_file );
+		$testee   = new Data\FileImportInfo( '', 1, new DateTime, $map_file );
 
 		$this->assertSame(
 			$map_file,
@@ -84,7 +84,7 @@ class XmlImportInfoTest extends Helper\MonkeyTestCase {
 
 	public function test_empty_map_file() {
 
-		$testee   = new Data\XmlImportInfo( '' );
+		$testee   = new Data\FileImportInfo( '' );
 		$this->assertSame(
 			'',
 			$testee->map_file()
@@ -97,7 +97,7 @@ class XmlImportInfoTest extends Helper\MonkeyTestCase {
 		$blog_id     = 2;
 		$date        = new DateTime;
 		$map_file    = '/path/to/something.else';
-		$testee      = new Data\XmlImportInfo(
+		$testee      = new Data\FileImportInfo(
 			$import_file,
 			$blog_id,
 			$date,

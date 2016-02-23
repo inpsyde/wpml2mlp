@@ -87,10 +87,10 @@ class MockBuilder {
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function data_xml_import_interface( Array $methods = [], Array $data = [] ) {
+	public function data_file_import_interface( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(
-			'W2M\Import\Data\XmlImportInterface',
+			'W2M\Import\Data\FileImportInterface',
 			$methods,
 			$data
 		);

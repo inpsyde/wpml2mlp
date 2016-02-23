@@ -7,7 +7,7 @@ use
 	W2M\Test\Helper,
 	DateTime;
 
-class JsonXmlImportReportTest extends Helper\MonkeyTestCase {
+class JsonFileImportReportTest extends Helper\MonkeyTestCase {
 
 	/**
 	 * @dataProvider create_report_test_data
@@ -18,7 +18,7 @@ class JsonXmlImportReportTest extends Helper\MonkeyTestCase {
 
 		$id_map_mock = $this->mock_builder->data_multi_type_id_list();
 		$file_mock   = $this->mock_builder->common_file();
-		$import_mock = $this->mock_builder->data_xml_import_interface();
+		$import_mock = $this->mock_builder->data_file_import_interface();
 
 		$maps = $data[ 'maps' ];
 		$id_map_mock->expects( $this->exactly( 4 ) )
@@ -52,7 +52,7 @@ class JsonXmlImportReportTest extends Helper\MonkeyTestCase {
 				)
 			);
 
-		$testee = new Module\JsonXmlImportReport( $id_map_mock, $file_mock );
+		$testee = new Module\JsonFileImportReport( $id_map_mock, $file_mock );
 		$testee->create_report( $import_mock );
 	}
 
@@ -74,7 +74,7 @@ class JsonXmlImportReportTest extends Helper\MonkeyTestCase {
 			$result->date
 		);
 		$this->assertRegExp(
-			'~\d+s~',
+			'~\d+\s?s~',
 			$result->runtime
 		);
 

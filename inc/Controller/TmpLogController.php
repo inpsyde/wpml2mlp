@@ -220,7 +220,7 @@ class TmpLogController {
 		add_action(
 			'w2m_import_xml_start_process',
 			/**
-			 * @param Data\XmlImportInterface $import
+			 * @param Data\FileImportInterface $import
 			 */
 			function( $import ) use ( $logger ) {
 				$this->logger->info(

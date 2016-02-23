@@ -155,9 +155,9 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		/**
 		 * Import reporting
 		 */
-		$import_info = new Import\Data\XmlImportInfo( $import_file, $blog_id, new DateTime );
+		$import_info = new Import\Data\FileImportInfo( $import_file, $blog_id, new DateTime );
 		$report_file = new Import\Common\File( $log_dir . '/w2m-import-report-' . time() . '.json' );
-		$reporter    = new Import\Module\JsonXmlImportReport( $import_id_mapper, $report_file );
+		$reporter    = new Import\Module\JsonFileImportReport( $import_id_mapper, $report_file );
 		add_action( 'w2m_import_process_done', [ $reporter, 'create_report' ] );
 
 		/**
@@ -251,14 +251,14 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		$importer = new Import\Module\ElementImporter( $processors );
 
 		/**
-		 * @param Import\Data\XmlImportInterface $import_info
+		 * @param Import\Data\FileImportInterface $import_info
 		 */
 		do_action( 'w2m_import_xml_start_process', $import_info );
 
 		$importer->process_elements();
 
 		/**
-		 * @param Import\Data\XmlImportInterface $import_info
+		 * @param Import\Data\FileImportInterface $import_info
 		 */
 		do_action( 'w2m_import_process_done', $import_info );
 

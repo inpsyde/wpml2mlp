@@ -6,13 +6,13 @@ use
 	DateTime;
 
 /**
- * Class XmlImportInfo
+ * Class FileImportInfo
  *
  * Information about an XML import
  *
  * @package W2M\Import\Data
  */
-class XmlImportInfo implements XmlImportInterface {
+class FileImportInfo implements FileImportInterface {
 
 	/**
 	 * @var string

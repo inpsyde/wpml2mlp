@@ -8,13 +8,13 @@ use
 	DateTime;
 
 /**
- * Class JsonXmlImportReport
+ * Class JsonFileImportReport
  *
- * Writes xml import report in JSON format
+ * Writes file import report in JSON format
  *
  * @package W2M\Import\Module
  */
-class JsonXmlImportReport implements XmlImportReporterInterface {
+class JsonFileImportReport implements FileImportReporterInterface {
 
 	/**
 	 * @var Data\MultiTypeIdListInterface
@@ -40,9 +40,9 @@ class JsonXmlImportReport implements XmlImportReporterInterface {
 	}
 
 	/**
-	 * @param Data\XmlImportInterface $import
+	 * @param Data\FileImportInterface $import
 	 */
-	public function create_report( Data\XmlImportInterface $import ) {
+	public function create_report( Data\FileImportInterface $import ) {
 
 		$runtime = time() - $import->start_date()->getTimestamp();
 		/* @link https://secure.php.net/manual/en/function.memory-get-usage.php */
