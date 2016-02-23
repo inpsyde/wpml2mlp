@@ -45,14 +45,21 @@ class JsonXmlImportReport implements XmlImportReporterInterface {
 	public function create_report( Data\XmlImportInterface $import ) {
 
 		$runtime = time() - $import->start_date()->getTimestamp();
+		/* @link https://secure.php.net/manual/en/function.memory-get-usage.php */
+		$convert = function( $size ) {
+			$unit = [ 'B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB' ];
+			return round( $size / pow( 1024, ( $i = (int) floor( log( $size, 1024 ) ) ) ), 2 ) . ' ' . $unit[ $i ];
+		};
+		$memory_usage = memory_get_peak_usage( TRUE );
 
 		$report  = (object) [
-			'name'        => 'WPML to MLP XML import report',
-			'date'        => $import->start_date()->format( DateTime::W3C ),
-			'runtime'     => "{$runtime}s",
-			'import_file' => $import->import_file(),
-			'map_file'    => $import->map_file(),
-			'maps'        => (object) [
+			'name'         => 'WPML to MLP XML import report',
+			'date'         => $import->start_date()->format( DateTime::W3C ),
+			'runtime'      => "{$runtime} s",
+			'memory_usage' => $convert( $memory_usage ),
+			'import_file'  => $import->import_file(),
+			'map_file'     => $import->map_file(),
+			'maps'         => (object) [
 				'comments'    => (object) $this->list->id_map( 'comment' ),
 				'posts'       => (object) $this->list->id_map( 'post' ),
 				'terms'       => (object) $this->list->id_map( 'term' ),
