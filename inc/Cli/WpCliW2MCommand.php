@@ -45,21 +45,26 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 			exit;
 		}
 
-		$import_file = realpath( $args[ 0 ] );
-		if ( ! is_file( $import_file ) || ! is_readable( $import_file ) ) {
+		$import_file = new Import\Common\File(
+			realpath( $args[ 0 ] )
+		);
+		if ( ! is_file( $import_file->name() ) || ! is_readable( $import_file->name() ) ) {
 			$this->handle_error( new WP_Error( 'parameter', 'Import file does not exist or is not readable.' ) );
 			exit;
 		}
 
-		$report   = NULL;
+		$defined_id_maps   = NULL;
+		$map_file          = NULL;
 		if ( isset( $assoc_args[ 'map_file' ] ) ) {
-			$map_file = realpath( $assoc_args[ 'map_file' ] );
-			if ( ! is_file( $map_file ) || ! is_readable( $map_file ) ) {
+			$map_file = new Import\Common\File(
+				realpath( $assoc_args[ 'map_file' ] )
+			);
+			if ( ! is_file( $map_file->name() ) || ! is_readable( $map_file->name() ) ) {
 				$this->handle_error( new WP_Error( 'parameter', 'Map file does not exist or is not readable.' ) );
 				exit;
 			}
-			// Todo: Implement proper Type object and parser
-			$report = json_decode( file_get_contents( $map_file ) );
+			// Todo: Use the given ID-Map types instead of this simple object
+			$defined_id_maps = json_decode( file_get_contents( $map_file->name() ) );
 		}
 
 		$env = new System\ImportEnvironment;
@@ -108,8 +113,8 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		 * ID mapping
 		 */
 		$import_id_mapper = new Import\Data\ImportListeningTypeIdMapper;
-		if ( $report ) {
-			$user_map = get_object_vars( $report->maps->users );
+		if ( $defined_id_maps ) {
+			$user_map = get_object_vars( $defined_id_maps->maps->users );
 			$import_id_mapper = new Import\Data\PresetUserTypeIdMapper(
 				$import_id_mapper,
 				$user_map
@@ -155,10 +160,19 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		/**
 		 * Import reporting
 		 */
-		$import_info = new Import\Data\FileImportInfo( $import_file, $blog_id, new DateTime );
-		$report_file = new Import\Common\File( $log_dir . '/w2m-import-report-' . time() . '.json' );
-		$reporter    = new Import\Module\JsonFileImportReport( $import_id_mapper, $report_file );
-		add_action( 'w2m_import_process_done', [ $reporter, 'create_report' ] );
+		$report       = new Import\Type\FileImportReport(
+			$import_file,
+			$import_id_mapper,
+			$blog_id,
+			[
+				'map_file' => $map_file,
+				'date'     => new DateTime,
+				'name'     => 'WPML to MLP XML import report'
+			]
+		);
+		$report_file   = new Import\Common\File( $log_dir . '/w2m-import-report-' . time() . '.json' );
+		$report_writer = new Import\Module\JsonFileImportReport( $report , $report_file );
+		add_action( 'w2m_import_process_done', [ $report_writer, 'create_report' ] );
 
 		/**
 		 * Users
@@ -166,7 +180,7 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		$user_iterator = new Import\Iterator\UserIterator(
 			new Import\Iterator\SimpleXmlItemWrapper(
 				new Import\Iterator\XmlNodeIterator(
-					$import_file,
+					$import_file->name(),
 					'wp:author'
 				)
 			),
@@ -183,7 +197,7 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		$term_iterator = new Import\Iterator\TermIterator(
 			new Import\Iterator\SimpleXmlItemWrapper(
 				new Import\Iterator\XmlNodeIterator(
-					$import_file,
+					$import_file->name(),
 					'wp:category'
 				)
 			),
@@ -201,7 +215,7 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		$post_iterator = new Import\Iterator\PostIterator(
 			new Import\Iterator\SimpleXmlItemWrapper(
 				new Import\Iterator\XmlNodeIterator(
-					$import_file,
+					$import_file->name(),
 					'item'
 				)
 			),
@@ -227,7 +241,7 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 		$comment_iterator = new Import\Iterator\CommentIterator(
 			new Import\Iterator\SimpleXmlItemWrapper(
 				new Import\Iterator\XmlNodeIterator(
-					$import_file,
+					$import_file->name(),
 					'wp:comment'
 				)
 			),
@@ -244,23 +258,23 @@ class WpCliW2MCommand extends \WP_CLI_Command {
 			$post_processor,
 			$comment_processor
 		];
-		if ( $report ) {
+		if ( $defined_id_maps ) {
 			// if we have a map of user_ids, skip the user import
 			array_shift( $processors );
 		}
 		$importer = new Import\Module\ElementImporter( $processors );
 
 		/**
-		 * @param Import\Data\FileImportInterface $import_info
+		 * @param Import\Type\FileImportReportInterface $report
 		 */
-		do_action( 'w2m_import_xml_start_process', $import_info );
+		do_action( 'w2m_import_xml_start_process', $report );
 
 		$importer->process_elements();
 
 		/**
-		 * @param Import\Data\FileImportInterface $import_info
+		 * @param Import\Type\FileImportReportInterface $report
 		 */
-		do_action( 'w2m_import_process_done', $import_info );
+		do_action( 'w2m_import_process_done', $report );
 
 	}
 

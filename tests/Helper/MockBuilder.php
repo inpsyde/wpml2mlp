@@ -327,6 +327,21 @@ class MockBuilder {
 	 *
 	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
+	public function type_file_import_report_interface( Array $methods = [], Array $data = [] ) {
+
+		return $this->mock_without_constructor(
+			'W2M\Import\Type\FileImportReportInterface',
+			$methods,
+			$data
+		);
+	}
+
+	/**
+	 * @param array $methods (Optional)
+	 * @param array $data (Optional)
+	 *
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
 	public function type_wp_import_comment( Array $methods = [], Array $data = [] ) {
 
 		return $this->mock_without_constructor(

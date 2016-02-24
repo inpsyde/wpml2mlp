@@ -5,6 +5,7 @@ namespace W2M\Import\Module;
 use
 	W2M\Import\Common,
 	W2M\Import\Data,
+	W2M\Import\Type,
 	DateTime;
 
 /**
@@ -17,9 +18,9 @@ use
 class JsonFileImportReport implements FileImportReporterInterface {
 
 	/**
-	 * @var Data\MultiTypeIdListInterface
+	 * @var Type\FileImportReportInterface
 	 */
-	private $list;
+	private $report;
 
 	/**
 	 * @var Common\FileInterface
@@ -27,16 +28,16 @@ class JsonFileImportReport implements FileImportReporterInterface {
 	private $file;
 
 	/**
-	 * @param Data\MultiTypeIdListInterface $list
+	 * @param Type\FileImportReportInterface $report
 	 * @param Common\FileInterface $file
 	 */
 	public function __construct(
-		Data\MultiTypeIdListInterface $list,
+		Type\FileImportReportInterface $report,
 		Common\FileInterface $file
 	) {
 
-		$this->list = $list;
-		$this->file = $file;
+		$this->report = $report;
+		$this->file   = $file;
 	}
 
 	/**
@@ -44,31 +45,12 @@ class JsonFileImportReport implements FileImportReporterInterface {
 	 */
 	public function create_report( Data\FileImportInterface $import ) {
 
-		$runtime = time() - $import->start_date()->getTimestamp();
-		/* @link https://secure.php.net/manual/en/function.memory-get-usage.php */
-		$convert = function( $size ) {
-			$unit = [ 'B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB' ];
-			return round( $size / pow( 1024, ( $i = (int) floor( log( $size, 1024 ) ) ) ), 2 ) . ' ' . $unit[ $i ];
-		};
-		$memory_usage = memory_get_peak_usage( TRUE );
+		$this->report->memory_usage( memory_get_peak_usage( TRUE ) );
+		$this->report->runtime( new DateTime );
 
-		$report  = (object) [
-			'name'         => 'WPML to MLP XML import report',
-			'date'         => $import->start_date()->format( DateTime::W3C ),
-			'runtime'      => "{$runtime} s",
-			'memory_usage' => $convert( $memory_usage ),
-			'import_file'  => $import->import_file(),
-			'map_file'     => $import->map_file(),
-			'maps'         => (object) [
-				'comments'    => (object) $this->list->id_map( 'comment' ),
-				'posts'       => (object) $this->list->id_map( 'post' ),
-				'terms'       => (object) $this->list->id_map( 'term' ),
-				'users'       => (object) $this->list->id_map( 'user' )
-			]
-		];
-
-		$report = json_encode( $report, JSON_PRETTY_PRINT );
-		$this->file->set_content( $report );
+		$this->file->set_content(
+			json_encode( $this->report, JSON_PRETTY_PRINT )
+		);
 
 		/**
 		 * @param Common\FileInterface $this->file

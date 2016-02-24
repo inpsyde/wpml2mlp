@@ -10,6 +10,9 @@ use
  *
  * Information about an XML import
  *
+ * @todo Remove it
+ * @deprecated Replaced by Import\Type\FileImportReport
+ *
  * @package W2M\Import\Data
  */
 class FileImportInfo implements FileImportInterface {
