@@ -6,7 +6,7 @@ namespace W2M\Import\Data;
  * Interface FileImportInterface
  *
  * Describes an import information object with additional
- * data for a import based on file (XML)
+ * data for an import based on file (XML)
  *
  * @package W2M\Import\Data
  */
