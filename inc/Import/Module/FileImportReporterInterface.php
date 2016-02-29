@@ -3,7 +3,7 @@
 namespace W2M\Import\Module;
 
 use
-	W2M\Import\Data;
+	W2M\Import\Type;
 
 /**
  * Interface FileImportReporterInterface
@@ -13,7 +13,11 @@ use
 interface FileImportReporterInterface {
 
 	/**
-	 * @param Data\FileImportInterface $import
+	 * creates the report
+	 *
+	 * @wp-hook w2m_import_process_done
+	 *
+	 * @param Type\ImportReportInterface $report
 	 */
-	public function create_report( Data\FileImportInterface $import );
+	public function create_report( Type\ImportReportInterface $report = NULL );
 }

@@ -41,10 +41,16 @@ class JsonFileImportReport implements FileImportReporterInterface {
 	}
 
 	/**
-	 * @param Data\FileImportInterface $import
+	 * @wp-hook w2m_import_process_done
+	 *
+	 * @param Type\ImportReportInterface $report
 	 */
-	public function create_report( Data\FileImportInterface $import ) {
+	public function create_report( Type\ImportReportInterface $report = NULL ) {
 
+		/**
+		 * We use the internal dependency here, the parameter comes just
+		 * from the wp-hook and is not used, however.
+		 */
 		$this->report->memory_usage( memory_get_peak_usage( TRUE ) );
 		$this->report->runtime( new DateTime );
 

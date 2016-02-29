@@ -61,7 +61,7 @@ class JsonFileImportReportTest extends Helper\MonkeyTestCase {
 			);
 
 		$testee = new Module\JsonFileImportReport( $id_map_mock, $file_mock );
-		$testee->create_report( $report_mock );
+		$testee->create_report();
 	}
 
 	public function report_assertions( $json, $data ) {
