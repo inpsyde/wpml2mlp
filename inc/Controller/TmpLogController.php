@@ -220,13 +220,13 @@ class TmpLogController {
 		add_action(
 			'w2m_import_xml_start_process',
 			/**
-			 * @param Data\FileImportInterface $import
+			 * @param Type\FileImportReportInterface $import
 			 */
 			function( $import ) use ( $logger ) {
 				$this->logger->info(
 					"Start import",
 					[
-						'import_file' => basename( $import->import_file() ),
+						'import_file' => basename( $import->import_file()->name() ),
 						//Todo: add blog_id via $import
 					]
 				);
