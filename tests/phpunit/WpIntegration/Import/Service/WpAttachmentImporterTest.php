@@ -45,6 +45,7 @@ class WpAttachmentImporterTest extends Helper\WpIntegrationTestCase {
 				$i++;
 				$parent_folder = $wp_upload_subdir[ $i ];
 			}
+			// Todo: this will fail when the directory is not empty
 			rmdir( $wp_upload['basedir'] . '/'. $parent_folder . '/' . $dir );
 		}
 
