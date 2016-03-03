@@ -70,7 +70,6 @@ if ( in_array( '-h', $argv ) || in_array( '--help', $argv ) ) {
 	exit( 0 );
 }
 
-
 $type     = $get_argument( 3, 'type' );
 $map_type = "{$type}s"; // types are referenced as plural
 $column   = $get_argument( 2, 'column' );
@@ -93,7 +92,6 @@ foreach ( $id_map as $origin_id => $id ) {
 		$id
 	);
 }
-
 
 $sql = <<<SQL
 UPATE {$quote_identifier($table)}
