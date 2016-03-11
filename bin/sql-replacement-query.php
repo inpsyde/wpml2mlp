@@ -99,6 +99,7 @@ UPDATE {$quote_identifier($table)}
 SET {$quote_identifier($column)} = (
 		CASE
 			{$sql_when}
+		ELSE {$quote_identifier($column)}
 		END
 );
 SQL;
