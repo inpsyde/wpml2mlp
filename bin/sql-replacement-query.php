@@ -94,12 +94,13 @@ foreach ( $id_map as $origin_id => $id ) {
 }
 
 $sql = <<<SQL
+-- Replacement for {$quote_identifier($table)}.{$quote_identifier($column)}
 UPATE {$quote_identifier($table)}
 SET {$quote_identifier($column)} = (
 		CASE
 			{$sql_when}
 		END
-)
+);
 SQL;
 
 $std_line_printer( $sql );
