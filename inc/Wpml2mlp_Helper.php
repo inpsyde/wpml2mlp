@@ -13,14 +13,17 @@ class Wpml2mlp_Helper {
 	public static function get_all_posts() {
 		global $sitepress;
 
-		$attachment_query_params = array(
-			'posts_per_page'   => -1,
-			'post_type'        => array( 'attachment' => 'attachment' ),
-			'post_status'      => array( 'publish', 'pending', 'draft', 'future', 'private', 'inherit' ),
-			'suppress_filters' => true
-		);
+		#$attachment_query_params = array(
+		#	'posts_per_page'   => -1,
+		#	'post_type'        => array( 'attachment' => 'attachment' ),
+		#	'post_status'      => array( 'publish', 'pending', 'draft', 'future', 'private', 'inherit' ),
+		#	'suppress_filters' => true
+		#);
+#
+		#$attachment_query = new WP_Query( $attachment_query_params );
 
-		$attachment_query = new WP_Query( $attachment_query_params );
+
+
 
 		$termtypes = array( 'category', 'post_tag' );
 
@@ -37,26 +40,13 @@ class Wpml2mlp_Helper {
 
 		);
 
-
 		$all_posts = array();
 
-		$languages = wpml_get_active_languages_filter();
-
-		unset(
-			$languages['en'],
-			$languages['nl'],
-			$languages['fr'],
-			$languages['it'],
-			$languages['de'],
-			$languages['es']
-		);
-
-		foreach( $languages as $lang_code => $lang_data ){
+		foreach( self::get_current_lang_group() as $lang_code => $lang_data ){
 
 			$sitepress->switch_lang( $lang_code );
 
 			$query = new WP_Query( $query_params );
-
 
 			if ( $query->found_posts > 0 ) {
 
@@ -107,6 +97,45 @@ class Wpml2mlp_Helper {
 
 	}
 
+
+	public function get_current_lang_group(){
+
+		if( false === ( $lang = get_transient( 'wpml2mlp_languages' ) ) ) {
+
+			$languages = wpml_get_active_languages_filter( FALSE );
+
+			$count      = 0;
+			$chunk      = 0;
+			$chunk_size = 1;
+
+			foreach ( $languages as $lang_code => $language ) {
+				if ( $count > $chunk_size ) {
+					$chunk ++;
+					$count = 0;
+				}
+				$lang[ $chunk ][ $lang_code ] = $language;
+				$count ++;
+			}
+
+		}
+
+		if( count( $lang ) == 0 ){
+
+			delete_transient( 'wpml2mlp_languages' );
+
+			die( 'no more languages found' );
+
+		}else{
+
+			$languages = array_shift( $lang );
+
+			set_transient( 'wpml2mlp_languages', $lang, WEEK_IN_SECONDS );
+
+		}
+
+		return $languages;
+
+	}
 
 	/**
 	 * Updates flag url for given blog.
