@@ -58,7 +58,8 @@ class WpUserParser implements UserParserInterface {
 			'author_email'        => 'email',
 			'author_first_name'   => 'first_name',
 			'author_last_name'    => 'last_name',
-			'author_display_name' => 'display_name'
+			'author_display_name' => 'display_name',
+			'author_role'         => 'role'
 		);
 
 		$user_data = array();

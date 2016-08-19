@@ -160,6 +160,11 @@ class Wpml_Wxr_Export {
 		$wxr_authors = FALSE;
 
 		foreach ( $authors as $author ) {
+
+			foreach( $author->roles as $role ){
+
+			}
+
 			$wxr_authors .= "\n\t\t<wp:author>\n";
 			$wxr_authors .= "\t\t\t<wp:author_id>" . intval( $author->ID ) . "</wp:author_id>\n";
 			$wxr_authors .= "\t\t\t<wp:author_login>" . $this->wxr_cdata( $author->user_login ) . "</wp:author_login>\n";
@@ -167,6 +172,7 @@ class Wpml_Wxr_Export {
 			$wxr_authors .= "\t\t\t<wp:author_display_name>" . $this->wxr_cdata( $author->display_name ) . "</wp:author_display_name>\n";
 			$wxr_authors .= "\t\t\t<wp:author_first_name>" . $this->wxr_cdata( $author->first_name ) . "</wp:author_first_name>\n";
 			$wxr_authors .= "\t\t\t<wp:author_last_name>" . $this->wxr_cdata( $author->last_name ) . "</wp:author_last_name>\n";
+			$wxr_authors .= "\t\t\t<wp:author_role>" . $this->wxr_cdata( $role ) . "</wp:author_role>\n";
 			$wxr_authors .= "\t\t</wp:author>\n";
 		}
 
@@ -206,25 +212,33 @@ class Wpml_Wxr_Export {
 
 		$wxr_categories = FALSE;
 
-		foreach ( $this->categories as $category ) {
+		if( property_exists( $this, 'categories' ) && ! empty( $this->categories ) ) {
 
-			$wxr_categories .= "\n\t\t<wp:category>\n";
-			$wxr_categories .= "\t\t\t<wp:term_id>" . intval( $category->term_id ) . "</wp:term_id>\n";
-			$wxr_categories .= "\t\t\t<wp:category_nicename>" . $this->wxr_cdata( $category->slug ) . "</wp:category_nicename>\n";
-			$wxr_categories .= "\t\t\t<wp:category_parent>" . $this->wxr_cdata( $category->parent ? $category->parent : '' ) . " </wp:category_parent>\n";
-			$wxr_categories .= "\t\t\t<wp:cat_name>" . $this->wxr_cdata( $category->name ) . "</wp:cat_name>\n";
-			$wxr_categories .= "\t\t\t<wp:category_description>" . $this->wxr_cdata( $category->description ) . "</wp:category_description>\n";
-			$wxr_categories .= "\t\t\t<wp:taxonomy>" . $this->wxr_cdata( $category->taxonomy ) . "</wp:taxonomy>\n";
-			$wxr_categories .= "\t\t</wp:category>\n";
+			foreach ( $this->categories as $category ) {
+
+				$wxr_categories .= "\n\t\t<wp:category>\n";
+				$wxr_categories .= "\t\t\t<wp:term_id>" . intval( $category->term_id ) . "</wp:term_id>\n";
+				$wxr_categories .= "\t\t\t<wp:category_nicename>" . $this->wxr_cdata( $category->slug ) . "</wp:category_nicename>\n";
+				$wxr_categories .= "\t\t\t<wp:category_parent>" . $this->wxr_cdata( $category->parent ? $category->parent : '' ) . " </wp:category_parent>\n";
+				$wxr_categories .= "\t\t\t<wp:cat_name>" . $this->wxr_cdata( $category->name ) . "</wp:cat_name>\n";
+				$wxr_categories .= "\t\t\t<wp:category_description>" . $this->wxr_cdata( $category->description ) . "</wp:category_description>\n";
+				$wxr_categories .= "\t\t\t<wp:taxonomy>" . $this->wxr_cdata( $category->taxonomy ) . "</wp:taxonomy>\n";
+				$wxr_categories .= "\t\t</wp:category>\n";
+			}
+
 		}
 
-		foreach ( $this->post_tags as $post_tag ) {
-			$wxr_categories .= "\n\t\t<wp:tag>\n";
-			$wxr_categories .= "\t\t\t<wp:term_id>" . intval( $post_tag->term_id ) . "</wp:term_id>\n";
-			$wxr_categories .= "\t\t\t<wp:tag_slug>" . $this->wxr_cdata( $post_tag->slug ) . "</wp:tag_slug >\n";
-			$wxr_categories .= "\t\t\t" . $this->wxr_tag_name( $post_tag ) . "\n";
-			$wxr_categories .= "\t\t\t" . $this->wxr_tag_description( $post_tag ) . "\n";
-			$wxr_categories .= "\t\t</wp:tag>\n";
+		if( property_exists( $this, 'post_tags' ) && ! empty( $this->post_tags ) ) {
+
+			foreach ( $this->post_tags as $post_tag ) {
+				$wxr_categories .= "\n\t\t<wp:tag>\n";
+				$wxr_categories .= "\t\t\t<wp:term_id>" . intval( $post_tag->term_id ) . "</wp:term_id>\n";
+				$wxr_categories .= "\t\t\t<wp:tag_slug>" . $this->wxr_cdata( $post_tag->slug ) . "</wp:tag_slug >\n";
+				$wxr_categories .= "\t\t\t" . $this->wxr_tag_name( $post_tag ) . "\n";
+				$wxr_categories .= "\t\t\t" . $this->wxr_tag_description( $post_tag ) . "\n";
+				$wxr_categories .= "\t\t</wp:tag>\n";
+			}
+
 		}
 
 		return $wxr_categories;
@@ -252,7 +266,7 @@ class Wpml_Wxr_Export {
 			$wxr_items .= "\t\t\t<wp:post_id>" . intval( $post->ID ) . "</wp:post_id>\n";
 			$wxr_items .= "\t\t\t<wp:post_date>" . $this->wxr_cdata( $post->post_date ) . "</wp:post_date>\n";
 			$wxr_items .= "\t\t\t<wp:post_author>" . $this->wxr_cdata( $post->post_author ) . "</wp:post_author>\n";
-			$wxr_items .= "\t\t\t<wp:post_date_gmt>" . $this->wxr_cdata( $post->post_date_gmt ) . "</wp:post_date_gmt>\n";
+			#$wxr_items .= "\t\t\t<wp:post_date_gmt>" . $this->wxr_cdata( $post->post_date_gmt ) . "</wp:post_date_gmt>\n";
 			$wxr_items .= "\t\t\t<wp:comment_status>" . $this->wxr_cdata( $post->comment_status ) . "</wp:comment_status>\n";
 			$wxr_items .= "\t\t\t<wp:ping_status>" . $this->wxr_cdata( $post->ping_status ) . "</wp:ping_status>\n";
 			$wxr_items .= "\t\t\t<wp:post_name>" . $this->wxr_cdata( $post->post_name ) . "</wp:post_name>\n";
@@ -423,7 +437,7 @@ class Wpml_Wxr_Export {
 		<link>{$blog_url}</link>
 		<description>{$blog_description}</description>
 		<pubDate>{$time}</pubDate>
-		<language>{$this->current_lng}</language>
+		<language>{$this->current_locale}</language>
 		<wp:wxr_version>{$wxr_version}</wp:wxr_version>
 		<wp:base_site_url>{$wxr_site_url}</wp:base_site_url>
 		<wp:base_blog_url>{$blog_url}</wp:base_blog_url>
@@ -450,6 +464,12 @@ EOF;
 	 * return string xml
 	 */
 	public function get_wxr() {
+
+		$post_ids = [];
+		foreach( $this->posts as $post ){
+			$post_ids[] = $post->ID;
+		}
+
 
 		$this->wxr_cache->unlink_wxr( $this->wxr_filename );
 

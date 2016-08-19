@@ -41,10 +41,26 @@ class WpUserImporter implements UserImporterInterface {
 			'user_email'    => $import_user->email(),
 			'first_name'    => $import_user->first_name(),
 			'last_name'     => $import_user->last_name(),
-			'display_name'  => $import_user->display_name()
+			'display_name'  => $import_user->display_name(),
+			'role'  		=> $import_user->role(),
 		);
 
 		$local_id = wp_insert_user( $userdata );
+
+		if ( is_wp_error( $local_id ) ) {
+
+			if( array_key_exists( 'existing_user_login', $local_id->errors ) ){
+
+
+				$exiting_wp_user = get_user_by( 'email', $userdata['user_email'] );
+				$local_id = $exiting_wp_user->ID;
+
+				add_user_to_blog( get_current_blog_id(), $exiting_wp_user->ID, $userdata['role'] );
+
+			}
+
+		}
+
 
 		if ( is_wp_error( $local_id ) ) {
 

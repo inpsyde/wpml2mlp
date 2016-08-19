@@ -26,6 +26,8 @@ class WpImportUser implements ImportUserInterface {
 
 	private $display_name = '';
 
+	private $role = '';
+
 	private $param_sanitizer;
 
 	/**
@@ -62,7 +64,8 @@ class WpImportUser implements ImportUserInterface {
 			'email'        => 'string',
 			'first_name'   => 'string',
 			'last_name'    => 'string',
-			'display_name' => 'string'
+			'display_name' => 'string',
+			'role' => 'string'
 		);
 
 		$valid_attributes = $this->param_sanitizer
@@ -152,6 +155,14 @@ class WpImportUser implements ImportUserInterface {
 	public function display_name() {
 
 		return $this->display_name;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function role() {
+
+		return $this->role;
 	}
 
 }

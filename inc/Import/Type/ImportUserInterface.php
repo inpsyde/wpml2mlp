@@ -34,4 +34,9 @@ interface ImportUserInterface extends ImportElementInterface {
 	 */
 	public function display_name();
 
+	/**
+	 * @return string
+	 */
+	public function role();
+
 }
