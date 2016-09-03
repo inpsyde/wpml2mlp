@@ -45,7 +45,7 @@ add_action( 'wp_loaded', function() {
 } );
 
 # Load plugin
-#add_action( 'admin_init', 'wpml2mlp_prerequisites' );
+add_action( 'admin_init', 'wpml2mlp_prerequisites' );
 
 /**
  * Reqiure needed files and heck the prerequisites to chose the way of use
@@ -60,6 +60,13 @@ add_action( 'wp_loaded', function() {
  */
 function wpml2mlp_prerequisites() {
 
+	require plugin_dir_path( __FILE__ ) . 'inc/Export/AdminPage/Page.php';
+	require plugin_dir_path( __FILE__ ) . 'inc/Export/AdminPage/Table.php';
+
+	new W2M\Export\AdminPage\export_admin_page();
+
+
+/*
 	set_time_limit( 0 );
 
 	$class_mappings = array(
@@ -107,8 +114,8 @@ function wpml2mlp_prerequisites() {
 
 	}
 
-	$wpml2mlp = new Wpml2mlp_Load();
-	$wpml2mlp->_load();
+	#$wpml2mlp = new Wpml2mlp_Load();
+	#$wpml2mlp->_load();*/
 
 }
 
