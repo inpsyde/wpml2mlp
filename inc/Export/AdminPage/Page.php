@@ -11,7 +11,7 @@ namespace W2M\Export\AdminPage;
 class Export_Admin_Page {
 
 	/**
-	 * Plugin instance.
+	 * class instance.
 	 *
 	 * @see   get_instance()
 	 * @type  object
@@ -21,7 +21,6 @@ class Export_Admin_Page {
 	/**
 	 * Access this plugin’s working instance
 	 *
-	 * @wp-hook plugins_loaded
 	 * @since   02/09/2016
 	 * @return  object of this class
 	 */
@@ -34,7 +33,7 @@ class Export_Admin_Page {
 
 	/**
 	 * Construct the admin page
-	 * To add tabs at the export admin p    age we Hook into all_admin_notices
+	 * To add tabs at the export admin page we Hook into all_admin_notices
 	 * and add javascriptsto call exports via ajax and css to handle
 	 * visible things.
 	 *
