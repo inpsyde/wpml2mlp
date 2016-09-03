@@ -43,36 +43,32 @@ class Export_Admin_Page {
 	public function __construct() {
 
 		$this->tabs = [
-			'default_export' => __( 'Export', 'wpml2mlp' ),
-			'export_wpml' => __( 'WPML Export', 'wpml2mlp' ),
+			'default_export'    => __( 'Export', 'wpml2mlp' ),
+			'export_wpml'       => __( 'WPML Export', 'wpml2mlp' ),
 		];
 
-		$this->current_tab();
 
-
-		add_action( 'admin_head', function () {
+		add_action( 'all_admin_notices', function () {
 
 			$instance = self::get_instance();
 
-			add_action( 'all_admin_notices', function () use ( $instance ) {
+			$current_screen = get_current_screen()->get();
 
-				$current_screen = get_current_screen()->get();
-
-				if ( $current_screen->id == 'export' ) {
-					$instance->display();
-				}
-
-			} );
-
-			if ( $this->current_tab() == 'export_wpml' ) {
-				$instance->attache_js();
-
+			if ( $current_screen->id == 'export' ) {
+				$instance->display();
 			}
 
-			$instance->attache_css();
+			wp_enqueue_script( 'wpml2mlp_export_script', plugin_dir_url( dirname(__FILE__) ) . '../../assets/js/wpml_export.js' );
+			wp_enqueue_style( 'wpml2mlp_export_style', plugin_dir_url( dirname(__FILE__) ) . '../../assets/css/wpml_export.css' );
+
+			$local_data = array(
+				'admin_url' => admin_url(),
+				'current_tab' => $instance->current_tab()
+			);
+
+			wp_localize_script( 'wpml2mlp_export_script', 'local_data', $local_data);
 
 		} );
-
 
 	}
 
@@ -111,53 +107,6 @@ class Export_Admin_Page {
 
 		return '<h2 class="nav-tab-wrapper">' . $tabs . '</h2>';
 
-	}
-
-	/**
-	 * Attache JavaScript to the admin page head
-	 *
-	 */
-	private function attache_js() { ?>
-
-	<script type="text/javascript">
-
-		jQuery(document).ready(function($){
-			$( ".wrap.wpml2ml_export" ).show();
-
-			$('.submit').click(function(e){
-				e.preventDefault();
-				var self = $( this );
-
-				var loaderContainer = $( '<span/>', {
-					'class': 'loader-image-container'
-				}).insertAfter( self );
-
-				var loader = $( '<img/>', {
-					src: '<?php /*echo admin_url() */?>images/loading.gif',
-					'class': 'loader-image'
-				}).appendTo( loaderContainer );
-
-				console.log( 'foo' );
-				var searchval = $('#s').val(); // get search term
-
-				$.post(
-					ajaxurl,
-					{
-						action : 'add_foobar',
-						searchval : searchval
-					},
-					function( response ) {
-						$('#results').empty().append( response );
-						loaderContainer.remove();
-					}
-				);
-			});
-
-		});
-
-	</script>
-
-	<?php
 	}
 
 	/**

@@ -61,7 +61,7 @@ add_action( 'admin_init', 'wpml2mlp_prerequisites' );
 function wpml2mlp_prerequisites() {
 
 	require plugin_dir_path( __FILE__ ) . 'inc/Export/AdminPage/Page.php';
-	require plugin_dir_path( __FILE__ ) . 'inc/Export/AdminPage/Table.php';
+	require plugin_dir_path( __FILE__ ) . 'inc/Export/AdminPage/Languages_Table.php';
 
 	new W2M\Export\AdminPage\export_admin_page();
 
