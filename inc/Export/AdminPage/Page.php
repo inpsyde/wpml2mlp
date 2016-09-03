@@ -8,23 +8,37 @@ namespace W2M\Export\AdminPage;
  *
  * @package W2M\Export\AdminPage
  */
-class export_admin_page {
+class Export_Admin_Page {
 
 	/**
-	 * class instance.
+	 * Plugin instance.
 	 *
+	 * @see   get_instance()
 	 * @type  object
 	 */
-	public $instance;
+	protected static $instance = NULL;
+
+	/**
+	 * Access this plugin’s working instance
+	 *
+	 * @wp-hook plugins_loaded
+	 * @since   02/09/2016
+	 * @return  object of this class
+	 */
+	public static function get_instance(){
+
+		NULL === self::$instance and self::$instance = new self;
+
+		return self::$instance;
+	}
 
 	/**
 	 * Construct the admin page
-	 * To add tabs at the export admin page we Hook into all_admin_notices
+	 * To add tabs at the export admin p    age we Hook into all_admin_notices
 	 * and add javascriptsto call exports via ajax and css to handle
 	 * visible things.
 	 *
-	 * @wp-hook all_admin_notices
-	 * @wp-hook admin_head
+	 * @wp-hook admin_init
 	 *
 	 */
 	public function __construct() {
@@ -36,21 +50,20 @@ class export_admin_page {
 
 		$this->current_tab();
 
-		$instance = $this;
 
+		add_action( 'admin_head', function () {
 
-		add_action( 'all_admin_notices', function () use ( $instance ) {
+			$instance = self::get_instance();
 
-			$current_screen = get_current_screen()->get();
+			add_action( 'all_admin_notices', function () use ( $instance ) {
 
-			if ( $current_screen->id == 'export' ) {
-				$instance->display();
-			}
+				$current_screen = get_current_screen()->get();
 
-		} );
+				if ( $current_screen->id == 'export' ) {
+					$instance->display();
+				}
 
-
-		add_action( 'admin_head', function () use ( $instance ) {
+			} );
 
 			if ( $this->current_tab() == 'export_wpml' ) {
 				$instance->attache_js();
@@ -182,7 +195,7 @@ class export_admin_page {
 
 				if ( $this->current_tab() == 'export_wpml' ) {;
 
-					$table = new languages_table();
+					$table = new Languages_Table();
 
 					$table->prepare_items();
 					$table->display();
