@@ -3,7 +3,7 @@
 namespace W2M\Export\AdminPage;
 
 
-class languages_table extends \WP_List_Table {
+class Languages_Table extends \WP_List_Table {
 
 	var $example_data = array(
 		array('ID' => 1,'booktitle' => '<a href="#" class="submit">Quarter Share</a>', 'author' => 'Nathan Lowell',
