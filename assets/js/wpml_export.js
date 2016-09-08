@@ -10,28 +10,51 @@ jQuery(document).ready(function($){
 	$('.submit').click(function(e){
 		e.preventDefault();
 		var self = $( this );
+		var parent = $( this ).parent().parent().parent().parent();
 
 		var loaderContainer = $( '<span/>', {
 			'class': 'loader-image-container'
 		}).insertAfter( self );
 
-		var loader = $( '<img/>', {
+		/*var loader = $( '<img/>', {
 			src: local_data.admin_url + '/images/loading.gif',
 			'class': 'loader-image'
-		}).appendTo( loaderContainer );
+		}).appendTo( loaderContainer );*/
 
-		console.log( 'foo' );
-		var searchval = $('#s').val(); // get search term
+		var data = JSON.parse( self.attr( 'data-export' ) );
 
-		$.post(
+		$( '.column-filesize', parent ).empty();
+		$( '.column-date', parent ).empty();
+
+		$( '<img/>', {
+			src: local_data.admin_url + '/images/loading.gif',
+			'class': 'loader-image'
+		}).appendTo( $( '.column-date', parent ) );
+
+		$( '<img/>', {
+			src: local_data.admin_url + '/images/loading.gif',
+			'class': 'loader-image'
+		}).appendTo( $( '.column-filesize', parent ) );
+
+		var d = new Date();
+		var timezone = d.getTimezoneOffset();
+
+		$.get(
 			ajaxurl,
 			{
-				action : 'add_foobar',
-				searchval : searchval
+				action : 'run_export',
+				wpml2mlp : data.wpml2mlp,
+				language : data.language,
+				timezone : timezone
 			},
 			function( response ) {
-				$('#results').empty().append( response );
+
 				loaderContainer.remove();
+
+				var response = JSON.parse( response );
+
+				$( '.column-filesize', parent ).text( response.filesize );
+				$( '.column-date', parent ).text( response.date );
 			}
 		);
 	});
