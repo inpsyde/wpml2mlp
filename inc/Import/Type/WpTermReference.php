@@ -13,10 +13,13 @@ class WpTermReference implements TermReferenceInterface {
 
 	private $taxonomy = '';
 
-	public function __construct( $origin_id, $taxonomy ) {
+	private $nicename = '';
+
+	public function __construct( $origin_id, $taxonomy, $nicename ) {
 
 		$this->origin_id = (int) $origin_id;
 		$this->taxonomy  = (string) $taxonomy;
+		$this->nicename	 = (string) $nicename;
 	}
 
 	/**
@@ -34,5 +37,14 @@ class WpTermReference implements TermReferenceInterface {
 
 		return $this->taxonomy;
 	}
+
+	/**
+	 * @return string
+	 */
+	public function nicename() {
+
+		return $this->nicename;
+	}
+
 
 }

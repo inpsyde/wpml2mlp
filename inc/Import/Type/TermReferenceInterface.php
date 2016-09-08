@@ -20,4 +20,11 @@ interface TermReferenceInterface {
 	 * @return string
 	 */
 	public function taxonomy();
+
+
+	/**
+	 * @return string
+	 */
+	public function nicename();
+
 }
