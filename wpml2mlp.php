@@ -124,9 +124,6 @@ function wpml2mlp_prerequisites() {
 
 	}
 
-	#$wpml2mlp = new Wpml2mlp_Load();
-	#$wpml2mlp->_load();
-
 }
 
 add_filter( 'wpml2mlp_supported_posttypes', 'add_woo' );
