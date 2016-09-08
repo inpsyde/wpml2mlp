@@ -82,7 +82,6 @@ function wpml2mlp_prerequisites() {
 		'Wpml2mlp_Helper'               => 'Wpml2mlp_Helper.php',
 		'Wpml2mlp_Importer'             => 'Wpml2mlp_Importer.php',
 		'Wpml2mlp_Language_Holder'      => 'Wpml2mlp_Language_Holder.php',
-		'Wpml2mlp_Load'                 => 'Wpml2mlp_Load.php',
 		'Wpml2mlp_Post_Creator'         => 'Wpml2mlp_Post_Creator.php',
 		'Wpml2mlp_Prerequisites'        => 'Wpml2mlp_Prerequisites.php',
 		'Wpml2mlp_Site_Creator'         => 'Wpml2mlp_Site_Creator.php',
@@ -96,6 +95,7 @@ function wpml2mlp_prerequisites() {
 		'Wpml2mlp_Wxr_Export'           => 'Wpml2mlp_Wxr_Export.php',
 		'Wpml2mlp_Xliff_Extractor'      => 'Wpml2mlp_Xliff_Extractor.php'
 	);
+
 
 	foreach ( $class_mappings as $key => $value ) {
 

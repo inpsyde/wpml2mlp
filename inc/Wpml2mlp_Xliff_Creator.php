@@ -117,8 +117,6 @@ class Wpml2mlp_Xliff_Creator {
 
 		$data = $this->contentForExport;
 
-
-
 		if ( is_array( $data ) && count( $data ) > 0 ) {
 
 			foreach ( $data as $locale => $posts ) {
