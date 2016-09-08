@@ -44,8 +44,23 @@ add_action( 'wp_loaded', function() {
 	WP_CLI::add_command( 'w2m', 'W2M\Cli\WpCliW2MCommand' );
 } );
 
+
 # Load plugin
-add_action( 'admin_init', 'wpml2mlp_prerequisites' );
+add_action( 'admin_init', 'wpml2mlp_admin_interface' );
+
+function wpml2mlp_admin_interface() {
+
+	require plugin_dir_path( __FILE__ ) . 'inc/Export/AdminPage/Page.php';
+	require plugin_dir_path( __FILE__ ) . 'inc/Export/AdminPage/Languages_Table.php';
+
+	new W2M\Export\AdminPage\export_admin_page();
+
+}
+
+
+# Load plugin
+add_action( 'wp_ajax_run_export', 'wpml2mlp_prerequisites' );
+#add_action( 'admin_init', 'wpml2mlp_prerequisites' );
 
 /**
  * Reqiure needed files and heck the prerequisites to chose the way of use
@@ -60,13 +75,6 @@ add_action( 'admin_init', 'wpml2mlp_prerequisites' );
  */
 function wpml2mlp_prerequisites() {
 
-	require plugin_dir_path( __FILE__ ) . 'inc/Export/AdminPage/Page.php';
-	require plugin_dir_path( __FILE__ ) . 'inc/Export/AdminPage/Languages_Table.php';
-
-	new W2M\Export\AdminPage\export_admin_page();
-
-
-/*
 	set_time_limit( 0 );
 
 	$class_mappings = array(
@@ -97,7 +105,9 @@ function wpml2mlp_prerequisites() {
 		}
 
 	}
+
 	$autoload = __DIR__ . '/vendor/autoload.php';
+
 	if ( file_exists( $autoload ) )
 		require_once $autoload;
 
@@ -108,14 +118,14 @@ function wpml2mlp_prerequisites() {
 
 	if ( $prerequisites->errors ) {
 
-		#deactivate_plugins( plugin_basename( __FILE__ ) );
+		deactivate_plugins( plugin_basename( __FILE__ ) );
 
 		wp_die( $prerequisites->errors[ $error_code ][ 0 ] );
 
 	}
 
 	#$wpml2mlp = new Wpml2mlp_Load();
-	#$wpml2mlp->_load();*/
+	#$wpml2mlp->_load();
 
 }
 
@@ -127,6 +137,40 @@ function add_woo( $posttypes ){
 
 	return $posttypes;
 }
+
+/**
+ * Query all terms where taxonomy are iata_tags
+ *
+ * @param $items    Like terms
+ *
+ * @return array
+ */
+add_filter( 'wpml2mlp_export_terms', function ( $items ){
+
+	global $wpdb;
+
+	$sql = "SELECT t . * , tt . *
+	FROM  $wpdb->terms AS t
+	INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id
+	WHERE tt.taxonomy LIKE  'iata_tags'";
+
+	$terms = $wpdb->get_results( $sql, OBJECT_K );
+
+	foreach( $terms as $term ){
+
+		if( $term->taxonomy == 'iata_tags' ){
+			$iata_tags[ $term->term_id ] = $term;
+		}
+
+	}
+
+	$items[ 'iata_tags' ] = $iata_tags;
+
+	return $items;
+
+});
+
+
 
 
 add_filter( 'wpml2mlp_xml_postmeta', 'add_wooorder_ids', 9, 2);
