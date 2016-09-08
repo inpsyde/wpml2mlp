@@ -2,67 +2,126 @@
 
 namespace W2M\Export\AdminPage;
 
-
 class Languages_Table extends \WP_List_Table {
-
-	var $example_data = array(
-		array('ID' => 1,'booktitle' => '<a href="#" class="submit">Quarter Share</a>', 'author' => 'Nathan Lowell',
-		      'isbn' => '978-0982514542'),
-		array('ID' => 2, 'booktitle' => '7th Son: Descent','author' => 'J. C. Hutchins',
-		      'isbn' => '0312384378'),
-		array('ID' => 3, 'booktitle' => 'Shadowmagic', 'author' => 'John Lenahan',
-		      'isbn' => '978-1905548927'),
-		array('ID' => 4, 'booktitle' => 'The Crown Conspiracy', 'author' => 'Michael J. Sullivan',
-		      'isbn' => '978-0979621130'),
-		array('ID' => 5, 'booktitle'     => 'Max Quick: The Pocket and the Pendant', 'author'    => 'Mark Jeffrey',
-		      'isbn' => '978-0061988929'),
-		array('ID' => 6, 'booktitle' => 'Jack Wakes Up: A Novel', 'author' => 'Seth Harwood',
-		      'isbn' => '978-0307454355')
-	);
-
-
-	/** Class constructor */
-	public function __construct() {
-
-		parent::__construct( [
-			                     'singular' => __( 'Customer', 'sp' ), //singular name of the listed records
-			                     'plural'   => __( 'Customers', 'sp' ), //plural name of the listed records
-			                     'ajax'     => FALSE //should this table support ajax?
-
-		                     ] );
-
-	}
 
 	/** Text displayed when no customer data is available */
 	public function no_items() {
-		_e( 'No customers avaliable.', 'sp' );
+		_e( 'No Languages avaliable.', 'wpml2mlp' );
 	}
 
 	public function get_columns(){
+
 		$columns = array(
-			'booktitle' => 'Title',
-			'author'    => 'Author',
-			'isbn'      => 'ISBN'
+			'cb'        => '<input type="checkbox" />',
+			'languages' => 'Languages',
+			'langcode'  => 'Code',
+			'filesize'  => 'Filesize',
+			'date'      => 'Date'
 		);
+
 		return $columns;
+
+	}
+
+	public function get_bulk_actions() {
+		$actions = array(
+			'export'    => 'Export'
+		);
+		return $actions;
+	}
+
+	public function column_cb( $item ) {
+		return sprintf(
+			'<input type="checkbox" name="lang[]" value="%s" />', $item['langcode']
+		);
+	}
+
+	public function column_languages( $item ){
+
+		$export_action = json_encode([
+			'wpml2mlp'  => 1,
+			'language' => $item['langcode']
+		]);
+
+		if( $item[ 'filesize' ] == '-' ){
+			$actions['create']  = '<a class="submit" href="" data-export=' . $export_action . '>' . __( 'Export now', 'wpml2mlp' ) . '</a>';
+		}else {
+			$actions[ 'download' ] = '<a href="' .  $item[ 'file']['url']  . '">' . __( 'Download', 'wpml2mlp' ) . '</a>';
+			$actions[ 'update' ]   = '<a class="submit" href="" data-export=' . $export_action . '>' . __( 'Update', 'wpml2mlp' ) . '</a>';
+		}
+
+
+		return sprintf('%1$s %2$s', $item['languages'], $this->row_actions( $actions ) );
 	}
 
 	public function prepare_items() {
+
+		$languages = wpml_get_active_languages_filter( FALSE );
+
+		$exiting_exports = $this->get_exports();
+
+		foreach( $languages as $i => $lang ){
+
+			$this->items[$i]['languages']   = '<strong><img src="' . $lang[ 'country_flag_url' ] . '"/> ' . $lang[ 'native_name' ] . '</strong>';
+			$this->items[$i]['langcode']    = $lang[ 'language_code' ];
+			$this->items[$i]['filesize']    = '-';
+			$this->items[$i]['date']        = '-';
+			$this->items[$i]['file']        = '-';
+
+
+			if( array_key_exists( $lang['default_locale'], $exiting_exports ) ) {
+
+				$export_file = $exiting_exports[ $lang[ 'default_locale' ] ][ 'path' ];
+
+				$this->items[$i]['filesize']    = size_format( filesize( $export_file ), 2 );
+				$this->items[$i]['date']        = date( 'm.d.y H:i', filemtime( $export_file ) );
+				$this->items[$i]['file']        = $exiting_exports[ $lang[ 'default_locale' ] ];
+
+			}
+
+		}
+
+
 		$columns = $this->get_columns();
 		$hidden = array();
 		$sortable = array();
 		$this->_column_headers = array($columns, $hidden, $sortable);
-		$this->items = $this->example_data;;
+
 	}
 
 	public function column_default( $item, $column_name ) {
+
 		switch( $column_name ) {
-			case 'booktitle':
-			case 'author':
-			case 'isbn':
-				return $item[ $column_name ];
+			case 'Languages':
+			case 'langcode':
+			case 'filesize':
+			case 'date':
 			default:
-				return print_r( $item, true ) ; //Show the whole array for troubleshooting purposes
+				return $item[ $column_name ] ; //Show the whole array for troubleshooting purposes
 		}
 	}
+
+	private function get_exports(){
+
+		$uploads = wp_upload_dir( );
+
+		$exports = [];
+
+		foreach( glob( $uploads['basedir'] . '/wpml2mlp/*.xml') as $export ){
+
+			preg_match( '/_([a-z]{2}(_[A-Z]{2})?)\.xml$/', $export, $langcode );
+
+			if( isset( $langcode[1] ) ) {
+				$exports[ $langcode[ 1 ] ] = [
+					'path'  => $uploads['basedir'] . '/wpml2mlp/' . basename( $export ),
+					'url'   => $uploads['baseurl'] . '/wpml2mlp/' . basename( $export )
+				];
+			}
+
+		}
+
+		return $exports;
+
+	}
+
 }
