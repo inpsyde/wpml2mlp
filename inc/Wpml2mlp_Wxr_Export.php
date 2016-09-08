@@ -30,6 +30,7 @@ class Wpml_Wxr_Export {
 		$this->posts          = $locale_obj[ 'posts' ];
 		$this->categories     = $locale_obj[ 'category' ];
 		$this->post_tags      = $locale_obj[ 'post_tag' ];
+		$this->custom_items   = $locale_obj[ 'custom_items' ];
 
 		$this->wxr_cache    = new Wpml2mlp_Wxr_Cache();
 		$this->wxr_filename = 'wpml_export_' . $locale . '.xml';
@@ -244,6 +245,36 @@ class Wpml_Wxr_Export {
 		return $wxr_categories;
 
 	}
+
+
+	private function wxr_get_custom_terms(){
+
+		$wxr_custom_type = false;
+
+		if( property_exists( $this, 'custom_items' ) && ! empty( $this->custom_items ) ) {
+
+			foreach ( $this->custom_items as $custom_type => $custom_items ) {
+
+				foreach ( $custom_items as $custom_item ) {
+
+					$wxr_custom_type .= "\n\t\t<wp:term>\n";
+					$wxr_custom_type .= "\t\t\t<wp:term_id>" . intval( $custom_item->term_id ) . "</wp:term_id>\n";
+					$wxr_custom_type .= "\t\t\t<wp:term_slug>" . $this->wxr_cdata( $custom_item->slug ) . "</wp:term_slug>\n";
+					$wxr_custom_type .= "\t\t\t<wp:term_name>" . $this->wxr_cdata( $custom_item->name ) . "</wp:term_name>\n";
+					$wxr_custom_type .= "\t\t\t<wp:term_taxonomy>" . $this->wxr_cdata( $custom_item->taxonomy ) . "</wp:term_taxonomy>\n";
+					$wxr_custom_type .= "\t\t</wp:term>\n";
+
+				}
+
+			}
+
+		}
+
+
+		return $wxr_custom_type;
+
+	}
+
 
 	private function wxr_get_post_items() {
 
@@ -476,7 +507,7 @@ EOF;
 		$this->wxr_cache->write( $this->get_wxr_header(), $this->wxr_filename );
 		$this->wxr_cache->write( $this->wxr_authors_list( $post_ids ), $this->wxr_filename );
 		$this->wxr_cache->write( $this->wxr_get_categories(), $this->wxr_filename );
-
+		#$this->wxr_cache->write( $this->wxr_get_custom_terms(), $this->wxr_filename );
 		$this->wxr_cache->write( $this->wxr_get_post_items(), $this->wxr_filename );
 
 		$this->wxr_cache->write( $this->get_wxr_footer(), $this->wxr_filename, FALSE );

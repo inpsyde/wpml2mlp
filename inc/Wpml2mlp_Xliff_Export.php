@@ -68,7 +68,7 @@ class Wpml_Xliff_Export {
 
 		}
 
-		debug( 'do_xliff_export' );
+		#debug( 'do_xliff_export' );
 
 	}
 
@@ -110,6 +110,16 @@ class Wpml_Xliff_Export {
 
 			$posts[ $current_lang ]['category'] = $lang_obj['category'];
 			$posts[ $current_lang ]['post_tag'] = $lang_obj['post_tag'];
+
+			unset( $lang_obj['posts'] );
+			unset( $lang_obj['category'] );
+			unset( $lang_obj['post_tag'] );
+
+			foreach( $lang_obj as $custom_item => $custom_item_value ){
+
+				$posts[ $current_lang ]['custom_items'][ $custom_item ] = $lang_obj[ $custom_item ];
+
+			}
 
 		}
 
@@ -193,7 +203,7 @@ class Wpml_Xliff_Export {
 	 */
 	private function map_translation_ids_to_source( $current_lang, $post ){
 
-		foreach( wpml_get_active_languages_filter() as $lang_code => $lang_data ){
+		foreach( wpml_get_active_languages_filter( 1 ) as $lang_code => $lang_data ){
 
 			if( $current_lang != $lang_code ){
 

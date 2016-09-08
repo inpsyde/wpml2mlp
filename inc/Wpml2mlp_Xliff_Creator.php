@@ -125,6 +125,12 @@ class Wpml2mlp_Xliff_Creator {
 
 				$wxr[ $locale ] = $this->get_wxr_file( $locale, $posts );
 
+				foreach( $wxr[ $locale ] as $wxr_file ) {
+
+					$wxr[ 'filesize' ] = size_format( filesize( $wxr_file ), 2 );
+					$wxr[ 'date' ]  = date( 'm.d.y H:i', filemtime( $wxr_file ) );
+
+				}
 				#buddy take a break, its hard work but now we have a wxr export file created :)
 				sleep(2);
 
@@ -132,8 +138,8 @@ class Wpml2mlp_Xliff_Creator {
 
 		}
 
-		debug( $wxr );
-
+		print_r( json_encode( $wxr ) );
+		die();
 	}
 
 	/**

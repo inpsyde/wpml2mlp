@@ -51,11 +51,14 @@ class WpUserImporter implements UserImporterInterface {
 
 			if( array_key_exists( 'existing_user_login', $local_id->errors ) ){
 
-
 				$exiting_wp_user = get_user_by( 'email', $userdata['user_email'] );
 				$local_id = $exiting_wp_user->ID;
 
-				add_user_to_blog( get_current_blog_id(), $exiting_wp_user->ID, $userdata['role'] );
+				if( ! property_exists( $exiting_wp_user, 'ID' ) ){
+					$local_id = 1;
+				}
+
+				add_user_to_blog( get_current_blog_id(), $local_id, $userdata['role'] );
 
 			}
 

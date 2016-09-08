@@ -235,7 +235,8 @@ class WpPostParser implements PostParserInterface {
 
 			$terms[] = new Type\WpTermReference(
 				(int) $term[ 'term_id' ],
-				(string) $term[ 'domain' ]
+				(string) $term[ 'domain' ],
+				(string) $term[ 'nicename' ]
 			);
 		}
 

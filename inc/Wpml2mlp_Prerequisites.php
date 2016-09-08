@@ -15,9 +15,9 @@ class Wpml2mlp_Prerequisites {
 	/**
 	 *
 	 */
-	public function check_prerequisites( $txt_domain, $error_code ) {
+	public static function check_prerequisites( $txt_domain, $error_code ) {
 
-		$error      = new WP_Error();
+		$error = new WP_Error();
 
 		if ( self::check_wordpress_version() ) {
 

@@ -147,12 +147,28 @@ class WpPostImporter implements PostImporterInterface {
 		$taxonomies = array();
 
 		foreach ( $import_post->terms() as $term ) {
-			$taxonomies[ $term->taxonomy() ][] = $this->id_mapper
+
+			$local_term = $this->id_mapper
 				->local_id( 'term',  $term->origin_id() );
-			// Todo: Trigger error when ID could not resolved
+
+			// fallback if term_id 0
+			if( $local_term == 0 ){
+
+				$local_term_obj = get_term_by( 'slug', $term->nicename(), $term->taxonomy() );
+				$taxonomies[ $term->taxonomy() ][] = $local_term_obj->term_id;
+
+			}else{
+
+				$taxonomies[ $term->taxonomy() ][] = $this->id_mapper
+					->local_id( 'term',  $term->origin_id() );
+				// Todo: Trigger error when ID could not resolved
+
+			}
+
 		}
 
 		foreach ( $taxonomies as $taxonomy => $term_ids ) {
+
 			$set_post_terms_result = wp_set_post_terms( $local_id, $term_ids, $taxonomy );
 			if ( is_wp_error( $set_post_terms_result ) ) {
 				/**
