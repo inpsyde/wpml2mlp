@@ -110,24 +110,6 @@ class Export_Admin_Page {
 	}
 
 	/**
-	 * Attache CSS to the admin page head
-	 */
-	private function attache_css() {
-
-		$style = FALSE;
-
-		if( $this->current_tab() != 'default_export' ) {
-			$style .= '.wrap{display:none}';
-		}
-
-		$style .= '.wrap h1{display:none}';
-		$style .= '.wrap.wpml2ml_export{display:block}';
-
-		echo '<style>' . $style . '</style>';
-
-	}
-
-	/**
 	 * Attache the wpml2mlp tab content
 	 */
 	private function display() {
