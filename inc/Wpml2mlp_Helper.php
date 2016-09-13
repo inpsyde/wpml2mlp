@@ -49,8 +49,9 @@ class Wpml2mlp_Helper {
 
 			}else {
 
-				print_r( $_GET );
-				exit;
+				foreach( $_GET[ 'languages' ] as $language ){
+					$languages[ $language ] = $language;
+				}
 
 			}
 
@@ -67,12 +68,6 @@ class Wpml2mlp_Helper {
 		$attachments               = [ ];
 		$attachments_flipped_index = [ ];
 
-		/*if ( empty( $languages ) && empty( $lang ) ) {
-
-			echo 'fertig';
-			die();
-
-		}*/
 
 		foreach ( $languages as $lang_code => $lang_data ) {
 
@@ -167,6 +162,7 @@ class Wpml2mlp_Helper {
 
 						}
 
+
 						$all_posts[ $current_lang_info[ 'default_locale' ] ] = apply_filters( 'wpml2mlp_export_terms', $all_posts[ $current_lang_info[ 'default_locale' ] ] );
 
 					}
@@ -205,10 +201,9 @@ class Wpml2mlp_Helper {
 			unset( $attachments );
 			unset( $attachments_flipped_index );
 			unset( $terms );
-			unset( $current_lang_info);
+			#unset( $current_lang_info);
 
 		}
-
 
 		if ( ! empty( $all_posts ) ) {
 

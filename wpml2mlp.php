@@ -141,7 +141,7 @@ function add_woo( $posttypes ){
  * @param $items    Like terms
  *
  * @return array
- */
+ *
 add_filter( 'wpml2mlp_export_terms', function ( $items ){
 
 	global $wpdb;
@@ -166,6 +166,7 @@ add_filter( 'wpml2mlp_export_terms', function ( $items ){
 	return $items;
 
 });
+/**/
 
 
 

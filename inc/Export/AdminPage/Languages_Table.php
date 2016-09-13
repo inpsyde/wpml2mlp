@@ -4,7 +4,7 @@ namespace W2M\Export\AdminPage;
 
 class Languages_Table extends \WP_List_Table {
 
-	/** Text displayed when no customer data is available */
+
 	public function no_items() {
 		_e( 'No Languages avaliable.', 'wpml2mlp' );
 	}
@@ -30,6 +30,16 @@ class Languages_Table extends \WP_List_Table {
 		return $actions;
 	}
 
+	public function get_sortable_columns() {
+
+		return array(
+			'date'  => array( 'date', true ),
+			'langcode' => array( 'langcode', true ),
+			'filesize' => array( 'filesize', true ),
+		);
+
+	}
+
 	public function column_cb( $item ) {
 		return sprintf(
 			'<input type="checkbox" name="lang[]" value="%s" />', $item['langcode']
@@ -44,10 +54,10 @@ class Languages_Table extends \WP_List_Table {
 		]);
 
 		if( $item[ 'filesize' ] == '-' ){
-			$actions['create']  = '<a class="submit" href="" data-export=' . $export_action . '>' . __( 'Export now', 'wpml2mlp' ) . '</a>';
+			$actions['create']  = '<a class="submit" id="lang_' . $item['langcode'] . '" href="" data-export=' . $export_action . '>' . __( 'Export now', 'wpml2mlp' ) . '</a>';
 		}else {
 			$actions[ 'download' ] = '<a href="' .  $item[ 'file']['url']  . '">' . __( 'Download', 'wpml2mlp' ) . '</a>';
-			$actions[ 'update' ]   = '<a class="submit" href="" data-export=' . $export_action . '>' . __( 'Update', 'wpml2mlp' ) . '</a>';
+			$actions[ 'update' ]   = '<a class="submit" id="lang_' . $item['langcode'] . '" href="" data-export=' . $export_action . '>' . __( 'Update', 'wpml2mlp' ) . '</a>';
 		}
 
 
@@ -84,8 +94,9 @@ class Languages_Table extends \WP_List_Table {
 
 		$columns = $this->get_columns();
 		$hidden = array();
-		$sortable = array();
+		$sortable = $this->get_sortable_columns();
 		$this->_column_headers = array($columns, $hidden, $sortable);
+
 
 	}
 

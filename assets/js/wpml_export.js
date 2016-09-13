@@ -6,20 +6,37 @@ jQuery(document).ready(function($){
 
 	$( ".wrap.wpml2ml_export" ).show();
 
+	// Bulkaction
+	$('.button.action').click(function(e){
 
+		var seleced = [];
+
+		var cehckboses = $( 'tbody .check-column input' );
+
+		cehckboses.each( function( i ) {
+
+			if ( $( this ).is( ':checked' ) == true ) {
+				seleced.push( $( this ).val() );
+			}
+
+		} );
+
+		$( '#lang_' + seleced[0] ).trigger( "click" );
+
+
+	});
+
+	//Single export
 	$('.submit').click(function(e){
 		e.preventDefault();
 		var self = $( this );
 		var parent = $( this ).parent().parent().parent().parent();
 
+		$( '.check-column input', parent ).prop( "checked", false );
+
 		var loaderContainer = $( '<span/>', {
 			'class': 'loader-image-container'
 		}).insertAfter( self );
-
-		/*var loader = $( '<img/>', {
-			src: local_data.admin_url + '/images/loading.gif',
-			'class': 'loader-image'
-		}).appendTo( loaderContainer );*/
 
 		var data = JSON.parse( self.attr( 'data-export' ) );
 
@@ -39,15 +56,17 @@ jQuery(document).ready(function($){
 		var d = new Date();
 		var timezone = d.getTimezoneOffset();
 
-		$.get(
-			ajaxurl,
-			{
+		$.ajax({
+			async: true,
+			url: ajaxurl,
+			type: "GET",
+			data: {
 				action : 'run_export',
 				wpml2mlp : data.wpml2mlp,
 				language : data.language,
 				timezone : timezone
 			},
-			function( response ) {
+			success: function ( response ){
 
 				loaderContainer.remove();
 
@@ -55,8 +74,12 @@ jQuery(document).ready(function($){
 
 				$( '.column-filesize', parent ).text( response.filesize );
 				$( '.column-date', parent ).text( response.date );
+
+				$('.button.action' ).trigger( 'click' );
+
 			}
-		);
+		});
+
 	});
 
 });
