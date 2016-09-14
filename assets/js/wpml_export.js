@@ -11,9 +11,9 @@ jQuery(document).ready(function($){
 
 		var seleced = [];
 
-		var cehckboses = $( 'tbody .check-column input' );
+		var checkboxes = $( 'tbody .check-column input' );
 
-		cehckboses.each( function( i ) {
+		checkboxes.each( function( i ) {
 
 			if ( $( this ).is( ':checked' ) == true ) {
 				seleced.push( $( this ).val() );

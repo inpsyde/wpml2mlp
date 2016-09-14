@@ -54,10 +54,10 @@ class Languages_Table extends \WP_List_Table {
 		]);
 
 		if( $item[ 'filesize' ] == '-' ){
-			$actions['create']  = '<a class="submit" id="lang_' . $item['langcode'] . '" href="" data-export=' . $export_action . '>' . __( 'Export now', 'wpml2mlp' ) . '</a>';
+			$actions['create']  = '<a class="submit" id="lang_' . esc_html( $item['langcode'] ) . '" href="" data-export=' . $export_action . '>' . __( 'Export now', 'wpml2mlp' ) . '</a>';
 		}else {
-			$actions[ 'download' ] = '<a href="' .  $item[ 'file']['url']  . '">' . __( 'Download', 'wpml2mlp' ) . '</a>';
-			$actions[ 'update' ]   = '<a class="submit" id="lang_' . $item['langcode'] . '" href="" data-export=' . $export_action . '>' . __( 'Update', 'wpml2mlp' ) . '</a>';
+			$actions[ 'download' ] = '<a href="' .   esc_html( $item[ 'file']['url'] ) . '">' . __( 'Download', 'wpml2mlp' ) . '</a>';
+			$actions[ 'update' ]   = '<a class="submit" id="lang_' . esc_html( $item['langcode'] ). '" href="" data-export=' . $export_action . '>' . __( 'Update', 'wpml2mlp' ) . '</a>';
 		}
 
 
@@ -72,7 +72,7 @@ class Languages_Table extends \WP_List_Table {
 
 		foreach( $languages as $i => $lang ){
 
-			$this->items[$i]['languages']   = '<strong><img src="' . $lang[ 'country_flag_url' ] . '"/> ' . $lang[ 'native_name' ] . '</strong>';
+			$this->items[$i]['languages']   = '<strong><img src="' .  esc_html( $lang[ 'country_flag_url' ] ) . '"/> ' .  esc_html( $lang[ 'native_name' ] ) . '</strong>';
 			$this->items[$i]['langcode']    = $lang[ 'language_code' ];
 			$this->items[$i]['filesize']    = '-';
 			$this->items[$i]['date']        = '-';
