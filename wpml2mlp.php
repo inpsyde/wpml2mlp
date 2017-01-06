@@ -50,6 +50,8 @@ add_action( 'admin_init', 'wpml2mlp_admin_interface' );
 
 function wpml2mlp_admin_interface() {
 
+	wpml2mlp_validate_activation();
+
 	require plugin_dir_path( __FILE__ ) . 'inc/Export/AdminPage/Page.php';
 	require plugin_dir_path( __FILE__ ) . 'inc/Export/AdminPage/Languages_Table.php';
 
@@ -121,6 +123,43 @@ function wpml2mlp_prerequisites() {
 		deactivate_plugins( plugin_basename( __FILE__ ) );
 
 		wp_die( $prerequisites->errors[ $error_code ][ 0 ] );
+
+	}
+
+}
+
+
+/**
+ * validate Plugin activation
+ * Activate Plugin only if wpml active o
+ */
+function wpml2mlp_validate_activation() {
+
+	require plugin_dir_path( __FILE__ ) . 'inc/Wpml2mlp_Prerequisites.php';
+	$is_wpmlplugin_active = Wpml2mlp_Prerequisites::is_wpmlplugin_active();
+	$is_mlp_plugin_active = Wpml2mlp_Prerequisites::is_mlp_plugin_active();
+
+	$txt_domain = 'wpml2mlp';
+	$error_code = $txt_domain . '_prerequisites';
+
+	if( empty( $is_wpmlplugin_active ) || empty( $is_mlp_plugin_active ) ){
+
+		if( empty( $is_wpmlplugin_active ) && ! is_multisite() ) {
+
+			$msg = sprintf( __( 'Sorry you have to activate the plugin wpml!<br /><br />Back to <a href="%2$s">WordPress admin</a>.', $txt_domain ), 1, admin_url() );
+
+		}elseif( empty( $is_mlp_plugin_active ) && is_multisite() ){
+
+			$msg = sprintf( __( 'Sorry you have to install and activate the plugin <a href="%2$s">MultilingualPress</a>! .<br /><br />Back to <a href="%3$s">WordPress admin</a>.', $txt_domain ), 1, 'https://wordpress.org/plugins/multilingual-press/', admin_url() );
+
+		}
+
+		$error = new WP_Error();
+		$error->add( $error_code, $msg );
+
+		deactivate_plugins( plugin_basename( __FILE__ ) );
+
+		wp_die( $error->get_error_message() );
 
 	}
 
