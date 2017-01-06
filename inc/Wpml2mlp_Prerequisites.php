@@ -90,6 +90,9 @@ class Wpml2mlp_Prerequisites {
 		$act_plugs = get_site_option( 'active_sitewide_plugins' );
 		$plugs     = array();
 
+		if( ! $act_plugs )
+			return;
+
 		foreach ( $act_plugs as $key => $value ) {
 			$plugin_name = explode( '/', $key );
 			if ( array_key_exists( 1, $plugin_name ) ) {
