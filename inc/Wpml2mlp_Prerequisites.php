@@ -105,7 +105,7 @@ class Wpml2mlp_Prerequisites {
 	 *
 	 * @return bool
 	 */
-	private static function is_wpmlplugin_active() {
+	public static function is_wpmlplugin_active() {
 
 		$act_plugs = get_option( 'active_plugins' );
 		$plugs     = array();
