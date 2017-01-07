@@ -142,6 +142,7 @@ function wpml2mlp_validate_activation() {
 	$txt_domain = 'wpml2mlp';
 	$error_code = $txt_domain . '_prerequisites';
 
+
 	if( empty( $is_wpmlplugin_active ) || empty( $is_mlp_plugin_active ) ){
 
 		if( empty( $is_wpmlplugin_active ) && ! is_multisite() ) {
@@ -154,12 +155,14 @@ function wpml2mlp_validate_activation() {
 
 		}
 
-		$error = new WP_Error();
-		$error->add( $error_code, $msg );
+		if( ! empty( $msg ) ) {
+			$error = new WP_Error();
+			$error->add( $error_code, $msg );
 
-		deactivate_plugins( plugin_basename( __FILE__ ) );
+			deactivate_plugins( plugin_basename( __FILE__ ) );
 
-		wp_die( $error->get_error_message() );
+			wp_die( $error->get_error_message() );
+		}
 
 	}
 
