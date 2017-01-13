@@ -1,9 +1,9 @@
 === WPML to MultilingualPress ===
 Contributors: inpsyde, Bueltge, nullbyte, derpixler, dnaber-de
 Tags: WPML, convert, export, import, migration, l10n, i18n, bilingual, international, internationalization, lang, language, localization,  multilanguage, multi language, multilingual, multi lingual, multisite, switcher, translation, website translation, wordpress translation,  network, categories, taxonomy, wxr
-Requires at least: 3.8
+Requires at least: 4.3
 Tested up to: 4.7.1
-Stable tag: trunk
+Stable tag: 2.0.0
 
 Convert posts from an existing WPML multilingual site via WXR Export/Import for MultilingualPress
 
