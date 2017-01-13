@@ -5,7 +5,7 @@
  * Description: Get data from WPML export and immediately import in Multisite and MultilingualPress environment.
  * Author:      Inpsyde GmbH
  * Author URI:  http://inpsyde.com
- * Version:     1.0.1
+ * Version:     2.0.0
  */
 
 defined( 'ABSPATH' ) or die( 'No direct access!' );
