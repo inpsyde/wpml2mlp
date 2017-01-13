@@ -8,10 +8,6 @@
  * Version:     1.0.1
  */
 
-#print_r( get_post_meta( 4285 ) );
-#die();
-
-
 defined( 'ABSPATH' ) or die( 'No direct access!' );
 
 /**
