@@ -77,6 +77,9 @@ add_action( 'wp_ajax_run_export', 'wpml2mlp_prerequisites' );
  */
 function wpml2mlp_prerequisites() {
 
+	if( is_multisite() )
+		return;
+
 	set_time_limit( 0 );
 
 	$class_mappings = array(
