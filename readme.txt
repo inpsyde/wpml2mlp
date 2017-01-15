@@ -43,7 +43,7 @@ We cannot guarantee free ad hoc support. Please be patient, we are a small team.
 = Requirements =
 * WordPress Multisite 4.4+
 * PHP 5.4.0, newer PHP versions will work faster.
-* [MultilingualPress](https://wordpress.org/plugins/multilingual-press/) plugin, also the [Premium](http://multilingualpress.pro/) Version
+* [MultilingualPress](https://wordpress.org/plugins/multilingual-press/) plugin
 
 Use the installer via back-end of your install or ...
 
