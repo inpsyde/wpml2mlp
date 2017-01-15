@@ -11,7 +11,7 @@ Convert posts from an existing WPML multilingual site via WXR Export/Import for 
 
 > **Note:** This plugin requires PHP 5.4 or higher to be activated.
 
-= Attention =
+= Please note =
 This plugin is considered a **tool for developers and advanced users**. It is not a feature plugin for daily use. You can use the plugin, but **make a full backup** of your entire system and make sure you can role back easily! Please give us feedback if you see problems. The best way for feedback is an issue on the repository on
 
 **Checkout our GitHub Repository** [github.com/inpsyde/wpml2mlp](https://github.com/inpsyde/wpml2mlp/issues).
