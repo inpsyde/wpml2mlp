@@ -35,8 +35,12 @@ This migration plugin:
 
 We cannot guarantee free ad hoc support. Please be patient, we are a small team.
 
-== How to use ==
+= How to use =
 [vimeo http://vimeo.com/199317177]
+
+== Screenshots ==
+1. Export: Tools -> Export -> WPML Export
+3. Import: WPCLI
 
 == Installation ==
 
