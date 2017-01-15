@@ -1,0 +1,5 @@
+.wrap h1{ display:none; }
+.wrap.wpml2ml_export{ display:block }
+
+.column-languages{width: 25%}
+.fixed .column-date{width: 15%}

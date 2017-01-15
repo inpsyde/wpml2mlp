@@ -5,14 +5,78 @@
  * Description: Get data from WPML export and immediately import in Multisite and MultilingualPress environment.
  * Author:      Inpsyde GmbH
  * Author URI:  http://inpsyde.com
- * Version:     1.0.0
+ * Version:     2.0.0
  */
 
 defined( 'ABSPATH' ) or die( 'No direct access!' );
 
-add_action( 'wp_loaded', 'wpml2mlp_load' );
+/**
+ * Searches the environment for evidence of existing WP-CLI
+ *
+ * @return bool
+ */
+function w2m_is_wp_cli() {
 
-function wpml2mlp_load() {
+	return
+		defined( 'WP_CLI' )
+		&& WP_CLI
+		&& class_exists( 'WP_CLI_Command' );
+}
+/**
+ * Note: this is a temporary bootstrap for the importer module
+ * coming with version 2.0.0
+ *
+ * It will be refactored later
+ */
+add_action( 'wp_loaded', function() {
+
+	if ( ! w2m_is_wp_cli() )
+		return;
+
+	$autoload = __DIR__ . '/vendor/autoload.php';
+	if ( file_exists( $autoload ) )
+		require_once $autoload;
+
+	WP_CLI::add_command( 'w2m', 'W2M\Cli\WpCliW2MCommand' );
+} );
+
+
+# Load plugin
+add_action( 'admin_init', 'wpml2mlp_admin_interface' );
+
+function wpml2mlp_admin_interface() {
+
+	wpml2mlp_validate_activation();
+
+	require plugin_dir_path( __FILE__ ) . 'inc/Export/AdminPage/Page.php';
+	require plugin_dir_path( __FILE__ ) . 'inc/Export/AdminPage/Languages_Table.php';
+
+	new W2M\Export\AdminPage\export_admin_page();
+
+}
+
+
+# Load plugin
+add_action( 'wp_ajax_run_export', 'wpml2mlp_prerequisites' );
+#add_action( 'admin_init', 'wpml2mlp_prerequisites' );
+
+/**
+ * Reqiure needed files and heck the prerequisites to chose the way of use
+ *
+ * Set the textdomain for this Plugin and a error code for the prerequisites
+ * and run the prerequisites. If no prerequisite lets wp die.
+ *
+ * @wp-hook plugins_loaded
+ *
+ * @since   0.0.1.2
+ *
+ */
+function wpml2mlp_prerequisites() {
+
+	if( is_multisite() )
+		return;
+
+	set_time_limit( 0 );
 
 	$class_mappings = array(
 		'Wpml2mlp_Categorie_Creator'    => 'Wpml2mlp_Categorie_Creator.php',
@@ -26,101 +90,79 @@ function wpml2mlp_load() {
 		'Wpml2mlp_Translations'         => 'Wpml2mlp_Translations.php',
 		'Wpml2mlp_Translations_Builder' => 'Wpml2mlp_Translations_Builder.php',
 		'Wpml2mlp_Xliff_Creator'        => 'Wpml2mlp_Xliff_Creator.php',
+		'Wpml2mlp_Xliff_Cache'          => 'Wpml2mlp_Wxr_Cache.php',
 		'Wpml2mlp_ZipCreator'           => 'Wpml2mlp_ZipCreator.php',
-		'Wpml_Xliff_Export'             => 'Wpml_Xliff_Export.php',
+		'Wpml2mlp_Xliff_Export'         => 'Wpml2mlp_Xliff_Export.php',
+		'Wpml2mlp_Wxr_Export'           => 'Wpml2mlp_Wxr_Export.php',
 		'Wpml2mlp_Xliff_Extractor'      => 'Wpml2mlp_Xliff_Extractor.php'
 	);
 
+
 	foreach ( $class_mappings as $key => $value ) {
+
 		if ( ! class_exists( $key ) ) {
+
 			require plugin_dir_path( __FILE__ ) . 'inc/' . $value;
 		}
+
 	}
 
-	if ( Wpml2mlp_Prerequisites::is_mlp_plugin_active() ) {
+	$autoload = __DIR__ . '/vendor/autoload.php';
 
-		global $wpdb;
+	if ( file_exists( $autoload ) )
+		require_once $autoload;
 
-		$w2m_import = new Wpml2mlp_Importer( $wpdb );
-		$w2m_import->setup();
+	$txt_domain = 'wpml2mlp';
+	$error_code = $txt_domain . '_prerequisites';
+
+	$prerequisites = Wpml2mlp_Prerequisites::check_prerequisites( $txt_domain, $error_code );
+
+	if ( $prerequisites->errors ) {
+
+		deactivate_plugins( plugin_basename( __FILE__ ) );
+
+		wp_die( $prerequisites->errors[ $error_code ][ 0 ] );
+
 	}
 
-	$xliff_export = new Wpml_Xliff_Export();
-	$xliff_export->setup();
-
-	wpml2mlp_add_hooks();
 }
 
-/**
- * Creates hooks for plugin.
- */
-function wpml2mlp_add_hooks() {
-
-	add_action( 'admin_init', 'wpml2mlp_page_init' );
-	add_action( 'network_admin_menu', 'wpml2mpl_add_menu_option' );
-	add_action( 'admin_menu', 'wpml2mlp_admin_menu' );
-}
 
 /**
- * Add option to admin menu.
+ * validate Plugin activation
+ * Activate Plugin only if wpml active o
  */
-function wpml2mlp_admin_menu() {
+function wpml2mlp_validate_activation() {
 
-	add_submenu_page(
-		'tools.php',
-		'Convert WPML to MLP',
-		'WPML2MLP',
-		'manage_options',
-		'wpml2mlp',
-		'wpml2mlp_show_import'
-	);
-}
+	require plugin_dir_path( __FILE__ ) . 'inc/Wpml2mlp_Prerequisites.php';
+	$is_wpmlplugin_active = Wpml2mlp_Prerequisites::is_wpmlplugin_active();
+	$is_mlp_plugin_active = Wpml2mlp_Prerequisites::is_mlp_plugin_active();
 
-/**
- * Add menu to to network navigation.
- */
-function wpml2mpl_add_menu_option() {
+	$txt_domain = 'wpml2mlp';
+	$error_code = $txt_domain . '_prerequisites';
 
-	add_submenu_page(
-		'settings.php',
-		'Convert WPML to MLP',
-		strtoupper( 'wpml2mlp' ),
-		'manage_network_options',
-		'wpml2mlp',
-		'wpml2mlp_show_import'
-	);
 
-}
+	if( empty( $is_wpmlplugin_active ) || empty( $is_mlp_plugin_active ) ){
 
-/**
- * Register, add settings and checks prerequisites of the plugin.
- */
-function wpml2mlp_page_init() {
+		if( empty( $is_wpmlplugin_active ) && ! is_multisite() ) {
 
-	//check  check_prerequisites
-	Wpml2mlp_Prerequisites::check_prerequisites();
+			$msg = sprintf( __( 'Sorry you have to activate the plugin wpml!<br /><br />Back to <a href="%2$s">WordPress admin</a>.', $txt_domain ), 1, admin_url() );
 
-	register_setting(
-		'export_option_group', // Option group
-		'export_option_name'
-	);
+		}elseif( empty( $is_mlp_plugin_active ) && is_multisite() ){
 
-	add_settings_section(
-		'setting_section_id', // ID
-		'', // Title
-		NULL, // Callback
-		'export-setting-admin' // Page
-	);
-}
+			$msg = sprintf( __( 'Sorry you have to install and activate the plugin <a href="%2$s">MultilingualPress</a>! .<br /><br />Back to <a href="%3$s">WordPress admin</a>.', $txt_domain ), 1, 'https://wordpress.org/plugins/multilingual-press/', admin_url() );
 
-/**
- * Displays relevant HTML content for plugin.
- */
-function wpml2mlp_show_import() {
+		}
 
-	if ( Wpml2mlp_Prerequisites::is_mlp_plugin_active() ) {
-		Wpml2mlp_Importer::display();
+		if( ! empty( $msg ) ) {
+			$error = new WP_Error();
+			$error->add( $error_code, $msg );
+
+			deactivate_plugins( plugin_basename( __FILE__ ) );
+
+			wp_die( $error->get_error_message() );
+		}
+
 	}
 
-	Wpml_Xliff_Export::display();
 }

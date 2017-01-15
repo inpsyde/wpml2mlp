@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+	bootstrap="tests/phpunit/bootstrap-integration.php"
+	backupGlobals="false"
+	colors="true"
+	convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true"
+	>
+	<php>
+		<const name="W2M\Test\DB_NAME" value="" />
+		<const name="W2M\Test\DB_USER" value="" />
+		<const name="W2M\Test\DB_PASS" value="" />
+		<const name="W2M\Test\DB_HOST" value="" />
+		<const name="W2M\Test\TABLE_PREFIX" value="w2m_" />
+		<!--
+			You can specify an absolute path (like /tmp/w2mtest) here (in
+			your local copy phpunit.xml of this file).
+			Default TMP_DIR is set internally to [sys_get_tmp_dir() . "/w2mtest"] when leaving
+			this blank. Relative paths will NOT WORK here.
+		-->
+		<const name="W2M\Test\TMP_DIR" value="" />
+	</php>
+	<testsuites>
+		<testsuite name="integration">
+			<directory suffix="Test.php">tests/phpunit/WpIntegration</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>

@@ -7,50 +7,52 @@ define( 'WPVERSION_CONST', '3.1' );
  */
 class Wpml2mlp_Prerequisites {
 
-	public static function check_prerequisites() {
+	/**
+	 * @var bool
+	 */
+	private static $prerequisites = TRUE;
 
-		$wp_version_check = self::check_wordpress_version();
-		$wpml_installed   = self::is_wpmlplugin_active();
+	/**
+	 *
+	 */
+	public static function check_prerequisites( $txt_domain, $error_code ) {
 
-		$msg = '';
-		$die = FALSE;
-		if ( $wp_version_check ) {
-			$msg = __(
-				'"Wpml2mlp" requires WordPress %1$s or higher, and has been deactivated! Please upgrade WordPress and try again.<br /><br />Back to <a href="%2$s">WordPress admin</a>.',
-				'wpml2mlp'
-			);
-			$url = esc_url( admin_url() );
+		$error = new WP_Error();
+
+		if ( self::check_wordpress_version() ) {
+
 			$msg = sprintf(
-				$msg,
-				WPVERSION_CONST,
-				$url
+				__( '"Wpml2mlp" requires WordPress %1$s or higher, and has been deactivated! Please upgrade WordPress and try again.<br /><br />Back to <a href="%2$s">WordPress admin</a>.', $txt_domain ),
+				2, WPVERSION_CONST, admin_url()
 			);
 
-			$die = TRUE;
+		} elseif ( ! is_multisite() ) {
+
+			$xliff_export = new Wpml_Xliff_Export();
+			$xliff_export->setup( 'multisite_not_installed' );
+
+			$msg = sprintf( __( ' Hier wird die neue wpml2mlp info Seite ausgegeben.<br /><br />Back to <a href="%2$s">WordPress admin</a>.', $txt_domain ), 1, admin_url() );
+
+		} elseif ( ! self::is_wpmlplugin_active() ) {
+
+			$msg = sprintf( __( 'Sorry you have to activate the plugin wpml!<br /><br />Back to <a href="%2$s">WordPress admin</a>.', $txt_domain ), 1, admin_url() );
+
+		} else if ( self::is_mlp_plugin_active() ) {
+
+			$msg = sprintf( __( 'Sorry you have to install and activate the plugin Multilingual Press! .<br /><br />Back to <a href="%2$s">WordPress admin</a>.', $txt_domain ), 1, admin_url() );
+
 		}
 
-		if ( ! is_multisite() || ! $wpml_installed ) {
-			$msg = __(
-				'Please ensure, that you have set up a multisite environment and activated WPML.<br /><br />Back to <a href="%s">WordPress admin</a>.',
-				'wpml2mlp'
-			);
-			$url = esc_url( admin_url() );
-			$msg = sprintf(
-				$msg,
-				$url
-			);
+		if( ! empty( $msg ) ){
 
-			$die = TRUE;
+			$error->add( $error_code, $msg );
+
 		}
 
-		if ( $die ) {
-			$plug_basename = plugin_basename( __FILE__ );
-			$basename_array = explode( '/', $plug_basename );
+		return $error;
 
-			deactivate_plugins( $basename_array[ 0 ] . '/wpml2mlp.php' );
-			wp_die( $msg );
-		}
 	}
+
 
 	/**
 	 * Checks is WP version ok for plugin.
@@ -88,6 +90,9 @@ class Wpml2mlp_Prerequisites {
 		$act_plugs = get_site_option( 'active_sitewide_plugins' );
 		$plugs     = array();
 
+		if( ! $act_plugs )
+			return;
+
 		foreach ( $act_plugs as $key => $value ) {
 			$plugin_name = explode( '/', $key );
 			if ( array_key_exists( 1, $plugin_name ) ) {
@@ -103,7 +108,7 @@ class Wpml2mlp_Prerequisites {
 	 *
 	 * @return bool
 	 */
-	private static function is_wpmlplugin_active() {
+	public static function is_wpmlplugin_active() {
 
 		$act_plugs = get_option( 'active_plugins' );
 		$plugs     = array();

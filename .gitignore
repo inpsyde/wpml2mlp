@@ -1,0 +1,7 @@
+vendor/
+tests/tmp/
+wiki/
+svn/
+phpunit*.xml
+.DS_Store
+._*

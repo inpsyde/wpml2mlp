@@ -1,9 +1,7 @@
 {
   "name": "inpsyde/wpml2mlp",
   "description": "Get data from WPML plugin export and immediately import in WordPress Multisite environment.",
-  "minimum-stability": "stable",
   "license": "GPL 2+",
-  "version": "1.0.0",
   "type": "wordpress-plugin",
   "authors": [
     {
@@ -21,11 +19,23 @@
     "docs": "https://github.com/inpsyde/wpml2mlp"
   },
   "require": {
-    "php": ">5.2.4",
-    "composer/installers": "~1.0"
+    "php": ">=5.4.0",
+    "monolog/monolog": "~1.17",
+    "level-2/dice": "dev-v2.0-PHP5.4-5.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "W2M\\": "inc/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "W2M\\Test\\Helper\\": "tests/Helper/"
+    }
   },
   "require-dev": {
-    "squizlabs/php_codesniffer": "^2.3",
-    "phpmd/phpmd": "2.1.3"
+    "inpsyde/wordpress-dev": "~4.4",
+    "brain/monkey": "~1.2",
+    "inpsyde/wp-tests-starter": "~1.0"
   }
 }

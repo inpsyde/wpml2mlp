@@ -49,7 +49,7 @@ class Wpml2mlp_Xliff_Creator {
 		}
 
 		if ( isset( $_GET[ 'mlp_xliff_action' ] ) && $_GET[ 'mlp_xliff_action' ] == 'download'
-			&& $_GET[ 'nonce' ] = wp_create_nonce(
+		     && $_GET[ 'nonce' ] = wp_create_nonce(
 				'xliff-export'
 			)
 		) {
@@ -75,13 +75,13 @@ class Wpml2mlp_Xliff_Creator {
 
 		</script>
 
-	<?php
+		<?php
 	}
 
 	/**
 	 * Runs xliff export.
 	 */
-	function do_xliff_export() {
+	function  do_xliff_export() {
 
 		$data = $this->contentForExport;
 		//$data = unserialize( base64_decode( $data ) );
@@ -111,6 +111,36 @@ class Wpml2mlp_Xliff_Creator {
 	}
 
 	/**
+	 * Runs storing xliff data.
+	 */
+	function store_wxr_export() {
+
+		$data = $this->contentForExport;
+
+		if ( is_array( $data ) && count( $data ) > 0 ) {
+
+			foreach ( $data as $locale => $posts ) {
+
+				$wxr[ $locale ] = $this->get_wxr_file( $locale, $posts );
+
+				foreach( $wxr[ $locale ] as $wxr_file ) {
+
+					$wxr[ 'filesize' ] = size_format( filesize( $wxr_file ), 2 );
+					$wxr[ 'date' ]  = date( 'm.d.y H:i', filemtime( $wxr_file ) );
+
+				}
+				#buddy take a break, its hard work but now we have a wxr export file created :)
+				sleep(2);
+
+			}
+
+		}
+
+		print_r( json_encode( $wxr ) );
+		die();
+	}
+
+	/**
 	 * Creates xliff file from WPML2MLP_Translations object.
 	 *
 	 * @param WPML2MLP_Translations $data
@@ -119,10 +149,14 @@ class Wpml2mlp_Xliff_Creator {
 	 */
 	function get_xlif_file( WPML2MLP_Translations $data ) {
 
-		$new_line   = "\n";
-		$xliff_file = '<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="' . $data->source_language . '" trgLang="' . $data->destination_language . '">' . $new_line;
+
+		$new_line = "\n";
+
+		$xliff_file = '<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="' . $data->source_language . '" trgLang="' . $data->destination_language . '" translations="' . count( $data->data ) . '">' . $new_line;
 		$xliff_file .= '<file id="f1">' . $new_line;
+
 		$i = 0;
+
 		foreach ( $data->data as $segment ) {
 			$xliff_file .= '<unit id="u' . $i . '">' . $new_line;
 			$xliff_file .= '<segment id="' . $segment->original_id . '">' . $new_line;
@@ -141,6 +175,17 @@ class Wpml2mlp_Xliff_Creator {
 		$xliff_file .= '</xliff>';
 
 		return $xliff_file;
+
+	}
+
+
+	function get_wxr_file( $locale, $posts ) {
+
+		$wxr = new Wpml_Wxr_Export( $locale, $posts );
+
+		$wxr_file = $wxr->get_wxr();
+
+		return $wxr_file;
 
 	}
 
