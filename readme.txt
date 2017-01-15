@@ -40,7 +40,7 @@ We cannot guarantee free ad hoc support. Please be patient, we are a small team.
 
 == Screenshots ==
 1. Export: Tools -> Export -> WPML Export
-3. Import: WPCLI
+2. Import: WPCLI
 
 == Installation ==
 
