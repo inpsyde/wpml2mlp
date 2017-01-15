@@ -1,7 +1,7 @@
 # WPML to MultilingualPress
 [![GitHub release](https://img.shields.io/badge/status-beta-lightgrey.svg)](https://github.com/inpsyde/wpml2mlp/edit/master)
 
-Convert posts from an existing WPML multilingual site via XLIFF Export/Import for MultilingualPress
+Convert posts from an existing WPML multilingual site via WXR Export/Import for MultilingualPress
 
 ## Description
 WPML stores each entry as a separate post and uses some custom tables to connect the translations. If you de-activate the plugin or have issues with functionality related to version updates, you get one site with multilingual confusion. This plugin migrate all data from WPML to [MultilingualPress](https://wordpress.org/plugins/multilingual-press/) plugin, also the [Premium](http://multilingualpress.pro/) Version.
@@ -31,8 +31,8 @@ You can follow our progress and development notices on our [developer blog](http
 ## Installation
 
 ### Requirements
- * WordPress Multisite 3.4+
- * PHP 5.2.4, newer PHP versions will work faster.
+ * WordPress Multisite 4.4+
+ * PHP 5.4*, newer PHP versions will work faster.
  * [MultilingualPress](https://wordpress.org/plugins/multilingual-press/) plugin, also the [Premium](http://multilingualpress.pro/) Version
 
 Use the installer via back-end of your install or ...
@@ -102,8 +102,17 @@ Use the installer via back-end of your install or ...
 
 ## Other Notes
 
-### Made by [Inpsyde](http://inpsyde.com) &middot; We love WordPress
-Have a look at the premium plugins in our [market](http://marketpress.com).
+
+```
+  ___                           _      
+ |_ _|_ __  _ __  ___ _   _  __| | ___ 
+  | || '_ \| '_ \/ __| | | |/ _` |/ _ \
+  | || | | | |_) \__ \ |_| | (_| |  __/
+ |___|_| |_| .__/|___/\__, |\__,_|\___|
+           |_|        |___/            
+```
+
+The team at [Inpsyde](https://inpsyde.com) is engineering the Web since 2006.
 
 ### Bugs, technical hints or contribute
 Please give me feedback, contribute and file technical bugs on this 

@@ -1,7 +1,7 @@
 === WPML to MultilingualPress ===
 Contributors: inpsyde, Bueltge, nullbyte, derpixler, dnaber-de
 Tags: WPML, convert, export, import, migration, l10n, i18n, bilingual, international, internationalization, lang, language, localization,  multilanguage, multi language, multilingual, multi lingual, multisite, switcher, translation, website translation, wordpress translation,  network, categories, taxonomy, wxr
-Requires at least: 4.3
+Requires at least: 4.4
 Tested up to: 4.7.1
 Stable tag: 2.0.0
 
@@ -41,7 +41,7 @@ We cannot guarantee free ad hoc support. Please be patient, we are a small team.
 == Installation ==
 
 = Requirements =
-* WordPress Multisite 4.3+
+* WordPress Multisite 4.4+
 * PHP 5.4.0, newer PHP versions will work faster.
 * [MultilingualPress](https://wordpress.org/plugins/multilingual-press/) plugin, also the [Premium](http://multilingualpress.pro/) Version
 
