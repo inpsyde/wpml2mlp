@@ -2,14 +2,6 @@
 
 Convert posts from an existing WPML multilingual site via WXR Export/Import for MultilingualPress
 
-## Description
-WPML stores each entry as a separate post and uses some custom tables to connect the translations. If you de-activate the plugin or have issues with functionality related to version updates, you get one site with multilingual confusion. This plugin migrate all data from WPML to [MultilingualPress](https://wordpress.org/plugins/multilingual-press/) plugin, also the [Premium](http://multilingualpress.pro/) Version.
-
-## Requirements
-
- * PHP >= 5.4.0
- * WP  >= 4.4.0
-
 ### Attention
 This plugin is considered a **tool for developers and advanced users**. It is not a feature plugin for daily use. You can use the plugin, but **make a full backup** of your entire system and make sure you can role back easily! Please give us feedback if you see problems. The best way for feedback is an issue on the repository on
 
