@@ -29,7 +29,7 @@ We cannot guarantee free ad hoc support. Please be patient, we are a small team.
 ### Requirements
  * WordPress Multisite 4.4+
  * PHP 5.4*, newer PHP versions will work faster.
- * [MultilingualPress](https://wordpress.org/plugins/multilingual-press/) plugin, also the [Premium](http://multilingualpress.pro/) Version
+ * [MultilingualPress](https://wordpress.org/plugins/multilingual-press/) plugin
 
 Use the installer via back-end of your install or ...
 
@@ -40,7 +40,7 @@ Use the installer via back-end of your install or ...
  5. Go to **Settings** on Multisite or **Tools** on single site, **WPML2MLP**, then start the export of the current WPML stuff.
 
 ### How to use
-[vimeo http://vimeo.com/199317177]
+See the screencast at [vimeo](http://vimeo.com/199317177) and read the [Wiki](https://github.com/inpsyde/wpml2mlp/wiki).
 
 ## Action & Filter Reference
 ### Actions
