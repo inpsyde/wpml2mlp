@@ -5,7 +5,6 @@ namespace W2M\Import\Service\Importer;
 use
 	W2M\Import\Data,
 	W2M\Import\Type,
-	W2M\Import\Module,
 	WP_Post,
 	WP_Error,
 	WP_Http;
@@ -107,9 +106,9 @@ class WpPostImporter implements PostImporterInterface {
 				 * Attach error handler/logger for missing origin_attachment_url
 				 *
 				 * @param WP_Error $error
-				 * @param array $import_postdata
+				 * @param Type\ImportPostInterface $import_post
 				 */
-				do_action( 'w2m_import_attachment_missing_origin_attachment_url', $error, $import_postdata );
+				do_action( 'w2m_import_attachment_missing_origin_attachment_url', $error, $import_post );
 
 				return;
 
@@ -124,11 +123,11 @@ class WpPostImporter implements PostImporterInterface {
 			 * Attach error handler/logger here
 			 *
 			 * @param WP_Error $local_id
-			 * @param array $import_postdata
+			 * @param Type\ImportPostInterface $import_post
 			 */
-			do_action( 'w2m_import_post_error', $local_id, $import_postdata );
+			do_action( 'w2m_import_post_error', $local_id, $import_post );
 
-			return;
+			return $local_id;
 		}
 
 		// notify the import object about the new local post id
@@ -138,7 +137,7 @@ class WpPostImporter implements PostImporterInterface {
 
 		if ( $import_post->origin_parent_post_id() && !$local_parent_id ) {
 			/**
-			 * @param stdClass|WP_Post $wp_post
+			 * @param \stdClass|WP_Post $wp_post
 			 * @param Type\ImportPostInterface $import_post
 			 */
 			do_action( 'w2m_import_missing_post_ancestor', $wp_post, $import_post );
@@ -152,16 +151,16 @@ class WpPostImporter implements PostImporterInterface {
 				->local_id( 'term',  $term->origin_id() );
 
 			// fallback if term_id 0
-			if( $local_term == 0 ){
+			if ( $local_term == 0 ) {
 
 				$local_term_obj = get_term_by( 'slug', $term->nicename(), $term->taxonomy() );
 				$taxonomies[ $term->taxonomy() ][] = $local_term_obj->term_id;
 
-			}else{
+			} else {
 
 				$taxonomies[ $term->taxonomy() ][] = $this->id_mapper
 					->local_id( 'term',  $term->origin_id() );
-				// Todo: Trigger error when ID could not resolved
+				// Todo: Trigger error when ID could not be resolved
 
 			}
 
@@ -222,7 +221,7 @@ class WpPostImporter implements PostImporterInterface {
 
 					$this->propagate_import_meta_error(
 						array(
-							'result'  => $update_post_meta_result,
+							'result'  => $add_post_meta_result,
 							'post_id' => $local_id,
 							'meta'    => array( 'key' => $meta->key(), 'value' => $v )
 						)
@@ -240,6 +239,8 @@ class WpPostImporter implements PostImporterInterface {
 		 * @param Type\ImportPostInterface $import_post
 		 */
 		do_action( 'w2m_post_imported', $wp_post, $import_post );
+
+		return TRUE;
 	}
 
 	/**
